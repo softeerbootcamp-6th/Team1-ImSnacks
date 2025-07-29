@@ -136,6 +136,121 @@ export const Assets = {
   },
 };
 
+export const Opacity = {
+  White: {
+    W0: 0,
+    W100: 0.1,
+    W200: 0.2,
+    W300: 0.3,
+    W400: 0.4,
+    W500: 0.5,
+    W600: 0.6,
+    W700: 0.7,
+    W800: 0.8,
+    W900: 0.9,
+    W1000: 1,
+  },
+  G500: {
+    '5o200': 0.2,
+    '5o400': 0.4,
+  },
+  G800: {
+    '8o200': 0.2,
+    '8o400': 0.4,
+  },
+  G900: {
+    '9o0': 0,
+    '9o400': 0.4,
+  },
+  Green: {
+    Gr200: 0.2,
+    Gr400: 0.4,
+  },
+};
+
+export const Gradient = {
+  CardStroke: {
+    W0: 0.1,
+    W1000: 0.35,
+    Angular: {
+      stops: [
+        { position: '10%', opacity: 'W0' },
+        { position: '35%', opacity: 'W1000' },
+        { position: '60%', opacity: 'W0' },
+        { position: '85%', opacity: 'W1000' },
+      ],
+    },
+    Dark: {
+      Angular: {
+        stops: [
+          { position: '10%', color: '9o0' },
+          { position: '35%', color: 'G900' },
+          { position: '60%', color: '9o0' },
+          { position: '85%', color: 'G900' },
+        ],
+      },
+    },
+  },
+  Background: {
+    Afternoon: {
+      Clear: {
+        Linear: {
+          from: '#B9E8FF',
+          to: '#1573ED',
+          stops: [
+            { position: '0%', color: '#B9E8FF' },
+            { position: '100%', color: '#1573ED' },
+          ],
+        },
+      },
+      Cloudy: {
+        Linear: {
+          from: '#91B2C2',
+          to: '#26374F',
+          stops: [
+            { position: '0%', color: '#91B2C2' },
+            { position: '100%', color: '#26374F' },
+          ],
+        },
+      },
+      Hot: {
+        Linear: {
+          from: '#FFEECC',
+          to: '#ED473B',
+          stops: [
+            { position: '0%', color: '#FFEECC' },
+            { position: '100%', color: '#ED473B' },
+          ],
+        },
+      },
+    },
+    Night: {
+      Clear: {
+        Linear: {
+          from: '#5A659D',
+          to: '#181324',
+          stops: [
+            { position: '0%', color: '#5A659D' },
+            { position: '100%', color: '#181324' },
+          ],
+        },
+      },
+    },
+  },
+  Conic: {
+    Background: {
+      from: '180deg',
+      at: '50% 50%',
+      stops: [
+        { position: '36deg', color: 'rgba(253, 254, 254, 0.00)' },
+        { position: '126deg', color: '#FDFEFE' },
+        { position: '216deg', color: 'rgba(253, 254, 254, 0.00)' },
+        { position: '306deg', color: '#FDFEFE' },
+      ],
+    },
+  },
+};
+
 // 통합된 컬러 시스템
 export const colorSystem = {
   // Primary Colors
@@ -152,6 +267,11 @@ export const colorSystem = {
 
   // Gray Scale
   grayscale: GrayScale,
+
+  opacity: Opacity,
+
+  // Gradient
+  gradient: Gradient,
 
   // Assets
   assets: Assets,
