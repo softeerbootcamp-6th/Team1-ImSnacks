@@ -1,6 +1,6 @@
 import { useRoutes, Outlet } from 'react-router';
 import Layout from '../layouts/Layout';
-import HomePage from '../pages/HomePage';
+import HomePage from '../pages/homePage/HomePage';
 
 export const Router = () => {
   const routes = useRoutes([
