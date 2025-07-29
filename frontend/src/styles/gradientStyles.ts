@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
-import { Gradient, Opacity, GrayScale } from './colors';
+import { Gradient, GrayScale } from './colors';
+import convertHexToRGBA from '@/utils/converHexToRGBA';
 
 // Gradient 스타일 객체
 export const gradientStyles = {
@@ -7,13 +8,13 @@ export const gradientStyles = {
   cardStrokeAngular: css`
     background: conic-gradient(
       from 0deg at 50% 50%,
-      rgba(255, 255, 255, ${Gradient.CardStroke.W0})
+      ${convertHexToRGBA(GrayScale.White, Gradient.CardStroke.W0)}
         ${Gradient.CardStroke.Angular.stops[0].position},
-      rgba(255, 255, 255, ${Gradient.CardStroke.W1000})
+      ${convertHexToRGBA(GrayScale.White, Gradient.CardStroke.W1000)}
         ${Gradient.CardStroke.Angular.stops[1].position},
-      rgba(255, 255, 255, ${Gradient.CardStroke.W0})
+      ${convertHexToRGBA(GrayScale.White, Gradient.CardStroke.W0)}
         ${Gradient.CardStroke.Angular.stops[2].position},
-      rgba(255, 255, 255, ${Gradient.CardStroke.W1000})
+      ${convertHexToRGBA(GrayScale.White, Gradient.CardStroke.W1000)}
         ${Gradient.CardStroke.Angular.stops[3].position}
     );
   `,
@@ -22,12 +23,11 @@ export const gradientStyles = {
   cardStrokeDarkAngular: css`
     background: conic-gradient(
       from 0deg at 50% 50%,
-      rgba(56, 48, 72, ${Opacity.G900['9o0']})
-        ${Gradient.CardStroke.Dark.Angular.stops[0].position},
-      ${GrayScale.G900} ${Gradient.CardStroke.Dark.Angular.stops[1].position},
-      rgba(56, 48, 72, ${Opacity.G900['9o0']})
-        ${Gradient.CardStroke.Dark.Angular.stops[2].position},
-      ${GrayScale.G900} ${Gradient.CardStroke.Dark.Angular.stops[3].position}
+      ${convertHexToRGBA(GrayScale.G900, 0.1)} 10%,
+      ${GrayScale.G900} 35%,
+      ${convertHexToRGBA(GrayScale.G900, 0.1)} 60%,
+      ${GrayScale.G900} 85%,
+      ${convertHexToRGBA(GrayScale.G900, 0.1)} 100%
     );
   `,
 
