@@ -17,8 +17,8 @@ export const Router = () => {
           index: true,
         },
         {
-          element: <div>Dash Board</div>,
-          path: 'dashboard',
+          element: <div>Weather Board</div>,
+          path: 'weather-board',
         },
         {
           element: <div>My Farm</div>,

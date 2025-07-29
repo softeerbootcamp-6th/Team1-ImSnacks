@@ -236,6 +236,16 @@ export const Gradient = {
         },
       },
     },
+    WeatherBoard: {
+      Linear: {
+        from: GrayScale.Black,
+        to: GrayScale.G900,
+        stops: [
+          { position: '17%', color: GrayScale.Black },
+          { position: '100%', color: GrayScale.G900 },
+        ],
+      },
+    },
   },
   Conic: {
     Background: {

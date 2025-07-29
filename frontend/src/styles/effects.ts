@@ -5,6 +5,9 @@ export const DropShadow = {
   Ds200: {
     dropShadow: '0 4px 32px rgba(113, 119, 143, 0.20)',
   },
+  Ds300: {
+    dropShadow: '0px 4px 32px 0px #383048',
+  },
   DsGraph: {
     dropShadow: '0 4px 28px rgba(56, 61, 72, 0.40)',
   },
