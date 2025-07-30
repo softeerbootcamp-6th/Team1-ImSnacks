@@ -1,0 +1,23 @@
+import type { ButtonHTMLAttributes } from 'react';
+import S from './BtnSelectChip.style';
+
+interface BtnSelectChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  size: 'Small' | 'Large';
+  text: string;
+  status?: 'Default' | 'Hover' | 'Pressed' | 'Disabled';
+}
+
+const BtnSelectChip = ({
+  size = 'Small',
+  text,
+  status = 'Default',
+  ...props
+}: BtnSelectChipProps) => {
+  return (
+    <button css={S.BtnSelectChipStyle(size, status)} {...props}>
+      {text}
+    </button>
+  );
+};
+
+export default BtnSelectChip;
