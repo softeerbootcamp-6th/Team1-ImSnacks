@@ -13,8 +13,13 @@ export const Typography = {
     fontWeight: 700,
     letterSpacing: '-1%',
   },
-
-  Subtitle: {
+  Subtitle500: {
+    fontSize: '24px',
+    lineHeight: '36px',
+    fontWeight: 500,
+    letterSpacing: '-2%',
+  },
+  Subtitle700: {
     fontSize: '24px',
     lineHeight: '36px',
     fontWeight: 700,
@@ -59,11 +64,6 @@ export const Typography = {
 
 // Bold variants for typography that support multiple weights
 export const TypographyBold = {
-  Subtitle: {
-    ...Typography.Subtitle,
-    fontWeight: 700,
-  },
-
   Body_L: {
     ...Typography.Body_L,
     fontWeight: 700,
@@ -77,13 +77,5 @@ export const TypographyBold = {
   Body_S: {
     ...Typography.Body_S,
     fontWeight: 700,
-  },
-};
-
-// Typography with Medium weight
-export const TypographyMedium = {
-  Subtitle: {
-    ...Typography.Subtitle,
-    fontWeight: 500,
   },
 };
