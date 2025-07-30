@@ -58,8 +58,8 @@ export const GrayScale = {
   G600: '#8D95AD',
   G700: '#71778F',
   G800: '#596072',
-  G900: '#383048',
-  Black: '#171718',
+  G900: '#383D48',
+  Black: '#17171B',
 };
 
 // Assets Design System - 색상만 정의
@@ -241,8 +241,8 @@ export const Gradient = {
         from: GrayScale.Black,
         to: GrayScale.G900,
         stops: [
-          { position: '17%', color: GrayScale.Black },
-          { position: '100%', color: GrayScale.G900 },
+          { position: '19.64%', color: GrayScale.Black },
+          { position: '113.38%', color: GrayScale.G900 },
         ],
       },
     },
