@@ -75,6 +75,16 @@ export const gradientStyles = {
     );
   `,
 
+  // Weather Board Background
+  backgroundWeatherBoard: css`
+    background: linear-gradient(
+      to right,
+      ${Gradient.Background.WeatherBoard.Linear.from}
+        ${Gradient.Background.WeatherBoard.Linear.stops[0].position},
+      ${Gradient.Background.WeatherBoard.Linear.to}
+        ${Gradient.Background.WeatherBoard.Linear.stops[1].position}
+    );
+  `,
   // Conic Background
   conicBackground: css`
     background: conic-gradient(
