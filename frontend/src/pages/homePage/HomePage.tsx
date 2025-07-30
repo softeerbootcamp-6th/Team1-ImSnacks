@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { gradientStyles } from '../../styles/gradientStyles';
+import { gradientStyles } from '@/styles/gradientStyles';
 import RegisterWorkContainer from './components/RegisterWorkContainer';
 
 const HomePage = () => {
