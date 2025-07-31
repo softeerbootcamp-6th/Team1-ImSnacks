@@ -4,8 +4,8 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
 import type {
-  BtnSelectChipSizeType,
-  BtnSelectChipStatusType,
+  BtnSelectChipSize,
+  BtnSelectChipStatus,
 } from '@/types/btnSelectChip.types';
 
 const BtnSelectChipSizeStyle = {
@@ -49,8 +49,8 @@ const BtnSelectChipBase = css`
 `;
 
 export const BtnSelectChip = (
-  size: BtnSelectChipSizeType,
-  status: BtnSelectChipStatusType
+  size: BtnSelectChipSize,
+  status: BtnSelectChipStatus
 ) => css`
   ${BtnSelectChipBase}
   ${BtnSelectChipSizeStyle[size]}
