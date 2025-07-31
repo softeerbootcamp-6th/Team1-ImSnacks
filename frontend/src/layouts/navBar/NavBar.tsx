@@ -9,6 +9,7 @@ import { css } from '@emotion/react';
 import S from './NavBar.styles';
 import Tab from './tab/Tab';
 import { Opacity } from '../../styles/colors';
+import Logo from '../../assets/icons/flat/IC24Logo.svg?react';
 
 const NavBar = () => {
   const isWeatherPage = window.location.pathname === '/weather-board';
@@ -21,11 +22,7 @@ const NavBar = () => {
       `}
     >
       <button css={S.LogoStyle}>
-        <img
-          css={S.LogoImage}
-          src="public/assets/icons/flat/IC24Logo.svg"
-          alt="Logo"
-        />
+        <Logo width={56} height={56} />
       </button>
       <ul css={S.NavBarContent}>
         {navItems.map(item => (
