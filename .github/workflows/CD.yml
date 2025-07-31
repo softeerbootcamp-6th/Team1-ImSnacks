@@ -45,6 +45,7 @@ jobs:
 
       # docker image를 build 하고 docker hub에 push
       - name: Docker Build and Push
+        working-directory: ./backend
         run: |
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo docker build -f ./.deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }} .
