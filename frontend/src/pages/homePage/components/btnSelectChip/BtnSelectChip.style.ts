@@ -4,59 +4,65 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
 
-const sizeStyles = {
-  Small: { height: '28px' },
-  Large: { height: '36px' },
-};
+const sizeSmallStyle = css`
+  height: 28px;
+`;
 
-const statusStyles = {
-  Default: {
-    backgroundColor: Assets.Global.Button.Default,
-    color: Assets.Text.Button.SelectChip.Default,
-  },
-  Hover: {
-    backgroundColor: Assets.Global.Button.Hover,
-    color: Assets.Text.Button.SelectChip.Hover,
-  },
-  Pressed: {
-    backgroundColor: Assets.Global.Button.Pressed,
-    color: Assets.Text.Button.SelectChip.Pressed,
-  },
-  Disabled: {
-    backgroundColor: Assets.Global.Button.Disabled,
-    color: Assets.Text.Button.SelectChip.Disabled,
-    cursor: 'not-allowed',
-  },
-};
+const sizeLargeStyle = css`
+  height: 36px;
+`;
 
-const BtnSelectChipStyle = (
-  size: 'Small' | 'Large',
-  status?: 'Default' | 'Hover' | 'Pressed' | 'Disabled'
-) => css`
+const defaultStyle = css`
+  background-color: ${Assets.Global.Button.Default};
+  color: ${Assets.Text.Button.SelectChip.Default};
+`;
+
+const hoverStyle = css`
+  background-color: ${Assets.Global.Button.Hover};
+  color: ${Assets.Text.Button.SelectChip.Hover};
+`;
+
+const pressedStyle = css`
+  background-color: ${Assets.Global.Button.Pressed};
+  color: ${Assets.Text.Button.SelectChip.Pressed};
+`;
+
+const disabledStyle = css`
+  background-color: ${Assets.Global.Button.Disabled};
+  color: ${Assets.Text.Button.SelectChip.Disabled};
+  cursor: not-allowed;
+`;
+
+const baseStyle = css`
   ${Typography.Body_S}
   border-radius: ${BorderRadius.Base.Soft};
   padding: ${Spacing.Spacing100} ${Spacing.Spacing400};
   display: flex;
   align-items: center;
   justify-content: center;
-  ${sizeStyles[size]}
   border: none;
   transition: all 0.1s ease-in-out;
   cursor: pointer;
+`;
 
-  ${(status && statusStyles[status]) || statusStyles.Default}
+export const BtnSelectChipStyle = (size: 'Small' | 'Large') => css`
+  ${baseStyle}
+  ${size === 'Small' ? sizeSmallStyle : sizeLargeStyle}
+  ${defaultStyle}
 
   &:hover {
-    ${statusStyles.Hover}
+    ${hoverStyle}
   }
 
   &:active {
-    ${statusStyles.Pressed}
+    ${pressedStyle}
   }
 
   &:disabled {
-    ${statusStyles.Disabled}
+    ${disabledStyle}
   }
 `;
 
-export default { BtnSelectChipStyle };
+export default {
+  BtnSelectChipStyle,
+};
