@@ -32,7 +32,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: |
           echo "----- workdir -----"
-          ls -al
+          ls -al .
           cd backend
           chmod +x gradlew
           echo "----- /backend -----"
