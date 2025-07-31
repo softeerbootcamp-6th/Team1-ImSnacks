@@ -1,7 +1,7 @@
 name: Blue-Green deployment
 
 on:
-  pull_request:
+  push:
     branches:
       - be
 
