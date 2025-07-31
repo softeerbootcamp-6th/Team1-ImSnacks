@@ -15,7 +15,7 @@ export const DropShadow = {
 
 export const BackgroundBlur = {
   BgBlur100: {
-    backdropFilter: 'blur(16px)',
+    backdropFilter: 'blur(8px)',
   },
 };
 

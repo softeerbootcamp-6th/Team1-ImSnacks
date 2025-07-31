@@ -34,7 +34,7 @@ export const gradientStyles = {
   // Background Afternoon Clear Linear
   backgroundAfternoonClear: css`
     background: linear-gradient(
-      to right,
+      68deg,
       ${Gradient.Background.Afternoon.Clear.Linear.from}
         ${Gradient.Background.Afternoon.Clear.Linear.stops[0].position},
       ${Gradient.Background.Afternoon.Clear.Linear.to}
@@ -45,7 +45,7 @@ export const gradientStyles = {
   // Background Afternoon Cloudy Linear
   backgroundAfternoonCloudy: css`
     background: linear-gradient(
-      to right,
+      36deg,
       ${Gradient.Background.Afternoon.Cloudy.Linear.from}
         ${Gradient.Background.Afternoon.Cloudy.Linear.stops[0].position},
       ${Gradient.Background.Afternoon.Cloudy.Linear.to}
@@ -56,7 +56,7 @@ export const gradientStyles = {
   // Background Afternoon Hot Linear
   backgroundAfternoonHot: css`
     background: linear-gradient(
-      to right,
+      36deg,
       ${Gradient.Background.Afternoon.Hot.Linear.from}
         ${Gradient.Background.Afternoon.Hot.Linear.stops[0].position},
       ${Gradient.Background.Afternoon.Hot.Linear.to}
@@ -67,11 +67,22 @@ export const gradientStyles = {
   // Background Night Clear Linear
   backgroundNightClear: css`
     background: linear-gradient(
-      to right,
+      46deg,
       ${Gradient.Background.Night.Clear.Linear.from}
         ${Gradient.Background.Night.Clear.Linear.stops[0].position},
       ${Gradient.Background.Night.Clear.Linear.to}
         ${Gradient.Background.Night.Clear.Linear.stops[1].position}
+    );
+  `,
+
+  // Weather Board Background
+  backgroundWeatherBoard: css`
+    background: linear-gradient(
+      221deg,
+      ${Gradient.Background.WeatherBoard.Linear.from}
+        ${Gradient.Background.WeatherBoard.Linear.stops[0].position},
+      ${Gradient.Background.WeatherBoard.Linear.to}
+        ${Gradient.Background.WeatherBoard.Linear.stops[1].position}
     );
   `,
 

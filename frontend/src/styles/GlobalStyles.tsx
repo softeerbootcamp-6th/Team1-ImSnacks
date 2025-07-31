@@ -164,10 +164,15 @@ const GlobalStyles = () => {
   return (
     <Global
       styles={css`
+        @font-face {
+          font-family: 'SUITE Variable';
+          src: url('/assets/fonts/SUITE-Variable.ttf') format('truetype');
+        }
+
         ${resetCss}
 
         * {
-          font-family: 'SUITE Variable';
+          font-family: 'SUITE Variable', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
