@@ -1,13 +1,23 @@
 import { css } from '@emotion/react';
 import WorkCell from '../workCell/WorkCell';
+import { WORK_CELL_STATUSES, WORK_CELL_TYPES } from '@/types/workCell.types';
 
 const WorkContainer = () => {
   const workCells = [
-    <WorkCell type="Start" status="Default" />,
+    <WorkCell
+      type={WORK_CELL_TYPES.START}
+      status={WORK_CELL_STATUSES.DEFAULT}
+    />,
     ...Array.from({ length: 12 }, (_, index) => {
-      return <WorkCell key={index} type="Middle" status="Default" />;
+      return (
+        <WorkCell
+          key={index}
+          type={WORK_CELL_TYPES.MIDDLE}
+          status={WORK_CELL_STATUSES.DEFAULT}
+        />
+      );
     }),
-    <WorkCell type="End" status="Default" />,
+    <WorkCell type={WORK_CELL_TYPES.END} status={WORK_CELL_STATUSES.DEFAULT} />,
   ];
 
   return (
