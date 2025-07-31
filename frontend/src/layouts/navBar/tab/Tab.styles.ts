@@ -22,8 +22,7 @@ const TabActive = css`
 
 const TabDefault = css`
   &:hover {
-    background-color: ${GrayScale.White};
-    opacity: ${Opacity.White.W300};
+    background: ${Opacity.White.W300};
   }
 `;
 
