@@ -2,13 +2,14 @@ import { useState } from 'react';
 import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
 import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
 import S from './RegisterWorkContainer.style';
+import { CROPS } from '@/constants/crops';
 
 const RegisterWorkContainer = () => {
-  const fruits = ['포도', '사과', '바나나', '딸기'];
-  const [selectedFruit, setSelectedFruit] = useState(0); // 첫 번째가 기본 선택
+  const crops = CROPS;
+  const [selectedFruit, setSelectedFruit] = useState(crops[0].id); // 첫 번째가 기본 선택
 
-  const handleFruitClick = (index: number) => {
-    setSelectedFruit(index);
+  const handleFruitClick = (id: number) => {
+    setSelectedFruit(id);
   };
 
   return (
@@ -21,13 +22,13 @@ const RegisterWorkContainer = () => {
       </div>
       <div css={S.BtnBox}>
         <div css={S.BtnSelectChipContainer}>
-          {fruits.map((fruit, index) => (
+          {crops.map(crop => (
             <BtnSelectChip
-              key={fruit}
+              key={crop.id}
               size="Small"
-              text={fruit}
-              status={selectedFruit === index ? 'Pressed' : 'Default'}
-              onClick={() => handleFruitClick(index)}
+              text={crop.name}
+              status={selectedFruit === crop.id ? 'Pressed' : 'Default'}
+              onClick={() => handleFruitClick(crop.id)}
             />
           ))}
         </div>
