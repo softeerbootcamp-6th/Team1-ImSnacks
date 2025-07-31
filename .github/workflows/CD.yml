@@ -29,18 +29,18 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
+            ~/backend/.gradle/caches
+            ~/backend/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-
 
       # gradle 파일에 접근할 권한을 부여
       - name: Run chmod to make gradlew executable
-        run: chmod +x ./gradlew
+        run: chmod +x ./backend/gradlew
 
       # build 작업 수행
       - name: Build with Gradle Wrapper
-        run: ./gradlew build
+        run: ./backend/gradlew build
 
       # docker image를 build 하고 docker hub에 push
       - name: Docker Build and Push
@@ -71,7 +71,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd ~/Backend/.deploy
+            cd ~/backend/.deploy
             rm -rf ./.env
             touch ./.env
             echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> ./.env
