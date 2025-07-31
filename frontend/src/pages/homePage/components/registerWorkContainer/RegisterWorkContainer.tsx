@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { Assets, GrayScale } from '@/styles/colors';
+import { Assets, Opacity } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
-import convertHexToRGBA from '@/utils/converHexToRGBA';
 import { borderStyles } from '@/styles/borderStyles';
 import { Typography, TypographyBold } from '@/styles/typography';
 import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
@@ -23,7 +22,7 @@ const RegisterWorkContainer = () => {
         height: 137px;
         border-radius: 16px;
         padding: ${Spacing.Spacing600} ${Spacing.Spacing800};
-        background: ${convertHexToRGBA(GrayScale.White, 0.6)};
+        background: ${Opacity.White.W600};
         ${borderStyles.gradientBorder}
         display: flex;
         flex-direction: row;

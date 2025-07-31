@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { ColorPrimary, GrayScale } from '@/styles/colors';
+import { ColorPrimary, Opacity } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { css } from '@emotion/react';
-import convertHexToRGBA from '@/utils/converHexToRGBA';
 import { Typography } from '@/styles/typography';
 
 interface WorkCellProps {
@@ -24,13 +23,13 @@ const borderRadiusStyles = {
 
 const statusStyles = {
   Default: css`
-    background-color: ${convertHexToRGBA(GrayScale.White, 0.2)};
+    background-color: ${Opacity.White.W200};
   `,
   Hover: css`
-    background-color: ${convertHexToRGBA(GrayScale.White, 0.8)};
+    background-color: ${Opacity.White.W800};
   `,
   Active: css`
-    background-color: ${convertHexToRGBA(GrayScale.White, 0.8)};
+    background-color: ${Opacity.White.W800};
   `,
 };
 
