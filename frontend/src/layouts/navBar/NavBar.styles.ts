@@ -8,6 +8,8 @@ const NavBarWrapper = css`
   flex-direction: row;
   box-sizing: border-box;
   width: 596px;
+  height: 52px;
+  overflow: hidden;
   padding: ${Spacing.Spacing200};
   justify-content: center;
   align-items: center;
@@ -25,16 +27,10 @@ const NavBarWrapper = css`
 
 const LogoStyle = css`
   display: flex;
-  padding: 0 16px 0 20px;
+  width: 60px;
+  padding-left: 4px;
+  box-sizing: border-box;
   align-items: center;
-`;
-
-const LogoImage = css`
-  display: flex;
-  padding: 4px;
-  align-items: center;
-  width: 24px;
-  height: 24px;
 `;
 
 const NavBarContent = css`
@@ -47,5 +43,4 @@ export default {
   NavBarWrapper,
   NavBarContent,
   LogoStyle,
-  LogoImage,
 };
