@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import { Assets, GrayScale, Opacity } from '../../../styles/colors';
-import { BorderRadius } from '../../../styles/borderRadius';
+import { Assets, GrayScale, Opacity } from '@/styles/colors';
+import { BorderRadius } from '@/styles/borderRadius';
 
 const TabStyle = css`
   display: flex;

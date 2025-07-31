@@ -8,8 +8,8 @@ const navItems = [
 import { css } from '@emotion/react';
 import S from './NavBar.styles';
 import Tab from './tab/Tab';
-import { Opacity } from '../../styles/colors';
-import Logo from '../../assets/icons/flat/IC24Logo.svg?react';
+import { Opacity } from '@/styles/colors';
+import Logo from '@/assets/icons/flat/IC24Logo.svg?react';
 
 const NavBar = () => {
   const isWeatherPage = window.location.pathname === '/weather-board';
