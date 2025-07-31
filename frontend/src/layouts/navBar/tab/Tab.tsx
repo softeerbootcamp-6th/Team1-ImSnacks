@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Typography } from '../../../styles/typography';
+import { Typography } from '@/styles/typography';
 import S from './Tab.styles';
 
 const Tab = ({

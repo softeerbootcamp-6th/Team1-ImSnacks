@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { Spacing } from '../../styles/spacing';
-import { GrayScale, Opacity } from '../../styles/colors';
-import { BackgroundBlur } from '../../styles/effects';
+import { Spacing } from '@/styles/spacing';
+import { Opacity } from '@/styles/colors';
+import { BackgroundBlur } from '@/styles/effects';
 
 const NavBarWrapper = css`
   display: flex;
