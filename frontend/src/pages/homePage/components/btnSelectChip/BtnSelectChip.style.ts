@@ -12,26 +12,24 @@ const sizeLargeStyle = css`
   height: 36px;
 `;
 
-const defaultStyle = css`
-  background-color: ${Assets.Global.Button.Default};
-  color: ${Assets.Text.Button.SelectChip.Default};
-`;
-
-const hoverStyle = css`
-  background-color: ${Assets.Global.Button.Hover};
-  color: ${Assets.Text.Button.SelectChip.Hover};
-`;
-
-const pressedStyle = css`
-  background-color: ${Assets.Global.Button.Pressed};
-  color: ${Assets.Text.Button.SelectChip.Pressed};
-`;
-
-const disabledStyle = css`
-  background-color: ${Assets.Global.Button.Disabled};
-  color: ${Assets.Text.Button.SelectChip.Disabled};
-  cursor: not-allowed;
-`;
+const statusStyle = {
+  Default: css`
+    background-color: ${Assets.Global.Button.Default};
+    color: ${Assets.Text.Button.SelectChip.Default};
+  `,
+  Pressed: css`
+    background-color: ${Assets.Global.Button.Pressed};
+    color: ${Assets.Text.Button.SelectChip.Pressed};
+  `,
+  Hover: css`
+    background-color: ${Assets.Global.Button.Hover};
+    color: ${Assets.Text.Button.SelectChip.Hover};
+  `,
+  Disabled: css`
+    background-color: ${Assets.Global.Button.Disabled};
+    color: ${Assets.Text.Button.SelectChip.Disabled};
+  `,
+};
 
 const baseStyle = css`
   ${Typography.Body_S}
@@ -45,21 +43,28 @@ const baseStyle = css`
   cursor: pointer;
 `;
 
-export const BtnSelectChipStyle = (size: 'Small' | 'Large') => css`
+export const BtnSelectChipStyle = (
+  size: 'Small' | 'Large',
+  status: 'Default' | 'Pressed' | 'Hover' | 'Disabled'
+) => css`
   ${baseStyle}
   ${size === 'Small' ? sizeSmallStyle : sizeLargeStyle}
-  ${defaultStyle}
-
+  ${statusStyle[status]}
+  
   &:hover {
-    ${hoverStyle}
+    ${statusStyle.Hover}
   }
 
   &:active {
-    ${pressedStyle}
+    ${statusStyle.Pressed}
+  }
+
+  &:focus {
+    ${statusStyle.Pressed}
   }
 
   &:disabled {
-    ${disabledStyle}
+    ${statusStyle.Disabled}
   }
 `;
 

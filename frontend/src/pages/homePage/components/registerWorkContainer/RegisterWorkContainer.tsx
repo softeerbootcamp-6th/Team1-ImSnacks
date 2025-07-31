@@ -1,12 +1,21 @@
 import { css } from '@emotion/react';
+import { useState } from 'react';
 import { Assets, GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import convertHexToRGBA from '@/utils/converHexToRGBA';
 import { borderStyles } from '@/styles/borderStyles';
-import { Typography } from '@/styles/typography';
+import { Typography, TypographyBold } from '@/styles/typography';
 import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
+import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
 
 const RegisterWorkContainer = () => {
+  const fruits = ['포도', '사과', '바나나', '딸기'];
+  const [selectedFruit, setSelectedFruit] = useState(0); // 첫 번째(포도)가 기본 선택
+
+  const handleFruitClick = (index: number) => {
+    setSelectedFruit(index);
+  };
+
   return (
     <div
       css={css`
@@ -20,6 +29,7 @@ const RegisterWorkContainer = () => {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        margin-top: ${Spacing.Spacing600};
       `}
     >
       <div
@@ -31,7 +41,7 @@ const RegisterWorkContainer = () => {
       >
         <div
           css={css`
-            ${Typography.Subtitle500}
+            ${TypographyBold.Subtitle}
             color: ${Assets.Text.Global.Headline};
           `}
         >
@@ -49,35 +59,42 @@ const RegisterWorkContainer = () => {
       <div
         css={css`
           display: flex;
-          flex-direction: row;
-          gap: ${Spacing.Spacing300};
+          flex-direction: column;
+          gap: ${Spacing.Spacing500};
+          padding-right: ${Spacing.Spacing800};
+          height: 88px;
+          width: 644px;
         `}
       >
-        <BtnSelectChip
-          size="Small"
-          text="포도"
-          status="Pressed"
-          onClick={() => console.log('clicked')}
-        />
-        <BtnSelectChip
-          size="Small"
-          text="사과"
-          status="Default"
-          onClick={() => console.log('clicked')}
-        />
-        <BtnSelectChip
-          size="Small"
-          text="바나나"
-          status="Hover"
-          onClick={() => console.log('clicked')}
-        />
-        <BtnSelectChip
-          size="Small"
-          text="딸기"
-          status="Disabled"
-          disabled={true}
-          onClick={() => console.log('clicked')}
-        />
+        <div
+          css={css`
+            display: flex;
+            flex-direction: row;
+            gap: ${Spacing.Spacing300};
+          `}
+        >
+          {fruits.map((fruit, index) => (
+            <BtnSelectChip
+              key={fruit}
+              size="Small"
+              text={fruit}
+              status={selectedFruit === index ? 'Pressed' : 'Default'}
+              onClick={() => handleFruitClick(index)}
+            />
+          ))}
+        </div>
+        <div
+          css={css`
+            display: flex;
+            flex-direction: row;
+            gap: ${Spacing.Spacing300};
+            height: 52px;
+          `}
+        >
+          <BtnCreateWork text="농작업" />
+          <BtnCreateWork text="농작업" />
+          <BtnCreateWork text="농작업" disabled={true} />
+        </div>
       </div>
     </div>
   );

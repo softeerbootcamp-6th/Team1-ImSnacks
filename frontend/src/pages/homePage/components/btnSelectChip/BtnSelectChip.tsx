@@ -4,15 +4,17 @@ import S from './BtnSelectChip.style';
 interface BtnSelectChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: 'Small' | 'Large';
   text: string;
+  status: 'Default' | 'Pressed' | 'Hover' | 'Disabled';
 }
 
 const BtnSelectChip = ({
   size = 'Small',
   text,
+  status = 'Default',
   ...props
 }: BtnSelectChipProps) => {
   return (
-    <button css={S.BtnSelectChipStyle(size)} {...props}>
+    <button css={S.BtnSelectChipStyle(size, status)} {...props}>
       {text}
     </button>
   );
