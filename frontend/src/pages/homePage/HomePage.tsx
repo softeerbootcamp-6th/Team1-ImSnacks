@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { gradientStyles } from '@/styles/gradientStyles';
 import RegisterWorkContainer from './components/registerWorkContainer/RegisterWorkContainer';
+import WorkContainer from './components/workContainer/WorkContainer';
 
 const HomePage = () => {
   return (
@@ -15,6 +16,7 @@ const HomePage = () => {
         justify-content: center;
       `}
     >
+      <WorkContainer />
       <RegisterWorkContainer />
     </div>
   );
