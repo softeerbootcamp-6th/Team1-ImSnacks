@@ -16,7 +16,7 @@ const Tab = ({
       <li
         css={css`
           ${S.TabStyle}
-          ${Typography.Body_S}
+          ${Typography.Body_S_400}
         ${isActive ? S.TabActive : S.TabDefault}
         `}
       >

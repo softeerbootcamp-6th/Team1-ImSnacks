@@ -32,7 +32,7 @@ const BtnSelectChipStatus = {
 };
 
 const BtnSelectChipBase = css`
-  ${Typography.Body_S}
+  ${Typography.Body_S_400}
   border-radius: ${BorderRadius.Base.Soft};
   padding: ${Spacing.Spacing100} ${Spacing.Spacing400};
   display: flex;
@@ -43,7 +43,7 @@ const BtnSelectChipBase = css`
   cursor: pointer;
 `;
 
-export const BtnSelectChipStyle = (
+export const BtnSelectChip = (
   size: 'Small' | 'Large',
   status: 'Default' | 'Pressed' | 'Hover' | 'Disabled'
 ) => css`
@@ -69,5 +69,5 @@ export const BtnSelectChipStyle = (
 `;
 
 export default {
-  BtnSelectChipStyle,
+  BtnSelectChip,
 };

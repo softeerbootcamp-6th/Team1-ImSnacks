@@ -34,7 +34,7 @@ const BtnCreateWorkDisabled = css`
 `;
 
 const BtnCreateWorkBase = css`
-  ${Typography.Body_S}
+  ${Typography.Body_S_400}
   ${SizeSmall}
   border-radius: ${BorderRadius.Base.S_Hard};
   padding: ${Spacing.Spacing300} 10px;

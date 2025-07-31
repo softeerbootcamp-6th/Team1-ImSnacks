@@ -1,7 +1,7 @@
 import { borderStyles } from '@/styles/borderStyles';
 import { Assets, Opacity } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
-import { Typography, TypographyBold } from '@/styles/typography';
+import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
 const RegisterWorkContainer = css`
@@ -19,12 +19,12 @@ const RegisterWorkContainer = css`
 `;
 
 const TextBoxTitle = css`
-  ${TypographyBold.Subtitle}
+  ${Typography.Subtitle_700}
   color: ${Assets.Text.Global.Headline};
 `;
 
 const TextBoxDescription = css`
-  ${Typography.Body_S}
+  ${Typography.Body_S_400}
   color: ${Assets.Text.Global.Caption};
 `;
 

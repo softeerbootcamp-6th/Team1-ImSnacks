@@ -14,7 +14,7 @@ const BtnSelectChip = ({
   ...props
 }: BtnSelectChipProps) => {
   return (
-    <button css={S.BtnSelectChipStyle(size, status)} {...props}>
+    <button css={S.BtnSelectChip(size, status)} {...props}>
       {text}
     </button>
   );
