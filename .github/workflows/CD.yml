@@ -71,7 +71,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd ~/Backend/.deploy
+            cd ~/backend/.deploy
             rm -rf ./.env
             touch ./.env
             echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> ./.env
