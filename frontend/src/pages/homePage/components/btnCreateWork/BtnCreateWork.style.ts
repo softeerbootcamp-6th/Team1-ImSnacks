@@ -4,38 +4,22 @@ import { Assets, ColorPrimary, GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 
-const sizeSmallStyle = css`
+const SizeSmall = css`
   min-width: 116px;
   height: 44px;
 `;
 
-const sizeLargeStyle = css`
+const SizeLarge = css`
   min-width: 146px;
   height: 52px;
 `;
 
-const defaultStyle = css`
+const BtnCreateWorkDefault = css`
   background-color: ${GrayScale.G50};
   color: ${Assets.Text.Gnb.Default};
-`;
 
-const hoverStyle = css`
-  background-color: ${ColorPrimary.B300};
-  color: ${GrayScale.White};
-  ${sizeLargeStyle}
-`;
-
-const disabledStyle = css`
-  background-color: transparent;
-  color: transparent;
-  cursor: not-allowed;
-  pointer-events: none;
-  border: 1px dashed ${GrayScale.White};
-`;
-
-const baseStyle = css`
   ${Typography.Body_S}
-  ${sizeSmallStyle}
+  ${SizeSmall}
   border-radius: ${BorderRadius.Base.S_Hard};
   padding: ${Spacing.Spacing300} 10px;
   display: flex;
@@ -46,23 +30,36 @@ const baseStyle = css`
   cursor: pointer;
 `;
 
-export const BtnCreateWorkStyle = css`
-  ${baseStyle}
-  ${defaultStyle}
+const BtnCreateWorkHover = css`
+  background-color: ${ColorPrimary.B300};
+  color: ${GrayScale.White};
+  ${SizeLarge}
+`;
+
+const BtnCreateWorkDisabled = css`
+  background-color: transparent;
+  color: transparent;
+  cursor: not-allowed;
+  pointer-events: none;
+  border: 1px dashed ${GrayScale.White};
+`;
+
+export const BtnCreateWork = css`
+  ${BtnCreateWorkDefault}
 
   &:hover {
-    ${hoverStyle}
+    ${BtnCreateWorkHover}
   }
 
   &:active {
-    ${hoverStyle}
+    ${BtnCreateWorkHover}
   }
 
   &:disabled {
-    ${disabledStyle}
+    ${BtnCreateWorkDisabled}
   }
 `;
 
 export default {
-  BtnCreateWorkStyle,
+  BtnCreateWork,
 };

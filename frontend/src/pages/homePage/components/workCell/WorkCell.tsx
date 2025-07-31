@@ -3,6 +3,7 @@ import { ColorPrimary, Opacity } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { css } from '@emotion/react';
 import { Typography } from '@/styles/typography';
+import DragIcon from '@/assets/icons/flat/IC24Drag.svg?react';
 
 interface WorkCellProps {
   type: 'Start' | 'Middle' | 'End';
@@ -64,8 +65,13 @@ const WorkCell = ({ type, status }: WorkCellProps) => {
             color: ${ColorPrimary.B300};
             text-align: center;
             white-space: pre-line;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
           `}
         >
+          <DragIcon width={24} height={24} fill={ColorPrimary.B300} />
           작업 일정을{'\n'}드래그 하세요
         </div>
       )}

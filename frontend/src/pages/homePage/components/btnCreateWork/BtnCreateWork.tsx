@@ -7,7 +7,7 @@ interface BtnCreateWorkProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const BtnCreateWork = ({ text, ...props }: BtnCreateWorkProps) => {
   return (
-    <button css={S.BtnCreateWorkStyle} {...props}>
+    <button css={S.BtnCreateWork} {...props}>
       {text}
     </button>
   );
