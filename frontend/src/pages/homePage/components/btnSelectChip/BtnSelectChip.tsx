@@ -1,16 +1,22 @@
 import type { ButtonHTMLAttributes } from 'react';
 import S from './BtnSelectChip.style';
+import {
+  BTN_SELECT_CHIP_SIZES,
+  BTN_SELECT_CHIP_STATUSES,
+  type BtnSelectChipSize,
+  type BtnSelectChipStatus,
+} from '@/types/btnSelectChip.types';
 
 interface BtnSelectChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  size: 'Small' | 'Large';
+  size: BtnSelectChipSize;
   text: string;
-  status: 'Default' | 'Pressed' | 'Hover' | 'Disabled';
+  status: BtnSelectChipStatus;
 }
 
 const BtnSelectChip = ({
-  size = 'Small',
+  size = BTN_SELECT_CHIP_SIZES.SMALL,
   text,
-  status = 'Default',
+  status = BTN_SELECT_CHIP_STATUSES.DEFAULT,
   ...props
 }: BtnSelectChipProps) => {
   return (

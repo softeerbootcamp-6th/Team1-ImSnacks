@@ -2,10 +2,11 @@ import { useState } from 'react';
 import DragIcon from '@/assets/icons/flat/IC24Drag.svg?react';
 import S from './WorkCell.style';
 import { ColorPrimary } from '@/styles/colors';
+import type { WorkCellType, WorkCellStatus } from '@/types/workCell.types';
 
 interface WorkCellProps {
-  type: 'Start' | 'Middle' | 'End';
-  status: 'Default' | 'Hover' | 'Active';
+  type: WorkCellType;
+  status: WorkCellStatus;
 }
 
 const WorkCell = ({ type, status }: WorkCellProps) => {

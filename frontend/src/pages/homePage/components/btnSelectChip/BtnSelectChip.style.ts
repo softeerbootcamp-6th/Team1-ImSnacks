@@ -3,16 +3,21 @@ import { Assets } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
+import type {
+  BtnSelectChipSizeType,
+  BtnSelectChipStatusType,
+} from '@/types/btnSelectChip.types';
 
-const SizeSamll = css`
-  height: 28px;
-`;
+const BtnSelectChipSizeStyle = {
+  Small: css`
+    height: 28px;
+  `,
+  Large: css`
+    height: 36px;
+  `,
+};
 
-const SizeLarge = css`
-  height: 36px;
-`;
-
-const BtnSelectChipStatus = {
+const BtnSelectChipStatusStyle = {
   Default: css`
     background-color: ${Assets.Global.Button.Default};
     color: ${Assets.Text.Button.SelectChip.Default};
@@ -44,27 +49,27 @@ const BtnSelectChipBase = css`
 `;
 
 export const BtnSelectChip = (
-  size: 'Small' | 'Large',
-  status: 'Default' | 'Pressed' | 'Hover' | 'Disabled'
+  size: BtnSelectChipSizeType,
+  status: BtnSelectChipStatusType
 ) => css`
   ${BtnSelectChipBase}
-  ${size === 'Small' ? SizeSamll : SizeLarge}
-  ${BtnSelectChipStatus[status]}
+  ${BtnSelectChipSizeStyle[size]}
+  ${BtnSelectChipStatusStyle[status]}
   
   &:hover {
-    ${BtnSelectChipStatus.Hover}
+    ${BtnSelectChipStatusStyle.Hover}
   }
 
   &:active {
-    ${BtnSelectChipStatus.Pressed}
+    ${BtnSelectChipStatusStyle.Pressed}
   }
 
   &:focus {
-    ${BtnSelectChipStatus.Pressed}
+    ${BtnSelectChipStatusStyle.Pressed}
   }
 
   &:disabled {
-    ${BtnSelectChipStatus.Disabled}
+    ${BtnSelectChipStatusStyle.Disabled}
   }
 `;
 

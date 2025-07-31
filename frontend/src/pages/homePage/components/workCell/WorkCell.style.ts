@@ -2,8 +2,9 @@ import { css } from '@emotion/react';
 import { ColorPrimary, Opacity } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Typography } from '@/styles/typography';
+import type { WorkCellType, WorkCellStatus } from '@/types/workCell.types';
 
-export const borderRadiusStyles = {
+const borderRadius = {
   Start: css`
     border-radius: ${BorderRadius.Base.Soft} 0 0 ${BorderRadius.Base.Soft};
   `,
@@ -15,7 +16,7 @@ export const borderRadiusStyles = {
   `,
 };
 
-export const statusStyles = {
+const WorkCellStatusStyle = {
   Default: css`
     background-color: ${Opacity.White.W200};
   `,
@@ -27,7 +28,7 @@ export const statusStyles = {
   `,
 };
 
-export const baseStyle = css`
+const baseStyle = css`
   width: 92px;
   height: 176px;
   transition: background-color 0.1s ease-in-out;
@@ -38,7 +39,7 @@ export const baseStyle = css`
   cursor: pointer;
 `;
 
-export const HoverCell = css`
+const HoverCell = css`
   ${Typography.Caption_S}
   color: ${ColorPrimary.B300};
   text-align: center;
@@ -49,22 +50,22 @@ export const HoverCell = css`
   gap: 4px;
 `;
 
-export const DragIcon = css`
+const DragIcon = css`
   width: 24px;
   height: 24px;
 `;
 
-export const workCell = (
-  type: 'Start' | 'Middle' | 'End',
-  status: 'Default' | 'Hover' | 'Active',
+const workCell = (
+  type: WorkCellType,
+  status: WorkCellStatus,
   isHovered: boolean
 ) => css`
   ${baseStyle}
-  ${borderRadiusStyles[type]}
-  ${isHovered ? statusStyles.Hover : statusStyles[status]}
+  ${borderRadius[type]}
+  ${isHovered ? WorkCellStatusStyle.Hover : WorkCellStatusStyle[status]}
 
   &:active {
-    ${statusStyles.Active}
+    ${WorkCellStatusStyle.Active}
   }
 `;
 
