@@ -1,6 +1,5 @@
 import { useRoutes, Outlet } from 'react-router';
 import Layout from '../layouts/Layout';
-import HomePage from '../pages/HomePage';
 import { css } from '@emotion/react';
 import { gradientStyles } from '../styles/gradientStyles';
 import HomePage from '../pages/homePage/HomePage';
