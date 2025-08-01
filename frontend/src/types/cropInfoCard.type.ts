@@ -1,6 +1,7 @@
 export type CropInfoCardType = {
   id: number;
   name: string;
-  lifeCycle: string;
-  date: number;
+  lifeCycleName: string;
+  lifeCycleStep: number;
+  duration: number;
 };
