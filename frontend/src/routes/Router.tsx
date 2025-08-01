@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout';
 import { css } from '@emotion/react';
 import { gradientStyles } from '@/styles/gradientStyles';
 import HomePage from '@/pages/homePage/HomePage';
+import MyFarmPage from '@/pages/myFarmPage/MyFarmPage';
 
 export const Router = () => {
   const routes = useRoutes([
@@ -33,7 +34,7 @@ export const Router = () => {
           path: 'weather-board',
         },
         {
-          element: <div>My Farm</div>,
+          element: <MyFarmPage />,
           path: 'my-farm',
         },
         {
