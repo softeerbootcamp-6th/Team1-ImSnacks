@@ -4,9 +4,10 @@ import PeachIcon from '@/assets/icons/crop/IcCropPeach.svg?react';
 import PearIcon from '@/assets/icons/crop/IcCropPear.svg?react';
 import MandarinIcon from '@/assets/icons/crop/IcCropMandarin.svg?react';
 import PersimmonIcon from '@/assets/icons/crop/IcCropPersimmon.svg?react';
+import type { CropNameType } from '@/types/crop.type';
 
-export const CropIcon: Record<
-  string,
+export const CROP_ICONS: Record<
+  CropNameType,
   React.FC<React.SVGProps<SVGSVGElement>>
 > = {
   포도: GrapeIcon,
