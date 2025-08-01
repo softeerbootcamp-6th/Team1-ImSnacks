@@ -1,4 +1,4 @@
-const navItems = [
+const NAVITEMS = [
   { title: '홈', path: '/' },
   { title: '날씨 정보', path: '/weather-board' },
   { title: '내 농장', path: '/my-farm' },
@@ -11,9 +11,7 @@ import Tab from './tab/Tab';
 import { Opacity } from '@/styles/colors';
 import Logo from '@/assets/icons/flat/IC24Logo.svg?react';
 
-const NavBar = () => {
-  const isWeatherPage = window.location.pathname === '/weather-board';
-
+const NavBar = ({ isWeatherPage }: { isWeatherPage: boolean }) => {
   return (
     <nav
       css={css`
@@ -25,7 +23,7 @@ const NavBar = () => {
         <Logo width={56} height={56} />
       </button>
       <ul css={S.NavBarContent}>
-        {navItems.map(item => (
+        {NAVITEMS.map(item => (
           <Tab
             key={item.path}
             path={item.path}
