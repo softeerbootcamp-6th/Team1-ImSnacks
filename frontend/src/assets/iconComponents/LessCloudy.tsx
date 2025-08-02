@@ -1,12 +1,6 @@
-import * as React from 'react';
 import type { SVGProps } from 'react';
 const SvgLessCloudy = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 192 160"
-    {...props}
-  >
+  <svg fill="none" viewBox="0 0 192 160" {...props}>
     <g filter="url(#LessCloudy_svg__a)">
       <circle
         cx={151.001}
@@ -88,7 +82,6 @@ const SvgLessCloudy = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={157.256} height={111.256} x={25.372} y={12.372}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(5.81px)',
           clipPath: 'url(#LessCloudy_svg__t)',
