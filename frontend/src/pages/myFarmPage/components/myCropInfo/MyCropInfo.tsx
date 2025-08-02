@@ -11,6 +11,7 @@ const MyCropInfo = () => {
       <MyFarmHeader
         title="내 작물 정보"
         Icon={<InfoIcon width={24} height={24} />}
+        toolTipContent={<div>작물의 현재 생육 단계를 확인할 수 있습니다</div>}
       />
       <div css={S.CropInfoCardContainer}>
         {crops.map(crop => (

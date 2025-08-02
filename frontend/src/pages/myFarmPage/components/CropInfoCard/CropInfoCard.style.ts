@@ -4,7 +4,7 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { Assets } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
-import { borderStyles } from '@/styles/customBorderGradientStyles';
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 
 const CropInfoCard = css`
   display: flex;
@@ -13,7 +13,7 @@ const CropInfoCard = css`
   width: 314px;
   height: 192px;
   border-radius: ${BorderRadius.Base.Hard};
-  ${borderStyles.gradientBorder}
+  ${customBorderGradientStyles.gradientBorder}
   background-color: ${Opacity.White.W100};
   padding: ${Spacing.Spacing500};
   gap: ${Spacing.Spacing300};

@@ -1,4 +1,4 @@
-import { borderStyles } from '@/styles/customBorderGradientStyles';
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { Assets, Opacity } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
@@ -10,7 +10,7 @@ const RegisterWorkContainer = css`
   border-radius: 16px;
   padding: ${Spacing.Spacing600} ${Spacing.Spacing800};
   background: ${Opacity.White.W600};
-  ${borderStyles.gradientBorder}
+  ${customBorderGradientStyles.gradientBorder}
   display: flex;
   flex-direction: row;
   justify-content: space-between;
