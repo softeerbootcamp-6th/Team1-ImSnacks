@@ -1,15 +1,8 @@
-import * as React from 'react';
 import type { SVGProps } from 'react';
 const SvgCloudy = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 196 170"
-    {...props}
-  >
+  <svg fill="none" viewBox="0 0 196 170" {...props}>
     <foreignObject width={53.468} height={41.468} x={30.266} y={20.266}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(4.87px)',
           clipPath: 'url(#Cloudy_svg__a)',
@@ -40,7 +33,6 @@ const SvgCloudy = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={157.256} height={111.256} x={37.372} y={6.372}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(5.81px)',
           clipPath: 'url(#Cloudy_svg__f)',
@@ -64,7 +56,6 @@ const SvgCloudy = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={63.468} height={49.468} x={138.266} y={72.266}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(4.87px)',
           clipPath: 'url(#Cloudy_svg__j)',

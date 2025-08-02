@@ -1,12 +1,6 @@
-import * as React from 'react';
 import type { SVGProps } from 'react';
 const SvgHeavyRain = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 169 144"
-    {...props}
-  >
+  <svg fill="none" viewBox="0 0 169 144" {...props}>
     <g filter="url(#HeavyRain_svg__a)">
       <path
         fill="#000"
@@ -184,7 +178,6 @@ const SvgHeavyRain = (props: SVGProps<SVGSVGElement>) => (
     />
     <foreignObject width={155.364} height={103.364} x={11.318} y={-6.682}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(3.99px)',
           clipPath: 'url(#HeavyRain_svg__H)',
