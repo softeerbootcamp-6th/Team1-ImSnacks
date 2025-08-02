@@ -1,4 +1,4 @@
-import { borderStyles } from '@/styles/borderStyles';
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { DropShadow } from '@/styles/effects';
 import { Spacing } from '@/styles/spacing';
 import { css } from '@emotion/react';
@@ -12,7 +12,7 @@ const GraphMenu = css`
   gap: ${Spacing.Spacing200};
 
   border-radius: 200px;
-  ${borderStyles.gradientBorder}
+  ${customBorderGradientStyles.gradientBorder}
   background: rgba(255, 255, 255, 0.4);
 
   ${DropShadow.Ds200};
