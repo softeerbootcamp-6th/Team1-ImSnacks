@@ -4,7 +4,7 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { Assets } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
-import { borderStyles } from '@/styles/borderStyles';
+import { borderStyles } from '@/styles/customBorderGradientStyles';
 
 const CropInfoCard = css`
   display: flex;

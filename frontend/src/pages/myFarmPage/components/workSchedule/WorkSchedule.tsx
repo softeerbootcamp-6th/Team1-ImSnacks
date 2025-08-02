@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import MyFarmHeader from '../myFarmHeader/MyFarmHeader';
 import { Spacing } from '@/styles/spacing';
 import { BorderRadius } from '@/styles/borderRadius';
-import { borderStyles } from '@/styles/borderStyles';
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { Opacity } from '@/styles/colors';
 
 const WorkSchedule = () => {
@@ -20,7 +20,7 @@ const WorkSchedule = () => {
           height: 770px;
           gap: ${Spacing.Spacing100};
           border-radius: ${BorderRadius.Base.S_Hard};
-          ${borderStyles.gradientBorder}
+          ${customBorderGradientStyles.gradientBorder}
           padding: ${Spacing.Spacing300};
           background-color: ${Opacity.White.W100};
         `}

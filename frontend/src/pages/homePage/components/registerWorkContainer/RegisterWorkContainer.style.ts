@@ -1,4 +1,4 @@
-import { borderStyles } from '@/styles/borderStyles';
+import { borderStyles } from '@/styles/customBorderGradientStyles';
 import { Assets, Opacity } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
