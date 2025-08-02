@@ -11,7 +11,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       css={css`
         display: flex;
         flex-direction: column;
-        padding: 0 200px;
+        align-items: center;
         height: 100vh;
         ${isWeatherPage
           ? gradientStyles.backgroundWeatherBoard
@@ -19,7 +19,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
       `}
     >
       <NavBar isWeatherPage={isWeatherPage} />
-      <main>{children}</main>
+      <main
+        css={css`
+          max-width: 1328px;
+        `}
+      >
+        {children}
+      </main>
     </div>
   );
 };
