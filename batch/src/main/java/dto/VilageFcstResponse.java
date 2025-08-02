@@ -8,7 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class VilageFcstResponse {
-    // getters, setters
     private Response response;
 
     @Setter
@@ -45,7 +44,6 @@ public class VilageFcstResponse {
     @Setter
     @Getter
     public static class Item {
-        // getters and setters
         private String baseDate;
         private String baseTime;
         private String category;
