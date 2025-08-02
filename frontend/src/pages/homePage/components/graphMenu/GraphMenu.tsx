@@ -4,19 +4,15 @@ import S from './GraphMenu.styles';
 const MENULIST = [
   {
     title: '강수량',
-    icon: 'IC24Rain.svg',
   },
   {
     title: '기온',
-    icon: 'IC24Temperature.svg',
   },
   {
     title: '습도',
-    icon: 'IC24Humidity.svg',
   },
   {
     title: '풍속',
-    icon: 'IC24Wind.svg',
   },
 ];
 
