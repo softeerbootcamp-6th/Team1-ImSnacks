@@ -14,5 +14,6 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponse, Short
         //TODO: WeatherRisk DTO 생성
         //전략 패턴으로 기상 특보 판단 로직 작성
 
+        return null;
     }
 }
