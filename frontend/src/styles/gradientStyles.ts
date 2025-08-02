@@ -10,7 +10,8 @@ export const gradientStyles = {
       ${Opacity.White.W0} ${Gradient.CardStroke.Angular.stops[0].position},
       ${Opacity.White.W1000} ${Gradient.CardStroke.Angular.stops[1].position},
       ${Opacity.White.W0} ${Gradient.CardStroke.Angular.stops[2].position},
-      ${Opacity.White.W1000} ${Gradient.CardStroke.Angular.stops[3].position}
+      ${Opacity.White.W1000} ${Gradient.CardStroke.Angular.stops[3].position},
+      ${Opacity.White.W0} 100%
     );
   `,
 

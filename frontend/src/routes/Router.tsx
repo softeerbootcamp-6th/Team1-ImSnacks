@@ -1,6 +1,7 @@
 import { useRoutes, Outlet } from 'react-router';
 import Layout from '@/layouts/Layout';
 import HomePage from '@/pages/homePage/HomePage';
+import MyFarmPage from '@/pages/myFarmPage/MyFarmPage';
 
 export const Router = () => {
   const routes = useRoutes([
@@ -21,7 +22,7 @@ export const Router = () => {
           path: 'weather-board',
         },
         {
-          element: <div>My Farm</div>,
+          element: <MyFarmPage />,
           path: 'my-farm',
         },
         {

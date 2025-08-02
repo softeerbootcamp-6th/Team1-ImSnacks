@@ -2,8 +2,10 @@ import { css } from '@emotion/react';
 import { Spacing } from '@/styles/spacing';
 import { Opacity } from '@/styles/colors';
 import { BackgroundBlur } from '@/styles/effects';
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 
 const NavBarWrapper = css`
+  ${customBorderGradientStyles.gradientBorder}
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
