@@ -53,6 +53,11 @@ export const Typography = {
     fontWeight: 400,
   },
 
+  Body_L_500: {
+    ...Body_L,
+    fontWeight: 500,
+  },
+
   Body_L_700: {
     ...Body_L,
     fontWeight: 700,

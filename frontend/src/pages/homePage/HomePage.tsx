@@ -1,21 +1,14 @@
-import { css } from '@emotion/react';
-import { gradientStyles } from '@/styles/gradientStyles';
 import RegisterWorkContainer from './components/registerWorkContainer/RegisterWorkContainer';
 import WorkContainer from './components/workContainer/WorkContainer';
+import HeadLine from './components/headLine/HeadLine';
+import MainPageGraph from './components/mainPageGraph/MainPageGraph';
+import S from './HomePage.styles';
 
 const HomePage = () => {
   return (
-    <div
-      css={css`
-        ${gradientStyles.backgroundAfternoonClear}
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      `}
-    >
+    <div css={S.MainPage}>
+      <HeadLine />
+      <MainPageGraph />
       <WorkContainer />
       <RegisterWorkContainer />
     </div>

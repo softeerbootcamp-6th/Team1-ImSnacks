@@ -1,13 +1,31 @@
 import type { ReactNode } from 'react';
-import GlobalStyles from '@/styles/GlobalStyles';
 import NavBar from './navBar/NavBar';
+import { gradientStyles } from '@/styles/gradientStyles';
+import { css } from '@emotion/react';
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const isWeatherPage = window.location.pathname === '/weather-board';
+
   return (
-    <div>
-      <GlobalStyles />
-      <NavBar />
-      <main>{children}</main>
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        ${isWeatherPage
+          ? gradientStyles.backgroundWeatherBoard
+          : gradientStyles.backgroundAfternoonClear}
+      `}
+    >
+      <NavBar isWeatherPage={isWeatherPage} />
+      <main
+        css={css`
+          max-width: 1328px;
+        `}
+      >
+        {children}
+      </main>
     </div>
   );
 };
