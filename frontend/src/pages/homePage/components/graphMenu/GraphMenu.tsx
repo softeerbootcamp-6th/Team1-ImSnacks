@@ -20,11 +20,21 @@ const MENULIST = [
   },
 ];
 
-const GraphMenu = () => {
+interface GraphMenuProps {
+  tabIndex: number;
+  setTabIndex: (index: number) => void;
+}
+const GraphMenu = ({ tabIndex, setTabIndex }: GraphMenuProps) => {
   return (
     <div css={S.GraphMenu}>
       {MENULIST.map((item, index) => (
-        <GraphMenuTab key={index} {...item} />
+        <GraphMenuTab
+          key={index}
+          {...item}
+          tabIndex={tabIndex}
+          setTabIndex={setTabIndex}
+          index={index}
+        />
       ))}
     </div>
   );

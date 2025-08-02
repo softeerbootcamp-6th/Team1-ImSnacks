@@ -1,11 +1,26 @@
+import { borderStyles } from '@/styles/borderStyles';
+import { DropShadow } from '@/styles/effects';
 import { Spacing } from '@/styles/spacing';
 import { css } from '@emotion/react';
 
 const GraphMenu = css`
   display: inline-flex;
-  padding:${Spacing.Spacing200}
-  align-items: flex-start;
+  padding: ${Spacing.Spacing200};
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   gap: ${Spacing.Spacing200};
+
+  border-radius: 200px;
+  ${borderStyles.gradientBorder}
+  background: rgba(255, 255, 255, 0.4);
+
+  ${DropShadow.Ds200};
+
+  position: absolute;
+  top: 0;
+  left: 12px;
+  z-index: 1;
 `;
 
 export default {
