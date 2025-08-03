@@ -1,7 +1,16 @@
 package com.ImSnacks.NyeoreumnagiBatch.writer.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Builder;
+
 @Entity
 @Table(name = "ShortTermWeatherForecast")
 @IdClass(ShortTermWeatherForecastId.class)
