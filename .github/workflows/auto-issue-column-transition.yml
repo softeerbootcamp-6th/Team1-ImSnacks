@@ -1,0 +1,46 @@
+name: Move issue to "Under Review" on PR creation
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  update-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move linked issue to "Under Review"
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}
+          script: |
+            const prBody = context.payload.pull_request.body;
+            const issueRegex = /(?:close|Fixes|Resolves) #(\d+)/gi;
+            let match;
+            while ((match = issueRegex.exec(prBody)) !== null) {
+              const issueNumber = match[1];
+              const issue = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber
+              });
+
+              const projects = await github.rest.projects.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              });
+
+              const projectId = projects.data.find(p => p.name === "ImSnacks's project")?.id;
+              if (!projectId) return;
+
+              const cards = await github.rest.projects.listCards({
+                column_id: ${{ secrets.UNDER_REVIEW_COLUMN_ID }},
+                per_page: 100
+              });
+
+              // 이슈를 Under Review로 이동
+              await github.rest.projects.moveCard({
+                card_id: issue.data.id,
+                column_id: ${{ secrets.UNDER_REVIEW_COLUMN_ID }} ,
+                position: 'top'
+              });
+            }
