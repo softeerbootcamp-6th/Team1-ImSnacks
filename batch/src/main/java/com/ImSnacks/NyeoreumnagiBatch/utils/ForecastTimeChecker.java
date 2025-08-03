@@ -1,5 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.utils;
 
+import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -17,4 +19,7 @@ public class ForecastTimeChecker {
         return secondsDiff >= 0 && secondsDiff <= 24 * 60 * 60;
     }
 
+    public static boolean isWithin24Hours(VilageFcstResponse.Item item) {
+        return isWithin24Hours(item.getBaseDate(), item.getBaseTime(), item.getFcstDate(), item.getFcstTime());
+    }
 }
