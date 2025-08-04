@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import WorkCell from '../workCell/WorkCell';
-import { WORK_CELL_STATUSES, WORK_CELL_TYPES } from '@/types/workCell.types';
+import { WORK_CELL_STATUSES, WORK_CELL_TYPES } from '@/types/workCell.type';
 
 const WorkContainer = () => {
   const workCells = [

@@ -1,5 +1,5 @@
 import { FLAT_ICON } from '@/constants/flatIcons';
-import S from './GraphMenuTab.styles';
+import S from './GraphMenuTab.style';
 import { Assets } from '@/styles/colors';
 
 interface GraphMenuTabProps {
