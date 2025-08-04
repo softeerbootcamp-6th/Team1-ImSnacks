@@ -1,15 +1,8 @@
-import * as React from 'react';
 import type { SVGProps } from 'react';
 const SvgWind = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 161 144"
-    {...props}
-  >
+  <svg fill="none" viewBox="0 0 161 144" {...props}>
     <foreignObject width={124.55} height={97.57} x={18.74} y={13.435}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(1.38px)',
           clipPath: 'url(#Wind_svg__a)',
@@ -43,7 +36,6 @@ const SvgWind = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={95.535} height={73.535} x={33.233} y={25.234}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(1.38px)',
           clipPath: 'url(#Wind_svg__g)',

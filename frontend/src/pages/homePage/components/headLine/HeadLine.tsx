@@ -1,5 +1,5 @@
 import { getSubjectParticle } from '@/utils/koreanParticleUtil';
-import S from './HeadLine.styles';
+import S from './HeadLine.style';
 import { LessCloudy } from '@/assets/iconComponents';
 import { css } from '@emotion/react';
 

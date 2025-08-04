@@ -2,7 +2,7 @@ import RegisterWorkContainer from './components/registerWorkContainer/RegisterWo
 import WorkContainer from './components/workContainer/WorkContainer';
 import HeadLine from './components/headLine/HeadLine';
 import MainPageGraph from './components/mainPageGraph/MainPageGraph';
-import S from './HomePage.styles';
+import S from './HomePage.style';
 
 const HomePage = () => {
   return (

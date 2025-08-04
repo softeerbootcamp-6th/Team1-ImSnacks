@@ -1,5 +1,5 @@
 import GraphMenuTab from '../graphMenuTab/GraphMenuTab';
-import S from './GraphMenu.styles';
+import S from './GraphMenu.style';
 
 const MENULIST = [
   {

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { ColorPrimary, Opacity } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Typography } from '@/styles/typography';
-import type { WorkCellType, WorkCellStatus } from '@/types/workCell.types';
+import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
 
 const borderRadius = {
   Start: css`
