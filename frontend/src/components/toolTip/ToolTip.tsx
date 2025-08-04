@@ -12,19 +12,32 @@ interface ToolTipProps {
 //TODO: shadow
 const ToolTip = ({ direction, content }: ToolTipProps) => {
   return (
-    <div
-      css={css`
-        min-height: 36px;
-        padding: ${Spacing.Spacing300};
-        background-color: ${GrayScale.White};
-        border-radius: ${BorderRadius.Base.S_Hard};
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      `}
-    >
-      {content}
+    <div>
+      <div
+        css={css`
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          background-color: red;
+          top: 15px;
+          left: 15px;
+        `}
+      ></div>
+      <div
+        css={css`
+          position: absolute;
+          min-height: 36px;
+          padding: ${Spacing.Spacing300};
+          background-color: ${GrayScale.White};
+          border-radius: ${BorderRadius.Base.S_Hard};
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        `}
+      >
+        {content}
+      </div>
     </div>
   );
 };
