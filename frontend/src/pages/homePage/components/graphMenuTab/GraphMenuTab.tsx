@@ -30,23 +30,11 @@ const GraphMenuTab = ({
       css={isActive ? S.GraphMenuTabActive : S.GraphMenuTabDefault}
     >
       {FlatIconComponent && (
-        <div
-          css={css`
-            svg path {
-              fill: ${isActive
-                ? '#FFFFFF'
-                : Assets.Global.Button.Default} !important;
-            }
-            button:hover & svg path {
-              fill: ${isActive ? '#FFFFFF' : '#FFFFFF'} !important;
-            }
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          `}
-        >
-          <FlatIconComponent width={24} height={24} />
-        </div>
+        <FlatIconComponent
+          width={24}
+          height={24}
+          color={isActive ? '#FFFFFF' : Assets.Global.Button.Default}
+        />
       )}
       {isActive && <span>{title}</span>}
     </button>
