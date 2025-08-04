@@ -3,7 +3,7 @@ description: 여러 작업을 포괄하는 상위 수준의 Epic 이슈 템플�
 title: "📝 Epic: <에픽 제목을 입력하세요>"
 labels: ["EPIC"]
 assignees: []
-project:["softeerbootcamp-6th/15"]
+projects: ["softeerbootcamp-6th/15"]
 body:
 
   - type: input
