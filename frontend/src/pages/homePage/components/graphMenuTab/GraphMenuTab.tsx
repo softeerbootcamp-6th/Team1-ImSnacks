@@ -1,7 +1,6 @@
 import { FLAT_ICON } from '@/constants/flatIcons';
 import S from './GraphMenuTab.styles';
 import { Assets } from '@/styles/colors';
-import { css } from '@emotion/react';
 
 interface GraphMenuTabProps {
   title: string;
