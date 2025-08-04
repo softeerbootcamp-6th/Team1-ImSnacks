@@ -15,7 +15,7 @@ public class ShortTermWeatherDto {
     private int ny;
 
     private List<WeatherForecastByTime> weatherForecastByTimeList;
-    private List<WeatherRisk> WeatherRiskList;
+    private List<WeatherRisk> weatherRiskList;
 
     @Getter
     @Builder
