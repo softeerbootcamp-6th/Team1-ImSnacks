@@ -32,7 +32,12 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponse, Short
         //TODO: WeatherRisk DTO 생성
         //전략 패턴으로 기상 특보 판단 로직 작성
 
-        return null;
+        return ShortTermWeatherDto.builder()
+                .nx(response.getWeatherInfo().get(0).getNx())
+                .ny(response.getWeatherInfo().get(0).getNy())
+                .weatherForecastByTimeList(weatherEntities)
+                .weatherForecastByTimeList(null)
+                .build();
     }
 
     private ShortTermWeatherDto.WeatherForecastByTime extractInfo(String fcstTimeStr, List<VilageFcstResponse.Item> weatherInfos) {
@@ -68,6 +73,16 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponse, Short
 
     private double parseDoubleOrDefault(String value, double defaultValue) {
         try {
+            if(value.equals("강수없음"))
+                return defaultValue;
+            if(value.equals("30.0~50.0mm"))
+                return 40;
+            if(value.equals("50.0mm 이상"))
+                return 50;
+            if(value.contains("mm")){
+                String valueWithoutUnit = value.substring(0, value.indexOf("mm"));
+                return Double.parseDouble(valueWithoutUnit);
+            }
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
             return defaultValue;
