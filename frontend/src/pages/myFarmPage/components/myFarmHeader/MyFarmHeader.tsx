@@ -1,14 +1,22 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import S from './MyFarmHeader.style';
+import ToolTip from '@/components/toolTip/ToolTip';
+import type { TooltipDirectionType } from '@/types/tooltip.type';
 
 interface MyFarmHeaderProps {
   title: string;
   Icon?: ReactNode;
   toolTipContent?: ReactNode;
+  toolTipDirection?: TooltipDirectionType;
 }
 
-const MyFarmHeader = ({ title, Icon, toolTipContent }: MyFarmHeaderProps) => {
+const MyFarmHeader = ({
+  title,
+  Icon,
+  toolTipContent,
+  toolTipDirection,
+}: MyFarmHeaderProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -21,8 +29,8 @@ const MyFarmHeader = ({ title, Icon, toolTipContent }: MyFarmHeaderProps) => {
           onMouseLeave={() => setShowTooltip(false)}
         >
           {Icon}
-          {showTooltip && toolTipContent && (
-            <div css={S.Tooltip}>{toolTipContent}</div>
+          {showTooltip && toolTipContent && toolTipDirection && (
+            <ToolTip direction={toolTipDirection} content={toolTipContent} />
           )}
         </div>
       )}

@@ -3,6 +3,7 @@ import CropInfoCard from '../cropInfoCard/CropInfoCard';
 import MyFarmHeader from '../myFarmHeader/MyFarmHeader';
 import S from './MyCropInfo.style';
 import InfoIcon from '@/assets/icons/flat/IC24Info.svg?react';
+import { TOOLTIP_DIRECTIONS } from '@/types/tooltip.type';
 
 const MyCropInfo = () => {
   const crops = CROPS;
@@ -11,7 +12,10 @@ const MyCropInfo = () => {
       <MyFarmHeader
         title="내 작물 정보"
         Icon={<InfoIcon width={24} height={24} />}
-        toolTipContent={<div>작물의 현재 생육 단계를 확인할 수 있습니다</div>}
+        toolTipContent={
+          <div>{`작물의 현재 생육 단계를\n확인할 수 있습니다`}</div>
+        }
+        toolTipDirection={TOOLTIP_DIRECTIONS.TOP}
       />
       <div css={S.CropInfoCardContainer}>
         {crops.map(crop => (
