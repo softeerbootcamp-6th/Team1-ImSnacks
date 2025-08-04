@@ -17,7 +17,7 @@ const NavBar = () => {
   return (
     <nav
       css={css`
-        ${S.NavBarWrapper}
+        ${S.NavBarWrapper(isWeatherPage)}
         ${isWeatherPage && `background: ${Opacity.G800['8o200']};`}
       `}
     >

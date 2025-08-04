@@ -4,8 +4,10 @@ import { Opacity } from '@/styles/colors';
 import { BackgroundBlur } from '@/styles/effects';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 
-const NavBarWrapper = css`
-  ${customBorderGradientStyles.gradientBorder}
+const NavBarWrapper = (isWeatherPage: boolean) => css`
+  ${isWeatherPage
+    ? customBorderGradientStyles.gradientBorderDark
+    : customBorderGradientStyles.gradientBorder}
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
