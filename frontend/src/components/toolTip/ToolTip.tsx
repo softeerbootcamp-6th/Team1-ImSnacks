@@ -9,7 +9,6 @@ interface ToolTipProps {
   content: ReactNode;
 }
 
-//TODO: shadow
 const ToolTip = ({ direction, content }: ToolTipProps) => {
   return (
     <div>
@@ -37,6 +36,7 @@ const ToolTip = ({ direction, content }: ToolTipProps) => {
         `}
       >
         {content}
+        {direction}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { BorderRadius } from '@/styles/borderRadius';
 import type {
   BtnSelectChipSize,
   BtnSelectChipStatus,
-} from '@/types/btnSelectChip.types';
+} from '@/types/btnSelectChip.type';
 
 const BtnSelectChipSizeStyle = {
   Small: css`

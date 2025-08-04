@@ -1,12 +1,6 @@
-import * as React from 'react';
 import type { SVGProps } from 'react';
 const SvgThunder = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 189 145"
-    {...props}
-  >
+  <svg fill="none" viewBox="0 0 189 145" {...props}>
     <g filter="url(#Thunder_svg__a)">
       <path
         fill="#000"
@@ -73,7 +67,6 @@ const SvgThunder = (props: SVGProps<SVGSVGElement>) => (
     />
     <foreignObject width={155.364} height={103.364} x={31.318} y={-4.682}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: 'blur(3.99px)',
           clipPath: 'url(#Thunder_svg__n)',

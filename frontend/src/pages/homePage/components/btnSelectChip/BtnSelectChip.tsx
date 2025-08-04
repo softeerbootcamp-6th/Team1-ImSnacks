@@ -5,7 +5,7 @@ import {
   BTN_SELECT_CHIP_STATUSES,
   type BtnSelectChipSize,
   type BtnSelectChipStatus,
-} from '@/types/btnSelectChip.types';
+} from '@/types/btnSelectChip.type';
 
 interface BtnSelectChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: BtnSelectChipSize;
