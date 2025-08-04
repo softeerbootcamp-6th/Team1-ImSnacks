@@ -1,0 +1,41 @@
+name: Epic Issue Template
+description: 여러 작업을 포괄하는 상위 수준의 Epic 이슈 템플릿
+title: "📝 Epic: <에픽 제목을 입력하세요>"
+labels: ["EPIC"]
+assignees: []
+project:["softeerbootcamp-6th/15"]
+body:
+
+  - type: input
+    id: epic-goal
+    attributes:
+      label: Epic 목표
+      description: 이 Epic의 최종 목표를 간결하게 서술하세요.
+      placeholder: 예) 사용자 인증 시스템 통합
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 상세 설명
+      description: Epic의 배경, 범위, 주요 내용 등을 상세히 작성하세요.
+      placeholder: |
+        - 왜 이 Epic이 필요한가?
+        - 어떤 시스템/기능과 연관되는가?
+        - 성공 기준은 무엇인가?
+
+  - type: textarea
+    id: child-issues
+    attributes:
+      label: 관련 하위 할 일 (이슈)
+      description: 이 Epic과 관련된 할 일들을 나열하세요.
+      placeholder: |
+        - [ ] 회원가입 화면 구현
+        - [ ] 로그인 API 연동
+
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 기타 참고 사항
+      description: 논의 내용, 참고 자료 링크 등을 추가로 적어두세요.
+      placeholder: 예) 관련 문서, 회의록 링크 등
