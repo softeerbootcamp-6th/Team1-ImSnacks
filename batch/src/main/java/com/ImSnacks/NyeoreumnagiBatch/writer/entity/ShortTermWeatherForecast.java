@@ -15,7 +15,6 @@ import lombok.Builder;
 @Table(name = "ShortTermWeatherForecast")
 @IdClass(ShortTermWeatherForecastId.class)
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

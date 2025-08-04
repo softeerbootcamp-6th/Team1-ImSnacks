@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "WeatherRisk")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
