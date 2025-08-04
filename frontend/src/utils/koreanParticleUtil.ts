@@ -13,9 +13,5 @@ export const hasFinalConsonant = (koreanString: string) => {
 
 // 해당 문자열 마지막 글자의 받침 여부에 따라 "이" 또는 "가" 리턴
 export const getSubjectParticle = (koreanString: string) => {
-  if (hasFinalConsonant(koreanString)) {
-    return '이';
-  } else {
-    return '가';
-  }
+  return hasFinalConsonant(koreanString) ? '이' : '가';
 };
