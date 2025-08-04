@@ -56,9 +56,8 @@ class WeatherWriterTest {
         return ShortTermWeatherDto.builder()
                 .nx(55)
                 .ny(127)
-                .fcstDate(LocalDate.of(2025, 8, 2))
                 .weatherForecastByTimeList(List.of(forecastByTime))
-                .WeatherRiskList(Collections.emptyList())
+                .weatherRiskList(Collections.emptyList())
                 .build();
     }
 
