@@ -6,7 +6,7 @@ export const ColorPrimary = {
   B400: '#4495F8',
   B500: '#147AF6',
   B600: '#096BE2',
-  B700: '#075481',
+  B700: '#0754B1',
   B800: '#053876',
   B900: '#03254E',
 };
@@ -67,8 +67,8 @@ export const Assets = {
   // Global/Button
   Global: {
     Button: {
-      Pressed: ColorPrimary.B700,
-      Default: GrayScale.White,
+      Default: GrayScale.G400,
+      Pressed: GrayScale.White,
       Hover: ColorPrimary.B300,
       Disabled: GrayScale.G200,
     },

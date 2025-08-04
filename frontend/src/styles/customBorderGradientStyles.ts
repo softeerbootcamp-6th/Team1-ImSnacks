@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { gradientStyles } from './gradientStyles';
 
-export const borderStyles = {
+export const customBorderGradientStyles = {
   gradientBorder: css`
     position: relative;
     overflow: hidden;
