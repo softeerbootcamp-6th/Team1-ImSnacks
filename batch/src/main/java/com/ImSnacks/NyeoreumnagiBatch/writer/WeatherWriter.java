@@ -24,14 +24,11 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
         List<WeatherRisk> weatherRisks = new ArrayList<>();
 
         List<? extends ShortTermWeatherDto> items = chunk.getItems();
-        int nx = items.get(0).getNx();
-        int ny = items.get(0).getNy();
-
         items.forEach(item -> {
             item.getWeatherForecastByTimeList().forEach(weatherForecastByTime -> {
                 forecasts.add(ShortTermWeatherForecast.builder()
-                        .nx(nx)
-                        .ny(ny)
+                        .nx(item.getNx())
+                        .ny(item.getNy())
                         .fcstTime(weatherForecastByTime.getFcstTime())
                         .precipitation(weatherForecastByTime.getPrecipitation())
                         .temperature(weatherForecastByTime.getTemperature())
