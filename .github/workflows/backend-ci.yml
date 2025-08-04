@@ -1,7 +1,7 @@
 name: backend-ci.yml
 
 on:
-  pull_request: # pull_request:
+  pull_request_target: # pull_request:
     branches: [ "be" ] # 브랜치 이름 변경
 
 permissions: write-all
