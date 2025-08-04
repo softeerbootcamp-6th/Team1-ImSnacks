@@ -1,6 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.writer.dto;
 
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,6 +20,7 @@ public class ShortTermWeatherDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
     public static class WeatherForecastByTime {
         private int fcstTime;
         private double precipitation;
