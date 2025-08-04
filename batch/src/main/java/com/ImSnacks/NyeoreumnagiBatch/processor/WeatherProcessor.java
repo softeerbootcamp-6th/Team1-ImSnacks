@@ -36,7 +36,7 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponse, Short
                 .nx(response.getWeatherInfo().get(0).getNx())
                 .ny(response.getWeatherInfo().get(0).getNy())
                 .weatherForecastByTimeList(weatherEntities)
-                .weatherForecastByTimeList(null)
+                .weatherRiskList(null)
                 .build();
     }
 

@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 public class ForecastTimeUtils {
 
     public static boolean isWithin24Hours(String baseDate, String baseTime, String fcstDate, String fcstTime) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
 
         LocalDateTime baseDateTime = LocalDateTime.parse(baseDate + baseTime, dateFormatter);
         LocalDateTime fcstDateTime = LocalDateTime.parse(fcstDate + fcstTime, dateFormatter);
