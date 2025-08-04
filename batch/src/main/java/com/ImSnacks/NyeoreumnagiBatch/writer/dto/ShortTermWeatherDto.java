@@ -13,7 +13,6 @@ import java.util.List;
 public class ShortTermWeatherDto {
     private int nx;
     private int ny;
-    private LocalDate fcstDate;
 
     private List<WeatherForecastByTime> weatherForecastByTimeList;
     private List<WeatherRisk> WeatherRiskList;
