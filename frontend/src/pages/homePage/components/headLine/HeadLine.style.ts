@@ -1,4 +1,6 @@
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
+import { DropShadow } from '@/styles/effects';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
@@ -27,11 +29,10 @@ const WeatherRisk = css`
 `;
 
 const WeatherRiskText = css`
-  border-radius: 8px;
-  border: 2px solid rgba(253, 254, 254, 0.4);
-  background: ${Opacity.White.W100};
-  box-shadow: 3px 0 4px 0 rgba(116, 98, 98, 0.08) inset,
-    0 3px 4px 0 rgba(0, 0, 0, 0.08) inset;
+  border-radius: 12px;
+  ${customBorderGradientStyles.gradientBorder};
+  background: ${Opacity.White.W200};
+  ${DropShadow.Ds200};
   padding: 2px 16px;
 `;
 
