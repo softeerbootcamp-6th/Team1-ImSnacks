@@ -3,7 +3,6 @@ import { GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
-import * as S from './ToolTip.style';
 
 interface ToolTipProps {
   direction: 'top' | 'bottom' | 'left' | 'right';
