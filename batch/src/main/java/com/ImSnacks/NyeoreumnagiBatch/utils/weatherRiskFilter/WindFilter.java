@@ -1,15 +1,18 @@
 package com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter;
 
+import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
-import dto.VilageFcstResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+@Component
 public class WindFilter implements WeatherRiskFilter{
     @Override
-    public List<ShortTermWeatherDto.WeatherRisk> filter(List<VilageFcstResponse.Item> metrics) {
-        List<ShortTermWeatherDto.WeatherRisk> risks = new ArrayList<>();
+    public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponse.Item>> metrics) {
+        List<ShortTermWeatherDto.WeatherRiskDto> risks = new ArrayList<>();
 
 
 

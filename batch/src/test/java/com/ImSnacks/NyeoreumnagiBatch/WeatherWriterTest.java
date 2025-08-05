@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +38,7 @@ class WeatherWriterTest {
     void write_shouldPersistWeatherForecasts() {
         // given
         int temperature = 26;
-        ShortTermWeatherDto.WeatherForecastByTime forecastByTime = createFakeWeatherForecastByTime(temperature);
+        ShortTermWeatherDto.WeatherForecastByTimeDto forecastByTime = createFakeWeatherForecastByTime(temperature);
         ShortTermWeatherDto weatherDto = createFakeWeatherDto(forecastByTime);
 
 
@@ -52,7 +51,7 @@ class WeatherWriterTest {
         assertEquals(temperature, all.get(0).getTemperature());
     }
 
-    private ShortTermWeatherDto createFakeWeatherDto(ShortTermWeatherDto.WeatherForecastByTime forecastByTime) {
+    private ShortTermWeatherDto createFakeWeatherDto(ShortTermWeatherDto.WeatherForecastByTimeDto forecastByTime) {
         return ShortTermWeatherDto.builder()
                 .nx(55)
                 .ny(127)
@@ -61,8 +60,8 @@ class WeatherWriterTest {
                 .build();
     }
 
-    private ShortTermWeatherDto.WeatherForecastByTime createFakeWeatherForecastByTime(int temperature) {
-        return ShortTermWeatherDto.WeatherForecastByTime.builder()
+    private ShortTermWeatherDto.WeatherForecastByTimeDto createFakeWeatherForecastByTime(int temperature) {
+        return ShortTermWeatherDto.WeatherForecastByTimeDto.builder()
                 .temperature(temperature)
                 .humidity(60)
                 .windSpeed(34.5)
