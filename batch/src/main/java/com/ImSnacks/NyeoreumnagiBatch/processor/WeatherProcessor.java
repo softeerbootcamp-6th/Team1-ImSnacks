@@ -12,13 +12,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class WeatherProcessor implements ItemProcessor<VilageFcstResponse, ShortTermWeatherDto> {
+    private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD");
+
     @Override
     public ShortTermWeatherDto process(VilageFcstResponse response) throws Exception {
         List<VilageFcstResponse.Item> within24HoursWeatherInfo = response.getWeatherInfo().stream()
                 .filter(ForecastTimeUtils::isWithin24Hours)
                 .toList();
 
-        Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD");
         Map<String, List<VilageFcstResponse.Item>> map = within24HoursWeatherInfo.stream()
                 .filter(item -> targetCategories.contains(item.getCategory()))
                 .collect(Collectors.groupingBy(VilageFcstResponse.Item::getFcstTime));

@@ -26,7 +26,7 @@ public class ForecastTimeUtils {
     //HHMM 형태의 문자열을 HH 정수형으로 반환
     public static int getIntegerFromAPITime(String apiTime) {
         if (apiTime.length() != 4) {
-            throw new IllegalArgumentException("시간 형식은 HHMM이어야 합니다.");
+            throw new IllegalArgumentException("시간 형식은 HHmm이어야 합니다.");
         }
         return Integer.parseInt(apiTime.substring(0, 2));
     }
