@@ -48,6 +48,7 @@ export const useWeeklyCalendar = () => {
   };
 
   const weekLabel = getWeekLabel();
+  const isCurrentWeek = getWeekLabel() === '이번 주';
 
   return {
     currentDate,
@@ -57,5 +58,6 @@ export const useWeeklyCalendar = () => {
     handleNextWeek,
     DateYYYYM,
     weekLabel,
+    isCurrentWeek,
   };
 };
