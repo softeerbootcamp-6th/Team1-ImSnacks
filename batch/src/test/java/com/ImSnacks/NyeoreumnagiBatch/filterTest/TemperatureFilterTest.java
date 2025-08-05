@@ -21,16 +21,13 @@ public class TemperatureFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "-5"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "-5")
         ));
         parameter.put("0200", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "-5"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "-5")
         ));
         parameter.put("0300", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0300", "-8"),
-                createItem("REH", "250805", "0000", "250805", "0300", "32")
+                createItem("TMP", "250805", "0000", "250805", "0300", "-8")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
@@ -46,16 +43,13 @@ public class TemperatureFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "31"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "31")
         ));
         parameter.put("0200", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "35"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "35")
         ));
         parameter.put("0300", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0300", "30"),
-                createItem("REH", "250805", "0000", "250805", "0300", "32")
+                createItem("TMP", "250805", "0000", "250805", "0300", "30")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
@@ -71,16 +65,13 @@ public class TemperatureFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "30"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "30")
         ));
         parameter.put("0200", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "-5"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "-5")
         ));
         parameter.put("0300", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0300", "-1"),
-                createItem("REH", "250805", "0000", "250805", "0300", "32")
+                createItem("TMP", "250805", "0000", "250805", "0300", "-1")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
@@ -93,20 +84,16 @@ public class TemperatureFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "-5"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "-5")
         ));
         parameter.put("0200", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "-5"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "-5")
         ));
         parameter.put("0400", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0300", "-8"),
-                createItem("REH", "250805", "0000", "250805", "0300", "32")
+                createItem("TMP", "250805", "0000", "250805", "0300", "-8")
         ));
         parameter.put("0500", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0300", "-8"),
-                createItem("REH", "250805", "0000", "250805", "0300", "32")
+                createItem("TMP", "250805", "0000", "250805", "0300", "-8")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
@@ -125,20 +112,16 @@ public class TemperatureFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "445"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "445")
         ));
         parameter.put("0200", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0100", "43"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("TMP", "250805", "0000", "250805", "0100", "43")
         ));
         parameter.put("0400", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0300", "76"),
-                createItem("REH", "250805", "0000", "250805", "0300", "32")
+                createItem("TMP", "250805", "0000", "250805", "0300", "76")
         ));
         parameter.put("0500", List.of(
-                createItem("TMP", "250805", "0000", "250805", "0500", "53"),
-                createItem("REH", "250805", "0000", "250805", "0500", "32")
+                createItem("TMP", "250805", "0000", "250805", "0500", "53")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);

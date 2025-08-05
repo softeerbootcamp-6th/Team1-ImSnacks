@@ -21,16 +21,13 @@ public class WindFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0100", "15"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("WSD", "250805", "0000", "250805", "0100", "15")
         ));
         parameter.put("0200", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0200", "25.4"),
-                createItem("REH", "250805", "0000", "250805", "0200", "32")
+                createItem("WSD", "250805", "0000", "250805", "0200", "25.4")
         ));
         parameter.put("0300", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0300", "3.2"),
-                createItem("REH", "250805", "0000", "250805", "0300", "32")
+                createItem("WSD", "250805", "0000", "250805", "0300", "3.2")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
@@ -46,20 +43,16 @@ public class WindFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0100", "15"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("WSD", "250805", "0000", "250805", "0100", "15")
         ));
         parameter.put("0200", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0200", "25.4"),
-                createItem("REH", "250805", "0000", "250805", "0200", "32")
+                createItem("WSD", "250805", "0000", "250805", "0200", "25.4")
         ));
         parameter.put("0400", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0400", "24.5"),
-                createItem("REH", "250805", "0000", "250805", "0400", "32")
+                createItem("WSD", "250805", "0000", "250805", "0400", "24.5")
         ));
         parameter.put("0500", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0500", "3.2"),
-                createItem("REH", "250805", "0000", "250805", "0500", "32")
+                createItem("WSD", "250805", "0000", "250805", "0500", "3.2")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
@@ -78,20 +71,16 @@ public class WindFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0100", "12"),
-                createItem("REH", "250805", "0000", "250805", "0100", "32")
+                createItem("WSD", "250805", "0000", "250805", "0100", "12")
         ));
         parameter.put("0200", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0200", "13"),
-                createItem("REH", "250805", "0000", "250805", "0200", "32")
+                createItem("WSD", "250805", "0000", "250805", "0200", "13")
         ));
         parameter.put("0400", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0400", "2"),
-                createItem("REH", "250805", "0000", "250805", "0400", "32")
+                createItem("WSD", "250805", "0000", "250805", "0400", "2")
         ));
         parameter.put("0500", List.of(
-                createItem("WSD", "250805", "0000", "250805", "0500", "3.2"),
-                createItem("REH", "250805", "0000", "250805", "0500", "32")
+                createItem("WSD", "250805", "0000", "250805", "0500", "3.2")
         ));
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);

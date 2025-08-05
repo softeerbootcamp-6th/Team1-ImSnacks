@@ -21,16 +21,13 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                createItem("REH", "250805", "0000", "250804", "0100", "32")
+                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
         ));
         parameter.put("0200", List.of(
-                createItem("PCP", "250805", "0000", "250804", "0100", "19mm"),
-                createItem("REH", "250805", "0000", "250804", "0100", "32")
+                createItem("PCP", "250805", "0000", "250804", "0100", "19mm")
         ));
         parameter.put("0300", List.of(
-                createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm"),
-                createItem("REH", "250805", "0000", "250804", "0100", "32")
+                createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm")
         ));
 
         //when
@@ -48,16 +45,13 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0300", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 )
         );
 
@@ -76,16 +70,13 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
                 "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
                 "0300", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 )
         );
 
@@ -104,20 +95,16 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
-                createItem("PCP", "250805", "0000", "250804", "0100", "1.7mm"),
-                createItem("REH", "250805", "0000", "250804", "0100", "32")
+                createItem("PCP", "250805", "0000", "250804", "0100", "1.7mm")
         ));
         parameter.put("0200", List.of(
-                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                createItem("REH", "250805", "0000", "250804", "0100", "32")
+                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
         ));
         parameter.put("0400", List.of(
-                createItem("PCP", "250805", "0000", "250804", "0100", "19.0mm"),
-                createItem("REH", "250805", "0000", "250804", "0100", "32")
+                createItem("PCP", "250805", "0000", "250804", "0100", "19.0mm")
         ));
         parameter.put("0500", List.of(
-                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                createItem("REH", "250805", "0000", "250804", "0100", "32")
+                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
         ));
 
         //when
@@ -138,20 +125,16 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0400", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0500", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 )
         );
 
@@ -173,20 +156,16 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
                 "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
                 "0400", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
                 "0500", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 )
         );
 
@@ -208,24 +187,19 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0300", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
                 ),
                 "0400", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
                 ),
                 "0500", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm")
                 )
         );
 
@@ -247,24 +221,19 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
                 "0300", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
                 "0400", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
                 ),
                 "0500", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm")
                 )
         );
 
@@ -289,20 +258,16 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "강수없음"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "강수없음")
                 ),
                 "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "강수없음"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "강수없음")
                 ),
                 "0300", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "0"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "0")
                 ),
                 "0500", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "0"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "0")
                 )
         );
 
@@ -318,16 +283,13 @@ public class RainFilterTest {
         //given
         Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
                 "2300", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
                 ),
                 "0000", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
                 ),
                 "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
                 )
         );
 
