@@ -314,6 +314,34 @@ public class RainFilterTest {
         assertThat(response.size()).isEqualTo(0);
     }
 
+    @Test
+    void 다음날로_넘어가는_경우(){
+        //given
+        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+                "2300", List.of(
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
+                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                ),
+                "0000", List.of(
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
+                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                ),
+                "0100", List.of(
+                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
+                        createItem("REH", "250805", "0000", "250804", "0100", "32")
+                )
+        );
+
+        //when
+        List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
+
+        //then
+        assertThat(response.size()).isEqualTo(1);
+        assertThat(response.get(0).getStartTime()).isEqualTo(23);
+        assertThat(response.get(0).getEndTime()).isEqualTo(1);
+        assertThat(response.get(0).getName()).isEqualTo(WeatherRiskType.RAIN);
+    }
+
     private VilageFcstResponse.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
         VilageFcstResponse.Item item = new VilageFcstResponse.Item();
         item.setCategory(category);
