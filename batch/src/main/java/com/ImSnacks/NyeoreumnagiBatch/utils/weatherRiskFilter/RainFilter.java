@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 @Component
-public class RainFilter implements WeatherRiskFilter{
+public class RainFilter extends WeatherRiskFilter{
     private static final String metricCategory = "PCP";
     private static final Map<WeatherRiskType, Predicate<String>> weatherRiskMapper = Map.of(
             WeatherRiskType.TORRENTIAL_RAIN, value -> value.equals("50.0mm 이상"),
@@ -27,46 +27,14 @@ public class RainFilter implements WeatherRiskFilter{
                     for(Map.Entry<WeatherRiskType, Predicate<String>> entry : weatherRiskMapper.entrySet()){
                         if(entry.getValue().test(item.getFcstValue())){
                             riskPerTime.put(ForecastTimeUtils.getIntegerFromAPITime(k), entry.getKey());
+                            break;
                         }
                     }
                 }
+                break;
             }
         });
 
         return groupingSameContinuousRisk(riskPerTime);
-    }
-
-    private List<ShortTermWeatherDto.WeatherRiskDto> groupingSameContinuousRisk(Map<Integer, WeatherRiskType> riskPerTime){
-        List<ShortTermWeatherDto.WeatherRiskDto> risks = new ArrayList<>();
-
-        if (!riskPerTime.isEmpty()) {
-            List<Integer> sortedTimes = new ArrayList<>(riskPerTime.keySet());
-            Collections.sort(sortedTimes);
-
-            Integer startTime = null;
-            Integer prevTime = null;
-            WeatherRiskType currentType = null;
-
-            for (Integer time : sortedTimes) {
-                WeatherRiskType type = riskPerTime.get(time);
-                if (currentType == null) {
-                    startTime = time;
-                    prevTime = time;
-                    currentType = type;
-                } else if (type.equals(currentType) && time == prevTime + 1) { // 연속되는 시간 & 같은 type
-                    prevTime = time;
-                } else {
-                    risks.add(new ShortTermWeatherDto.WeatherRiskDto(startTime, prevTime, currentType));
-                    startTime = time;
-                    prevTime = time;
-                    currentType = type;
-                }
-            }
-            if (startTime != null && currentType != null) {
-                risks.add(new ShortTermWeatherDto.WeatherRiskDto(startTime, prevTime, currentType));
-            }
-        }
-
-        return risks;
     }
 }

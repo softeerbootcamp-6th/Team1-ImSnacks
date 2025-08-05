@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class WindFilter implements WeatherRiskFilter{
+public class WindFilter extends WeatherRiskFilter{
     @Override
     public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponse.Item>> metrics) {
         List<ShortTermWeatherDto.WeatherRiskDto> risks = new ArrayList<>();
