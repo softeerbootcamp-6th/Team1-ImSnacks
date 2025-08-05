@@ -1,44 +1,26 @@
-import { BorderRadius } from '@/styles/borderRadius';
-import { GrayScale } from '@/styles/colors';
-import { Spacing } from '@/styles/spacing';
-import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
+import ArrowIcon from '@/assets/icons/flat/Arrow.svg?react';
+import S from './ToolTip.style';
+import type { TooltipDirectionType, TooltipType } from '@/types/tooltip.type';
 
 interface ToolTipProps {
-  direction: 'top' | 'bottom' | 'left' | 'right';
+  direction: TooltipDirectionType;
   content: ReactNode;
+  type: TooltipType;
 }
 
-const ToolTip = ({ direction, content }: ToolTipProps) => {
+const ToolTip = ({ direction, content, type }: ToolTipProps) => {
   return (
-    <div>
-      <div
-        css={css`
-          position: absolute;
-          width: 30px;
-          height: 30px;
-          background-color: red;
-          top: 15px;
-          left: 15px;
-        `}
-      ></div>
-      <div
-        css={css`
-          position: absolute;
-          min-height: 36px;
-          padding: ${Spacing.Spacing300};
-          background-color: ${GrayScale.White};
-          border-radius: ${BorderRadius.Base.S_Hard};
-          box-sizing: border-box;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        `}
-      >
+    <>
+      <div css={S.ToolTip(direction, type)}>
+        <ArrowIcon
+          css={S.TooltipArrow(direction, type)}
+          width={20}
+          height={20}
+        />
         {content}
-        {direction}
       </div>
-    </div>
+    </>
   );
 };
 
