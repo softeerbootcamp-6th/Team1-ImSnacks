@@ -6,11 +6,9 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 @Component
@@ -23,7 +21,6 @@ public class WindFilter extends WeatherRiskFilter{
     @Override
     public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponse.Item>> metrics) {
         Map<Integer, WeatherRiskType> riskPerTime = new HashMap<>();
-
         metrics.forEach((k, v) -> {
             VilageFcstResponse.Item item = v.stream()
                     .filter(i -> i.getCategory().equals(metricCategory))
@@ -40,7 +37,6 @@ public class WindFilter extends WeatherRiskFilter{
                 }
             }
         });
-
         return groupingSameContinuousRisk(riskPerTime);
     }
 }

@@ -7,6 +7,7 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,20 +19,19 @@ public class RainFilterTest {
     @Test
     void 비에_해당하는_응답만_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
-                "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
-                ),
-                "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "19mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
-                ),
-                "0300", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
-                )
-        );
+        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        parameter.put("0100", List.of(
+                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
+                createItem("REH", "250805", "0000", "250804", "0100", "32")
+        ));
+        parameter.put("0200", List.of(
+                createItem("PCP", "250805", "0000", "250804", "0100", "19mm"),
+                createItem("REH", "250805", "0000", "250804", "0100", "32")
+        ));
+        parameter.put("0300", List.of(
+                createItem("PCP", "250805", "0000", "250804", "0100", "1.5mm"),
+                createItem("REH", "250805", "0000", "250804", "0100", "32")
+        ));
 
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
@@ -102,24 +102,23 @@ public class RainFilterTest {
     @Test
     void 비에_해당하는_응답이_여러구간_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
-                "0100", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1.7mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
-                ),
-                "0200", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
-                ),
-                "0400", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "19.0mm"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
-                ),
-                "0500", List.of(
-                        createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
-                        createItem("REH", "250805", "0000", "250804", "0100", "32")
-                )
-        );
+        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        parameter.put("0100", List.of(
+                createItem("PCP", "250805", "0000", "250804", "0100", "1.7mm"),
+                createItem("REH", "250805", "0000", "250804", "0100", "32")
+        ));
+        parameter.put("0200", List.of(
+                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
+                createItem("REH", "250805", "0000", "250804", "0100", "32")
+        ));
+        parameter.put("0400", List.of(
+                createItem("PCP", "250805", "0000", "250804", "0100", "19.0mm"),
+                createItem("REH", "250805", "0000", "250804", "0100", "32")
+        ));
+        parameter.put("0500", List.of(
+                createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만"),
+                createItem("REH", "250805", "0000", "250804", "0100", "32")
+        ));
 
         //when
         List<ShortTermWeatherDto.WeatherRiskDto> response = filter.filtering(parameter);
