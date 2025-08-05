@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -14,13 +13,13 @@ public class ShortTermWeatherDto {
     private int nx;
     private int ny;
 
-    private List<WeatherForecastByTime> weatherForecastByTimeList;
-    private List<WeatherRisk> weatherRiskList;
+    private List<WeatherForecastByTimeDto> weatherForecastByTimeList;
+    private List<WeatherRiskDto> weatherRiskList;
 
     @Getter
     @Builder
     @AllArgsConstructor
-    public static class WeatherForecastByTime {
+    public static class WeatherForecastByTimeDto {
         private int fcstTime;
         private double precipitation;
         private int temperature;
@@ -30,7 +29,7 @@ public class ShortTermWeatherDto {
 
     @Getter
     @Builder
-    public static class WeatherRisk {
+    public static class WeatherRiskDto {
         private int startTime;
         private int endTime;
         private WeatherRiskType name;
