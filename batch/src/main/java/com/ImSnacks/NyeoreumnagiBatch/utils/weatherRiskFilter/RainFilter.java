@@ -22,19 +22,21 @@ public class RainFilter extends WeatherRiskFilter{
     public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponse.Item>> metrics) {
         Map<Integer, WeatherRiskType> riskPerTime = new HashMap<>();
         metrics.forEach((k, v) -> {
-            for(VilageFcstResponse.Item item : v){
-                if(item.getCategory().equals(metricCategory)){
-                    for(Map.Entry<WeatherRiskType, Predicate<String>> entry : weatherRiskMapper.entrySet()){
-                        if(entry.getValue().test(item.getFcstValue())){
-                            riskPerTime.put(ForecastTimeUtils.getIntegerFromAPITime(k), entry.getKey());
-                            break;
-                        }
-                    }
+            VilageFcstResponse.Item item = v.stream()
+                    .filter(i -> i.getCategory().equals(metricCategory))
+                    .findFirst()
+                    .orElse(null);
+
+            if(item == null)
+                return;
+
+            for(Map.Entry<WeatherRiskType, Predicate<String>> entry : weatherRiskMapper.entrySet()){
+                if(entry.getValue().test(item.getFcstValue())){
+                    riskPerTime.put(ForecastTimeUtils.getIntegerFromAPITime(k), entry.getKey());
+                    break;
                 }
-                break;
             }
         });
-
         return groupingSameContinuousRisk(riskPerTime);
     }
 }
