@@ -1,9 +1,9 @@
 import { BorderRadius } from '@/styles/borderRadius';
-import { Assets, GrayScale } from '@/styles/colors';
+import { Assets, ColorPrimary, GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
-import type { TooltipDirectionType } from '@/types/tooltip.type';
+import type { TooltipDirectionType, TooltipType } from '@/types/tooltip.type';
 
 const tooltipPosition = {
   Top: css`
@@ -51,17 +51,43 @@ const tooltipArrowPosition = {
   `,
 };
 
-const ToolTip = (direction: TooltipDirectionType) => css`
+const tooltipColorByType = {
+  Default: css`
+    background-color: ${GrayScale.White};
+    color: ${Assets.Text.ToolTip.Default};
+  `,
+  Working: css`
+    background-color: ${GrayScale.White};
+    color: ${Assets.Text.ToolTip.Neighbor};
+  `,
+  Neighbor: css`
+    background-color: ${ColorPrimary.B300};
+    color: ${Assets.Text.ToolTip.Neighbor};
+  `,
+};
+
+const TooltipArrowColorByType = {
+  Default: css`
+    color: ${GrayScale.White};
+  `,
+  Working: css`
+    color: ${GrayScale.White};
+  `,
+  Neighbor: css`
+    color: ${ColorPrimary.B300};
+  `,
+};
+
+const ToolTip = (direction: TooltipDirectionType, type: TooltipType) => css`
   position: absolute;
   ${tooltipPosition[direction]}
-  color: ${Assets.Text.ToolTip.Default};
+  ${tooltipColorByType[type]};
   ${Typography.Caption_S}
   z-index: 10;
 
   min-height: 36px;
   white-space: pre;
   padding: ${Spacing.Spacing300};
-  background-color: ${GrayScale.White};
   border-radius: ${BorderRadius.Base.S_Hard};
   box-sizing: border-box;
   display: inline-flex;
@@ -70,10 +96,11 @@ const ToolTip = (direction: TooltipDirectionType) => css`
   justify-content: center;
 `;
 
-const TooltipArrowPosition = (direction: TooltipDirectionType) =>
+const TooltipArrow = (direction: TooltipDirectionType, type: TooltipType) =>
   css`
     position: absolute;
     ${tooltipArrowPosition[direction]}
+    ${TooltipArrowColorByType[type]}
   `;
 
-export default { ToolTip, TooltipArrowPosition };
+export default { ToolTip, TooltipArrow };

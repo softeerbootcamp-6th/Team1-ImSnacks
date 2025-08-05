@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import S from './MyFarmHeader.style';
 import ToolTip from '@/components/toolTip/ToolTip';
-import type { TooltipDirectionType } from '@/types/tooltip.type';
+import { TOOLTIP_TYPES, type TooltipDirectionType } from '@/types/tooltip.type';
 import useToolTip from '@/hooks/useToolTip';
 
 interface MyFarmHeaderProps {
@@ -30,7 +30,11 @@ const MyFarmHeader = ({
         >
           {Icon}
           {showTooltip && toolTipContent && toolTipDirection && (
-            <ToolTip direction={toolTipDirection} content={toolTipContent} />
+            <ToolTip
+              direction={toolTipDirection}
+              content={toolTipContent}
+              type={TOOLTIP_TYPES.DEFAULT}
+            />
           )}
         </div>
       )}
