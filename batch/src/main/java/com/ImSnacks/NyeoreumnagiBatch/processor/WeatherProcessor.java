@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +32,11 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponse, Short
         //필요한 metric만 뽑아서 시간별로 그룹핑
         Map<String, List<VilageFcstResponse.Item>> map = within24HoursWeatherInfo.stream()
                 .filter(item -> targetCategories.contains(item.getCategory()))
-                .collect(Collectors.groupingBy(VilageFcstResponse.Item::getFcstTime));
+                .collect(Collectors.groupingBy(
+                        VilageFcstResponse.Item::getFcstTime,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
 
         //DTO mapping
         List<ShortTermWeatherDto.WeatherForecastByTimeDto> weatherEntities = new ArrayList<>();
