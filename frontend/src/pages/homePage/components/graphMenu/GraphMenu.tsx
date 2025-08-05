@@ -1,20 +1,6 @@
 import GraphMenuTab from '../graphMenuTab/GraphMenuTab';
 import S from './GraphMenu.style';
-
-const MENULIST = [
-  {
-    title: '강수량',
-  },
-  {
-    title: '기온',
-  },
-  {
-    title: '습도',
-  },
-  {
-    title: '풍속',
-  },
-];
+import { MENU_LIST } from '@/constants/graphMenu';
 
 interface GraphMenuProps {
   tabIndex: number;
@@ -23,7 +9,7 @@ interface GraphMenuProps {
 const GraphMenu = ({ tabIndex, setTabIndex }: GraphMenuProps) => {
   return (
     <div css={S.GraphMenu}>
-      {MENULIST.map((item, index) => (
+      {MENU_LIST.map((item, index) => (
         <GraphMenuTab
           key={index}
           {...item}
