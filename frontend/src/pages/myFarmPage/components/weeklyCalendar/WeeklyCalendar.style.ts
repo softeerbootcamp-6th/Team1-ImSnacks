@@ -64,8 +64,11 @@ const DayNameContainer = (dayName: string) => css`
 `;
 
 const DateWorkContainer = css`
+  padding: ${Spacing.Spacing200};
+  gap: ${Spacing.Spacing200};
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
 `;
 
 export default {
