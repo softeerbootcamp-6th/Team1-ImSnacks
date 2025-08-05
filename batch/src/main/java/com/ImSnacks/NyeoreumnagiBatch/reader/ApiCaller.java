@@ -1,8 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -13,7 +11,6 @@ import static com.ImSnacks.NyeoreumnagiBatch.reader.ApiRequestValues.*;
 
 @Component
 public class ApiCaller {
-    private static final Logger log = LoggerFactory.getLogger(ApiCaller.class);
     @Value("${api.service.key}")
     private String serviceKey;
 
