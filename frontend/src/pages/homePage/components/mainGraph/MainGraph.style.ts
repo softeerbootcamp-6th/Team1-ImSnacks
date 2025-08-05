@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const MainPageGraph = css`
+const MainGraph = css`
   margin-top: 32px;
   width: 1356px;
   height: 338px;
@@ -15,5 +15,5 @@ const MainPageGraph = css`
 `;
 
 export default {
-  MainPageGraph,
+  MainGraph,
 };
