@@ -5,20 +5,13 @@ const NAVITEMS = [
   { title: '마이 페이지', path: '/my-page' },
 ];
 
-import { css } from '@emotion/react';
 import S from './NavBar.styles';
 import Tab from './tab/Tab';
-import { Opacity } from '@/styles/colors';
 import Logo from '@/assets/icons/flat/IC24Logo.svg?react';
 
 const NavBar = ({ isWeatherPage }: { isWeatherPage: boolean }) => {
   return (
-    <nav
-      css={css`
-        ${S.NavBarWrapper(isWeatherPage)}
-        ${isWeatherPage && `background: ${Opacity.G800['8o200']};`}
-      `}
-    >
+    <nav css={S.NavBarWrapper(isWeatherPage)}>
       <button css={S.LogoStyle}>
         <Logo width={56} height={56} />
       </button>

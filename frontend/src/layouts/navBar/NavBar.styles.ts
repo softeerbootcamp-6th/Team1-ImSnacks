@@ -6,8 +6,15 @@ import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles'
 
 const NavBarWrapper = (isWeatherPage: boolean) => css`
   ${isWeatherPage
-    ? customBorderGradientStyles.gradientBorderDark
-    : customBorderGradientStyles.gradientBorder}
+    ? css`
+        ${customBorderGradientStyles.gradientBorderDark}
+        background-color: ${Opacity.G800['8o200']};
+      `
+    : css`
+        ${customBorderGradientStyles.gradientBorder}
+        background-color: ${Opacity.White.W400};
+      `}
+
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
@@ -19,7 +26,6 @@ const NavBarWrapper = (isWeatherPage: boolean) => css`
   align-items: center;
   gap: ${Spacing.Spacing300};
   border-radius: 32px;
-  background: ${Opacity.White.W400};
 
   ${BackgroundBlur.BgBlur100}
   z-index: 1000;
