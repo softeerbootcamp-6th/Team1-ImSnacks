@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import MyFarmHeader from '../myFarmHeader/MyFarmHeader';
-import WeeklyCalendar from './WeeklyCalendar';
-import WeekNavigator from './WeekNavigator';
+import WeeklyCalendar from '../weeklyCalendar/WeeklyCalendar';
+import WeekNavigator from '../weekNavigator/WeekNavigator';
 import { useWeeklyCalendar } from '../../../../hooks/useWeeklyCalendar';
 import { Spacing } from '@/styles/spacing';
 import { BorderRadius } from '@/styles/borderRadius';
@@ -18,6 +18,7 @@ const WorkSchedule = () => {
     handleNextWeek,
     DateYYYYM,
     weekLabel,
+    isCurrentWeek,
   } = useWeeklyCalendar();
 
   return (
@@ -53,6 +54,7 @@ const WorkSchedule = () => {
             weekLabel={weekLabel}
             onPreviousWeek={handlePreviousWeek}
             onNextWeek={handleNextWeek}
+            isCurrentWeek={isCurrentWeek}
           />
         </div>
         <WeeklyCalendar

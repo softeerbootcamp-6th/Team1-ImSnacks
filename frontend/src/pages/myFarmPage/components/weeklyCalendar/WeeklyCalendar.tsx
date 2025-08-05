@@ -4,6 +4,7 @@ import 'dayjs/locale/ko';
 import { Spacing } from '@/styles/spacing';
 import { GrayScale, ColorStatus, ColorPrimary } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
+import { BorderRadius } from '@/styles/borderRadius';
 
 // 한국어 locale 설정
 dayjs.locale('ko');
@@ -78,7 +79,7 @@ const WeeklyCalendar = ({
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border-radius: 8px;
+                border-radius: ${BorderRadius.Base.Hard};
                 ${Typography.Body_L_500}
                 color: ${isCurrentMonth ? GrayScale.G900 : GrayScale.G400};
                 background-color: ${isToday ? GrayScale.G100 : 'transparent'};
