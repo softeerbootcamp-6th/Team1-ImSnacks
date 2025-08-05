@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import S from './MyFarmHeader.style';
 import ToolTip from '@/components/toolTip/ToolTip';
 import { TOOLTIP_TYPES, type TooltipDirectionType } from '@/types/tooltip.type';
-import useVisible from '@/hooks/useVisible';
+import useVisibility from '@/hooks/useVisibility';
 
 interface MyFarmHeaderProps {
   title: string;
@@ -17,17 +17,13 @@ const MyFarmHeader = ({
   toolTipContent,
   toolTipDirection,
 }: MyFarmHeaderProps) => {
-  const { isVisible, handleMouseEnter, handleMouseLeave } = useVisible();
+  const { isVisible, show, hide } = useVisibility();
 
   return (
     <div css={S.MyFarmHeader}>
       <div>{title}</div>
       {Icon && (
-        <div
-          css={S.IconContainer}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
+        <div css={S.IconContainer} onMouseEnter={show} onMouseLeave={hide}>
           {Icon}
           {isVisible && toolTipContent && toolTipDirection && (
             <ToolTip
