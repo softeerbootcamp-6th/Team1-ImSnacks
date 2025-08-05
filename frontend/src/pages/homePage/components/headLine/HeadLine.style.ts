@@ -8,6 +8,8 @@ const Headline = css`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 124px;
+  position: relative;
 `;
 
 const GreetingMessage = css`
@@ -37,7 +39,6 @@ const HeadlineWeather = css`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: ${Spacing.Spacing900};
 `;
 
 const HeadlineDate = css`
@@ -46,6 +47,14 @@ const HeadlineDate = css`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin-right: 200px;
+`;
+
+const HeadlineWeatherIcon = css`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 `;
 
 export default {
@@ -55,4 +64,5 @@ export default {
   WeatherRiskText,
   HeadlineWeather,
   HeadlineDate,
+  HeadlineWeatherIcon,
 };
