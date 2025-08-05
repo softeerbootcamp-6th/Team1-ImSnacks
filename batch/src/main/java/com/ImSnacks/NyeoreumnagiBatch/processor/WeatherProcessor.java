@@ -6,6 +6,7 @@ import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class WeatherProcessor implements ItemProcessor<VilageFcstResponse, ShortTermWeatherDto> {
     private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD");

@@ -4,14 +4,18 @@ import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
 import com.ImSnacks.NyeoreumnagiBatch.processor.WeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@SpringBootTest
 public class WeatherProcessorTest {
 
-    private final WeatherProcessor processor = new WeatherProcessor();
+    @Autowired
+    private WeatherProcessor processor;
 
     @Test
     void 네가지_카테고리만_있고_24시간_내의_데이터만_있을_때_엔티티_매핑_성공() throws Exception {
