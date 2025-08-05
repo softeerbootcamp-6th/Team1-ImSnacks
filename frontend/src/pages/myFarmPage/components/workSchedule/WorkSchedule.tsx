@@ -1,5 +1,8 @@
 import { css } from '@emotion/react';
 import MyFarmHeader from '../myFarmHeader/MyFarmHeader';
+import WeeklyCalendar from './WeeklyCalendar';
+import WeekNavigator from './WeekNavigator';
+import { useWeeklyCalendar } from '../../../../hooks/useWeeklyCalendar';
 import { Spacing } from '@/styles/spacing';
 import { BorderRadius } from '@/styles/borderRadius';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
@@ -7,6 +10,16 @@ import { GrayScale, Opacity } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
 
 const WorkSchedule = () => {
+  const {
+    currentDate,
+    dayNames,
+    weekDates,
+    handlePreviousWeek,
+    handleNextWeek,
+    DateYYYYM,
+    weekLabel,
+  } = useWeeklyCalendar();
+
   return (
     <div
       css={css`
@@ -27,13 +40,26 @@ const WorkSchedule = () => {
       >
         <div
           css={css`
-            color: ${GrayScale.White};
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             ${Typography.Body_L_500}
-            padding: 0 ${Spacing.Spacing100} ${Spacing.Spacing100} 0;
+            color: ${GrayScale.White};
+            padding: 0 ${Spacing.Spacing400} 0 ${Spacing.Spacing400};
           `}
         >
-          2025년 8월
+          <span>{DateYYYYM}</span>
+          <WeekNavigator
+            weekLabel={weekLabel}
+            onPreviousWeek={handlePreviousWeek}
+            onNextWeek={handleNextWeek}
+          />
         </div>
+        <WeeklyCalendar
+          currentDate={currentDate}
+          weekDates={weekDates}
+          dayNames={dayNames}
+        />
       </div>
     </div>
   );
