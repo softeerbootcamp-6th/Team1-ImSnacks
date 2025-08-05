@@ -33,10 +33,10 @@ public class RainFilter implements WeatherRiskFilter{
             }
         });
 
-        return groupingSameContinuouRisk(riskPerTime);
+        return groupingSameContinuousRisk(riskPerTime);
     }
 
-    private List<ShortTermWeatherDto.WeatherRiskDto> groupingSameContinuouRisk(Map<Integer, WeatherRiskType> riskPerTime){
+    private List<ShortTermWeatherDto.WeatherRiskDto> groupingSameContinuousRisk(Map<Integer, WeatherRiskType> riskPerTime){
         List<ShortTermWeatherDto.WeatherRiskDto> risks = new ArrayList<>();
 
         if (!riskPerTime.isEmpty()) {
