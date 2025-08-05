@@ -5,48 +5,48 @@ import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 import type { TooltipDirectionType, TooltipType } from '@/types/tooltip.type';
 
-const tooltipPosition = {
-  Top: css`
-    top: -60px;
+export const tooltipPosition = {
+  Top: (offset = 60) => css`
+    top: -${offset}px;
     left: 50%;
     transform: translateX(-50%);
   `,
-  Bottom: css`
-    bottom: -50px;
+  Bottom: (offset = 50) => css`
+    bottom: -${offset}px;
     left: 50%;
     transform: translateX(-50%);
   `,
-  Left: css`
+  Left: (offset = 40) => css`
     top: 50%;
-    right: 40px;
+    right: ${offset}px;
     transform: translateY(-50%);
   `,
-  Right: css`
+  Right: (offset = 40) => css`
     top: 50%;
-    left: 40px;
+    left: ${offset}px;
     transform: translateY(-50%);
   `,
 };
 
-const tooltipArrowPosition = {
-  Top: css`
-    bottom: -10px;
+export const tooltipArrowPosition = {
+  Top: (offset = -10) => css`
+    bottom: ${offset}px;
     left: 50%;
     transform: translateX(-50%);
   `,
-  Bottom: css`
-    top: -10px;
+  Bottom: (offset = -10) => css`
+    top: -${offset}px;
     left: 50%;
     transform: translateX(-50%) rotate(180deg);
   `,
-  Left: css`
+  Left: (offset = -10) => css`
     top: 50%;
-    right: -10px;
+    right: ${offset}px;
     transform: translateY(-50%) rotate(-90deg);
   `,
-  Right: css`
+  Right: (offset = -10) => css`
     top: 50%;
-    left: -10px;
+    left: ${offset}px;
     transform: translateY(-50%) rotate(90deg);
   `,
 };
@@ -80,7 +80,7 @@ const TooltipArrowColorByType = {
 
 const ToolTip = (direction: TooltipDirectionType, type: TooltipType) => css`
   position: absolute;
-  ${tooltipPosition[direction]}
+  ${tooltipPosition[direction]()}
   ${tooltipColorByType[type]};
   ${Typography.Caption_S}
   z-index: 10;
@@ -99,7 +99,7 @@ const ToolTip = (direction: TooltipDirectionType, type: TooltipType) => css`
 const TooltipArrow = (direction: TooltipDirectionType, type: TooltipType) =>
   css`
     position: absolute;
-    ${tooltipArrowPosition[direction]}
+    ${tooltipArrowPosition[direction]()}
     ${TooltipArrowColorByType[type]}
   `;
 
