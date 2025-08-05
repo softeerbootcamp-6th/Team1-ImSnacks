@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import S from './MyFarmHeader.style';
 import ToolTip from '@/components/toolTip/ToolTip';
 import { TOOLTIP_TYPES, type TooltipDirectionType } from '@/types/tooltip.type';
-import useHover from '@/hooks/useHover';
+import useVisible from '@/hooks/useVisible';
 
 interface MyFarmHeaderProps {
   title: string;
@@ -17,7 +17,7 @@ const MyFarmHeader = ({
   toolTipContent,
   toolTipDirection,
 }: MyFarmHeaderProps) => {
-  const { isHovered, handleMouseEnter, handleMouseLeave } = useHover();
+  const { isVisible, handleMouseEnter, handleMouseLeave } = useVisible();
 
   return (
     <div css={S.MyFarmHeader}>
@@ -29,7 +29,7 @@ const MyFarmHeader = ({
           onMouseLeave={handleMouseLeave}
         >
           {Icon}
-          {isHovered && toolTipContent && toolTipDirection && (
+          {isVisible && toolTipContent && toolTipDirection && (
             <ToolTip
               direction={toolTipDirection}
               content={toolTipContent}
