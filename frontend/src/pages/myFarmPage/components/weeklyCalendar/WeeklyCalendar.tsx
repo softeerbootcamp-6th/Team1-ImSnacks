@@ -18,7 +18,7 @@ const WeeklyCalendar = ({ weekDates }: WeeklyCalendarProps) => {
 
           return (
             <div key={index} css={S.DateContainer}>
-              <div css={S.DateInfoContainer(dayName, isToday)}>
+              <div css={S.DateInfoContainer}>
                 <div css={S.DayNameContainer(dayName)}>{dayName}</div>
                 <div css={S.DateNumberContainer(dayName, isToday)}>
                   {dayjs(date).date()}

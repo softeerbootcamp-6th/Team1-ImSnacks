@@ -6,7 +6,7 @@ import { Typography } from '@/styles/typography';
 
 const WeeklyNavigator = css`
   display: flex;
-  min-width: 108px;
+  min-width: 120px;
   height: 32px;
   align-items: center;
   justify-content: space-between;

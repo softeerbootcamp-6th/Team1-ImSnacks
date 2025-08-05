@@ -4,6 +4,7 @@ import { GrayScale, ColorStatus, ColorPrimary, Opacity } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
+import { FlexStyles } from '@/styles/commonStyles';
 
 const getDayColor = (dayName: string, isToday = false) => {
   if (isToday) return GrayScale.White;
@@ -29,23 +30,19 @@ const DayContainer = css`
   gap: ${Spacing.Spacing100};
 `;
 
+const DateInfoContainer = css`
+  ${FlexStyles.flexColumn}
+  justify-content: center;
+  gap: ${Spacing.Spacing100};
+  width: 100%;
+  border-bottom: 1px solid ${GrayScale.G300};
+  padding: ${Spacing.Spacing200} 0;
+`;
+
 const DateContainer = css`
   border-right: 1px solid ${GrayScale.G300};
   height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const DateInfoContainer = (dayName: string, isToday = false) => css`
-  width: 36px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: ${BorderRadius.Base.Hard};
-  ${Typography.Body_L_500}
-  background-color: ${isToday ? ColorPrimary.B400 : 'transparent'};
-  color: ${getDayColor(dayName, isToday)};
+  ${FlexStyles.flexColumn}
 `;
 
 const DateNumberContainer = (dayName: string, isToday = false) => css`
@@ -69,7 +66,6 @@ const DayNameContainer = (dayName: string) => css`
 const DateWorkContainer = css`
   width: 100%;
   height: 100%;
-  border-right: 1px solid ${GrayScale.G300};
 `;
 
 export default {
