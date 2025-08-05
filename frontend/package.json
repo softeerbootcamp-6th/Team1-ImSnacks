@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "svgr": "npx @svgr/cli -d src/assets/iconComponents --ignore-existing --typescript --no-dimensions src/assets/icons/glass",
-    "prepare": "husky"
+    "prepare": "cd .. && husky"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
