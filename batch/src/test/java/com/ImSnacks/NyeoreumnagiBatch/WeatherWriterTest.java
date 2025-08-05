@@ -6,6 +6,7 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
 import com.ImSnacks.NyeoreumnagiBatch.writer.repository.WeatherRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.item.Chunk;
@@ -20,8 +21,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@Transactional
-@Rollback
 class WeatherWriterTest {
     @Autowired
     private WeatherRepository weatherRepository;
@@ -33,6 +32,12 @@ class WeatherWriterTest {
     @BeforeEach
     void setUp() {
         writer = new WeatherWriter(weatherRepository, weatherRiskRepository);
+    }
+
+    @AfterEach
+    void tearDown() {
+        weatherRepository.deleteAll();
+        weatherRiskRepository.deleteAll();
     }
 
     @Test
