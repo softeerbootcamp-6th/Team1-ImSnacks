@@ -1,21 +1,21 @@
+import type { WeatherMetrics } from '@/types/weather.types';
 import GraphMenuTab from '../graphMenuTab/GraphMenuTab';
 import S from './GraphMenu.style';
 import { MENU_LIST } from '@/constants/graphMenu';
 
 interface GraphMenuProps {
-  tabIndex: number;
-  setTabIndex: (index: number) => void;
+  currentTab: WeatherMetrics;
+  setCurrentTab: (tab: WeatherMetrics) => void;
 }
-const GraphMenu = ({ tabIndex, setTabIndex }: GraphMenuProps) => {
+const GraphMenu = ({ currentTab, setCurrentTab }: GraphMenuProps) => {
   return (
     <div css={S.GraphMenu}>
-      {MENU_LIST.map((item, index) => (
+      {MENU_LIST.map(item => (
         <GraphMenuTab
-          key={index}
+          key={item.weatherMetric}
           {...item}
-          tabIndex={tabIndex}
-          setTabIndex={setTabIndex}
-          index={index}
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
         />
       ))}
     </div>
