@@ -29,6 +29,7 @@ public class ShortTermWeatherDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
     public static class WeatherRiskDto {
         private int startTime;
         private int endTime;
