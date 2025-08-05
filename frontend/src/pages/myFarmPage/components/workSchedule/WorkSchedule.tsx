@@ -11,8 +11,6 @@ import { Typography } from '@/styles/typography';
 
 const WorkSchedule = () => {
   const {
-    currentDate,
-    dayNames,
     weekDates,
     handlePreviousWeek,
     handleNextWeek,
@@ -32,10 +30,12 @@ const WorkSchedule = () => {
       <div
         css={css`
           height: 770px;
-          gap: ${Spacing.Spacing100};
+          display: flex;
+          flex-direction: column;
           border-radius: ${BorderRadius.Base.S_Hard};
           ${customBorderGradientStyles.gradientBorder}
           padding: ${Spacing.Spacing300};
+          gap: ${Spacing.Spacing300};
           background-color: ${Opacity.White.W100};
         `}
       >
@@ -57,11 +57,7 @@ const WorkSchedule = () => {
             isCurrentWeek={isCurrentWeek}
           />
         </div>
-        <WeeklyCalendar
-          currentDate={currentDate}
-          weekDates={weekDates}
-          dayNames={dayNames}
-        />
+        <WeeklyCalendar weekDates={weekDates} />
       </div>
     </div>
   );

@@ -8,10 +8,6 @@ dayjs.locale('ko');
 export const useWeeklyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const dayNames = Array.from({ length: 7 }, (_, i) =>
-    dayjs().day(i).format('ddd')
-  );
-
   const getWeekDates = (date: Date) => {
     const startOfWeek = dayjs(date).startOf('week');
 
@@ -52,7 +48,6 @@ export const useWeeklyCalendar = () => {
 
   return {
     currentDate,
-    dayNames,
     weekDates,
     handlePreviousWeek,
     handleNextWeek,

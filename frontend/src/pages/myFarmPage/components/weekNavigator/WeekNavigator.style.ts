@@ -21,12 +21,12 @@ const WeeklyNavigator = css`
 const onNextWeekButton = (isCurrentWeek: boolean) => css`
   background: none;
   border: none;
-  color: ${isCurrentWeek ? GrayScale.G500 : GrayScale.White};
+
   cursor: ${isCurrentWeek ? 'not-allowed' : 'pointer'};
+  opacity: ${isCurrentWeek ? 0.2 : 1};
   padding: ${Spacing.Spacing100};
   border-radius: ${BorderRadius.Base.Hard};
   transition: background-color 0.2s ease;
-  opacity: ${isCurrentWeek ? 0.5 : 1};
 
   &:hover {
     background-color: ${isCurrentWeek ? 'transparent' : Opacity.White.W200};
