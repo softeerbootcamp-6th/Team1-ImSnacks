@@ -16,7 +16,7 @@ public class WeatherJobScheduler {
     private final JobLauncher jobLauncher;
     private final Job weatherJob;
 
-    //2시부터 3시간 간격으로 11분마다 매일
+    //2시부터 3시간 간격으로 15분마다 매일
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
     public void runWeatherJob() throws Exception {
         JobParameters params = WeatherJobParams.get();
