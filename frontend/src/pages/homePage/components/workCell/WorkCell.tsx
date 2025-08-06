@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import DragIcon from '@/assets/icons/flat/IC24Drag.svg?react';
+import { IC24DragIcon } from '@/assets/icons/flat';
 import S from './WorkCell.style';
 import { ColorPrimary } from '@/styles/colors';
 import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
@@ -21,7 +21,7 @@ const WorkCell = ({ type, status }: WorkCellProps) => {
       {isHovered && (
         <div css={S.HoverCell}>
           <div css={S.DragIcon}>
-            <DragIcon width={24} height={24} fill={ColorPrimary.B300} />
+            <IC24DragIcon width={24} height={24} fill={ColorPrimary.B300} />
           </div>
           작업 일정을{'\n'}드래그 하세요
         </div>

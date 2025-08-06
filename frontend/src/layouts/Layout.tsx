@@ -12,7 +12,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 100vh;
+        height: 100%;
         ${isWeatherPage
           ? gradientStyles.backgroundWeatherBoard
           : gradientStyles.backgroundAfternoonClear}

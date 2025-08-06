@@ -78,9 +78,13 @@ const TooltipArrowColorByType = {
   `,
 };
 
-const ToolTip = (direction: TooltipDirectionType, type: TooltipType) => css`
+const ToolTip = (
+  direction: TooltipDirectionType,
+  type: TooltipType,
+  offset?: number
+) => css`
   position: absolute;
-  ${tooltipPosition[direction]()}
+  ${tooltipPosition[direction](offset)}
   ${tooltipColorByType[type]};
   ${Typography.Caption_S}
   z-index: 10;
@@ -96,10 +100,14 @@ const ToolTip = (direction: TooltipDirectionType, type: TooltipType) => css`
   justify-content: center;
 `;
 
-const TooltipArrow = (direction: TooltipDirectionType, type: TooltipType) =>
+const TooltipArrow = (
+  direction: TooltipDirectionType,
+  type: TooltipType,
+  offset?: number
+) =>
   css`
     position: absolute;
-    ${tooltipArrowPosition[direction]()}
+    ${tooltipArrowPosition[direction](offset)}
     ${TooltipArrowColorByType[type]}
   `;
 
