@@ -16,7 +16,7 @@ public class MyWork {
 //    @ManyToOne
 //    private Member member;
 
-    @OneToOne
+    @ManyToOne
     private RecommendedWork recommendedWork;
 
     @Column(name = "start_time", nullable = false)
