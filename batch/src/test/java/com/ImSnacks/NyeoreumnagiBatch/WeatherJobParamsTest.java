@@ -8,6 +8,6 @@ public class WeatherJobParamsTest {
     @Test
     void 현재_기준_호출_시_JobParams_출력() {
         JobParameters params = WeatherJobParams.get();
-        System.out.println(params.toString());
+        //System.out.println(params.toString());
     }
 }
