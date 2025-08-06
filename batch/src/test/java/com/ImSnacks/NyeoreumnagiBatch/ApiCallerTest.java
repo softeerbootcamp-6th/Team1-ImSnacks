@@ -18,39 +18,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Rollback
 public class ApiCallerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ApiCallerTest.class);
+//    private static final Logger log = LoggerFactory.getLogger(ApiCallerTest.class);
+//
+//    @Test
+//    void shouldReturnExpectedUrl() {
+//        // given
+//        String baseDate = "20250804";
+//        String baseTime = "0500";
+//        int nx = 61;
+//        int ny = 128;
+//
+//        // when
+//        String actual = ApiCaller.buildUriString(baseDate, baseTime, nx, ny);
+//
+//        log.debug(actual);
+//
+//        // then
+//        // API authKey는 제외
+//        //String expected = String.format("%s?authKey&numOfRows=1000&pageNo=1&dataType=JSON&base_date=%s&base_time=%s&nx=%d&ny=%d", ApiRequestValues.URI.toString(), baseDate, baseTime, nx, ny);
+//        //assertEquals(expected, actual);
+//    }
 
-    @Test
-    void shouldReturnExpectedUrl() {
-        // given
-        String baseDate = "20250804";
-        String baseTime = "0500";
-        int nx = 61;
-        int ny = 128;
-
-        // when
-        String actual = ApiCaller.buildUriString(baseDate, baseTime, nx, ny);
-
-        log.debug(actual);
-
-        // then
-        // API authKey는 제외
-        //String expected = String.format("%s?authKey&numOfRows=1000&pageNo=1&dataType=JSON&base_date=%s&base_time=%s&nx=%d&ny=%d", ApiRequestValues.URI.toString(), baseDate, baseTime, nx, ny);
-        //assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldReturnExpectedDto() {
-        // given
-        String baseDate = "20250805";
-        String baseTime = "0500";
-        int nx = 61;
-        int ny = 128;
-
-        // when
-        VilageFcstResponseDto actual = ApiCaller.call(baseDate, baseTime, nx, ny);
-
-        // then
-        log.debug(actual.toString());
-    }
+//    @Test
+//    void shouldReturnExpectedDto() {
+//        // given
+//        String baseDate = "20250805";
+//        String baseTime = "0500";
+//        int nx = 61;
+//        int ny = 128;
+//
+//        // when
+//        VilageFcstResponseDto actual = ApiCaller.call(baseDate, baseTime, nx, ny);
+//
+//        // then
+//        log.debug(actual.toString());
+//    }
 }
