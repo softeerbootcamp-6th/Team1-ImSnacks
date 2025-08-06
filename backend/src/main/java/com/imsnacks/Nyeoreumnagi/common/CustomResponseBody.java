@@ -1,10 +1,8 @@
 package com.imsnacks.Nyeoreumnagi.common;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 
-@Data
-@RequiredArgsConstructor
+@Getter
 public class CustomResponseBody<T> {
     private int code;
     private String msg;
