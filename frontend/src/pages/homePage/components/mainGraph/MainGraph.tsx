@@ -108,6 +108,19 @@ const graphData = {
   ],
 };
 
+const weatherRiskData = [
+  {
+    category: '호우',
+    startTime: '10',
+    endTime: '12',
+  },
+  {
+    category: '폭염',
+    startTime: '12',
+    endTime: '14',
+  },
+];
+
 const MainGraph = () => {
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.PRECIPITATION
@@ -116,7 +129,7 @@ const MainGraph = () => {
   return (
     <div css={S.MainGraph}>
       <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
-      <MainLineChart graphData={graphData} />
+      <MainLineChart graphData={graphData} weatherRiskData={weatherRiskData} />
     </div>
   );
 };
