@@ -1,8 +1,8 @@
 package com.ImSnacks.NyeoreumnagiBatch.filterTest;
 
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.TemperatureFilter;
-import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.WeatherRiskFilter;
+import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.TemperatureFilter;
+import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
 import org.junit.jupiter.api.Test;

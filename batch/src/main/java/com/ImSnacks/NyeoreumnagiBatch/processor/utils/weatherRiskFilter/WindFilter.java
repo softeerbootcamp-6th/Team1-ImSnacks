@@ -1,7 +1,7 @@
-package com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter;
+package com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter;
 
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.utils.ForecastTimeUtils;
+import com.ImSnacks.NyeoreumnagiBatch.processor.utils.ForecastTimeUtils;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
 import org.springframework.stereotype.Component;

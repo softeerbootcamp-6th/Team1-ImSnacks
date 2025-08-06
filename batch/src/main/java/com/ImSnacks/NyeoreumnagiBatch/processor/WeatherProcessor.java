@@ -1,8 +1,8 @@
 package com.ImSnacks.NyeoreumnagiBatch.processor;
 
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.utils.ForecastTimeUtils;
-import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.WeatherRiskFilter;
+import com.ImSnacks.NyeoreumnagiBatch.processor.utils.ForecastTimeUtils;
+import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
