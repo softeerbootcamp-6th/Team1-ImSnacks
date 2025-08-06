@@ -16,7 +16,7 @@ public class WeatherJobParams {
     public static JobParameters get() {
         String baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String baseTime = String.format("%02d00", getBaseTime());
-        return new JobParametersBuilder.
+        return new JobParametersBuilder()
                 .addString(ApiRequestValues.BASE_DATE.toString(), baseDate)
                 .addString(ApiRequestValues.BASE_TIME.toString(), baseTime)
                 .toJobParameters();
