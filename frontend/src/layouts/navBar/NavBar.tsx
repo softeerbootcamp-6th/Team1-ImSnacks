@@ -7,13 +7,13 @@ const NAVITEMS = [
 
 import S from './NavBar.styles';
 import Tab from './tab/Tab';
-import Logo from '@/assets/icons/flat/IC24Logo.svg?react';
+import { IC24LogoIcon } from '@/assets/icons/flat';
 
 const NavBar = ({ isWeatherPage }: { isWeatherPage: boolean }) => {
   return (
     <nav css={S.NavBarWrapper(isWeatherPage)}>
       <button css={S.LogoStyle}>
-        <Logo width={56} height={56} />
+        <IC24LogoIcon width={56} height={56} />
       </button>
       <ul css={S.NavBarContent}>
         {NAVITEMS.map(item => (

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import ArrowIcon from '@/assets/icons/flat/Arrow.svg?react';
+import { ArrowIcon } from '@/assets/icons/flat';
 import S from './ToolTip.style';
 import type { TooltipDirectionType, TooltipType } from '@/types/tooltip.type';
 
