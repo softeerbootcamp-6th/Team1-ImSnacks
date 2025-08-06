@@ -1,3 +1,5 @@
+import convertHexToRGBA from '@/utils/converHexToRGBA';
+
 // Primary Colors - Blue Palette
 export const ColorPrimary = {
   B100: '#E2EEFD',
@@ -163,8 +165,8 @@ export const Opacity = {
     '9o400': 'rgba(56, 61, 72, 0.4)',
   },
   Green: {
-    Gr200: 'rgba(56, 61, 72, 0.4)',
-    Gr400: 'rgba(56, 61, 72, 0.4)',
+    Gr200: convertHexToRGBA(ColorStatus.Global.Green, 0.2),
+    Gr400: convertHexToRGBA(ColorStatus.Global.Green, 0.4),
   },
 };
 
