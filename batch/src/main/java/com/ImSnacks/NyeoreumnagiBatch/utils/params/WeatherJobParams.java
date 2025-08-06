@@ -14,21 +14,30 @@ public class WeatherJobParams {
     private static final List<Integer> BASE_TIMES = Arrays.asList(2, 5, 8, 11, 14, 17, 20, 23);
 
     public static JobParameters get() {
-        String baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String baseTime = String.format("%02d00", getBaseTime());
+        LocalDate nowDate = LocalDate.now();
+        int nowHour = LocalTime.now().getHour();
+        if (nowHour < 2) { // 00시, 01시의 경우, 전날 23시를 base로 한다.
+            nowHour = 23;
+            nowDate = nowDate.minusDays(1);
+        }
+
+        String baseDate = nowDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String baseTime = String.format("%02d00", getBaseTime(nowHour));
         return new JobParametersBuilder()
                 .addString(ApiRequestValues.BASE_DATE.toString(), baseDate)
                 .addString(ApiRequestValues.BASE_TIME.toString(), baseTime)
                 .toJobParameters();
     }
 
-    private static int getBaseTime() {
-        int nowHour = LocalTime.now().getHour();
-        for (int t : BASE_TIMES) {
+    private static int getBaseTime(int nowHour) {
+        assert (nowHour >= 2);
+        for (int i = BASE_TIMES.size() - 1; i >= 0; --i) {
+            int t = BASE_TIMES.get(i);
             if (t <= nowHour) {
                 return t;
             }
         }
-        return BASE_TIMES.get(BASE_TIMES.size() - 1);
+        assert (false);
+        return 0;
     }
 }
