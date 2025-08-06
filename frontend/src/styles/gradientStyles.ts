@@ -19,11 +19,11 @@ export const gradientStyles = {
   cardStrokeDarkAngular: css`
     background: conic-gradient(
       from 0deg at 50% 50%,
-      ${Opacity.White.W100} 10%,
+      ${Opacity.G900['9o0']} 10%,
       ${GrayScale.G900} 35%,
-      ${Opacity.White.W100} 60%,
+      ${Opacity.G900['9o0']} 60%,
       ${GrayScale.G900} 85%,
-      ${Opacity.White.W100} 100%
+      ${Opacity.G900['9o0']} 100%
     );
   `,
 

@@ -37,7 +37,9 @@ export const customBorderGradientStyles = {
       bottom: 0;
       padding: 1px;
       ${gradientStyles.cardStrokeDarkAngular}
+
       border-radius: inherit;
+      pointer-events: none;
       -webkit-mask: linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
       -webkit-mask-composite: destination-out;

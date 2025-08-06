@@ -4,8 +4,17 @@ import { Opacity } from '@/styles/colors';
 import { BackgroundBlur } from '@/styles/effects';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 
-const NavBarWrapper = css`
-  ${customBorderGradientStyles.gradientBorder}
+const NavBarWrapper = (isWeatherPage: boolean) => css`
+  ${isWeatherPage
+    ? css`
+        ${customBorderGradientStyles.gradientBorderDark}
+        background-color: ${Opacity.G800['8o200']};
+      `
+    : css`
+        ${customBorderGradientStyles.gradientBorder}
+        background-color: ${Opacity.White.W400};
+      `}
+
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
@@ -17,7 +26,6 @@ const NavBarWrapper = css`
   align-items: center;
   gap: ${Spacing.Spacing300};
   border-radius: 32px;
-  background: ${Opacity.White.W400};
 
   ${BackgroundBlur.BgBlur100}
   z-index: 1000;
