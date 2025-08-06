@@ -11,7 +11,7 @@ CREATE TABLE `Farm` (
                         `ny`	int4	NOT NULL
 );
 
-CREATE TABLE UniqueNxNy (
+CREATE TABLE Unique_Nx_Ny (
                             nx INT NOT NULL,
                             ny INT NOT NULL,
                             UNIQUE (nx, ny)

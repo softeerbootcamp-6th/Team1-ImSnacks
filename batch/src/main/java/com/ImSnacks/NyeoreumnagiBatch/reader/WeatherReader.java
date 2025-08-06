@@ -46,7 +46,7 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     public VilageFcstResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         if (locations == null){
             locations = jdbcTemplate.query(
-                    "SELECT nx, ny FROM UniqueNxNy",
+                    "SELECT nx, ny FROM Unique_Nx_Ny",
                     (rs, rowNum) -> new NxNy(rs.getInt("nx"), rs.getInt("ny"))
             );
         }

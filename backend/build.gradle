@@ -51,14 +51,14 @@ jacocoTestReport {
 
 jacoco {
 	toolVersion = "0.8.13"
-	reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+	reportsDirectory = layout.buildDirectory.dir('jacoco')
 }
 
 jacocoTestReport {
 	reports {
-		xml.required = false
+		xml.required = true
 		csv.required = false
-		html.outputLocation = layout.buildDirectory.dir('jacoco/index.html')
+		html.outputLocation = layout.buildDirectory.dir('jacoco/html')
 	}
 }
 
