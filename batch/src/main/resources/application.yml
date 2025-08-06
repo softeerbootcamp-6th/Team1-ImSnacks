@@ -1,6 +1,17 @@
 spring:
+  profiles:
+    active: local
+
   application:
     name: NyeoreumnagiBatch
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
   h2:
     console:
       enabled: true
@@ -20,6 +31,25 @@ spring:
       mode: always
 #      schema-locations: classpath:init-farm.sql
 #      data-locations: classpath:insert_unique_nxny.sql
+
+
+api:
+  service:
+    key: ${OPEN_API_KEY}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://${RDS_ENDPOINT}:${RDS_PORT}/${RDS_DATABASE}?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+
 api:
   service:
     key: ${OPEN_API_KEY}
