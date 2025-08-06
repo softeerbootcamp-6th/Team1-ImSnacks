@@ -22,7 +22,7 @@ const WeeklyCalendar = ({
           const isToday = dayjs(date).isSame(dayjs(), 'day');
           const dayName = dayjs(date).format('dd');
           const dayData =
-            workScheduleDataByDate[dayjs(date).format('YYYY-MM-DD')];
+            workScheduleDataByDate[dayjs(date).format('YYYY-MM-DD')] || [];
 
           return (
             <div key={index} css={S.DateContainer}>
@@ -33,7 +33,7 @@ const WeeklyCalendar = ({
                 </div>
               </div>
               <div css={S.DateWorkContainer}>
-                {dayData?.map((work: WorkCardType) => (
+                {dayData.map((work: WorkCardType) => (
                   <WorkCardWeb
                     key={work.id}
                     cropName={work.cropName}

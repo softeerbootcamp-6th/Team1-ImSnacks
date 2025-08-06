@@ -64,6 +64,8 @@ const DayNameContainer = (dayName: string) => css`
 `;
 
 const DateWorkContainer = css`
+  display: flex;
+  flex-direction: column;
   padding: ${Spacing.Spacing200};
   gap: ${Spacing.Spacing200};
   width: 100%;
