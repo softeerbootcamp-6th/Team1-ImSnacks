@@ -1,15 +1,17 @@
-package dto;
+package com.ImSnacks.NyeoreumnagiBatch.reader.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@Getter
 @Setter
-public class VilageFcstResponse {
-    // getters, setters
+public class VilageFcstResponseDto {
     private Response response;
+
+    public List<Item> getWeatherInfo(){
+        return response.getBody().getItems().getItem();
+    }
 
     @Setter
     @Getter
@@ -45,7 +47,6 @@ public class VilageFcstResponse {
     @Setter
     @Getter
     public static class Item {
-        // getters and setters
         private String baseDate;
         private String baseTime;
         private String category;
@@ -54,5 +55,6 @@ public class VilageFcstResponse {
         private String fcstValue;
         private int nx;
         private int ny;
+
     }
 }

@@ -62,14 +62,14 @@ class ForecastTimeUtilsTest {
     void HHMM_형식이_아닌_경우_예외처리() {
         assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime("930"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("시간 형식은 HHMM이어야 합니다.");
+                .hasMessage("시간 형식은 HHmm이어야 합니다.");
     }
 
     @Test
     void HHMM_형식이_아닌_경우_예외처리2() {
         assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime("12300"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("시간 형식은 HHMM이어야 합니다.");
+                .hasMessage("시간 형식은 HHmm이어야 합니다.");
     }
 
     @Test

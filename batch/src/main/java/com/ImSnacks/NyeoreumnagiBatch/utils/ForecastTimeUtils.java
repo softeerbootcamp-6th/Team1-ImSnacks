@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.utils;
 
-import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 public class ForecastTimeUtils {
 
     public static boolean isWithin24Hours(String baseDate, String baseTime, String fcstDate, String fcstTime) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
 
         LocalDateTime baseDateTime = LocalDateTime.parse(baseDate + baseTime, dateFormatter);
         LocalDateTime fcstDateTime = LocalDateTime.parse(fcstDate + fcstTime, dateFormatter);
@@ -19,7 +19,7 @@ public class ForecastTimeUtils {
         return secondsDiff >= 0 && secondsDiff <= 24 * 60 * 60;
     }
 
-    public static boolean isWithin24Hours(VilageFcstResponse.Item item) {
+    public static boolean isWithin24Hours(VilageFcstResponseDto.Item item) {
         return isWithin24Hours(item.getBaseDate(), item.getBaseTime(), item.getFcstDate(), item.getFcstTime());
     }
 

@@ -1,9 +1,12 @@
 spring:
   application:
     name: NyeoreumnagiBatch
-
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   datasource:
-    url: jdbc:h2:mem:batchtest;MODE=MySQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:./batchdb;MODE=MySQL;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -12,4 +15,11 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
-
+  sql:
+    init:
+      mode: always
+#      schema-locations: classpath:init-farm.sql
+#      data-locations: classpath:insert_unique_nxny.sql
+api:
+  service:
+    key: ${OPEN_API_KEY}
