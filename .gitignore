@@ -121,10 +121,6 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# Application Properties
-
-application.yml
-
 # Eclipse Gradle plugin generated files
 # Eclipse Core
 .project
