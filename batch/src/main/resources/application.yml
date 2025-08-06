@@ -22,7 +22,7 @@ spring:
     username: sa
     password:
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
   batch:
     jdbc:
       initialize-schema: always
