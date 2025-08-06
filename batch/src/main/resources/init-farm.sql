@@ -12,7 +12,6 @@ CREATE TABLE `Farm` (
 );
 
 CREATE TABLE UniqueNxNy (
-                            id INT PRIMARY KEY AUTO_INCREMENT,
                             nx INT NOT NULL,
                             ny INT NOT NULL,
                             UNIQUE (nx, ny)
