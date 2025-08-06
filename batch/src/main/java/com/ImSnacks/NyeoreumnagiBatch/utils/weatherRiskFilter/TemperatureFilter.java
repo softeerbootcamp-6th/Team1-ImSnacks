@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter;
 
-import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.utils.ForecastTimeUtils;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
@@ -21,13 +21,13 @@ public class TemperatureFilter extends WeatherRiskFilter {
     );
 
     @Override
-    public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponse.Item>> metrics) {
+    public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponseDto.Item>> metrics) {
         Map<Integer, WeatherRiskType> riskPerTime = new HashMap<>();
 
-        List<Map.Entry<String, List<VilageFcstResponse.Item>>> entryList = new ArrayList<>(metrics.entrySet());
+        List<Map.Entry<String, List<VilageFcstResponseDto.Item>>> entryList = new ArrayList<>(metrics.entrySet());
         for (int i = 0; i < entryList.size(); i++) {
-            Map.Entry<String, List<VilageFcstResponse.Item>> entry1 = entryList.get(i);
-            VilageFcstResponse.Item item1 = entry1.getValue().stream()
+            Map.Entry<String, List<VilageFcstResponseDto.Item>> entry1 = entryList.get(i);
+            VilageFcstResponseDto.Item item1 = entry1.getValue().stream()
                     .filter(it -> it.getCategory().equals(metricCategory))
                     .findFirst()
                     .orElse(null);
@@ -46,8 +46,8 @@ public class TemperatureFilter extends WeatherRiskFilter {
                 continue;
             }
 
-            Map.Entry<String, List<VilageFcstResponse.Item>> entry2 = entryList.get(i + 1);
-            VilageFcstResponse.Item item2 = entry2.getValue().stream()
+            Map.Entry<String, List<VilageFcstResponseDto.Item>> entry2 = entryList.get(i + 1);
+            VilageFcstResponseDto.Item item2 = entry2.getValue().stream()
                     .filter(it -> it.getCategory().equals(metricCategory))
                     .findFirst()
                     .orElse(null);

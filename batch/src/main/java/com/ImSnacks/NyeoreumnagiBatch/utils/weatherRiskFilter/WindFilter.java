@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter;
 
-import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.utils.ForecastTimeUtils;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
@@ -19,10 +19,10 @@ public class WindFilter extends WeatherRiskFilter{
     );
 
     @Override
-    public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponse.Item>> metrics) {
+    public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponseDto.Item>> metrics) {
         Map<Integer, WeatherRiskType> riskPerTime = new HashMap<>();
         metrics.forEach((k, v) -> {
-            VilageFcstResponse.Item item = v.stream()
+            VilageFcstResponseDto.Item item = v.stream()
                     .filter(i -> i.getCategory().equals(metricCategory))
                     .findFirst()
                     .orElse(null);

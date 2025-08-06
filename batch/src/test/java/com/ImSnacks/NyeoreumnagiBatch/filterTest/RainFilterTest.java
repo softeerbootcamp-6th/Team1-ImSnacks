@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.filterTest;
 
-import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.RainFilter;
 import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
@@ -19,7 +19,7 @@ public class RainFilterTest {
     @Test
     void 비에_해당하는_응답만_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
         ));
@@ -43,7 +43,7 @@ public class RainFilterTest {
     @Test
     void 호우에_해당하는_응답만_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "0100", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
@@ -68,7 +68,7 @@ public class RainFilterTest {
     @Test
     void 폭우에_해당하는_응답만_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "0100", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
@@ -93,7 +93,7 @@ public class RainFilterTest {
     @Test
     void 비에_해당하는_응답이_여러구간_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("PCP", "250805", "0000", "250804", "0100", "1.7mm")
         ));
@@ -123,7 +123,7 @@ public class RainFilterTest {
     @Test
     void 호우에_해당하는_응답이_여러구간_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "0100", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
@@ -154,7 +154,7 @@ public class RainFilterTest {
     @Test
     void 폭우에_해당하는_응답이_여러구간_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "0100", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "50.0mm 이상")
                 ),
@@ -185,7 +185,7 @@ public class RainFilterTest {
     @Test
     void 비와_호우에_해당하는_응답이_여러구간_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "0100", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
@@ -219,7 +219,7 @@ public class RainFilterTest {
     @Test
     void 비와_폭우와_호우에_해당하는_응답이_여러구간_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "0100", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "30.0~50.0mm")
                 ),
@@ -256,7 +256,7 @@ public class RainFilterTest {
     @Test
     void 강수량이_없는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "0100", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "강수없음")
                 ),
@@ -281,7 +281,7 @@ public class RainFilterTest {
     @Test
     void 다음날로_넘어가는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = Map.of(
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = Map.of(
                 "2300", List.of(
                         createItem("PCP", "250805", "0000", "250804", "0100", "1mm 미만")
                 ),
@@ -303,8 +303,8 @@ public class RainFilterTest {
         assertThat(response.get(0).getName()).isEqualTo(WeatherRiskType.RAIN);
     }
 
-    private VilageFcstResponse.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
-        VilageFcstResponse.Item item = new VilageFcstResponse.Item();
+    private VilageFcstResponseDto.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
+        VilageFcstResponseDto.Item item = new VilageFcstResponseDto.Item();
         item.setCategory(category);
         item.setBaseDate(baseDate);
         item.setBaseTime(baseTime);

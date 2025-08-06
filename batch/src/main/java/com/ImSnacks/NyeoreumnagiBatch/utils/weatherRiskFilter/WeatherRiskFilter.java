@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter;
 
-import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
 
@@ -11,7 +11,7 @@ import java.util.Map;
 
 public abstract class WeatherRiskFilter {
 
-    public abstract List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponse.Item>> metrics);
+    public abstract List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponseDto.Item>> metrics);
 
     protected List<ShortTermWeatherDto.WeatherRiskDto> groupingSameContinuousRisk(Map<Integer, WeatherRiskType> riskPerTime) {
         List<ShortTermWeatherDto.WeatherRiskDto> risks = new ArrayList<>();

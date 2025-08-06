@@ -2,9 +2,6 @@ package com.ImSnacks.NyeoreumnagiBatch.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import jakarta.annotation.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
@@ -49,7 +46,7 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     public VilageFcstResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         if (locations == null){
             locations = jdbcTemplate.query(
-                    "SELECT nx, ny FROM Farm",
+                    "SELECT nx, ny FROM UniqueNxNy",
                     (rs, rowNum) -> new NxNy(rs.getInt("nx"), rs.getInt("ny"))
             );
         }

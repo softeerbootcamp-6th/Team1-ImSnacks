@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.filterTest;
 
-import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.WindFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
@@ -19,7 +19,7 @@ public class WindFilterTest {
     @Test
     void 강풍이_하나의_구간만_있을_때(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("WSD", "250805", "0000", "250805", "0100", "15")
         ));
@@ -41,7 +41,7 @@ public class WindFilterTest {
     @Test
     void 강풍이_여러_구간에_있을_때(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("WSD", "250805", "0000", "250805", "0100", "15")
         ));
@@ -69,7 +69,7 @@ public class WindFilterTest {
     @Test
     void 바람이_안_불_때(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("WSD", "250805", "0000", "250805", "0100", "12")
         ));
@@ -88,8 +88,8 @@ public class WindFilterTest {
         assertThat(response.size()).isEqualTo(0);
     }
 
-    private VilageFcstResponse.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
-        VilageFcstResponse.Item item = new VilageFcstResponse.Item();
+    private VilageFcstResponseDto.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
+        VilageFcstResponseDto.Item item = new VilageFcstResponseDto.Item();
         item.setCategory(category);
         item.setBaseDate(baseDate);
         item.setBaseTime(baseTime);

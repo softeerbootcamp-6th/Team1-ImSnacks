@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.filterTest;
 
-import com.ImSnacks.NyeoreumnagiBatch.dto.VilageFcstResponse;
+import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.TemperatureFilter;
 import com.ImSnacks.NyeoreumnagiBatch.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
@@ -19,7 +19,7 @@ public class TemperatureFilterTest {
     @Test
     void 서리만_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("TMP", "250805", "0000", "250805", "0100", "-5")
         ));
@@ -41,7 +41,7 @@ public class TemperatureFilterTest {
     @Test
     void 이상고온만_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("TMP", "250805", "0000", "250805", "0100", "31")
         ));
@@ -63,7 +63,7 @@ public class TemperatureFilterTest {
     @Test
     void 아무것도_없는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("TMP", "250805", "0000", "250805", "0100", "30")
         ));
@@ -82,7 +82,7 @@ public class TemperatureFilterTest {
     @Test
     void 서리가_여러개_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("TMP", "250805", "0000", "250805", "0100", "-5")
         ));
@@ -110,7 +110,7 @@ public class TemperatureFilterTest {
     @Test
     void 이상기온이_여러개_있는_경우(){
         //given
-        Map<String, List<VilageFcstResponse.Item>> parameter = new LinkedHashMap<>();
+        Map<String, List<VilageFcstResponseDto.Item>> parameter = new LinkedHashMap<>();
         parameter.put("0100", List.of(
                 createItem("TMP", "250805", "0000", "250805", "0100", "445")
         ));
@@ -135,8 +135,8 @@ public class TemperatureFilterTest {
         assertThat(response.get(1).getName()).isEqualTo(WeatherRiskType.ABNORMAL_HEAT);
     }
 
-    private VilageFcstResponse.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
-        VilageFcstResponse.Item item = new VilageFcstResponse.Item();
+    private VilageFcstResponseDto.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
+        VilageFcstResponseDto.Item item = new VilageFcstResponseDto.Item();
         item.setCategory(category);
         item.setBaseDate(baseDate);
         item.setBaseTime(baseTime);

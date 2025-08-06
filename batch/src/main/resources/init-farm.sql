@@ -10,3 +10,9 @@ CREATE TABLE `Farm` (
                         `nx`	int4	NOT NULL,
                         `ny`	int4	NOT NULL
 );
+
+CREATE TABLE UniqueNxNy (
+                            nx INT NOT NULL,
+                            ny INT NOT NULL,
+                            UNIQUE (nx, ny)
+);

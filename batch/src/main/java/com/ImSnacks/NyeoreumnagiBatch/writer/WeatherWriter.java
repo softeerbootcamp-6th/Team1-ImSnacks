@@ -8,10 +8,12 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
 
