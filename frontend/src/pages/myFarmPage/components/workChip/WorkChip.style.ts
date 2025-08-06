@@ -7,7 +7,7 @@ import {
   WORK_CHIP_TYPES,
   type WorkChipType,
   type WorkChipStatus,
-} from '@/types/workCardWeb.type';
+} from '@/types/workChip.type';
 
 const getWorkChipColorByType = (
   type: WorkChipType,

@@ -26,8 +26,6 @@ export const useWeeklyCalendar = () => {
     setCurrentDate(prev => dayjs(prev).add(1, 'week').toDate());
   };
 
-  const DateYYYYM = dayjs(currentDate).format('YYYY년 M월');
-
   // 현재 주 판단 로직
   const getWeekLabel = () => {
     const today = dayjs();
@@ -44,6 +42,7 @@ export const useWeeklyCalendar = () => {
   };
 
   const weekLabel = getWeekLabel();
+  const monthLabel = dayjs(currentDate).format('YYYY년 M월');
   const isCurrentWeek = getWeekLabel() === '이번 주';
 
   return {
@@ -51,8 +50,8 @@ export const useWeeklyCalendar = () => {
     weekDates,
     handlePreviousWeek,
     handleNextWeek,
-    DateYYYYM,
     weekLabel,
+    monthLabel,
     isCurrentWeek,
   };
 };

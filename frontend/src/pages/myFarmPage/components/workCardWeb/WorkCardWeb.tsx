@@ -4,7 +4,7 @@ import { Spacing } from '@/styles/spacing';
 import { css } from '@emotion/react';
 import { Typography } from '@/styles/typography';
 import WorkChip from '../workChip/WorkChip';
-import { WORK_CHIP_STATUSES, WORK_CHIP_TYPES } from '@/types/workCardWeb.type';
+import { WORK_CHIP_TYPES } from '@/types/workChip.type';
 import { CROP_NAME } from '@/constants/cropName';
 
 interface WorkCardWebProps {
@@ -88,7 +88,6 @@ const WorkCardWeb = ({
         chipType={
           isCompleted ? WORK_CHIP_TYPES.COMPLETE : WORK_CHIP_TYPES.INCOMPLETE
         }
-        status={WORK_CHIP_STATUSES.DEFAULT}
       />
     </div>
   );

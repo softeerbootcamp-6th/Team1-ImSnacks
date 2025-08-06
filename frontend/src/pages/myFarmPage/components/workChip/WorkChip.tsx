@@ -1,4 +1,4 @@
-import { WORK_CHIP_TYPES, type WorkChipType } from '@/types/workCardWeb.type';
+import { WORK_CHIP_TYPES, type WorkChipType } from '@/types/workChip.type';
 import S from './WorkChip.style';
 import type { ButtonHTMLAttributes } from 'react';
 
