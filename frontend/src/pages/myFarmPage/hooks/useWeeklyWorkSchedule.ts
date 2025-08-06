@@ -10,7 +10,7 @@ export const useWeeklyWorkSchedule = () => {
     monthLabel,
   } = useBaseWeeklyCalendar();
 
-  // 현재 주 판단 로직 (프로젝트 특화)
+  // 현재 주 판단 로직
   const getWeekLabel = () => {
     const today = dayjs();
     const currentWeekStart = dayjs(currentDate).startOf('week');
