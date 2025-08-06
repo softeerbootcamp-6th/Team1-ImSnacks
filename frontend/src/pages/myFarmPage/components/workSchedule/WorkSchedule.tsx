@@ -1,7 +1,7 @@
 import MyFarmHeader from '../myFarmHeader/MyFarmHeader';
 import WeeklyCalendar from '../weeklyCalendar/WeeklyCalendar';
 import WeekNavigator from '../weekNavigator/WeekNavigator';
-import { useWeeklyCalendar } from '../../../../hooks/useWeeklyCalendar';
+import { useWeeklyWorkSchedule } from '../../hooks/useWeeklyWorkSchedule';
 import { WORK_SCHEDULE_DATA } from '@/constants/workScheduleData';
 import { groupDataRecordStructure } from '@/utils/groupDataRecord';
 import S from './WorkSchedule.style';
@@ -14,7 +14,7 @@ const WorkSchedule = () => {
     weekLabel,
     monthLabel,
     isCurrentWeek,
-  } = useWeeklyCalendar();
+  } = useWeeklyWorkSchedule();
 
   // 각 날짜별 작업 데이터를 key: date, value: workCardData 형태로 변환
   const workScheduleDataByDate = groupDataRecordStructure(
@@ -31,8 +31,8 @@ const WorkSchedule = () => {
           <span>{monthLabel}</span>
           <WeekNavigator
             weekLabel={weekLabel}
-            onPreviousWeek={handlePreviousWeek}
-            onNextWeek={handleNextWeek}
+            onPreviousWeek={() => handlePreviousWeek(1)}
+            onNextWeek={() => handleNextWeek(1)}
             isCurrentWeek={isCurrentWeek}
           />
         </div>

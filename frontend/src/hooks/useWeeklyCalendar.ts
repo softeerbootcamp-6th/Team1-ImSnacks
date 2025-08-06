@@ -5,7 +5,7 @@ import 'dayjs/locale/ko';
 // 한국어 locale 설정
 dayjs.locale('ko');
 
-export const useWeeklyCalendar = () => {
+export const useBaseWeeklyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const getWeekDates = (date: Date) => {
@@ -18,40 +18,21 @@ export const useWeeklyCalendar = () => {
 
   const weekDates = getWeekDates(currentDate);
 
-  const handlePreviousWeek = () => {
-    setCurrentDate(prev => dayjs(prev).subtract(1, 'week').toDate());
+  const handlePreviousWeek = (offset: number) => {
+    setCurrentDate(prev => dayjs(prev).subtract(offset, 'week').toDate());
   };
 
-  const handleNextWeek = () => {
-    setCurrentDate(prev => dayjs(prev).add(1, 'week').toDate());
+  const handleNextWeek = (offset: number) => {
+    setCurrentDate(prev => dayjs(prev).add(offset, 'week').toDate());
   };
 
-  // 현재 주 판단 로직
-  const getWeekLabel = () => {
-    const today = dayjs();
-    const currentWeekStart = dayjs(currentDate).startOf('week');
-    const todayWeekStart = today.startOf('week');
-
-    const weekDiff = currentWeekStart.diff(todayWeekStart, 'week');
-
-    return weekDiff === 0
-      ? '이번 주'
-      : weekDiff < 0
-      ? `${Math.abs(weekDiff)}주 전`
-      : `${weekDiff}주 후`;
-  };
-
-  const weekLabel = getWeekLabel();
   const monthLabel = dayjs(currentDate).format('YYYY년 M월');
-  const isCurrentWeek = getWeekLabel() === '이번 주';
 
   return {
     currentDate,
     weekDates,
     handlePreviousWeek,
     handleNextWeek,
-    weekLabel,
     monthLabel,
-    isCurrentWeek,
   };
 };
