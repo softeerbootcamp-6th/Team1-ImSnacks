@@ -22,9 +22,11 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: pnpm install
 
       - name: Build FE
+        working-directory: ./frontend
         run: pnpm run build
 
       - name: Configure AWS Credentials
@@ -43,7 +45,7 @@ jobs:
           else
             BUCKET=${{ secrets.S3_BUCKET_DEV }}
           fi
-          aws s3 sync build/ s3://$BUCKET --delete
+          aws s3 sync frontend/dist/ s3://$BUCKET --delete
 
       - name: Invalidate CloudFront
         if: success()
