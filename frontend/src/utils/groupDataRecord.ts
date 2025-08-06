@@ -7,6 +7,7 @@
  * @param itemsKey - 각 항목에서 추출하여 저장할 데이터 키
  * @returns key 값을 기준으로 그룹화된 객체
  */
+
 export const groupDataRecordStructure = <
   T,
   K extends keyof T,
