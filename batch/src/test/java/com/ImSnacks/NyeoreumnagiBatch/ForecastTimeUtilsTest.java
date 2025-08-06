@@ -10,42 +10,42 @@ class ForecastTimeUtilsTest {
     @Test
     void _10시간_이후_날짜_포함() {
         boolean result = ForecastTimeUtils.isWithin24Hours(
-                "250803", "0500", "250803", "1500");
+                "20250803", "0500", "20250803", "1500");
         assertThat(result).isTrue();
     }
 
     @Test
     void _23시간_후의_날짜_포함() {
         boolean result = ForecastTimeUtils.isWithin24Hours(
-                "250803", "2300", "250804", "2200");
+                "20250803", "2300", "20250804", "2200");
         assertThat(result).isTrue();
     }
 
     @Test
     void _24시간_후의_시간_포함() {
         boolean result = ForecastTimeUtils.isWithin24Hours(
-                "250803", "0600", "250804", "0600");
+                "20250803", "0600", "20250804", "0600");
         assertThat(result).isTrue();
     }
 
     @Test
     void _24시간_이후의_날짜_미포함() {
         boolean result = ForecastTimeUtils.isWithin24Hours(
-                "250803", "0600", "250804", "0700");
+                "20250803", "0600", "20250804", "0700");
         assertThat(result).isFalse();
     }
 
     @Test
     void 기준_시간_이전의_날짜_미포함() {
         boolean result = ForecastTimeUtils.isWithin24Hours(
-                "250803", "0600", "250803", "0500");
+                "20250803", "0600", "20250803", "0500");
         assertThat(result).isFalse();
     }
 
     @Test
     void 같은_날짜_포함() {
         boolean result = ForecastTimeUtils.isWithin24Hours(
-                "250803", "0600", "250803", "0600");
+                "20250803", "0600", "20250803", "0600");
         assertThat(result).isTrue();
     }
 
