@@ -29,24 +29,24 @@ export const tooltipPosition = {
 };
 
 export const tooltipArrowPosition = {
-  Top: (offset = -10) => css`
-    bottom: ${offset}px;
+  Top: () => css`
+    bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
   `,
-  Bottom: (offset = -10) => css`
-    top: -${offset}px;
+  Bottom: () => css`
+    top: -10px;
     left: 50%;
     transform: translateX(-50%) rotate(180deg);
   `,
-  Left: (offset = -10) => css`
+  Left: () => css`
     top: 50%;
-    right: ${offset}px;
+    right: -10px;
     transform: translateY(-50%) rotate(-90deg);
   `,
-  Right: (offset = -10) => css`
+  Right: () => css`
     top: 50%;
-    left: ${offset}px;
+    left: -10px;
     transform: translateY(-50%) rotate(90deg);
   `,
 };
@@ -81,9 +81,10 @@ const TooltipArrowColorByType = {
 const ToolTip = (
   direction: TooltipDirectionType,
   type: TooltipType,
-  offset?: number
+  offset?: number,
+  isAbsolute?: boolean
 ) => css`
-  position: absolute;
+  position: ${isAbsolute ? 'absolute' : 'relative'};
   ${tooltipPosition[direction](offset)}
   ${tooltipColorByType[type]};
   ${Typography.Caption_S}
@@ -100,14 +101,10 @@ const ToolTip = (
   justify-content: center;
 `;
 
-const TooltipArrow = (
-  direction: TooltipDirectionType,
-  type: TooltipType,
-  offset?: number
-) =>
+const TooltipArrow = (direction: TooltipDirectionType, type: TooltipType) =>
   css`
     position: absolute;
-    ${tooltipArrowPosition[direction](offset)}
+    ${tooltipArrowPosition[direction]()}
     ${TooltipArrowColorByType[type]}
   `;
 
