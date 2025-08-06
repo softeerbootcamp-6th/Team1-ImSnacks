@@ -6,6 +6,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ public class WeatherJobParams {
     private static final List<Integer> BASE_TIMES = Arrays.asList(2, 5, 8, 11, 14, 17, 20, 23);
 
     public static JobParameters get() {
-        LocalDate nowDate = LocalDate.now();
+        LocalDate nowDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
         int nowHour = LocalTime.now().getHour();
         if (nowHour < 2) { // 00시, 01시의 경우, 전날 23시를 base로 한다.
             nowHour = 23;
