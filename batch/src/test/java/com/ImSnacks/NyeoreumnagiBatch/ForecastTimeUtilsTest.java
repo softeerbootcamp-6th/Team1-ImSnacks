@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch;
 
-import com.ImSnacks.NyeoreumnagiBatch.utils.ForecastTimeUtils;
+import com.ImSnacks.NyeoreumnagiBatch.processor.utils.ForecastTimeUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

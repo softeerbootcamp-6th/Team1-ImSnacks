@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.utils;
+package com.ImSnacks.NyeoreumnagiBatch.processor.utils;
 
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 

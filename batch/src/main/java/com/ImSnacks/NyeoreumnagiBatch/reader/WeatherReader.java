@@ -32,8 +32,8 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     @Autowired
     private ApiCaller apiCaller;
 
-    WeatherReader(@Value("#{jobParameters['baseDate']}") String baseDate,
-                  @Value("#{jobParameters['baseTime']}") String baseTime,
+    WeatherReader(@Value("#{jobParameters['base_date']}") String baseDate,
+                  @Value("#{jobParameters['base_time']}") String baseTime,
                   JdbcTemplate jdbcTemplate)
     {
         this.baseDate = baseDate;
