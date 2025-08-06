@@ -2,24 +2,29 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import S from './WeeklyCalendar.style';
 import WorkCardWeb from '../workCardWeb/WorkCardWeb';
-import { WORK_SCHEDULE_DATA } from '@/constants/workScheduleData';
+import { type WorkCardType } from '@/types/workCard.type';
 
 dayjs.locale('ko');
 
 interface WeeklyCalendarProps {
   weekDates: Date[];
+  workScheduleDataByDate: {
+    date: string;
+    workCardData: WorkCardType[];
+  }[];
 }
 
-const WeeklyCalendar = ({ weekDates }: WeeklyCalendarProps) => {
+const WeeklyCalendar = ({
+  weekDates,
+  workScheduleDataByDate,
+}: WeeklyCalendarProps) => {
   return (
     <div css={S.WeeklyCalendar}>
       <div css={S.DayContainer}>
         {weekDates.map((date, index) => {
           const isToday = dayjs(date).isSame(dayjs(), 'day');
           const dayName = dayjs(date).format('dd');
-          const workScheduleData = WORK_SCHEDULE_DATA.filter(
-            work => work.date === dayjs(date).format('YYYY-MM-DD')
-          );
+          const dayData = workScheduleDataByDate[index];
 
           return (
             <div key={index} css={S.DateContainer}>
@@ -30,7 +35,7 @@ const WeeklyCalendar = ({ weekDates }: WeeklyCalendarProps) => {
                 </div>
               </div>
               <div css={S.DateWorkContainer}>
-                {workScheduleData.map(work => (
+                {dayData.workCardData.map((work: WorkCardType) => (
                   <WorkCardWeb
                     key={work.id}
                     cropName={work.cropName}

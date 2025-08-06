@@ -8,16 +8,25 @@ import { BorderRadius } from '@/styles/borderRadius';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { GrayScale, Opacity } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
+import { WORK_SCHEDULE_DATA } from '@/constants/workScheduleData';
+import { groupDataRecordStructure } from '@/utils/groupDataRecord';
 
 const WorkSchedule = () => {
   const {
     weekDates,
     handlePreviousWeek,
     handleNextWeek,
-    DateYYYYM,
     weekLabel,
+    monthLabel,
     isCurrentWeek,
   } = useWeeklyCalendar();
+
+  // 각 날짜별 작업 데이터를 key: date, value: workCardData 형태로 변환
+  const workScheduleDataByDate = groupDataRecordStructure(
+    WORK_SCHEDULE_DATA,
+    'date',
+    'workCardData'
+  );
 
   return (
     <div
@@ -49,7 +58,7 @@ const WorkSchedule = () => {
             padding: 0 ${Spacing.Spacing400} 0 ${Spacing.Spacing400};
           `}
         >
-          <span>{DateYYYYM}</span>
+          <span>{monthLabel}</span>
           <WeekNavigator
             weekLabel={weekLabel}
             onPreviousWeek={handlePreviousWeek}
@@ -57,7 +66,10 @@ const WorkSchedule = () => {
             isCurrentWeek={isCurrentWeek}
           />
         </div>
-        <WeeklyCalendar weekDates={weekDates} />
+        <WeeklyCalendar
+          weekDates={weekDates}
+          workScheduleDataByDate={workScheduleDataByDate}
+        />
       </div>
     </div>
   );
