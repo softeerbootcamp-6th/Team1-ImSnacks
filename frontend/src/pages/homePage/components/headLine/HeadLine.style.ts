@@ -12,6 +12,7 @@ const Headline = css`
   width: 100%;
   height: 124px;
   position: relative;
+  margin-bottom: ${Spacing.Spacing800};
 `;
 
 const GreetingMessage = css`
