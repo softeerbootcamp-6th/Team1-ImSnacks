@@ -27,7 +27,7 @@ public class JwtAuthHandlerArgumentResolverTest {
     @Test
     void 커스텀_어노테이션_타입_판단_성공() throws Exception {
         // given
-        Method method = TestController.class.getMethod("testMethod", long.class, String.class);
+        Method method = TestController.class.getMethod("testMethod", Long.class, String.class);
         MethodParameter paramWithAnno = new MethodParameter(method, 0);
         MethodParameter paramWithoutAnno = new MethodParameter(method, 1);
 
@@ -43,7 +43,7 @@ public class JwtAuthHandlerArgumentResolverTest {
     @Test
     void 토큰의_멤버_아이디_추출_성공() throws Exception {
         // given
-        Method method = TestController.class.getMethod("testMethod", long.class, String.class);
+        Method method = TestController.class.getMethod("testMethod", Long.class, String.class);
         MethodParameter paramWithAnno = new MethodParameter(method, 0);
 
         HttpServletRequest servletRequest = Mockito.mock(HttpServletRequest.class);
@@ -60,6 +60,6 @@ public class JwtAuthHandlerArgumentResolverTest {
     }
 
     private static class TestController {
-        public void testMethod(@PreAuthorize long memberId, String another) {}
+        public void testMethod(@PreAuthorize Long memberId, String another) {}
     }
 }
