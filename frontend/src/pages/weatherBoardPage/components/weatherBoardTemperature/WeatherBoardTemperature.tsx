@@ -91,7 +91,13 @@ const WeatherBoardTemparature = () => {
         ${S.WeatherBoardTemperature}
       `}
     >
-      <div style={{ position: 'absolute', top: '16px', left: '20px' }}>
+      <div
+        css={css`
+          position: absolute;
+          top: 16px;
+          left: 20px;
+        `}
+      >
         <h3>최고기온</h3>
         <p>{weeklyTemperatureData.highestTemperature}°</p>
       </div>
