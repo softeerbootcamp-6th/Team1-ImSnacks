@@ -63,7 +63,7 @@ const graphData = {
     },
     {
       name: '21',
-      value: 0,
+      value: 20,
     },
     {
       name: '22',
@@ -71,7 +71,7 @@ const graphData = {
     },
     {
       name: '23',
-      value: 0,
+      value: 10,
     },
     {
       name: '24',
@@ -115,9 +115,14 @@ const weatherRiskData = [
     endTime: '12',
   },
   {
-    category: '폭염',
+    category: '이상저온',
     startTime: '12',
     endTime: '14',
+  },
+  {
+    category: '한파',
+    startTime: '17',
+    endTime: '01',
   },
 ];
 
