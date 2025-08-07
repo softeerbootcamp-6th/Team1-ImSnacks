@@ -1,5 +1,5 @@
-import SunFlatIcon from '@/assets/icons/flat/IC24Sun.svg?react';
-import LessCloudyFlatICon from '@/assets/icons/flat/IC24LessCloudy.svg?react';
+import SunnyFlatIcon from '@/assets/icons/flat/IC24Sun.svg?react';
+import LessCloudyFlatIcon from '@/assets/icons/flat/IC24LessCloudy.svg?react';
 import CloudyFlatIcon from '@/assets/icons/flat/IC24Cloudy.svg?react';
 import RainFlatIcon from '@/assets/icons/flat/IC24Rain.svg?react';
 import HeavyRainFlatIcon from '@/assets/icons/flat/IC24HeavyRain.svg?react';
@@ -14,18 +14,16 @@ export const FLAT_ICON: Record<
   string,
   React.FC<React.SVGProps<SVGSVGElement>>
 > = {
-  강수량: RainFlatIcon,
-  기온: TemperatureFlatIcon,
-  습도: HumidityFlatIcon,
-  풍속: WindFlatIcon,
-  태양: SunFlatIcon,
-  구름: CloudyFlatIcon,
-  '구름 밤': CloudyNightFlatIcon,
-  밤: NightFlatIcon,
-  비: RainFlatIcon,
-  폭우: HeavyRainFlatIcon,
-  눈: SnowFlatIcon,
-  '조금 흐림': LessCloudyFlatICon,
-  흐림: CloudyFlatIcon,
-  '흐림 밤': CloudyNightFlatIcon,
+  PERCIPITATION: RainFlatIcon,
+  TEMPERATURE: TemperatureFlatIcon,
+  HUMIDITY: HumidityFlatIcon,
+  WIND_SPEED: WindFlatIcon,
+  SUNNY: SunnyFlatIcon,
+  NIGHT: NightFlatIcon,
+  RAIN: RainFlatIcon,
+  HEAVY_RAIN: HeavyRainFlatIcon,
+  SNOW: SnowFlatIcon,
+  LESS_CLOUDY: LessCloudyFlatIcon,
+  CLOUDY: CloudyFlatIcon,
+  CLOUDY_NIGHT: CloudyNightFlatIcon,
 };
