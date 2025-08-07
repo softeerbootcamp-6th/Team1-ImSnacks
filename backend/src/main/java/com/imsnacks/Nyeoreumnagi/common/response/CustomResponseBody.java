@@ -1,4 +1,4 @@
-package com.imsnacks.Nyeoreumnagi.common;
+package com.imsnacks.Nyeoreumnagi.common.response;
 
 import lombok.Getter;
 
