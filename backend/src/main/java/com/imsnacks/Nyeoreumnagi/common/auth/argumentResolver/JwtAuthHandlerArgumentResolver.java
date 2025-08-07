@@ -14,7 +14,7 @@ public class JwtAuthHandlerArgumentResolver implements HandlerMethodArgumentReso
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasAnnotation = parameter.hasParameterAnnotation((PreAuthorize.class));
-        boolean hasType = long.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasType = Long.class.isAssignableFrom(parameter.getParameterType());
         return hasAnnotation && hasType;
     }
 
