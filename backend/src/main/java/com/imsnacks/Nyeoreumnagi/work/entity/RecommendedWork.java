@@ -1,9 +1,13 @@
 package com.imsnacks.Nyeoreumnagi.work.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class RecommendedWork {
     @Id
