@@ -5,7 +5,12 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { CROP_NAME } from '@/constants/cropName';
 
-const WorkCardContainer = (isDragging: boolean) => css`
+const WorkCardContainer = (
+  isDragging: boolean,
+  x: number = 0,
+  y: number = 0,
+  width?: number
+) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -14,6 +19,8 @@ const WorkCardContainer = (isDragging: boolean) => css`
   border-radius: ${BorderRadius.Base.S_Hard};
   background-color: ${GrayScale.White};
   border: 1px solid ${GrayScale.G200};
+  width: ${width ? `${width}px` : 'auto'};
+  transform: translate(${x}px, ${y}px);
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   opacity: ${isDragging ? 0.8 : 1};

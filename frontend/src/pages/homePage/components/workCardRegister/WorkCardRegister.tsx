@@ -9,7 +9,8 @@ interface WorkCardRegisterProps {
   workName: string;
   workTime: string;
   isDragging?: boolean;
-  style?: React.CSSProperties;
+  x?: number;
+  y?: number;
   onMouseDown?: (e: React.MouseEvent) => void;
   width?: number;
 }
@@ -19,17 +20,14 @@ const WorkCardRegister = ({
   workName,
   workTime,
   isDragging = false,
-  style,
+  x = 0,
+  y = 0,
   onMouseDown,
   width,
 }: WorkCardRegisterProps) => {
   return (
     <div
-      css={S.WorkCardContainer(isDragging)}
-      style={{
-        ...style,
-        width: width ? `${width}px` : 'auto',
-      }}
+      css={S.WorkCardContainer(isDragging, x, y, width)}
       onMouseDown={onMouseDown}
     >
       <div css={S.WorkCardContent}>
