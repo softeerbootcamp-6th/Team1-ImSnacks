@@ -8,7 +8,7 @@ public record GetWeatherGraphResponse (
         String weatherMetric,
         List<ValuePerTime> valuePerTime
 ){
-    public static record ValuePerTime(
+    public record ValuePerTime(
             String name,
             int value
     ){
