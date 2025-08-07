@@ -1,12 +1,14 @@
 package com.imsnacks.Nyeoreumnagi.work.service;
 
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
+import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ResisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ResisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
+import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyWorkRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.RecommendedWorkRepository;
@@ -16,34 +18,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.imsnacks.Nyeoreumnagi.common.util.TimeValidator.validateTime;
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.MEMBER_NOT_FOUND;
+import static com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MyWorkService {
-    private final MyWorkRepository myWorkRepository;
+    @Autowired
+    private MyWorkRepository myWorkRepository;
     @Autowired
     private RecommendedWorkRepository recommendedWorkRepository;
-
     @Autowired
     private MyCropRepository myCropRepository;
     @Autowired
     private MemberRepository memberRepository;
 
-
     public ResisterMyWorkResponse registerMyWork(ResisterMyWorkRequest request, Long memberId) {
         if (!validateTime(request.startTime(), request.endTime())){
-            throw new RuntimeException();
+            throw new WorkException(INVALID_MY_WORK_TIME);
         }
 
-        RecommendedWork recommendedWork = recommendedWorkRepository.findById(request.recommendedWorkId()).orElseThrow(RuntimeException::new
-        );
+        RecommendedWork recommendedWork = recommendedWorkRepository.findById(request.recommendedWorkId()).orElseThrow(() -> new WorkException(RECOMMENDED_WORK_NOT_FOUND));
 
-        MyCrop myCrop = myCropRepository.findById(request.myCropId()).orElseThrow(RuntimeException::new);
+        MyCrop myCrop = myCropRepository.findById(request.myCropId()).orElseThrow(() -> new WorkException(MY_CROP_NOT_FOUND));
 
         String cropName = myCrop.getCrop().getName();
 
-        Member member = memberRepository.findById(memberId).orElseThrow(RuntimeException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
         MyWork myWork = MyWork.createMyWork(
                 member,
