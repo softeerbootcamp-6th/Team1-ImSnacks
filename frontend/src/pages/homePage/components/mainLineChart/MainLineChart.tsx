@@ -42,12 +42,13 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
 
   const processedData = getProcessedData(graphData, weatherRiskData);
 
-  const wrapperMargin = {
+  const WRAPPER_MARGIN = {
     top: 53,
     right: -40,
     left: 12,
     bottom: 55,
   };
+  const CHART_HEIGHT = 373;
 
   return (
     <div css={S.MainLineChart}>
@@ -68,9 +69,9 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
         <div css={S.LineChartInnerWrapper(chartWidth)}>
           <ComposedChart
             width={chartWidth}
-            height={373}
+            height={CHART_HEIGHT}
             data={processedData}
-            margin={wrapperMargin}
+            margin={WRAPPER_MARGIN}
           >
             {GraphHighlight}
             <CartesianGrid
@@ -118,7 +119,8 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
                   cx={0}
                   cy={0}
                   weatherRiskData={weatherRiskData}
-                  wrapperMargin={wrapperMargin}
+                  wrapperMargin={WRAPPER_MARGIN}
+                  chartHeight={CHART_HEIGHT}
                 />
               }
             />

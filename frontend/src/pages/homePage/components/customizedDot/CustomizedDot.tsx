@@ -1,4 +1,13 @@
+import { GrayScale } from '@/styles/colors';
 import type { WeatherRiskData } from '@/types/mainGraph.type';
+
+const DOT_SIZE = 18;
+const DOT_RADIUS = 7;
+const DOT_STROKE_WIDTH = 3;
+const LINE_STROKE_WIDTH = 2;
+const LINE_WIDTH = 2;
+const LINE_VERTICAL_OFFSET = 7;
+const LINE_HORIZONTAL_OFFSET = 1;
 
 // CustomizedDot 컴포넌트
 const CustomizedDot = ({
@@ -7,15 +16,16 @@ const CustomizedDot = ({
   payload,
   weatherRiskData,
   wrapperMargin,
+  chartHeight,
 }: {
   cx: number;
   cy: number;
   payload?: { name: string; value: number };
   weatherRiskData: WeatherRiskData[];
   wrapperMargin: { top: number; bottom: number; left: number; right: number };
+  chartHeight: number;
 }) => {
   // 차트의 실제 높이 계산 (전체 높이 - 상단 마진 - 하단 마진)
-  const chartHeight = 373;
   const topMargin = wrapperMargin.top;
   const bottomMargin = wrapperMargin.bottom;
   const availableHeight = chartHeight - topMargin - bottomMargin;
@@ -34,11 +44,11 @@ const CustomizedDot = ({
       {/* 리스크 세로 경계선 */}
       {hasRiskData && (
         <svg
-          x={cx - 1}
-          y={cy + 7}
-          width={2}
-          height={lineHeight - 7}
-          viewBox={`0 0 2 ${lineHeight - 7}`}
+          x={cx - LINE_HORIZONTAL_OFFSET}
+          y={cy + LINE_VERTICAL_OFFSET}
+          width={LINE_WIDTH}
+          height={lineHeight - LINE_VERTICAL_OFFSET}
+          viewBox={`0 0 ${LINE_WIDTH} ${lineHeight - LINE_VERTICAL_OFFSET}`}
           fill="none"
           style={{ overflow: 'visible' }}
         >
@@ -48,7 +58,7 @@ const CustomizedDot = ({
               x1="2"
               y1="0"
               x2="2"
-              y2={lineHeight - 7}
+              y2={lineHeight - LINE_VERTICAL_OFFSET}
               gradientUnits="userSpaceOnUse"
             >
               <stop stopColor="#FDFEFE" />
@@ -56,29 +66,29 @@ const CustomizedDot = ({
             </linearGradient>
           </defs>
           <path
-            d={`M1 ${lineHeight - 7}L1 0`}
+            d={`M1 ${lineHeight - LINE_VERTICAL_OFFSET}L1 0`}
             stroke={`url(#paint0_linear_${cx})`}
-            strokeWidth="2"
+            strokeWidth={LINE_STROKE_WIDTH}
           />
         </svg>
       )}
 
       {/* dot */}
       <svg
-        x={cx - 9}
-        y={cy - 9}
-        width={18}
-        height={18}
-        viewBox="0 0 18 18"
+        x={cx - DOT_SIZE / 2}
+        y={cy - DOT_SIZE / 2}
+        width={DOT_SIZE}
+        height={DOT_SIZE}
+        viewBox={`0 0 ${DOT_SIZE} ${DOT_SIZE}`}
         fill="none"
       >
         <circle
-          cx="9"
-          cy="9"
-          r="7"
+          cx={DOT_SIZE / 2}
+          cy={DOT_SIZE / 2}
+          r={DOT_RADIUS}
           fill="#88BBF9"
-          stroke="#FDFEFE"
-          strokeWidth="3"
+          stroke={GrayScale.White}
+          strokeWidth={DOT_STROKE_WIDTH}
           strokeLinejoin="round"
         />
       </svg>
