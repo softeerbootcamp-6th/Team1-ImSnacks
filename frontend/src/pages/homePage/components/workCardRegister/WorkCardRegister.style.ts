@@ -23,7 +23,7 @@ const WorkCardContainer = (
   transform: translate(${x}px, ${y}px);
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  opacity: ${isDragging ? 0.8 : 1};
+  opacity: ${isDragging ? 0.5 : 1};
   transition: ${isDragging ? 'none' : 'all 0.2s ease'};
   z-index: ${isDragging ? 1000 : 1};
   user-select: none;

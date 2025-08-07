@@ -5,6 +5,7 @@ import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
 import { useInitialWorkBlocks } from '@/pages/homePage/hooks/useInitialWorkBlocks';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
+import useRemoveOnOutOfBounds from '@/hooks/dnd/useRemoveOnOutOfBounds';
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
 
@@ -18,11 +19,37 @@ const WorkContainer = () => {
     updatePosition,
     endDrag,
     isItemDragging,
+    getDraggingItem,
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
     getItemPosition: block => block.position,
     onPositionChange: updated => setWorkBlocks(updated),
   });
+
+  // 드래그 중인 아이템 id를 가져오는 함수
+  const getDraggingId = () => {
+    // isItemDragging은 특정 id가 드래그 중인지 알려주므로,
+    // workBlocks에서 드래그 중인 id를 찾아 반환
+    const draggingBlock = workBlocks.find(block => isItemDragging(block.id));
+    return draggingBlock ? draggingBlock.id : null;
+  };
+
+  const { checkAndRemove } = useRemoveOnOutOfBounds<WorkBlockType>({
+    containerRef: containerRef as React.RefObject<HTMLElement>,
+    items: workBlocks,
+    getItemId: block => block.id,
+    getItemPosition: block => block.position,
+    getItemWidth: block => block.width,
+    onRemove: id => setWorkBlocks(blocks => blocks.filter(b => b.id !== id)),
+  });
+
+  const handleEndDrag = () => {
+    const draggingId = getDraggingId();
+    if (draggingId !== null) {
+      checkAndRemove(draggingId);
+    }
+    endDrag();
+  };
 
   const updateBlockWorkTime = (
     block: WorkBlockType,
@@ -56,28 +83,35 @@ const WorkContainer = () => {
         onMouseMove={e => {
           updatePosition(e, (block, pos) => updateBlockWorkTime(block, pos));
         }}
-        onMouseUp={endDrag}
-        onMouseLeave={endDrag}
+        onMouseUp={handleEndDrag}
+        onMouseLeave={handleEndDrag}
         css={css`
           width: 100%;
         `}
       >
-        {workBlocks.map(block => (
-          <WorkCardRegister
-            key={block.id}
-            id={block.id}
-            cropName={block.cropName}
-            workName={block.workName}
-            workTime={block.workTime}
-            isDragging={isItemDragging(block.id)}
-            width={block.width}
-            x={block.position.x}
-            y={block.position.y}
-            onMouseDown={e => {
-              startDrag(e, block.id, workBlocks);
-            }}
-          />
-        ))}
+        {(() => {
+          const draggingItem = getDraggingItem(workBlocks);
+          return (
+            isDragging &&
+            draggingItem && (
+              <WorkCardRegister
+                key={draggingItem.id}
+                id={draggingItem.id}
+                cropName={draggingItem.cropName}
+                workName={draggingItem.workName}
+                workTime={draggingItem.workTime}
+                isDragging={isDragging}
+                width={draggingItem.width}
+                x={draggingItem.position.x}
+                y={draggingItem.position.y}
+                onMouseDown={e => {
+                  startDrag(e, draggingItem.id, workBlocks);
+                }}
+              />
+            )
+          );
+        })()}
+
         <div
           css={css`
             overflow-x: auto;
@@ -99,6 +133,22 @@ const WorkContainer = () => {
             }
           `}
         >
+          {workBlocks.map(block => (
+            <WorkCardRegister
+              key={block.id}
+              id={block.id}
+              cropName={block.cropName}
+              workName={block.workName}
+              workTime={block.workTime}
+              isDragging={isItemDragging(block.id)}
+              width={block.width}
+              x={block.position.x}
+              y={block.position.y}
+              onMouseDown={e => {
+                startDrag(e, block.id, workBlocks);
+              }}
+            />
+          ))}
           <div
             css={css`
               display: flex;

@@ -98,6 +98,15 @@ export const useDragAndDrop = <T>({
     []
   );
 
+  const getDraggingItem = useCallback(
+    (currentItems?: T[]) => {
+      if (draggedItemIdRef.current === null) return null;
+      const items = currentItems || itemsRef.current;
+      return items.find(item => getItemId(item) === draggedItemIdRef.current);
+    },
+    [getItemId]
+  );
+
   return {
     containerRef,
     isDragging,
@@ -105,5 +114,6 @@ export const useDragAndDrop = <T>({
     updatePosition,
     endDrag,
     isItemDragging,
+    getDraggingItem,
   };
 };
