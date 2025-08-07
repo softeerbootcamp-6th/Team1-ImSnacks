@@ -1,10 +1,9 @@
 package com.ImSnacks.NyeoreumnagiBatch.writer;
 
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
-import com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRisk;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
-import com.ImSnacks.NyeoreumnagiBatch.writer.repository.WeatherRepository;
+import com.ImSnacks.NyeoreumnagiBatch.writer.repository.ShortTermWeatherForecast;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
@@ -17,18 +16,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
 
-    private final WeatherRepository weatherRepository;
+    private final ShortTermWeatherForecast weatherRepository;
     private final WeatherRiskRepository weatherRiskRepository;
 
     @Override
     public void write(Chunk<? extends ShortTermWeatherDto> chunk)  {
-        List<ShortTermWeatherForecast> forecasts = new ArrayList<>();
+        List<com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast> forecasts = new ArrayList<>();
         List<WeatherRisk> weatherRisks = new ArrayList<>();
 
         List<? extends ShortTermWeatherDto> items = chunk.getItems();
         items.forEach(item -> {
             item.getWeatherForecastByTimeList().forEach(weatherForecastByTime -> {
-                forecasts.add(ShortTermWeatherForecast.builder()
+                forecasts.add(com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast.builder()
                         .nx(item.getNx())
                         .ny(item.getNy())
                         .fcstTime(weatherForecastByTime.getFcstTime())
