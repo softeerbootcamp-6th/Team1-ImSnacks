@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -23,4 +25,6 @@ public class Member {
 
     @Column(nullable = false)
     private int phoneNumber;
+
+    private UUID refreshToken;
 }
