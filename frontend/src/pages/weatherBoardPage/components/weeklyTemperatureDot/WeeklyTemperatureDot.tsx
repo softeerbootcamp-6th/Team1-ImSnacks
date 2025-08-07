@@ -1,6 +1,7 @@
 import { FLAT_ICON } from '@/constants/flatIcons';
 import { Typography } from '@/styles/typography';
 import { getTemperatureColor } from '../../utils/weeklyTemperatureUtil';
+import { FlexStyles } from '@/styles/commonStyles';
 
 const WeeklyTemperatureDot = ({
   cx,
@@ -24,14 +25,7 @@ const WeeklyTemperatureDot = ({
     <>
       {payload && FlatIconComponent && (
         <foreignObject x={cx - 17} y={cy - 50} width={40} height={66}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              color: 'white',
-            }}
-          >
+          <div css={FlexStyles.flexColumn}>
             <FlatIconComponent width={20} height={20} />
             <span css={Typography.Body_S_400}>{payload.temperature}°</span>
           </div>
