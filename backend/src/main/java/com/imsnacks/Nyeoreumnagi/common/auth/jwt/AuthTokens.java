@@ -5,7 +5,6 @@ import lombok.*;
 import java.util.UUID;
 
 @Getter
-@Builder
 public class AuthTokens {
 
     private String accessToken;
