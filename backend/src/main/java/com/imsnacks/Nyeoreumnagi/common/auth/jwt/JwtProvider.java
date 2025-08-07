@@ -33,7 +33,7 @@ public class JwtProvider {
 
         UUID refreshToken = UUID.randomUUID();
 
-        return AuthTokens.of(accessToken, refreshToken, JWT_EXPIRED_IN);
+        return AuthTokens.of(accessToken, refreshToken);
     }
 
     public boolean isExpiredToken(String token){
