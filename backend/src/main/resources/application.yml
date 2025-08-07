@@ -24,6 +24,9 @@ spring:
   jpa:
     hibernate.ddl-auto: update
 
+springdoc:
+  override-with-generic-response: false
+
 secret:
   jwt-secret-key: ${JWT_SECRET_KEY}
   jwt-expired-in:
