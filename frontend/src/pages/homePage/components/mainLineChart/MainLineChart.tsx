@@ -1,149 +1,62 @@
-import type { WeatherMetrics } from '@/types/weather.types';
 import {
-  LineChart,
+  ComposedChart,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  ResponsiveContainer,
-  Label,
+  Area,
 } from 'recharts';
-import { Typography } from '@/styles/typography';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
-import { css } from '@emotion/react';
 import { getUnit } from '@/utils/getUnit';
-import ToolTip from '@/components/toolTip/ToolTip';
-
-const CustomizedDot = (props: { cx: number; cy: number }) => {
-  const { cx, cy } = props;
-
-  return (
-    <svg
-      x={cx - 9}
-      y={cy - 9}
-      width={18}
-      height={18}
-      viewBox="0 0 18 18"
-      fill="none"
-    >
-      <circle
-        cx="9"
-        cy="9"
-        r="7"
-        fill="#88BBF9"
-        stroke="#FDFEFE"
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
+import { generateYTicks, getProcessedData } from '../../utils/LineChartUtil';
+import S from './MainLineChart.style';
+import CustomizedDot from '../customizedDot/CustomizedDot';
+import CustomTooltip from '../customizedTootip/CustomizedTooltip';
+import type { MainGraphData, WeatherRiskData } from '@/types/mainGraph.type';
+import WeatherRiskText from '../weatherRiskText/WeatherRiskText';
 
 interface MainLineChartProps {
-  graphData: {
-    min: number;
-    max: number;
-    weatherMetric: WeatherMetrics;
-    valuePerTime: Array<{ name: string; value: number }>;
-  };
+  graphData: MainGraphData;
+  weatherRiskData: WeatherRiskData[];
 }
 
-const MainLineChart = ({ graphData }: MainLineChartProps) => {
+const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
   const pointSpacing = 100;
   const chartWidth = Math.max(
     300,
     (graphData.valuePerTime.length - 1) * pointSpacing + 100
   );
 
-  // Y축 tick 값들 계산
-  const generateYTicks = () => {
-    const { min, max } = graphData;
-    const ticks = [];
-    const step = (max - min) / 5; // 6개 tick이므로 5개 간격
-    for (let i = 0; i <= 5; i++) {
-      ticks.push(Math.round((min + step * i) * 10) / 10);
-    }
-    return ticks.reverse(); // 위에서부터 아래로
-  };
+  const yTicks = generateYTicks({ min: graphData.min, max: graphData.max });
 
-  const yTicks = generateYTicks();
+  const GraphHighlight = (
+    <defs>
+      <linearGradient id="customGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="rgba(253, 254, 254, 0.40)" />
+        <stop offset="60%" stopColor="rgba(253, 254, 254, 0.20)" />
+        <stop offset="88%" stopColor="rgba(253, 254, 254, 0.00)" />
+      </linearGradient>
+    </defs>
+  );
 
-  // 커스텀 Tooltip 컴포넌트
-  const CustomTooltip = ({
-    active,
-    payload,
-    label,
-  }: {
-    active?: boolean;
-    payload?: Array<{ value: number; name: string }>;
-    label?: string;
-  }) => {
-    if (active && payload && payload.length) {
-      return (
-        <ToolTip
-          direction="top"
-          content={
-            <div style={{ ...Typography.Caption_S, color: GrayScale.G900 }}>
-              {`${label}시: ${payload[0].value}${getUnit(
-                graphData.weatherMetric
-              )}`}
-            </div>
-          }
-        />
-      );
-    }
-    return null;
+  const processedData = getProcessedData(graphData, weatherRiskData);
+
+  const wrapperMargin = {
+    top: 53,
+    right: -40,
+    left: 12,
+    bottom: 55,
   };
 
   return (
-    <div
-      style={{
-        width: '100%',
-        position: 'relative',
-        // backgroundColor: 'pink',
-      }}
-    >
-      {/* 고정된 Y축 */}
-      <div
-        style={{
-          position: 'absolute',
-          right: '0px',
-          top: '0px',
-          bottom: '0px',
-          width: '28px',
-          zIndex: 10,
-          // pointerEvents: 'none',
-          // backgroundColor: 'red',
-          marginTop: '8px',
-          display: 'inline-flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          gap: '20px',
-          ...Typography.Caption_S,
-          color: Assets.Text.Global.Clear,
-        }}
-      >
+    <div css={S.MainLineChart}>
+      {/* Fixed Y축 */}
+      <div css={S.FixedYAxisWrapper}>
         {getUnit(graphData.weatherMetric)}
-        <div
-          css={css`
-            display: flex;
-            height: 250px;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            align-self: stretch;
-          `}
-        >
+        <div css={S.YAxis}>
           {yTicks.map(tick => (
-            <div
-              key={tick}
-              style={{
-                ...Typography.Caption_S,
-                color: Assets.Text.Global.Clear,
-              }}
-            >
+            <div key={tick} css={S.YAxisTick}>
               {tick}
             </div>
           ))}
@@ -151,62 +64,76 @@ const MainLineChart = ({ graphData }: MainLineChartProps) => {
       </div>
 
       {/* Line Chart */}
-      <div
-        style={{
-          overflowX: 'auto',
-          width: 'calc(100% - 44px)',
-          // backgroundColor: 'green',
-        }}
-      >
-        <LineChart
-          width={chartWidth}
-          height={373}
-          data={graphData.valuePerTime}
-          margin={{
-            top: 53,
-            right: -40,
-            left: 12,
-            bottom: 55,
-          }}
-        >
-          <CartesianGrid
-            horizontal={true}
-            vertical={false}
-            stroke={Opacity.White.W200}
-            strokeWidth={2}
-          />
-          <XAxis
-            dataKey="name"
-            tickLine={false}
-            tick={{ fill: Assets.Text.Global.Clear }}
-            axisLine={false}
-            tickMargin={60}
-          />
-          <YAxis
-            domain={[graphData.min, graphData.max]}
-            tickCount={6}
-            type="number"
-            axisLine={false}
-            orientation="right"
-            tickLine={false}
-            style={{
-              display: 'none',
-            }}
-          />
-          <Tooltip
-            content={<CustomTooltip />}
-            // position={{ x: 0, y: -30 }}
-            // offset={-30}
-            // cursor={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke={GrayScale.White}
-            strokeWidth={4}
-            dot={<CustomizedDot cx={0} cy={0} />}
-          />
-        </LineChart>
+      <div css={S.LineChartScrollWrapper}>
+        <div css={S.LineChartInnerWrapper(chartWidth)}>
+          <ComposedChart
+            width={chartWidth}
+            height={373}
+            data={processedData}
+            margin={wrapperMargin}
+          >
+            {GraphHighlight}
+            <CartesianGrid
+              horizontal={true}
+              vertical={false}
+              stroke={Opacity.White.W200}
+              strokeWidth={2}
+            />
+            <XAxis
+              dataKey="name"
+              tickLine={false}
+              tick={{ fill: Assets.Text.Global.Clear }}
+              axisLine={false}
+              tickMargin={60}
+            />
+            <YAxis
+              domain={[graphData.min, graphData.max]}
+              tickCount={6}
+              type="number"
+              axisLine={false}
+              orientation="right"
+              tickLine={false}
+              style={{
+                display: 'none',
+              }}
+            />
+            <Tooltip content={<CustomTooltip graphData={graphData} />} />
+
+            {weatherRiskData.map((item, index) => (
+              <Area
+                key={item.category}
+                type="monotone"
+                dataKey={`areaValue_${index}`}
+                stroke="transparent"
+                fill="url(#customGradient)"
+              />
+            ))}
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke={GrayScale.White}
+              strokeWidth={4}
+              dot={
+                <CustomizedDot
+                  cx={0}
+                  cy={0}
+                  weatherRiskData={weatherRiskData}
+                  wrapperMargin={wrapperMargin}
+                />
+              }
+            />
+          </ComposedChart>
+
+          {weatherRiskData.map((riskData, index) => (
+            <WeatherRiskText
+              key={`weatherRisk_${index}`}
+              riskData={riskData}
+              graphData={graphData}
+              index={index}
+              pointSpacing={pointSpacing}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
