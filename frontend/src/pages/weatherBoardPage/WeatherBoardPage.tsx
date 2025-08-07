@@ -18,6 +18,7 @@ const WeatherBoardPage = () => {
         css={css`
           width: 100%;
           text-align: start;
+          margin-bottom: 4px;
         `}
       >
         <p css={S.MyFarmAddress}>{address}</p>
