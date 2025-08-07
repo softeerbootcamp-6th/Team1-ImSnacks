@@ -1,4 +1,4 @@
-package com.imsnacks.Nyeoreumnagi.my_work;
+package com.imsnacks.Nyeoreumnagi.work.entity;
 
 public enum WorkStatus {
     COMPLETED,

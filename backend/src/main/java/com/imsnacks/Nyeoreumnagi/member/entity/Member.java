@@ -27,7 +27,7 @@ public class Member {
     private String nickname;
 
     @Column(nullable = false)
-    private int phoneNumber;
+    private String phoneNumber;
 
     @Setter
     private UUID refreshToken;
