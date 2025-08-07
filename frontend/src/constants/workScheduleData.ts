@@ -1,6 +1,6 @@
 export const WORK_SCHEDULE_DATA = [
   {
-    date: '2025-08-08',
+    date: '2025-08-06',
     workCardData: [
       {
         id: 1,
@@ -12,13 +12,13 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: '2025-08-09',
+    date: '2025-08-07',
     workCardData: [
       {
         id: 2,
         cropName: '배',
         workName: '배 맛있다',
-        workTime: '13:00 - 15:00',
+        workTime: '00:00 - 03:00',
         isCompleted: true,
       },
 
@@ -26,7 +26,7 @@ export const WORK_SCHEDULE_DATA = [
         id: 3,
         cropName: '복숭아',
         workName: '복숭아 맛있다!!!',
-        workTime: '13:10 - 15:10',
+        workTime: '03:20 - 05:10',
         isCompleted: true,
       },
     ],
