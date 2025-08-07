@@ -16,22 +16,27 @@ const WeatherRiskText = ({
 }: WeatherRiskTextProps) => {
   const { category, startTime, endTime } = riskData;
 
-  const startIndex = graphData.valuePerTime.findIndex(
-    item => item.name === startTime
-  );
-  const endIndex = endTime
-    ? graphData.valuePerTime.findIndex(item => item.name === endTime)
-    : startIndex;
+  const getCenterX = (startTime: string, endTime?: string) => {
+    const startIndex = graphData.valuePerTime.findIndex(
+      item => item.name === startTime
+    );
+    const endIndex = endTime
+      ? graphData.valuePerTime.findIndex(item => item.name === endTime)
+      : startIndex;
 
-  if (startIndex === -1 || endIndex === -1) return null;
+    // 중간 위치
+    const centerIndex = (startIndex + endIndex) / 2;
 
-  // 중간 위치
-  const centerIndex = (startIndex + endIndex) / 2;
+    const centerX = 12 + centerIndex * pointSpacing;
 
-  const centerX = 12 + centerIndex * pointSpacing;
+    return centerX;
+  };
 
   return (
-    <div key={`category_${index}`} css={S.WeatherRiskText(centerX, category)}>
+    <div
+      key={`category_${index}`}
+      css={S.WeatherRiskText(getCenterX(startTime, endTime), category)}
+    >
       {category}
     </div>
   );
