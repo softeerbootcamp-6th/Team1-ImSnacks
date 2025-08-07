@@ -8,14 +8,14 @@ public class CustomResponseBody<T> {
     private String msg;
     private T data;
 
-    public CustomResponseBody(StatusCode statusCode, String msg, T data) {
-        this.code = statusCode.getCode();
+    public CustomResponseBody(int statusCode, String msg, T data) {
+        this.code = statusCode;
         this.msg = msg;
         this.data = data;
     }
 
-    public CustomResponseBody(StatusCode statusCode, String msg) {
-        this.code = statusCode.getCode();
+    public CustomResponseBody(int statusCode, String msg) {
+        this.code = statusCode;
         this.msg = msg;
     }
 }
