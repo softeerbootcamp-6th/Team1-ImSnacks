@@ -73,9 +73,12 @@ export const useDragAndDrop = <T>({
   );
 
   const handleMouseUp = useCallback(() => {
+    if (draggedItemId !== null) {
+      onPositionChange([...items]);
+    }
     setDraggedItemId(null);
     setIsDragging(false);
-  }, []);
+  }, [draggedItemId, items, onPositionChange]);
 
   const isItemDragging = useCallback(
     (itemId: number | string) => draggedItemId === itemId,

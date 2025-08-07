@@ -8,6 +8,8 @@ export const useInitialWorkBlocks = () => {
     cropName: string;
     workName: string;
     workTime: string;
+    startTime: string;
+    endTime: string;
     position: { x: number; y: number };
     width: number;
   }> = [];
@@ -39,6 +41,8 @@ export const useInitialWorkBlocks = () => {
       cropName: work.cropName,
       workName: work.workName,
       workTime: work.workTime,
+      startTime: work.startTime,
+      endTime: work.endTime,
       position: { x, y: 50 }, // 기본 y 위치
       width,
     });
