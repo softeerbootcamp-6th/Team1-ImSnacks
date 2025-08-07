@@ -1,4 +1,6 @@
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
+import { DropShadow } from '@/styles/effects';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
@@ -8,6 +10,9 @@ const Headline = css`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 124px;
+  position: relative;
+  margin-bottom: ${Spacing.Spacing800};
 `;
 
 const GreetingMessage = css`
@@ -25,11 +30,10 @@ const WeatherRisk = css`
 `;
 
 const WeatherRiskText = css`
-  border-radius: 8px;
-  border: 2px solid rgba(253, 254, 254, 0.4);
-  background: ${Opacity.White.W100};
-  box-shadow: 3px 0 4px 0 rgba(116, 98, 98, 0.08) inset,
-    0 3px 4px 0 rgba(0, 0, 0, 0.08) inset;
+  border-radius: 12px;
+  ${customBorderGradientStyles.gradientBorder};
+  background: ${Opacity.White.W200};
+  ${DropShadow.Ds200};
   padding: 2px 16px;
 `;
 
@@ -37,7 +41,6 @@ const HeadlineWeather = css`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: ${Spacing.Spacing900};
 `;
 
 const HeadlineDate = css`
@@ -46,6 +49,14 @@ const HeadlineDate = css`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin-right: 200px;
+`;
+
+const HeadlineWeatherIcon = css`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 `;
 
 export default {
@@ -55,4 +66,5 @@ export default {
   WeatherRiskText,
   HeadlineWeather,
   HeadlineDate,
+  HeadlineWeatherIcon,
 };

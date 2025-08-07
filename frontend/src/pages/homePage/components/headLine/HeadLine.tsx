@@ -6,7 +6,7 @@ import { css } from '@emotion/react';
 const HeadLine = () => {
   const nickName = '밤비';
   const data = {
-    isRisk: true,
+    hasWeatherRisk: true,
     startHour: 11,
     endHour: 15,
     message: '오전 11시부터 오후 3시까지 우박',
@@ -24,7 +24,7 @@ const HeadLine = () => {
       <div css={S.GreetingMessage}>
         <div>좋은 아침이에요, {nickName}님!</div>
 
-        {data.isRisk ? (
+        {data.hasWeatherRisk ? (
           <div css={S.WeatherRisk}>
             <span css={S.WeatherRiskText}>{data.message}</span>
             <span
@@ -44,15 +44,7 @@ const HeadLine = () => {
           <span>{currentTime.date}</span>
           <span>{currentTime.time}</span>
         </div>
-        <div>
-          <LessCloudy
-            width={160}
-            height={124}
-            css={css`
-              z-index: 1;
-            `}
-          />
-        </div>
+        <LessCloudy width={200} height={150} css={S.HeadlineWeatherIcon} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { ColorPrimary, GrayScale } from '@/styles/colors';
+import { Assets, ColorPrimary, GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { css } from '@emotion/react';
 
@@ -15,6 +15,10 @@ const GraphMenuTabActive = css`
   border-radius: 200px;
   background-color: ${ColorPrimary.B700};
   color: ${GrayScale.White};
+
+  svg path {
+    fill: ${GrayScale.White};
+  }
 `;
 
 const GraphMenuTabDefault = css`
@@ -26,8 +30,16 @@ const GraphMenuTabDefault = css`
   border-radius: 200px;
   background-color: ${GrayScale.White};
 
+  svg {
+    color: ${Assets.Global.Button.Default};
+    transition: color 0.2s ease;
+  }
+
   &:hover {
     background-color: ${ColorPrimary.B300};
+    svg path {
+      fill: ${GrayScale.White};
+    }
   }
 `;
 
