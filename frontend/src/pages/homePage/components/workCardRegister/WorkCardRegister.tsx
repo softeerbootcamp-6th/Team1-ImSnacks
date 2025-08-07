@@ -2,7 +2,6 @@ import { Spacing } from '@/styles/spacing';
 import { FlexStyles } from '@/styles/commonStyles';
 import { css } from '@emotion/react';
 import S from './WorkCardRegister.style';
-import type { CSSProperties } from 'react';
 
 interface WorkCardRegisterProps {
   id?: number;

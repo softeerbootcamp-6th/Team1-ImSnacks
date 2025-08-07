@@ -17,9 +17,12 @@ const WorkCardContainer = (isDragging: boolean) => css`
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   opacity: ${isDragging ? 0.8 : 1};
-  transition: all 0.2s ease;
+  transition: ${isDragging ? 'none' : 'all 0.2s ease'};
   z-index: ${isDragging ? 1000 : 1};
   user-select: none;
+  will-change: transform;
+
+  cursor: grab;
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
