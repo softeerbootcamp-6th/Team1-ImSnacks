@@ -2,6 +2,7 @@ import { Spacing } from '@/styles/spacing';
 import { FlexStyles } from '@/styles/commonStyles';
 import { css } from '@emotion/react';
 import S from './WorkCardRegister.style';
+import type { CSSProperties } from 'react';
 
 interface WorkCardRegisterProps {
   id?: number;
@@ -11,6 +12,7 @@ interface WorkCardRegisterProps {
   isDragging?: boolean;
   style?: React.CSSProperties;
   onMouseDown?: (e: React.MouseEvent) => void;
+  width?: number;
 }
 
 const WorkCardRegister = ({
@@ -20,11 +22,15 @@ const WorkCardRegister = ({
   isDragging = false,
   style,
   onMouseDown,
+  width,
 }: WorkCardRegisterProps) => {
   return (
     <div
       css={S.WorkCardContainer(isDragging)}
-      style={style}
+      style={{
+        ...style,
+        width: width ? `${width}px` : 'auto',
+      }}
       onMouseDown={onMouseDown}
     >
       <div css={S.WorkCardContent}>
