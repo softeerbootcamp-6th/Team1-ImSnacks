@@ -1,18 +1,10 @@
 import { WORK_SCHEDULE_DATA } from '@/constants/workScheduleData';
 import { groupDataRecordStructure } from '@/utils/groupDataRecord';
 import dayjs from 'dayjs';
+import type { WorkBlockType } from '@/types/workCard.type';
 
 export const useInitialWorkBlocks = () => {
-  const blocks: Array<{
-    id: number;
-    cropName: string;
-    workName: string;
-    workTime: string;
-    startTime: string;
-    endTime: string;
-    position: { x: number; y: number };
-    width: number;
-  }> = [];
+  const blocks: WorkBlockType[] = [];
 
   const todayWorkScheduleData =
     groupDataRecordStructure(WORK_SCHEDULE_DATA, 'date', 'workCardData')[

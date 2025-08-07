@@ -6,6 +6,7 @@ import { GrayScale } from '@/styles/colors';
 import { useInitialWorkBlocks } from '@/pages/homePage/hooks/useInitialWorkBlocks';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import dayjs from 'dayjs';
+import type { WorkBlockType } from '@/types/workCard.type';
 
 const WorkContainer = () => {
   const [workBlocks, setWorkBlocks] = useState(useInitialWorkBlocks());
@@ -13,9 +14,9 @@ const WorkContainer = () => {
   const {
     containerRef,
     isDragging,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
+    startDrag,
+    updatePosition,
+    endDrag,
     isItemDragging,
   } = useDragAndDrop({
     items: workBlocks,
@@ -27,60 +28,47 @@ const WorkContainer = () => {
   });
 
   // 드래그 중 workTime 업데이트
-  const updateWorkTime = (e: React.MouseEvent, id: number) => {
-    const blocksWithUpdatedTime = workBlocks.map(block => {
-      // id가 일치하는 블록만 업데이트
-      if (block.id === id) {
-        // x 위치를 시간으로 변환 (100px = 1시간)
-        const newStartHour = Math.round(block.position.x / 100);
-        const newStartMinutes = Math.round((block.position.x % 100) * 0.6); // 100px = 60분
+  const updateBlockWorkTime = (block: WorkBlockType) => {
+    // x 위치를 시간으로 변환 (100px = 1시간)
+    const newStartHour = Math.round(block.position.x / 100);
+    const newStartMinutes = Math.round((block.position.x % 100) * 0.6); // 100px = 60분
 
-        // 기존 작업 시간 길이 유지
-        const originalStartTime = dayjs(block.startTime);
-        const originalEndTime = dayjs(block.endTime);
-        const durationMinutes = originalEndTime.diff(
-          originalStartTime,
-          'minute'
-        );
+    // 기존 작업 시간 길이 유지
+    const originalStartTime = dayjs(block.startTime);
+    const originalEndTime = dayjs(block.endTime);
+    const durationMinutes = originalEndTime.diff(originalStartTime, 'minute');
 
-        // 새로운 시작 시간 계산 (x 위치 기반)
-        const newStartTime = dayjs().hour(newStartHour).minute(newStartMinutes);
-        const newEndTime = newStartTime.add(durationMinutes, 'minute');
+    // 새로운 시작 시간 계산 (x 위치 기반)
+    const newStartTime = dayjs().hour(newStartHour).minute(newStartMinutes);
+    const newEndTime = newStartTime.add(durationMinutes, 'minute');
+    console.log(
+      'updateWorkTime',
+      originalStartTime.toISOString(),
+      originalEndTime.toISOString(),
+      newStartTime.toISOString(),
+      newEndTime.toISOString()
+    );
 
-        return {
-          ...block,
-          startTime: newStartTime.toISOString(),
-          endTime: newEndTime.toISOString(),
-          workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
-            'HH:mm'
-          )}`,
-        };
-      }
-      return block; // 다른 블록은 그대로 유지
-    });
-    setWorkBlocks(blocksWithUpdatedTime);
+    return {
+      ...block,
+      startTime: newStartTime.toISOString(),
+      endTime: newEndTime.toISOString(),
+      workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
+        'HH:mm'
+      )}`,
+    };
   };
 
   return (
     <div
       ref={containerRef}
       onMouseMove={e => {
-        handleMouseMove(e);
-        if (isDragging) {
-          // 드래그 중인 블록의 id 찾기
-          const draggedBlock = workBlocks.find(block =>
-            isItemDragging(block.id)
-          );
-          if (draggedBlock) {
-            updateWorkTime(e, draggedBlock.id);
-          }
-          console.log(draggedBlock);
-        }
+        updatePosition(e, block => updateBlockWorkTime(block));
       }}
       onMouseUp={() => {
-        handleMouseUp();
+        endDrag();
       }}
-      onMouseLeave={handleMouseUp}
+      onMouseLeave={endDrag}
       css={css`
         width: 100%;
         overflow-x: auto;
@@ -116,20 +104,22 @@ const WorkContainer = () => {
         <WorkCells isDragging={isDragging} />
 
         {workBlocks.map(block => (
-          <WorkCardRegister
-            key={block.id}
-            id={block.id}
-            cropName={block.cropName}
-            workName={block.workName}
-            workTime={block.workTime}
-            isDragging={isItemDragging(block.id)}
-            width={block.width}
-            x={block.position.x}
-            y={block.position.y}
-            onMouseDown={e => {
-              handleMouseDown(e, block.id);
-            }}
-          />
+          <>
+            <WorkCardRegister
+              key={block.id}
+              id={block.id}
+              cropName={block.cropName}
+              workName={block.workName}
+              workTime={block.workTime}
+              isDragging={isItemDragging(block.id)}
+              width={block.width}
+              x={block.position.x}
+              y={block.position.y}
+              onMouseDown={e => {
+                startDrag(e, block.id);
+              }}
+            />
+          </>
         ))}
       </div>
     </div>
