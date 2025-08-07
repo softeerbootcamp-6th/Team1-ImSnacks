@@ -1,9 +1,10 @@
-package com.imsnacks.Nyeoreumnagi.weather;
+package com.imsnacks.Nyeoreumnagi.weather.controller;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
+import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
