@@ -93,7 +93,7 @@ const WeatherBoardTemparature = () => {
     >
       <div style={{ position: 'absolute', top: '16px', left: '20px' }}>
         <h3>최고기온</h3>
-        <p>{weeklyTemperatureData.highestTemperature}°C</p>
+        <p>{weeklyTemperatureData.highestTemperature}°</p>
       </div>
 
       <ResponsiveContainer width="100%" height="100%">
