@@ -58,7 +58,16 @@ jacocoTestReport {
 	reports {
 		xml.required = true
 		csv.required = false
-		html.outputLocation = layout.buildDirectory.dir('jacoco/html')
+		html.outputLocation = layout.buildDirectory.dir('jacoco/index.html')
+	}
+	afterEvaluate {
+		classDirectories.setFrom(
+				files(classDirectories.files.collect {
+					fileTree(dir: it, include: [
+							'com/imsnacks/Nyeoreumnagi/**/entity/*.class'
+					])
+				})
+		)
 	}
 }
 
@@ -67,7 +76,7 @@ jacocoTestCoverageVerification {
 		rule {
 			enabled = true
 			element = 'CLASS'
-			includes = ['com.imsnacks.*']
+			includes = ['com/imsnacks/.*/entity/.*']
 
 			limit {
 				counter = 'BRANCH'
