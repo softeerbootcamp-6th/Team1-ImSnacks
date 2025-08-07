@@ -8,20 +8,21 @@ interface ToolTipProps {
   content: ReactNode;
   type: TooltipType;
   offset?: number;
+  isAbsolute?: boolean;
 }
 
-const ToolTip = ({ direction, content, type, offset }: ToolTipProps) => {
+const ToolTip = ({
+  direction,
+  content,
+  type,
+  offset,
+  isAbsolute = true,
+}: ToolTipProps) => {
   return (
-    <>
-      <div css={S.ToolTip(direction, type, offset)}>
-        <ArrowIcon
-          css={S.TooltipArrow(direction, type, offset)}
-          width={20}
-          height={20}
-        />
-        {content}
-      </div>
-    </>
+    <div css={S.ToolTip(direction, type, offset, isAbsolute)}>
+      <ArrowIcon css={S.TooltipArrow(direction, type)} width={20} height={20} />
+      {content}
+    </div>
   );
 };
 
