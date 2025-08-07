@@ -3,7 +3,7 @@ import { groupDataRecordStructure } from '@/utils/groupDataRecord';
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
 
-export const useInitialWorkBlocks = () => {
+const getInitialWorkBlocks = () => {
   const blocks: WorkBlockType[] = [];
 
   const todayWorkScheduleData =
@@ -42,3 +42,5 @@ export const useInitialWorkBlocks = () => {
 
   return blocks;
 };
+
+export default getInitialWorkBlocks;

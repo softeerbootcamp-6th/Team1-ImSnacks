@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 interface Position {
   x: number;
@@ -29,6 +29,20 @@ export const useDragAndDrop = <T>({
   const latestMousePos = useRef<{ x: number; y: number } | null>(null);
 
   const [isDragging, setIsDragging] = useState(false);
+  const [currentDraggingItem, setCurrentDraggingItem] = useState<T | null>(
+    null
+  );
+
+  // 드래그 중 workBlocks가 바뀌면 currentDraggingItem도 최신값으로 동기화
+  useEffect(() => {
+    if (isDragging && currentDraggingItem) {
+      const updated = itemsRef.current.find(
+        item => getItemId(item) === getItemId(currentDraggingItem)
+      );
+      if (updated) setCurrentDraggingItem(updated);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemsRef.current, isDragging]);
 
   const startDrag = useCallback(
     (e: React.MouseEvent, itemId: number | string, items: T[]) => {
@@ -47,6 +61,7 @@ export const useDragAndDrop = <T>({
 
       draggedItemIdRef.current = itemId;
       itemsRef.current = items;
+      setCurrentDraggingItem(item);
       setIsDragging(true);
     },
     [getItemId, getItemPosition]
@@ -72,15 +87,23 @@ export const useDragAndDrop = <T>({
 
         const updatedItems = itemsRef.current.map(item => {
           if (getItemId(item) === itemId) {
-            return updateBlock(item, { x, y });
+            const updatedItem = updateBlock(item, { x, y });
+            if (
+              currentDraggingItem &&
+              getItemId(currentDraggingItem) === itemId
+            ) {
+              setCurrentDraggingItem(updatedItem);
+            }
+            return updatedItem;
           }
           return item;
         });
 
         onPositionChange(updatedItems);
+        itemsRef.current = updatedItems;
       });
     },
-    [getItemId, onPositionChange]
+    [getItemId, onPositionChange, currentDraggingItem]
   );
 
   const endDrag = useCallback(() => {
@@ -90,21 +113,13 @@ export const useDragAndDrop = <T>({
     }
     draggedItemIdRef.current = null;
     latestMousePos.current = null;
+    setCurrentDraggingItem(null);
     setIsDragging(false);
   }, []);
 
   const isItemDragging = useCallback(
     (id: number | string) => draggedItemIdRef.current === id,
     []
-  );
-
-  const getDraggingItem = useCallback(
-    (currentItems?: T[]) => {
-      if (draggedItemIdRef.current === null) return null;
-      const items = currentItems || itemsRef.current;
-      return items.find(item => getItemId(item) === draggedItemIdRef.current);
-    },
-    [getItemId]
   );
 
   return {
@@ -114,6 +129,6 @@ export const useDragAndDrop = <T>({
     updatePosition,
     endDrag,
     isItemDragging,
-    getDraggingItem,
+    currentDraggingItem,
   };
 };
