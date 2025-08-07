@@ -1,6 +1,6 @@
 import { WEATHER_METRICS } from '@/types/weather.types';
 
-export const MENU_LIST = [
+export const GRAPH_MENU_LIST = [
   {
     title: '강수량',
     weatherMetric: WEATHER_METRICS.PRECIPITATION,
