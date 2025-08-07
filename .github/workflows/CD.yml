@@ -79,5 +79,7 @@ jobs:
             touch ./.env
             echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> ./.env
             echo "DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}" >> ./.env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> ./.env
+            echo "ACCESS_TOKEN_EXPIRED_IN=${{ secrets.ACCESS_TOKEN_EXPIRED_IN }}" >> ./.env
             chmod +x deploy.sh
             source deploy.sh

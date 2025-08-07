@@ -13,6 +13,8 @@ services:
       - app-network
     environment:
       - TZ=Asia/Seoul
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_SECRET_KEY=${ACCESS_TOKEN_EXPIRED_IN}
 
 networks:
   app-network:
