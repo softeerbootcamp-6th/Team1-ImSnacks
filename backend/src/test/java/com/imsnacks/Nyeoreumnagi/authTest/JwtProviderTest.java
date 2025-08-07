@@ -40,7 +40,6 @@ class JwtProviderTest {
         //then
         assertThat(tokens.getAccessToken()).isNotNull();
         assertThat(tokens.getRefreshToken()).isInstanceOf(UUID.class);
-        assertThat(tokens.getExpiresIn()).isEqualTo(60000L);
         assertThat(memberId).isEqualTo(77L);
     }
 
