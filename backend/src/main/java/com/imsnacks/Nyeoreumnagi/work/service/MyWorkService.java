@@ -1,7 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.work.service;
 
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
-import com.imsnacks.Nyeoreumnagi.work.MemberRepository;
+import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ResisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ResisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
