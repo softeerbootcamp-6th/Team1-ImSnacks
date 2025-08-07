@@ -16,7 +16,7 @@ const GraphMenuTab = ({
   setCurrentTab,
 }: GraphMenuTabProps) => {
   const isActive = currentTab === weatherMetric;
-  const FlatIconComponent = FLAT_ICON[title];
+  const FlatIconComponent = FLAT_ICON[weatherMetric];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
