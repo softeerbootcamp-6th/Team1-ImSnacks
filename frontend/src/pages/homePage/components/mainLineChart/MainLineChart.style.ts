@@ -5,6 +5,18 @@ import { css } from '@emotion/react';
 const MainLineChart = css`
   width: 100%;
   position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 44px;
+    width: 25px;
+    height: 90%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.1), transparent);
+    pointer-events: none;
+    z-index: 5;
+  }
 `;
 
 const FixedYAxisWrapper = css`
