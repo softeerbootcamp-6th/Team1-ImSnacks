@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Getter
-@Setter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +29,6 @@ public class Member {
     @Column(nullable = false)
     private int phoneNumber;
 
+    @Setter
     private UUID refreshToken;
 }
