@@ -1,8 +1,10 @@
-package com.imsnacks.Nyeoreumnagi.recommended_work.entity;
+package com.imsnacks.Nyeoreumnagi.work.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class RecommendedWork {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
