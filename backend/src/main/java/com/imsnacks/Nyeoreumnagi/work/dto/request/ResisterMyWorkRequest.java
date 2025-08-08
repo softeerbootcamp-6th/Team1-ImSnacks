@@ -1,4 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.work.dto.request;
 
-public record ResisterMyWorkRequest(long recommendedWorkId, long myCropId, String startTime, String endTime) {
+import jakarta.validation.constraints.NotBlank;
+
+public record ResisterMyWorkRequest(@NotBlank long recommendedWorkId, @NotBlank long myCropId, @NotBlank String startTime, @NotBlank String endTime) {
 }

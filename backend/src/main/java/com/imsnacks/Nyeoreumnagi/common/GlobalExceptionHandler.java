@@ -8,6 +8,7 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus;
+import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,5 +31,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CustomResponseBody<Void>> handleJwtException(JwtException ex) {
         AuthResponseStatus status = ex.getStatus();
         return ResponseUtil.error(status.getCode(), status.getMessage());
+    }
+
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public ResponseEntity<CustomResponseBody<Void>> handleValidationException(UnexpectedTypeException ex) {
+        return ResponseUtil.error(400, ex.getMessage());
     }
 }
