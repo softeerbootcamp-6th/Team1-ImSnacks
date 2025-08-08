@@ -2,6 +2,7 @@ import { Spacing } from '@/styles/spacing';
 import { FlexStyles } from '@/styles/commonStyles';
 import { css } from '@emotion/react';
 import S from './WorkCardRegister.style';
+import type { CropNameType } from '@/types/crop.type';
 
 interface WorkCardRegisterProps {
   id?: number;
@@ -27,11 +28,11 @@ const WorkCardRegister = ({
 }: WorkCardRegisterProps) => {
   return (
     <div
-      css={S.WorkCardContainer(isDragging, x, y, width)}
+      css={S.WorkCardContainer({ isDragging, x, y, width })}
       onMouseDown={onMouseDown}
     >
       <div css={S.WorkCardContent}>
-        <div css={S.WorkCardColorBar(cropName)} />
+        <div css={S.WorkCardColorBar(cropName as CropNameType)} />
         <div css={S.WorkCardInfo}>
           <div
             css={css`

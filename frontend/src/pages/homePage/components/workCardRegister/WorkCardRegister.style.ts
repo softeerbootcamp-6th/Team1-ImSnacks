@@ -4,7 +4,7 @@ import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { CROP_NAME } from '@/constants/cropName';
-import type { CropNameType } from '@/constants/cropName';
+import type { CropNameType } from '@/types/crop.type';
 
 interface WorkCardContainerProps {
   isDragging: boolean;
@@ -57,7 +57,7 @@ const WorkCardContent = css`
 const WorkCardColorBar = (cropName: CropNameType) => css`
   width: 4px;
   height: 42px;
-  background-color: ${ColorStatus.Crops[cropName]};
+  background-color: ${ColorStatus.Crops[CROP_NAME[cropName]]};
   border-radius: ${BorderRadius.Base.Hard};
 `;
 

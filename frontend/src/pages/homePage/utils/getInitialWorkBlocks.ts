@@ -2,6 +2,7 @@ import { WORK_SCHEDULE_DATA } from '@/constants/workScheduleData';
 import { groupDataRecordStructure } from '@/utils/groupDataRecord';
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
+import type { CropNameType } from '@/types/crop.type';
 
 const getInitialWorkBlocks = () => {
   const blocks: WorkBlockType[] = [];
@@ -30,7 +31,7 @@ const getInitialWorkBlocks = () => {
 
     blocks.push({
       id: work.id,
-      cropName: work.cropName,
+      cropName: work.cropName as CropNameType,
       workName: work.workName,
       workTime: work.workTime,
       startTime: work.startTime,
