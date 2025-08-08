@@ -1,9 +1,10 @@
 import WorkChip from '../workChip/WorkChip';
 import { WORK_CHIP_TYPES } from '@/types/workChip.type';
 import S from './WorkCardWeb.style';
+import type { CropNameType } from '@/types/crop.type';
 
 interface WorkCardWebProps {
-  cropName: string;
+  cropName: CropNameType;
   workName: string;
   workTime: string;
   isCompleted: boolean;

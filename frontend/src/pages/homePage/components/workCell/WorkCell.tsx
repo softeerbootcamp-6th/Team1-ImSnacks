@@ -7,9 +7,10 @@ import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
 interface WorkCellProps {
   type: WorkCellType;
   status: WorkCellStatus;
+  isDragging?: boolean;
 }
 
-const WorkCell = ({ type, status }: WorkCellProps) => {
+const WorkCell = ({ type, status, isDragging = false }: WorkCellProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -20,10 +21,14 @@ const WorkCell = ({ type, status }: WorkCellProps) => {
     >
       {isHovered && (
         <div css={S.HoverCell}>
-          <div css={S.DragIcon}>
-            <IC24DragIcon width={24} height={24} fill={ColorPrimary.B300} />
-          </div>
-          작업 일정을{'\n'}드래그 하세요
+          {!isDragging && (
+            <>
+              <div css={S.DragIcon}>
+                <IC24DragIcon width={24} height={24} fill={ColorPrimary.B300} />
+              </div>
+              <p>작업 일정을{'\n'}드래그 하세요</p>
+            </>
+          )}
         </div>
       )}
     </div>

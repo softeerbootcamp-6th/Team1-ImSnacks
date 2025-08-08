@@ -5,4 +5,4 @@ export const CROP_NAME = {
   배: 'Pear',
   감귤: 'Mandarin',
   단감: 'Persimmon',
-};
+} as const;

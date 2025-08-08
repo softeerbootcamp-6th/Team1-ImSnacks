@@ -1,24 +1,28 @@
 export const WORK_SCHEDULE_DATA = [
   {
-    date: '2025-08-08',
+    date: '2025-08-06',
     workCardData: [
       {
         id: 1,
         cropName: '포도',
         workName: '맛있게 먹기',
         workTime: '10:00 - 12:00',
+        startTime: '2025-08-06T10:00:00',
+        endTime: '2025-08-06T12:00:00',
         isCompleted: false,
       },
     ],
   },
   {
-    date: '2025-08-09',
+    date: '2025-08-08',
     workCardData: [
       {
         id: 2,
         cropName: '배',
         workName: '배 맛있다',
-        workTime: '13:00 - 15:00',
+        workTime: '00:00 - 03:00',
+        startTime: '2025-08-07T00:00:00',
+        endTime: '2025-08-07T03:00:00',
         isCompleted: true,
       },
 
@@ -26,7 +30,9 @@ export const WORK_SCHEDULE_DATA = [
         id: 3,
         cropName: '복숭아',
         workName: '복숭아 맛있다!!!',
-        workTime: '13:10 - 15:10',
+        workTime: '03:20 - 05:10',
+        startTime: '2025-08-07T03:20:00',
+        endTime: '2025-08-07T05:10:00',
         isCompleted: true,
       },
     ],
