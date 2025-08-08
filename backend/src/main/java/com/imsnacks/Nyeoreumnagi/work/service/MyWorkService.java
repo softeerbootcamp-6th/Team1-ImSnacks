@@ -5,7 +5,7 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
-import com.imsnacks.Nyeoreumnagi.work.dto.request.ResisterMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ResisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
@@ -33,7 +33,7 @@ public class MyWorkService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ResisterMyWorkResponse registerMyWork(ResisterMyWorkRequest request, Long memberId) {
+    public ResisterMyWorkResponse registerMyWork(RegisterMyWorkRequest request, Long memberId) {
         if (!validateTime(request.startTime(), request.endTime())) {
             throw new WorkException(INVALID_MY_WORK_TIME);
         }
