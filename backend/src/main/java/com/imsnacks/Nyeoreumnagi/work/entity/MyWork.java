@@ -57,7 +57,10 @@ public class MyWork {
         return myWork;
     }
 
-
+    public void modifyWorkTime(LocalDateTime startTime, LocalDateTime endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+    };
 
 
 }
