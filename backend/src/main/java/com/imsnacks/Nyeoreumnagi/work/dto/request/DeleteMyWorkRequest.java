@@ -1,3 +1,5 @@
 package com.imsnacks.Nyeoreumnagi.work.dto.request;
 
-public record DeleteMyWorkRequest (long myWorkId){}
+import jakarta.validation.constraints.NotNull;
+
+public record DeleteMyWorkRequest (@NotNull Long myWorkId){}
