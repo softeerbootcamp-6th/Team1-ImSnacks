@@ -24,4 +24,9 @@ public class WeatherController {
     public ResponseEntity<CustomResponseBody<GetWeatherGraphResponse>> getWeatherGraph(@PreAuthorize Long memberId, @RequestParam WeatherMetric weatherMetric){
         return ResponseUtil.success(weatherService.getWeatherGraph(memberId, weatherMetric));
     }
+
+    @GetMapping("/fcstRisk")
+    public ResponseEntity<CustomResponseBody<GetFcstRiskResponse>> getFcstRiskResponse(@PreAuthorize Long memberId){
+        return ResponseUtil.success(weatherService.getWeatherRisk(memberId));
+    }
 }
