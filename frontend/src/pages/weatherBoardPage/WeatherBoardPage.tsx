@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import S from './WeatherBoardPage.style';
-import WeatherBoardTemparature from './components/weatherBoardTemperature/WeatherBoardTemparature';
+import WeatherBoardTemperature from './components/weatherBoardTemperature/WeatherBoardTemperature';
 import WeatherBoardWeekly from './components/weatherBoardWeekly/WeatherBoardWeekly';
 import WeatherBoardRain from './components/weatherBoardRain/WeatherBoardRain';
 import WeatherBoardHumidity from './components/weatherBoardHumidity/WeatherBoardHumidity';
@@ -18,6 +18,7 @@ const WeatherBoardPage = () => {
         css={css`
           width: 100%;
           text-align: start;
+          margin-bottom: 4px;
         `}
       >
         <p css={S.MyFarmAddress}>{address}</p>
@@ -50,7 +51,7 @@ const WeatherBoardPage = () => {
                 height: 280px;
               `}
             >
-              <WeatherBoardTemparature />
+              <WeatherBoardTemperature />
             </div>
             <div
               css={css`

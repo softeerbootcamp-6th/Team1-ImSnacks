@@ -5,3 +5,14 @@ export interface WorkCardType {
   workTime: string;
   isCompleted: boolean;
 }
+
+export interface WorkBlockType {
+  id: number;
+  cropName: string;
+  workName: string;
+  workTime: string;
+  startTime: string;
+  endTime: string;
+  position: { x: number; y: number };
+  width: number;
+}
