@@ -4,13 +4,21 @@ import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { CROP_NAME } from '@/constants/cropName';
+import type { CropNameType } from '@/constants/cropName';
 
-const WorkCardContainer = (
-  isDragging: boolean,
-  x: number = 0,
-  y: number = 0,
-  width?: number
-) => css`
+interface WorkCardContainerProps {
+  isDragging: boolean;
+  x: number;
+  y: number;
+  width?: number;
+}
+
+const WorkCardContainer = ({
+  isDragging,
+  x = 0,
+  y = 0,
+  width,
+}: WorkCardContainerProps) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -46,14 +54,10 @@ const WorkCardContent = css`
   gap: ${Spacing.Spacing300};
 `;
 
-const WorkCardColorBar = (cropName: string) => css`
+const WorkCardColorBar = (cropName: CropNameType) => css`
   width: 4px;
   height: 42px;
-  background-color: ${ColorStatus.Crops[
-    CROP_NAME[
-      cropName as keyof typeof CROP_NAME
-    ] as keyof typeof ColorStatus.Crops
-  ]};
+  background-color: ${ColorStatus.Crops[cropName]};
   border-radius: ${BorderRadius.Base.Hard};
 `;
 

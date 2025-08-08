@@ -5,7 +5,7 @@ import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
 import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
-import useRemoveOnOutOfBounds from '@/hooks/dnd/useRemoveOnOutOfBounds';
+import useRemoveOnOutOfBound from '@/hooks/dnd/useRemoveOnOutOfBound';
 import type { WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 
@@ -26,7 +26,7 @@ const WorkContainer = () => {
     onPositionChange: updated => setWorkBlocks(updated),
   });
 
-  const { checkAndRemove } = useRemoveOnOutOfBounds<WorkBlockType>({
+  const { checkAndRemove } = useRemoveOnOutOfBound<WorkBlockType>({
     containerRef: containerRef as React.RefObject<HTMLElement>,
     items: workBlocks,
     getItemId: block => block.id,
