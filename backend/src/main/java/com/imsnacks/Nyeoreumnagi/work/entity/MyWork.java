@@ -41,16 +41,16 @@ public class MyWork {
     public static MyWork createMyWork(
             Member member,
             RecommendedWork recommendedWork,
-            String startTime,
-            String endTime,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
             String cropName
 
     ) {
         MyWork myWork = new MyWork();
         myWork.member = member;
         myWork.recommendedWork = recommendedWork;
-        myWork.startTime = LocalDateTime.of(LocalDate.now(), LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HHmm")));
-        myWork.endTime = LocalDateTime.of(LocalDate.now(), LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HHmm")));
+        myWork.startTime = startTime;
+        myWork.endTime = endTime;
         myWork.workStatus = WorkStatus.NOT_COMPLETED;
         myWork.cropName = cropName;
 
