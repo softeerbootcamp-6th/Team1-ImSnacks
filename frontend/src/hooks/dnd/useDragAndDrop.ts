@@ -33,7 +33,6 @@ export const useDragAndDrop = <T>({
     null
   );
 
-  // 드래그 중 workBlocks가 바뀌면 currentDraggingItem도 최신값으로 동기화
   useEffect(() => {
     if (isDragging && currentDraggingItem) {
       const updated = itemsRef.current.find(
@@ -41,8 +40,7 @@ export const useDragAndDrop = <T>({
       );
       if (updated) setCurrentDraggingItem(updated);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemsRef.current, isDragging]);
+  }, [isDragging, currentDraggingItem, getItemId]);
 
   const startDrag = useCallback(
     (e: React.MouseEvent, itemId: number | string, items: T[]) => {
