@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import S from './WeatherBoardPage.style';
 import WeatherBoardTemperature from './components/weatherBoardTemperature/WeatherBoardTemperature';
 import WeatherBoardWeekly from './components/weatherBoardWeekly/WeatherBoardWeekly';
-import WeatherBoardRain from './components/weatherBoardRain/WeatherBoardRain';
+import WeatherBoardPrecipiation from './components/weatherBoardPrecipiation/WeatherBoardPrecipiation';
 import WeatherBoardHumidity from './components/weatherBoardHumidity/WeatherBoardHumidity';
 import WeatherBoardWind from './components/weatherBoardWind/WeatherBoardWind';
 import WeatherBoardUV from './components/weatherBoardUV/WeatherBoardUV';
@@ -61,7 +61,7 @@ const WeatherBoardPage = () => {
                 ${S.WeatherBoardContent}
               `}
             >
-              <WeatherBoardRain />
+              <WeatherBoardPrecipiation />
               <WeatherBoardHumidity />
               <WeatherBoardWind />
             </div>
