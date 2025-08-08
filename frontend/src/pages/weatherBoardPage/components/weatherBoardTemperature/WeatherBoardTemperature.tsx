@@ -5,10 +5,10 @@ import { WEATHER_CONDITIONS } from '@/types/weather.types';
 import { css } from '@emotion/react';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { getTemperatureColor } from '../../utils/weeklyTemperatureUtil';
-import WeeklyTemperatureDot from '../weeklyTemperatureDot/WeeklyTemperatureDot';
+import TemperatureDot from '../temperatureDot/TemperatureDot';
 import S from './WeatherBoardTemperature.style';
 
-const weeklyTemperatureData = {
+const temperatureData = {
   highestTemperature: 30,
   weeklyTemperature: [
     {
@@ -54,9 +54,9 @@ const weeklyTemperatureData = {
   ],
 };
 
-const WeatherBoardTemparature = () => {
+const WeatherBoardTemperature = () => {
   // 온도 데이터에서 최소값과 최대값 계산
-  const temperatures = weeklyTemperatureData.weeklyTemperature.map(
+  const temperatures = temperatureData.weeklyTemperature.map(
     item => item.temperature
   );
   const minTemp = Math.min(...temperatures);
@@ -73,10 +73,9 @@ const WeatherBoardTemparature = () => {
         x2="100%"
         y2="0%"
       >
-        {weeklyTemperatureData.weeklyTemperature.map((item, index) => {
+        {temperatureData.weeklyTemperature.map((item, index) => {
           const offset =
-            (index / (weeklyTemperatureData.weeklyTemperature.length - 1)) *
-            100;
+            (index / (temperatureData.weeklyTemperature.length - 1)) * 100;
           const color = getTemperatureColor(item.temperature);
           return <stop key={index} offset={`${offset}%`} stopColor={color} />;
         })}
@@ -99,12 +98,12 @@ const WeatherBoardTemparature = () => {
         `}
       >
         <h3>최고기온</h3>
-        <p>{weeklyTemperatureData.highestTemperature}°</p>
+        <p>{temperatureData.highestTemperature}°</p>
       </div>
 
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={weeklyTemperatureData.weeklyTemperature}
+          data={temperatureData.weeklyTemperature}
           margin={{ top: 90, right: 30, left: 30 }}
         >
           {temperatureGradient}
@@ -124,7 +123,7 @@ const WeatherBoardTemparature = () => {
             dataKey="temperature"
             stroke="url(#temperatureGradient)"
             strokeWidth={3}
-            dot={<WeeklyTemperatureDot cx={0} cy={0} />}
+            dot={<TemperatureDot cx={0} cy={0} />}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -132,4 +131,4 @@ const WeatherBoardTemparature = () => {
   );
 };
 
-export default WeatherBoardTemparature;
+export default WeatherBoardTemperature;
