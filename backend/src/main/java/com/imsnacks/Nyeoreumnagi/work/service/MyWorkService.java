@@ -26,14 +26,10 @@ import static com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus.*;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MyWorkService {
-    @Autowired
-    private MyWorkRepository myWorkRepository;
-    @Autowired
-    private RecommendedWorkRepository recommendedWorkRepository;
-    @Autowired
-    private MyCropRepository myCropRepository;
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MyWorkRepository myWorkRepository;
+    private final RecommendedWorkRepository recommendedWorkRepository;
+    private final MyCropRepository myCropRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ResisterMyWorkResponse registerMyWork(ResisterMyWorkRequest request, Long memberId) {
