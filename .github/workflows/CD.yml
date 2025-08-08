@@ -81,5 +81,10 @@ jobs:
             echo "DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}" >> ./.env
             echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> ./.env
             echo "ACCESS_TOKEN_EXPIRED_IN=${{ secrets.ACCESS_TOKEN_EXPIRED_IN }}" >> ./.env
+            echo "RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }}" >> ./.env
+            echo "RDS_PORT=${{ secrets.RDS_PORT }}" >> ./.env
+            echo "RDS_DATABASE=${{ secrets.RDS_DATABASE }}" >> ./.env
+            echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}" >> ./.env
+            echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> ./.env
             chmod +x deploy.sh
             source deploy.sh
