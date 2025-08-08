@@ -18,6 +18,8 @@ public class WeatherRisk {
     private LocalDate fcstDate;
     private int startTime;
     private int endTime;
+    private int nx;
+    private int ny;
     @Enumerated(EnumType.STRING)
     private WeatherRiskType name;
 }
