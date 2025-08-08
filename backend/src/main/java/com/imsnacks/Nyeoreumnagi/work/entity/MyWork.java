@@ -6,6 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -21,10 +26,10 @@ public class MyWork {
     private RecommendedWork recommendedWork;
 
     @Column(name = "start_time", nullable = false)
-    String startTime;
+    LocalDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    String endTime;
+    LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,8 +49,8 @@ public class MyWork {
         MyWork myWork = new MyWork();
         myWork.member = member;
         myWork.recommendedWork = recommendedWork;
-        myWork.startTime = startTime;
-        myWork.endTime = endTime;
+        myWork.startTime = LocalDateTime.of(LocalDate.now(), LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HHmm")));
+        myWork.endTime = LocalDateTime.of(LocalDate.now(), LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HHmm")));
         myWork.workStatus = WorkStatus.NOT_COMPLETED;
         myWork.cropName = cropName;
 
