@@ -11,7 +11,7 @@ class MyWorkTest {
 
     @Test
     void MyWork_생성을_성공한다() {
-        Member member = new Member(1L, "id", "password", "nickname", "01012345678", UUID.randomUUID() );
+        Member member = new Member(1L, "id", "password", "nickname", "01012345678", UUID.randomUUID(), null);
         RecommendedWork recommendedWork = new RecommendedWork(1L, "qiLLR3K", true, false, true, false, true, true, false);
         String startTime = "1110";
         String endTime = "1220";
