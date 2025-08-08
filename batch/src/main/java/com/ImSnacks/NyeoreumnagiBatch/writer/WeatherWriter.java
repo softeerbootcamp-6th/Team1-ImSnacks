@@ -5,20 +5,33 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRisk;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
 import com.ImSnacks.NyeoreumnagiBatch.writer.repository.WeatherRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
+@StepScope
 public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
 
-    private final WeatherRepository weatherRepository;
-    private final WeatherRiskRepository weatherRiskRepository;
+    @Autowired
+    private WeatherRepository weatherRepository;
+    @Autowired
+    private WeatherRiskRepository weatherRiskRepository;
+
+    private final String baseDate;
+
+    WeatherWriter(@Value("#{jobParameters['base_date']}") String baseDate)
+    {
+        this.baseDate = baseDate;
+    }
 
     @Override
     public void write(Chunk<? extends ShortTermWeatherDto> chunk)  {
@@ -42,6 +55,7 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
             item.getWeatherRiskList().forEach(weatherRisk -> {
                 weatherRisks.add(WeatherRisk.builder()
                         .name(weatherRisk.getName())
+                                .fcstDate(LocalDate.parse(baseDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
                         .startTime(weatherRisk.getStartTime())
                         .endTime(weatherRisk.getEndTime())
                         .build());
