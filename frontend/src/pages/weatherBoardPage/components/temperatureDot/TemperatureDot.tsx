@@ -3,7 +3,7 @@ import { Typography } from '@/styles/typography';
 import { getTemperatureColor } from '../../utils/weeklyTemperatureUtil';
 import { FlexStyles } from '@/styles/commonStyles';
 
-const WeeklyTemperatureDot = ({
+const TemperatureDot = ({
   cx,
   cy,
   payload,
@@ -51,4 +51,4 @@ const WeeklyTemperatureDot = ({
   );
 };
 
-export default WeeklyTemperatureDot;
+export default TemperatureDot;
