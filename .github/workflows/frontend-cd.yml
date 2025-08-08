@@ -10,16 +10,17 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "pnpm"
 
       - name: Install PNPM
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
 
       - name: Install dependencies
         working-directory: ./frontend
@@ -29,13 +30,39 @@ jobs:
         working-directory: ./frontend
         run: pnpm run build
 
+      - name: Debug Secrets
+        if: success()
+        run: |
+          echo "Checking if AWS secrets are set..."
+          if [ -n "${{ secrets.AWS_FE_ACCESS_KEY }}" ]; then
+            echo "AWS_FE_ACCESS_KEY is set"
+          else
+            echo "AWS_FE_ACCESS_KEY is NOT set"
+          fi
+          if [ -n "${{ secrets.AWS_FE_SECRET_ACCESS_KEY }}" ]; then
+            echo "AWS_SECRET_ACCESS_KEY is set"
+          else
+            echo "AWS_SECRET_ACCESS_KEY is NOT set"
+          fi
+          if [ -n "${{ secrets.AWS_FE_REGION }}" ]; then
+            echo "AWS_REGION is set: ${{ secrets.AWS_FE_REGION }}"
+          else
+            echo "AWS_REGION is NOT set"
+          fi
+
       - name: Configure AWS Credentials
         if: success()
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_FE_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_FE_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_FE_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_FE_REGION }}
+
+      - name: Test AWS Configuration
+        if: success()
+        run: |
+          echo "Testing AWS configuration..."
+          aws sts get-caller-identity
 
       - name: Sync to S3
         if: success()
