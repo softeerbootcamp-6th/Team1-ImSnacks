@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/test")
 @RequiredArgsConstructor
-public class WeatherController {
+public class TestController {
 
     private final JwtProvider jwtProvider;
 
