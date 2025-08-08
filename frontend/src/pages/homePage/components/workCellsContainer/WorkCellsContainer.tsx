@@ -2,11 +2,11 @@ import { css } from '@emotion/react';
 import WorkCell from '../workCell/WorkCell';
 import { WORK_CELL_TYPES, WORK_CELL_STATUSES } from '@/types/workCell.type';
 
-interface WorkCellsProps {
+interface WorkCellsContainerProps {
   isDragging: boolean;
 }
 
-const WorkCells = ({ isDragging }: WorkCellsProps) => {
+const WorkCellsContainer = ({ isDragging }: WorkCellsContainerProps) => {
   return (
     <>
       <div
@@ -92,4 +92,4 @@ const WorkCells = ({ isDragging }: WorkCellsProps) => {
   );
 };
 
-export default WorkCells;
+export default WorkCellsContainer;

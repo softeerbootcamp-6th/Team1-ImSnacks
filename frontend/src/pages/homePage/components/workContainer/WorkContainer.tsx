@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
-import WorkCells from './WorkCells';
+import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
 import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
@@ -121,7 +121,7 @@ const WorkContainer = () => {
               position: relative;
             `}
           >
-            <WorkCells isDragging={isDragging} />
+            <WorkCellsContainer isDragging={isDragging} />
           </div>
         </div>
       </div>
