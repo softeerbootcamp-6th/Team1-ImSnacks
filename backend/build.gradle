@@ -74,11 +74,7 @@ jacocoTestReport {
                 files(classDirectories.files.collect {
                     fileTree(dir: it, include: [
                             'com/imsnacks/Nyeoreumnagi/**/entity/*.class'
-                    ],
-                    exclude: [
-                            'com/imsnacks/Nyeoreumnagi/work/entity/LifeCycleAndRecommendedWorkId.class'
-                    ]
-                    )
+                    ])
                 })
         )
     }
@@ -90,7 +86,6 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
             includes = ['com.imsnacks.*.entity.*']
-            excludes = ['com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWorkId']
 
             limit {
                 counter = 'BRANCH'
