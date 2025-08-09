@@ -6,6 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -14,17 +19,17 @@ public class MyWork {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private RecommendedWork recommendedWork;
 
     @Column(name = "start_time", nullable = false)
-    String startTime;
+    LocalDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    String endTime;
+    LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,8 +41,8 @@ public class MyWork {
     public static MyWork createMyWork(
             Member member,
             RecommendedWork recommendedWork,
-            String startTime,
-            String endTime,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
             String cropName
 
     ) {
@@ -52,7 +57,10 @@ public class MyWork {
         return myWork;
     }
 
-
+    public void modifyWorkTime(LocalDateTime startTime, LocalDateTime endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+    };
 
 
 }
