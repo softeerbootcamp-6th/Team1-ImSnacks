@@ -45,7 +45,7 @@ class MyWorkTest {
     }
 
     private static Member createMember() {
-        Member member = new Member(1L, "id", "password", "nickname", "01012345678", UUID.randomUUID() );
+        Member member = new Member(1L, "id", "password", "nickname", "01012345678", UUID.randomUUID(), null);
         return member;
     }
 

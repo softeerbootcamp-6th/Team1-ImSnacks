@@ -1,0 +1,60 @@
+name: Deploy FE
+
+on:
+  push:
+    branches: [main, dev]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: pnpm install
+
+      - name: Build FE
+        working-directory: ./frontend
+        run: pnpm run build
+
+      - name: Configure AWS Credentials
+        if: success()
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_FE_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_FE_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_FE_REGION }}
+
+      - name: Sync to S3
+        if: success()
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            BUCKET=${{ secrets.S3_BUCKET_PROD }}
+          else
+            BUCKET=${{ secrets.S3_BUCKET_DEV }}
+          fi
+          aws s3 sync frontend/dist/ s3://$BUCKET --delete
+
+      - name: Invalidate CloudFront
+        if: success()
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }}
+          else
+            DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }}
+          fi
+          aws cloudfront create-invalidation \
+            --distribution-id $DISTRIBUTION_ID \
+            --paths "/*"

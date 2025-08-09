@@ -35,4 +35,7 @@ public class Member {
     @Column(columnDefinition = "VARCHAR(36)")
     @Setter
     private UUID refreshToken;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    Farm farm;
 }

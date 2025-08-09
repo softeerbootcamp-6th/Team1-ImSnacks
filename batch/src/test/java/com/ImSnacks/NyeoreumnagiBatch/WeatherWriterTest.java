@@ -2,17 +2,14 @@ package com.ImSnacks.NyeoreumnagiBatch;
 
 import com.ImSnacks.NyeoreumnagiBatch.writer.*;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
-import com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
-import com.ImSnacks.NyeoreumnagiBatch.writer.repository.WeatherRepository;
-import jakarta.transaction.Transactional;
+import com.ImSnacks.NyeoreumnagiBatch.writer.repository.ShortTermWeatherForecast;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.item.Chunk;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class WeatherWriterTest {
     @Autowired
-    private WeatherRepository weatherRepository;
+    private ShortTermWeatherForecast weatherRepository;
     @Autowired
     private WeatherRiskRepository weatherRiskRepository;
 
@@ -51,7 +48,7 @@ class WeatherWriterTest {
         writer.write(Chunk.of(weatherDto));
 
         // then
-        List<ShortTermWeatherForecast> all = weatherRepository.findAll();
+        List<com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast> all = weatherRepository.findAll();
         assertEquals(1, all.size());
         assertEquals(temperature, all.get(0).getTemperature());
     }
