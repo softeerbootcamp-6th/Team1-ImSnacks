@@ -1,0 +1,15 @@
+name: 공지
+description: 프로젝트와 관련된 중요한 공지를 작성합니다.
+title: "[공지] "
+body:
+  - type: markdown
+    attributes:
+      value: "프로젝트와 관련된 공식 공지 내용을 입력해주세요."
+  - type: textarea
+    id: content
+    attributes:
+      label: 공지 내용
+      description: 공지할 내용을 구체적으로 작성해주세요.
+      placeholder: 예) 서비스 점검 일정 안내
+    validations:
+      required: true
