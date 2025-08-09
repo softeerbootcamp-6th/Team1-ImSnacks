@@ -12,7 +12,7 @@ public record GetWeatherGraphResponse (
 ){
     public record ValuePerTime(
             String name,
-            int value
+            double value
     ){
     }
 }

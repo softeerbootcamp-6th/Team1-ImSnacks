@@ -57,7 +57,7 @@ public class WeatherService {
         return forecasts.stream()
                 .map(f -> {
                     String name = String.format("%02d", f.getFcstTime());
-                    int value = getValue(f, metric);
+                    double value = getValue(f, metric);
                     return new GetWeatherGraphResponse.ValuePerTime(name, value);
                 })
                 .sorted(Comparator.comparingInt(v -> {
@@ -69,24 +69,24 @@ public class WeatherService {
 
     private int getMaxValue(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric) {
         return forecasts.stream()
-                .mapToInt(f -> getValue(f, metric))
+                .mapToInt(f -> (int) getValue(f, metric))
                 .max()
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
     }
 
     private int getMinValue(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric) {
         return forecasts.stream()
-                .mapToInt(f -> getValue(f, metric))
+                .mapToInt(f -> (int) getValue(f, metric))
                 .min()
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
     }
 
-    private int getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
+    private double getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
         switch (metric) {
-            case PERCIPITATION: return (int) forecast.getPrecipitation();
+            case PERCIPITATION: return forecast.getPrecipitation();
             case TEMPERATURE: return forecast.getTemperature();
             case HUMIDITY: return forecast.getHumidity();
-            case WIND_SPEED: return (int) forecast.getWindSpeed();
+            case WIND_SPEED: return forecast.getWindSpeed();
             default: throw new WeatherException(INVALID_WEATHER_METRIC);
         }
     }
