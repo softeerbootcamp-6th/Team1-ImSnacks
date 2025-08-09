@@ -23,7 +23,7 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String method = request.getMethod();
         String url = request.getRequestURI();
-        String accessToken = request.getHeader(HttpHeaders.COOKIE);
+        String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(method.equals(HttpMethod.OPTIONS.name())){
             return true;
