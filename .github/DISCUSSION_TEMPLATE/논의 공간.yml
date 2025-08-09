@@ -1,0 +1,17 @@
+name: 논의 공간
+description: 프로젝트와 관련된 다양한 주제를 토론합니다.
+title: "[논의] "
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: 논의 주제
+      description: 토론할 주제나 질문을 명확하게 적어주세요.
+      placeholder: 예) 새로운 기능의 필요성에 대한 의견
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 상세 내용
+      description: 논의에 대한 배경 설명, 참고 자료 등을 포함해주세요.
