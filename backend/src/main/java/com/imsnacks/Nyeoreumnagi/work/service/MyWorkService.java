@@ -7,7 +7,7 @@ import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
-import com.imsnacks.Nyeoreumnagi.work.dto.response.ResgisterMyWorkResponse;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
@@ -33,7 +33,7 @@ public class MyWorkService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ResgisterMyWorkResponse registerMyWork(RegisterMyWorkRequest request, Long memberId) {
+    public RegisterMyWorkResponse registerMyWork(RegisterMyWorkRequest request, Long memberId) {
         if (!validateTime(request.startTime(), request.endTime())) {
             throw new WorkException(INVALID_MY_WORK_TIME);
         }
@@ -55,7 +55,7 @@ public class MyWorkService {
         );
 
         MyWork savedMyWork = myWorkRepository.save(myWork);
-        return new ResgisterMyWorkResponse(savedMyWork.getId());
+        return new RegisterMyWorkResponse(savedMyWork.getId());
     }
 
     @Transactional
