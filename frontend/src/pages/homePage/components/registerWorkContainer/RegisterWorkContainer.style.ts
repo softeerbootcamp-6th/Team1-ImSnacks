@@ -16,6 +16,7 @@ const RegisterWorkContainer = css`
   justify-content: space-between;
   align-items: center;
   margin-top: ${Spacing.Spacing600};
+  margin-bottom: ${Spacing.Spacing600};
 `;
 
 const TextBoxTitle = css`
