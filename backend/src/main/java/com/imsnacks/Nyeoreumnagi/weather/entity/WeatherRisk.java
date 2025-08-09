@@ -24,5 +24,7 @@ public class WeatherRisk {
     @Enumerated(EnumType.STRING)
     private WeatherRiskType name;
 
+    private int nx;
+    private int ny;
     private Long jobExecutionId;
 }
