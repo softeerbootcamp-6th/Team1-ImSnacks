@@ -1,5 +1,5 @@
 package com.imsnacks.Nyeoreumnagi.briefing.dto.response;
 
 // Http요청의 body
-public record WeatherBriefingResponse() {
+public record WeatherBriefingResponse(boolean hasWeatherRisk, int startHour, int endHour, String weatherMsg) {
 }
