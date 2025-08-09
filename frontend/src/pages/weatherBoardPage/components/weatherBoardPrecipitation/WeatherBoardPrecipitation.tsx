@@ -1,12 +1,14 @@
 import { CommonStyles } from '@/styles/commonStyles';
+import S from './WeatherBoardPrecipitation.style';
 
 const WeatherBoardRain = () => {
   return (
-    <div css={CommonStyles.weatherBoardContainer}>
+    <div css={S.WeatherBoardPrecipitation}>
       <div>
-        <h3>강수량</h3>
+        <h3>최고 강수량</h3>
         <p>10mm</p>
       </div>
+      <div></div>
     </div>
   );
 };
