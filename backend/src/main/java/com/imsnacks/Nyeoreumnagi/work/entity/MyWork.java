@@ -19,10 +19,10 @@ public class MyWork {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private RecommendedWork recommendedWork;
 
     @Column(name = "start_time", nullable = false)
@@ -57,7 +57,10 @@ public class MyWork {
         return myWork;
     }
 
-
+    public void modifyWorkTime(LocalDateTime startTime, LocalDateTime endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+    };
 
 
 }
