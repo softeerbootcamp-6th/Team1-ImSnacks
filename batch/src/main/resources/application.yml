@@ -5,6 +5,24 @@ spring:
   application:
     name: NyeoreumnagiBatch
 
+  jpa:
+    hibernate.ddl-auto: update
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  sql:
+    init:
+      mode: always
+  #      schema-locations: classpath:init-farm.sql
+#      data-locations: classpath:insert_unique_nxny.sql
+
+api:
+  service:
+    key: ${OPEN_API_KEY}
+
 ---
 
 spring:
@@ -21,23 +39,6 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-  jpa:
-    hibernate.ddl-auto: update
-  batch:
-    job:
-      enabled: false
-    jdbc:
-      initialize-schema: always
-  sql:
-    init:
-      mode: always
-#      schema-locations: classpath:init-farm.sql
-#      data-locations: classpath:insert_unique_nxny.sql
-
-
-api:
-  service:
-    key: ${OPEN_API_KEY}
 
 ---
 
@@ -52,6 +53,4 @@ spring:
     username: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
 
-api:
-  service:
-    key: ${OPEN_API_KEY}
+
