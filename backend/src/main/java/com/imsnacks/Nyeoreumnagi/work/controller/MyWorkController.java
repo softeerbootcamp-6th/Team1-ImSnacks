@@ -4,7 +4,9 @@ import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
 import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.service.MyWorkService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,8 +40,18 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "농작업 삭제 성공")
     @ApiResponse(responseCode = "400", description = "농작업 삭제 실패")
     @DeleteMapping("")
-    public ResponseEntity<CustomResponseBody<Void>> deleteMyWork(@Validated @RequestBody DeleteMyWorkRequest request, @PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<Void>> deleteMyWork(@RequestBody DeleteMyWorkRequest request, @PreAuthorize Long memberId) {
         myWorkService.deleteMyWork(request, memberId);
         return ResponseUtil.success();
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "농작업 수정")
+    @ApiResponse(responseCode = "200", description = "농작업 수정 성공")
+    @ApiResponse(responseCode = "400", description = "농작업 수정 실패")
+    @PatchMapping("")
+    public ResponseEntity<CustomResponseBody<ModifyMyWorkResponse>> modifyMyWork(@RequestBody ModifyMyWorkRequest request, @PreAuthorize Long memberId) {
+        ModifyMyWorkResponse modifyMyWorkResponse = myWorkService.modifyMyWork(request, memberId);
+        return ResponseUtil.success(modifyMyWorkResponse);
     }
 }
