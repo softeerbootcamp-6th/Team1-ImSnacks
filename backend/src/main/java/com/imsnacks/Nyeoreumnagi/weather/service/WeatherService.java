@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.INVALID_MEMBER_ID;
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
 
 @Service
@@ -29,6 +30,10 @@ public class WeatherService {
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric){
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
         Farm farm = member.getFarm();
+
+        if(farm == null){
+            throw new MemberException(NO_FARM_INFO);
+        }
 
         int nx = farm.getNx();
         int ny = farm.getNy();
@@ -52,7 +57,7 @@ public class WeatherService {
         return forecasts.stream()
                 .map(f -> {
                     String name = String.format("%02d", f.getFcstTime());
-                    int value = (int) getValue(f, metric);
+                    int value = getValue(f, metric);
                     return new GetWeatherGraphResponse.ValuePerTime(name, value);
                 })
                 .sorted(Comparator.comparingInt(v -> {
@@ -64,24 +69,24 @@ public class WeatherService {
 
     private int getMaxValue(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric) {
         return forecasts.stream()
-                .mapToInt(f -> (int) getValue(f, metric))
+                .mapToInt(f -> getValue(f, metric))
                 .max()
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
     }
 
     private int getMinValue(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric) {
         return forecasts.stream()
-                .mapToInt(f -> (int) getValue(f, metric))
+                .mapToInt(f -> getValue(f, metric))
                 .min()
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
     }
 
-    private double getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
+    private int getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
         switch (metric) {
-            case PERCIPITATION: return forecast.getPrecipitation();
+            case PERCIPITATION: return (int) forecast.getPrecipitation();
             case TEMPERATURE: return forecast.getTemperature();
             case HUMIDITY: return forecast.getHumidity();
-            case WIND_SPEED: return forecast.getWindSpeed();
+            case WIND_SPEED: return (int) forecast.getWindSpeed();
             default: throw new WeatherException(INVALID_WEATHER_METRIC);
         }
     }
