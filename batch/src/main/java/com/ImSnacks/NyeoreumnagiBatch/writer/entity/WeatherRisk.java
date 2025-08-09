@@ -3,8 +3,6 @@ package com.ImSnacks.NyeoreumnagiBatch.writer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "WeatherRisk")
 @Getter
@@ -15,7 +13,7 @@ public class WeatherRisk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long weatherRiskId;
-    private LocalDate fcstDate;
+    private long jobExecutionId;
     private int startTime;
     private int endTime;
     private int nx;

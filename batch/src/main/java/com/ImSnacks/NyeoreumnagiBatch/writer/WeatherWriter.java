@@ -5,36 +5,34 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRisk;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
 import com.ImSnacks.NyeoreumnagiBatch.writer.repository.WeatherRepository;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @StepScope
-public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
-
+public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecutionListener {
     @Autowired
     private WeatherRepository weatherRepository;
     @Autowired
     private WeatherRiskRepository weatherRiskRepository;
 
-    private final String baseDate;
+    private Long jobExecutionId;
 
-    WeatherWriter(@Value("#{jobParameters['base_date']}") String baseDate)
-    {
-        this.baseDate = baseDate;
+    @Override
+    public void beforeStep(StepExecution stepExecution) {
+        this.jobExecutionId = stepExecution.getJobExecution().getId();
     }
 
     @Override
-    public void write(Chunk<? extends ShortTermWeatherDto> chunk)  {
+    public void write(Chunk<? extends ShortTermWeatherDto> chunk) {
         List<ShortTermWeatherForecast> forecasts = new ArrayList<>();
         List<WeatherRisk> weatherRisks = new ArrayList<>();
 
@@ -55,9 +53,11 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
             item.getWeatherRiskList().forEach(weatherRisk -> {
                 weatherRisks.add(WeatherRisk.builder()
                         .name(weatherRisk.getName())
-                                .fcstDate(LocalDate.parse(baseDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
+                        .jobExecutionId(jobExecutionId)
                         .startTime(weatherRisk.getStartTime())
                         .endTime(weatherRisk.getEndTime())
+                        .nx(item.getNx())
+                        .ny(item.getNy())
                         .build());
             });
 
