@@ -64,6 +64,11 @@ public class MyWorkService {
         if (myWork.getMember().getId() != memberId) {
             throw new WorkException(MY_WORK_NOT_FOUND);
         }
+
+        if(!myWork.isDone()){
+            throw new WorkException(MY_WORK_NOT_COMPLETED);
+        }
+
         myWorkRepository.deleteById(request.myWorkId());
     }
 
