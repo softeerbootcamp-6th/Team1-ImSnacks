@@ -3,6 +3,7 @@ package com.imsnacks.Nyeoreumnagi.member.exception;
 public enum MemberResponseStatus {
     MEMBER_NOT_FOUND(2001, "회원 정보가 존재하지 않습니다."),
     INVALID_MEMBER_ID(2002, "memberId에 일치하는 member가 존재하지 않습니다."),
+    NO_FARM_INFO(2003, "해당 멤버는 농장 정보가 없습니다."),
     ;
 
     private int code;
