@@ -5,11 +5,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,6 +31,7 @@ public class MyWork {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter
     WorkStatus workStatus;
 
     @Column(name = "crop_name", nullable = false)
@@ -60,7 +59,11 @@ public class MyWork {
     public void modifyWorkTime(LocalDateTime startTime, LocalDateTime endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
-    };
+    }
+
+    public boolean isDone() {
+        return workStatus == WorkStatus.COMPLETED;
+    }
 
 
 }
