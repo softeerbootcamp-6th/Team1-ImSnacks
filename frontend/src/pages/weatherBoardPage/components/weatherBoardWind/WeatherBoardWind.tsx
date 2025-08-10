@@ -1,6 +1,6 @@
 import S from './WeatherBoardWind.style';
 import { Typography } from '@/styles/typography';
-import WindArrow from '@/assets/icons/flat/WindArrow.svg?react';
+import { WindArrow } from '@/assets/icons/flat';
 import { GrayScale } from '@/styles/colors';
 
 interface WeatherBoardWindProps {
