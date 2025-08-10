@@ -1,5 +1,3 @@
-name: "공지"
-description: "프로젝트와 관련된 중요한 공지를 작성합니다."
 title: "[공지] "
 body:
   - type: markdown
