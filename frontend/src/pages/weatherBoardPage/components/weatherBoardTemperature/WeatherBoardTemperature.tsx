@@ -1,8 +1,6 @@
 import { GrayScale } from '@/styles/colors';
-import { CommonStyles } from '@/styles/commonStyles';
 import { Typography } from '@/styles/typography';
 import { WEATHER_CONDITIONS } from '@/types/weather.types';
-import { css } from '@emotion/react';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { getTemperatureColor } from '../../utils/temperatureUtil';
 import TemperatureDot from '../temperatureDot/TemperatureDot';
@@ -84,19 +82,8 @@ const WeatherBoardTemperature = () => {
   );
 
   return (
-    <div
-      css={css`
-        ${CommonStyles.weatherBoardContainer}
-        ${S.WeatherBoardTemperature}
-      `}
-    >
-      <div
-        css={css`
-          position: absolute;
-          top: 16px;
-          left: 20px;
-        `}
-      >
+    <div css={S.WeatherBoardTemperature}>
+      <div css={S.WeatherBoardTemperatureTitle}>
         <h3>최고기온</h3>
         <p>{temperatureData.highestTemperature}°</p>
       </div>

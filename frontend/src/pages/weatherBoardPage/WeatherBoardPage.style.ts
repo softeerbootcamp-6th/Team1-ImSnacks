@@ -9,6 +9,7 @@ const WeatherBoardPage = css`
   flex-direction: column;
   align-items: center;
   width: 1328px;
+  margin-bottom: 108px;
 `;
 
 const MyFarmAddress = css`
