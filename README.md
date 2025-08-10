@@ -74,4 +74,4 @@
 
 ## 5. GitHub Wiki
 - [📖 그라운드룰 바로가기](https://github.com/softeerbootcamp-6th/Team1-ImSnacks/wiki/%5B1%ED%8C%80%5D-%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)
-- [💭 논의 공간 바로가기](https://foregoing-sofa-1ca.notion.site/244e13d9782280f6b1bce7aceca56aa0?v=244e13d9782280c8b7d2000cdaf13622
+- [💭 논의 공간 바로가기](https://foregoing-sofa-1ca.notion.site/244e13d9782280f6b1bce7aceca56aa0?v=244e13d9782280c8b7d2000cdaf13622)
