@@ -11,6 +11,14 @@ body:
     validations:
       required: true
   - type: textarea
+    id: mention
+    attributes:
+      label:🚶 아이디어 공유 대상
+      description: 아이디어 공유 전달이 필요한 사람들을 태그해주세요. (예: @username)
+      placeholder: 예) @username
+    validations:
+      required: false
+  - type: textarea
     id: benefit
     attributes:
       label: 🤩 기대 효과

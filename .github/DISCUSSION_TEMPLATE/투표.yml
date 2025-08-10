@@ -12,6 +12,14 @@ body:
     validations:
       required: true
   - type: textarea
+    id: mention
+    attributes:
+      label:🚶 투표 대상
+      description: 투표에 참여할 사람들을 태그해주세요. (예: @username)
+      placeholder: 예) @username
+    validations:
+      required: false
+  - type: textarea
     id: options
     attributes:
       label: ☑️ 투표 옵션

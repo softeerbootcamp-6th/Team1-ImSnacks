@@ -11,6 +11,14 @@ body:
     validations:
       required: true
   - type: textarea
+    id: mention
+    attributes:
+      label:🚶 논의 대상
+      description: 함께 논의가 필요한 사람들을 태그해주세요. (예: @username)
+      placeholder: 예) @username
+    validations:
+      required: false
+  - type: textarea
     id: details
     attributes:
       label: ✏️ 상세 내용
