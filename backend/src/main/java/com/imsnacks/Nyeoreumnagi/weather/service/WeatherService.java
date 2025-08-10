@@ -12,6 +12,7 @@ import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
+import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +69,7 @@ public class WeatherService {
         int ny = farm.getNy();
 
         List<WeatherRisk> weatherRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
-        List<GetFcstRiskResponse.WeatherRiskDto> weatherRiskDtos = getRemovedOverLappingDTO(weatherRisks);
+        List<GetFcstRiskResponse.WeatherRiskDto> weatherRiskDtos = WeatherRiskIntervalMerger.merge(weatherRisks);
 
         return new GetFcstRiskResponse(weatherRiskDtos);
     }
@@ -120,72 +121,5 @@ public class WeatherService {
 
     private int getUpperLimit(int value){
         return ((value / 5) + 1) * 5;
-    }
-
-    private List<GetFcstRiskResponse.WeatherRiskDto> getRemovedOverLappingDTO(List<WeatherRisk> weatherRisks){
-        class LinePoint implements Comparable<LinePoint> {
-            int time;
-            boolean isStart;
-            WeatherRisk risk;
-            LinePoint(int time, boolean isStart, WeatherRisk risk) {
-                this.time = time;
-                this.isStart = isStart;
-                this.risk = risk;
-            }
-            @Override
-            public int compareTo(LinePoint o) {
-                if (this.time != o.time) return Integer.compare(this.time, o.time);
-                return Boolean.compare(!this.isStart, !o.isStart); // start(true) 우선
-            }
-        }
-
-        //각 구간의 시작점, 끝점을 List로 저장
-        List<LinePoint> linePoints = new ArrayList<>();
-        for (WeatherRisk r : weatherRisks) {
-            linePoints.add(new LinePoint(r.getStartTime(), true, r));
-            linePoints.add(new LinePoint(r.getEndTime(), false, r));
-        }
-        Collections.sort(linePoints);
-
-        //우선순위 Comparator (enum클래스의 ordinal이 높을수록 우선순위 높음)
-        Comparator<WeatherRisk> prioComp = Comparator
-                .comparingInt((WeatherRisk r) -> r.getType().ordinal())
-                .reversed();
-        TreeSet<WeatherRisk> actives = new TreeSet<>(prioComp.thenComparingLong(WeatherRisk::getWeatherRiskId));
-
-        List<GetFcstRiskResponse.WeatherRiskDto> result = new ArrayList<>();
-        int lastTime = -1;
-        WeatherRisk currentShow = null;
-
-        //TreeSet에 하나씩 넣으면서 우선순위에 따른 구간 계산
-        for (LinePoint lp : linePoints) {
-            if (lastTime != -1 && lastTime < lp.time && currentShow != null) {
-                if (!result.isEmpty()) {
-                    GetFcstRiskResponse.WeatherRiskDto prev = result.get(result.size() - 1);
-                    // 위험 종류가 같고, 시간 끊김 없이 연속되면 합침
-                    if (prev.category().equals(currentShow.getType().getDescription())
-                            && prev.endTime().equals(String.valueOf(lastTime))) {
-                        GetFcstRiskResponse.WeatherRiskDto merged =
-                                new GetFcstRiskResponse.WeatherRiskDto(prev.category(), prev.startTime(), String.valueOf(lp.time));
-                        result.set(result.size() - 1, merged);
-                    } else {
-                        result.add(new GetFcstRiskResponse.WeatherRiskDto(currentShow.getType().getDescription(),
-                                String.valueOf(lastTime), String.valueOf(lp.time)));
-                    }
-                } else {
-                    result.add(new GetFcstRiskResponse.WeatherRiskDto(currentShow.getType().getDescription(),
-                            String.valueOf(lastTime), String.valueOf(lp.time)));
-                }
-            }
-            if (lp.isStart) {
-                actives.add(lp.risk);
-            } else {
-                actives.remove(lp.risk);
-            }
-            currentShow = actives.isEmpty() ? null : actives.first();
-            lastTime = lp.time;
-        }
-
-        return result;
     }
 }
