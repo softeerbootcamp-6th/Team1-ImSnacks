@@ -18,6 +18,8 @@ public class WeatherRisk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long weatherRiskId;
+    private int nx; // 임시로 추가
+    private int ny; // 임시로 추가
     private LocalDate fcstDate;
     private int startTime;
     private int endTime;
