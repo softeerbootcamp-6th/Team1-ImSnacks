@@ -83,7 +83,7 @@ const WeatherBoardPage = () => {
             ${S.WeatherBoardContent}
           `}
         >
-          <WeatherBoardUV />
+          <WeatherBoardUV value={8} startTime="08:00" endTime="18:00" />
           <WeatherBoardDust />
           <WeatherBoardSunset />
         </div>
