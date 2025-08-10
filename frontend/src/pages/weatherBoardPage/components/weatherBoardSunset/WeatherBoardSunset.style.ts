@@ -19,24 +19,30 @@ const WeatherBoardSunsetTitle = css`
 `;
 
 const WeatherBoardSunsetContent = css`
-  position: 'relative';
-  height: '150px';
-  display: 'flex';
-  justify-content: 'center';
-  align-items: 'flex-end';
+  position: relative;
+  width: 100%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 6px;
 `;
 
 const WeatherBoardSunsetSvg = css`
+  z-index: 2;
   overflow: visible;
   width: 242px;
   height: 121px;
 `;
 
 const WeatherBoardSunsetBaseLine = css`
+  position: absolute;
+  left: 0;
+  right: 0;
   width: 100%;
   height: 1px;
   background: ${GrayScale.G900};
-  margin-bottom: 6px;
+  z-index: 1;
 `;
 
 const WeatherBoardSunsetTimeWrapper = css`
