@@ -100,7 +100,7 @@ public class MyWorkService {
                 new GetMyWorksOfTodayResponse(
                         myWork.getId(),
                         myWork.getCropName(),
-                        myWork.getRecommendedWork().getName(),
+                        myWork.getRecommendedWorkName(),
                         myWork.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + myWork.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                         myWork.getStartTime().toString(),
                         myWork.getEndTime().toString()
