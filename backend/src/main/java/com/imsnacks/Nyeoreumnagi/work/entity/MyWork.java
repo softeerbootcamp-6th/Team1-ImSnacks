@@ -65,5 +65,7 @@ public class MyWork {
         return workStatus == WorkStatus.COMPLETED;
     }
 
-
+    public String getRecommendedWorkName(){
+        return this.getRecommendedWork().getName();
+    }
 }

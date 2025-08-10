@@ -8,8 +8,8 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus;
-import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -33,8 +33,8 @@ public class GlobalExceptionHandler {
         return ResponseUtil.error(status.getCode(), status.getMessage());
     }
 
-    @ExceptionHandler(UnexpectedTypeException.class)
-    public ResponseEntity<CustomResponseBody<Void>> handleValidationException(UnexpectedTypeException ex) {
-        return ResponseUtil.error(400, ex.getMessage());
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomResponseBody<Void>> handleValidationException(MethodArgumentNotValidException ex) {
+        return ResponseUtil.error(400, ex.getFieldError().getField() + "가 유효하지 않은 형식입니다.");
     }
 }
