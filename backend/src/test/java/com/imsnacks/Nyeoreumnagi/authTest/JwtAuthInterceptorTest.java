@@ -47,7 +47,7 @@ class JwtAuthInterceptorTest {
     void 토큰_없는_경우_예외() {
         //given
         when(request.getMethod()).thenReturn("GET");
-        when(request.getHeader(HttpHeaders.COOKIE)).thenReturn(null);
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(null);
 
         //when
         //then
@@ -60,7 +60,7 @@ class JwtAuthInterceptorTest {
     void 토큰_타입_불일치_예외() {
         //given
         when(request.getMethod()).thenReturn("GET");
-        when(request.getHeader(HttpHeaders.COOKIE)).thenReturn("FOO token");
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("FOO token");
 
         //when
         //then
@@ -73,7 +73,7 @@ class JwtAuthInterceptorTest {
     void 만료된_토큰_예외() {
         //given
         when(request.getMethod()).thenReturn("GET");
-        when(request.getHeader(HttpHeaders.COOKIE)).thenReturn("Bearer xxxx");
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer xxxx");
         when(jwtProvider.isExpiredToken("xxxx")).thenReturn(true);
 
         //when
@@ -87,7 +87,7 @@ class JwtAuthInterceptorTest {
     void 멤버_ID_없으면_예외() {
         //given
         when(request.getMethod()).thenReturn("GET");
-        when(request.getHeader(HttpHeaders.COOKIE)).thenReturn("Bearer xxxx");
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer xxxx");
         when(jwtProvider.isExpiredToken("xxxx")).thenReturn(false);
         when(jwtProvider.getMemberId("xxxx")).thenReturn(null);
 
@@ -102,7 +102,7 @@ class JwtAuthInterceptorTest {
     void 정상토큰_멤버ID_속성설정() {
         //given
         when(request.getMethod()).thenReturn("GET");
-        when(request.getHeader(HttpHeaders.COOKIE)).thenReturn("Bearer testtoken");
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer testtoken");
         when(jwtProvider.isExpiredToken("testtoken")).thenReturn(false);
         when(jwtProvider.getMemberId("testtoken")).thenReturn(123L);
 

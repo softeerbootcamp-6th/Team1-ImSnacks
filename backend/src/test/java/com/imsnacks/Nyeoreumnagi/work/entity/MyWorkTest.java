@@ -54,4 +54,33 @@ class MyWorkTest {
         return recommendedWork;
     }
 
+    @Test
+    void isDone_실행_시_myWork가_완료_상태이면_true_를_반환한다() {
+        MyWork myWork = createMyWork();
+        myWork.setWorkStatus(WorkStatus.COMPLETED);
+
+        boolean myWorkDone = myWork.isDone();
+
+        assertThat(myWorkDone).isTrue();
+    }
+
+    @Test
+    void isDone_실행_시_myWork가_미완료_상태이면_false_를_반환한다() {
+        MyWork myWork = createMyWork();
+        myWork.setWorkStatus(WorkStatus.NOT_COMPLETED);
+
+        boolean myWorkDone = myWork.isDone();
+
+        assertThat(myWorkDone).isFalse();
+    }
+
+    private MyWork createMyWork(){
+        Member member = createMember();
+        RecommendedWork recommendedWork = createRecommendedWork();
+        LocalDateTime startTime = LocalDateTime.of(2025, Month.AUGUST, 8, 23, 10, 0);
+        LocalDateTime endTime = LocalDateTime.of(2025, Month.AUGUST, 9, 0, 10, 0);
+        String cropName = "포도";
+
+        return MyWork.createMyWork(member, recommendedWork, startTime, endTime, cropName);
+    }
 }
