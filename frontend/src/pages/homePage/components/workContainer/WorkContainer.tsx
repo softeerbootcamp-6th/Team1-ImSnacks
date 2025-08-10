@@ -19,7 +19,7 @@ const WorkContainer = () => {
     updatePosition,
     endDrag,
     isItemDragging,
-    currentDraggingItem,
+    draggedItemRef,
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
     getItemPosition: block => block.position,
@@ -36,7 +36,7 @@ const WorkContainer = () => {
   });
 
   const handleEndDrag = () => {
-    const draggingId = currentDraggingItem?.id;
+    const draggingId = draggedItemRef.current?.id;
     if (draggingId !== null && draggingId !== undefined) {
       checkAndRemove(draggingId);
     }
@@ -56,22 +56,28 @@ const WorkContainer = () => {
           width: 100%;
         `}
       >
-        {isDragging && currentDraggingItem && (
-          <WorkCardRegister
-            key={currentDraggingItem.id}
-            id={currentDraggingItem.id}
-            cropName={currentDraggingItem.cropName}
-            workName={currentDraggingItem.workName}
-            workTime={currentDraggingItem.workTime}
-            isDragging={isDragging}
-            width={currentDraggingItem.width}
-            x={currentDraggingItem.position.x}
-            y={currentDraggingItem.position.y}
-            onMouseDown={e => {
-              startDrag(e, currentDraggingItem.id, workBlocks);
-            }}
-          />
-        )}
+        {isDragging &&
+          draggedItemRef.current &&
+          (console.log(
+            'draggedItemRef.current position',
+            draggedItemRef.current.position
+          ),
+          (
+            <WorkCardRegister
+              key={draggedItemRef.current.id}
+              id={draggedItemRef.current.id}
+              cropName={draggedItemRef.current.cropName}
+              workName={draggedItemRef.current.workName}
+              workTime={draggedItemRef.current.workTime}
+              isDragging={isDragging}
+              width={draggedItemRef.current.width}
+              x={draggedItemRef.current.position.x}
+              y={draggedItemRef.current.position.y}
+              onMouseDown={e => {
+                startDrag(e, draggedItemRef.current!.id, workBlocks);
+              }}
+            />
+          ))}
 
         <div
           css={css`
@@ -94,22 +100,25 @@ const WorkContainer = () => {
             }
           `}
         >
-          {workBlocks.map(block => (
-            <WorkCardRegister
-              key={block.id}
-              id={block.id}
-              cropName={block.cropName}
-              workName={block.workName}
-              workTime={block.workTime}
-              isDragging={isItemDragging(block.id)}
-              width={block.width}
-              x={block.position.x}
-              y={block.position.y}
-              onMouseDown={e => {
-                startDrag(e, block.id, workBlocks);
-              }}
-            />
-          ))}
+          {workBlocks.map(block => {
+            const { id, workName, workTime, width, position } = block;
+            return (
+              <WorkCardRegister
+                key={id}
+                id={id}
+                cropName={block.cropName}
+                workName={workName}
+                workTime={workTime}
+                isDragging={isItemDragging(id)}
+                width={width}
+                x={position.x}
+                y={position.y}
+                onMouseDown={e => {
+                  startDrag(e, id, workBlocks);
+                }}
+              />
+            );
+          })}
           <div
             css={css`
               display: flex;
