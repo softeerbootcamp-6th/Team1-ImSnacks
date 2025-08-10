@@ -1,7 +1,6 @@
 import { GrayScale } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
 import { WEATHER_CONDITIONS } from '@/types/weather.types';
-import { css } from '@emotion/react';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { getTemperatureColor } from '../../utils/temperatureUtil';
 import TemperatureDot from '../temperatureDot/TemperatureDot';
