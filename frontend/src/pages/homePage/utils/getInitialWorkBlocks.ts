@@ -4,30 +4,37 @@ import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
 import type { CropNameType } from '@/types/crop.type';
 
-const getInitialWorkBlocks = () => {
+// 시간을 픽셀 위치로 변환하는 함수
+export const calculateTimeToPosition = (startTime: string, endTime: string) => {
+  const startDateTime = dayjs(startTime);
+  const endDateTime = dayjs(endTime);
+
+  // 시작 시간을 분으로 변환 (자정 기준)
+  const startTotalMinutes = startDateTime.hour() * 60 + startDateTime.minute();
+  const endTotalMinutes = endDateTime.hour() * 60 + endDateTime.minute();
+
+  // 작업 시간의 길이 (분)
+  const durationMinutes = endTotalMinutes - startTotalMinutes;
+
+  // WorkCell 너비(92px) + gap(8px) = 100px, 1시간 = 60분
+  const x = (startTotalMinutes / 60) * 100;
+  const width = (durationMinutes / 60) * 100;
+
+  return { x, width };
+};
+
+const getInitialWorkBlocks = (newWorkBlocks?: WorkBlockType[]) => {
   const blocks: WorkBlockType[] = [];
 
-  const todayWorkScheduleData =
-    groupDataRecordStructure(WORK_SCHEDULE_DATA, 'date', 'workCardData')[
-      dayjs(new Date()).format('YYYY-MM-DD')
-    ] || [];
+  const todayWorkScheduleData = newWorkBlocks
+    ? newWorkBlocks
+    : groupDataRecordStructure(WORK_SCHEDULE_DATA, 'date', 'workCardData')[
+        dayjs(new Date()).format('YYYY-MM-DD')
+      ] || [];
 
   todayWorkScheduleData.forEach(work => {
     // startTime과 endTime을 직접 사용하여 x 위치와 너비 계산
-    const startDateTime = dayjs(work.startTime);
-    const endDateTime = dayjs(work.endTime);
-
-    // 시작 시간을 분으로 변환 (자정 기준)
-    const startTotalMinutes =
-      startDateTime.hour() * 60 + startDateTime.minute();
-    const endTotalMinutes = endDateTime.hour() * 60 + endDateTime.minute();
-
-    // 작업 시간의 길이 (분)
-    const durationMinutes = endTotalMinutes - startTotalMinutes;
-
-    // WorkCell 너비(92px) + gap(8px) = 100px, 1시간 = 60분
-    const x = (startTotalMinutes / 60) * 100;
-    const width = (durationMinutes / 60) * 100;
+    const { x, width } = calculateTimeToPosition(work.startTime, work.endTime);
 
     blocks.push({
       id: work.id,
