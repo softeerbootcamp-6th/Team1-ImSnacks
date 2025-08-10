@@ -43,7 +43,7 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "농작업 삭제 성공")
     @ApiResponse(responseCode = "400", description = "농작업 삭제 실패")
     @DeleteMapping("")
-    public ResponseEntity<CustomResponseBody<Void>> deleteMyWork(@RequestBody DeleteMyWorkRequest request, @PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<Void>> deleteMyWork(@Validated @RequestBody DeleteMyWorkRequest request, @PreAuthorize Long memberId) {
         myWorkService.deleteMyWork(request, memberId);
         return ResponseUtil.success();
     }
@@ -53,7 +53,7 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "농작업 수정 성공")
     @ApiResponse(responseCode = "400", description = "농작업 수정 실패")
     @PatchMapping("")
-    public ResponseEntity<CustomResponseBody<ModifyMyWorkResponse>> modifyMyWork(@RequestBody ModifyMyWorkRequest request, @PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<ModifyMyWorkResponse>> modifyMyWork(@Validated @RequestBody ModifyMyWorkRequest request, @PreAuthorize Long memberId) {
         ModifyMyWorkResponse modifyMyWorkResponse = myWorkService.modifyMyWork(request, memberId);
         return ResponseUtil.success(modifyMyWorkResponse);
     }
