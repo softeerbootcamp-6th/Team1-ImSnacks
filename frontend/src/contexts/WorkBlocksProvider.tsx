@@ -10,7 +10,7 @@ interface WorkBlocksProviderProps {
   children: ReactNode;
 }
 
-const WorkBlocksContext = ({ children }: WorkBlocksProviderProps) => {
+const WorkBlocksProvider = ({ children }: WorkBlocksProviderProps) => {
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>(
     getInitialWorkBlocks()
   );
@@ -37,4 +37,4 @@ const WorkBlocksContext = ({ children }: WorkBlocksProviderProps) => {
   return <WorkBlocksContext value={value}>{children}</WorkBlocksContext>;
 };
 
-export { WorkBlocksContext };
+export default WorkBlocksProvider;

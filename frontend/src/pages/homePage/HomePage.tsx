@@ -3,7 +3,7 @@ import WorkContainer from './components/workContainer/WorkContainer';
 import HeadLine from './components/headLine/HeadLine';
 import MainGraph from './components/mainGraph/MainGraph';
 import S from './HomePage.style';
-import { WorkBlocksProvider } from '@/contexts/WorkBlocksProvider';
+import WorkBlocksProvider from '@/contexts/WorkBlocksProvider';
 
 const HomePage = () => {
   return (
