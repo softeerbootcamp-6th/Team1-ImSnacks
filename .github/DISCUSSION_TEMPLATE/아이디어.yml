@@ -1,0 +1,25 @@
+name: 아이디어
+description: 새로운 기능 또는 개선 아이디어를 제안합니다.
+title: "[아이디어] "
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: 💡 아이디어 설명
+      description: 제안할 아이디어를 상세히 설명해주세요.
+      placeholder: 예) 모바일 앱 다크모드 지원
+    validations:
+      required: true
+  - type: textarea
+    id: mention
+    attributes:
+      label:🚶 아이디어 공유 대상
+      description: 아이디어 공유 전달이 필요한 사람들을 태그해주세요. (예: @username)
+      placeholder: 예) @username
+    validations:
+      required: false
+  - type: textarea
+    id: benefit
+    attributes:
+      label: 🤩 기대 효과
+      description: 이 아이디어가 프로젝트에 주는 이점을 설명해주세요.
