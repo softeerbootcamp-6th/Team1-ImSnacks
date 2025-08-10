@@ -1,9 +1,9 @@
 package com.imsnacks.Nyeoreumnagi.work.dto.response;
 
 public record GetMyWorksOfTodayResponse(
-        Long id,
-        String cropName,
-        String workName,
+        Long myWorkId,
+        String myCropName,
+        String myWorkName,
         String workTime,
         String startTime,
         String endTime
