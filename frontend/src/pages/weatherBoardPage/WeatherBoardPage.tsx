@@ -63,7 +63,7 @@ const WeatherBoardPage = () => {
             >
               <WeatherBoardPrecipitation value={30} />
               <WeatherBoardHumidity />
-              <WeatherBoardWind />
+              <WeatherBoardWind direction="남서풍" speed={10} degree={270} />
             </div>
           </div>
           <div
