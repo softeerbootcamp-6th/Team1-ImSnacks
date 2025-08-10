@@ -2,7 +2,7 @@ import { ColorPrimary } from '@/styles/colors';
 import { calculateHeightRatio } from '../../utils/precipitationUtil';
 import S from './WeatherBoardPrecipitation.style';
 
-const WeatherBoardRain = ({ value }: { value: number }) => {
+const WeatherBoardPrecipitation = ({ value }: { value: number }) => {
   const heightRatio = calculateHeightRatio(value);
 
   // SVG 레이어 높이 설정
@@ -67,4 +67,4 @@ const WeatherBoardRain = ({ value }: { value: number }) => {
   );
 };
 
-export default WeatherBoardRain;
+export default WeatherBoardPrecipitation;
