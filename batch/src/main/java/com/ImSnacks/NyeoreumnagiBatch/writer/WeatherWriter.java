@@ -1,9 +1,10 @@
 package com.ImSnacks.NyeoreumnagiBatch.writer;
 
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
+import com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRisk;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
-import com.ImSnacks.NyeoreumnagiBatch.writer.repository.WeatherRepository;
+import com.ImSnacks.NyeoreumnagiBatch.writer.repository.ShortTermWeatherForecastRepository;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -19,7 +20,7 @@ import java.util.List;
 @StepScope
 public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecutionListener {
     @Autowired
-    private WeatherRepository weatherRepository;
+    private ShortTermWeatherForecastRepository weatherRepository;
     @Autowired
     private WeatherRiskRepository weatherRiskRepository;
 
