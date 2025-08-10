@@ -1,5 +1,3 @@
-name: "논의 공간" 
-description: "프로젝트와 관련된 다양한 주제를 토론합니다."
 title: "[논의] "
 body:
   - type: textarea
