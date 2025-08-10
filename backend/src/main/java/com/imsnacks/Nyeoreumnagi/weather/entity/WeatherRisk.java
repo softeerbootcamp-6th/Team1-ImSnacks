@@ -22,7 +22,7 @@ public class WeatherRisk {
     private int startTime;
     private int endTime;
     @Enumerated(EnumType.STRING)
-    private WeatherRiskType name;
+    private WeatherRiskType type;
 
     private int nx;
     private int ny;
