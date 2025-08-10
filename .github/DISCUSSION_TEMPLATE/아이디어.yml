@@ -5,7 +5,7 @@ body:
   - type: textarea
     id: idea
     attributes:
-      label: 아이디어 설명
+      label: 💡 아이디어 설명
       description: 제안할 아이디어를 상세히 설명해주세요.
       placeholder: 예) 모바일 앱 다크모드 지원
     validations:
@@ -13,5 +13,5 @@ body:
   - type: textarea
     id: benefit
     attributes:
-      label: 기대 효과
+      label: 🤩 기대 효과
       description: 이 아이디어가 프로젝트에 주는 이점을 설명해주세요.

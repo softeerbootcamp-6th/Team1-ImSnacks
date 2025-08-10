@@ -8,7 +8,7 @@ body:
   - type: textarea
     id: content
     attributes:
-      label: 공지 내용
+      label: 📣 공지 내용
       description: 공지할 내용을 구체적으로 작성해주세요.
       placeholder: 예) 서비스 점검 일정 안내
     validations:

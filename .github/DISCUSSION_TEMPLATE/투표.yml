@@ -6,7 +6,7 @@ body:
   - type: textarea
     id: question
     attributes:
-      label: 투표 주제
+      label: 🗳️ 투표 주제
       description: 투표할 주제를 간단하게 적어주세요.
       placeholder: 예) 다음 개발 우선순위
     validations:
@@ -14,7 +14,7 @@ body:
   - type: textarea
     id: options
     attributes:
-      label: 투표 옵션
+      label: ☑️ 투표 옵션
       description: 선택지를 각 줄마다 하나씩 입력해주세요.
       placeholder: |
         옵션 1
