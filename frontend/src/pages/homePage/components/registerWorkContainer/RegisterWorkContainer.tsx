@@ -1,15 +1,44 @@
 import { useState } from 'react';
+import dayjs from 'dayjs';
 import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
 import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
 import S from './RegisterWorkContainer.style';
 import { CROPS } from '@/constants/crops';
+import type { WorkBlockType } from '@/types/workCard.type';
+import useWorkBlocks from '@/contexts/useWorkBlocks';
+import { calculateTimeToPosition } from '../../utils/getInitialWorkBlocks';
 
 const RegisterWorkContainer = () => {
   const crops = CROPS;
-  const [selectedFruit, setSelectedFruit] = useState(crops[0].id); // 첫 번째가 기본 선택
 
-  const handleFruitClick = (id: number) => {
-    setSelectedFruit(id);
+  const [selectedCrop, setSelectedCrop] = useState<{
+    id: number;
+    name: string;
+  }>(crops[0]);
+
+  const { addWorkBlock } = useWorkBlocks();
+
+  const handleCropClick = (crop: { id: number; name: string }) => {
+    setSelectedCrop(crop);
+  };
+
+  const handleCreateWork = (workName: string) => {
+    const { x, width } = calculateTimeToPosition(
+      dayjs().hour(9).minute(0).toISOString(),
+      dayjs().hour(10).minute(0).toISOString()
+    );
+
+    const newWorkBlock: WorkBlockType = {
+      id: Date.now(),
+      position: { x, y: 50 },
+      width,
+      cropName: selectedCrop?.name || '기본',
+      workName: workName,
+      workTime: '09:00 - 10:00',
+      startTime: dayjs().hour(9).minute(0).toISOString(),
+      endTime: dayjs().hour(10).minute(0).toISOString(),
+    };
+    addWorkBlock(newWorkBlock);
   };
 
   return (
@@ -27,14 +56,16 @@ const RegisterWorkContainer = () => {
               key={crop.id}
               size="Small"
               text={crop.name}
-              status={selectedFruit === crop.id ? 'Pressed' : 'Default'}
-              onClick={() => handleFruitClick(crop.id)}
+              status={selectedCrop.id === crop.id ? 'Pressed' : 'Default'}
+              onClick={() => handleCropClick(crop)}
             />
           ))}
         </div>
         <div css={S.BtnCreateWorkContainer}>
-          <BtnCreateWork text="농작업" />
-          <BtnCreateWork text="농작업" />
+          <BtnCreateWork
+            text="농작업"
+            onClick={() => handleCreateWork('농작업')}
+          />
         </div>
       </div>
     </div>

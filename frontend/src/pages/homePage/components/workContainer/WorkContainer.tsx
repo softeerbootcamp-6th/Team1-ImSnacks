@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
-import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
 import useRemoveOnOutOfBound from '@/hooks/dnd/useRemoveOnOutOfBound';
 import type { WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
+import useWorkBlocks from '@/contexts/useWorkBlocks';
 
 const WorkContainer = () => {
-  const [workBlocks, setWorkBlocks] = useState(getInitialWorkBlocks());
+  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
 
   const {
     containerRef,
@@ -23,7 +23,7 @@ const WorkContainer = () => {
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
     getItemPosition: block => block.position,
-    onPositionChange: updated => setWorkBlocks(updated),
+    onPositionChange: updated => updateWorkBlocks(updated),
   });
 
   const { checkAndRemove } = useRemoveOnOutOfBound<WorkBlockType>({
@@ -32,7 +32,7 @@ const WorkContainer = () => {
     getItemId: block => block.id,
     getItemPosition: block => block.position,
     getItemWidth: block => block.width,
-    onRemove: id => setWorkBlocks(blocks => blocks.filter(b => b.id !== id)),
+    onRemove: id => removeWorkBlock(id),
   });
 
   const handleEndDrag = () => {

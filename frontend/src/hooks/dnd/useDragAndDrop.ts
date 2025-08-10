@@ -23,6 +23,7 @@ export const useDragAndDrop = <T>({
 }: UseDragAndDropProps<T>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const draggedItemIdRef = useRef<number | string | null>(null);
+  const draggedItemRef = useRef<T | null>(null);
   const dragOffsetRef = useRef<DragOffset>({ x: 0, y: 0 });
   const itemsRef = useRef<T[]>([]);
   const animationFrameRef = useRef<number | null>(null);
@@ -59,6 +60,7 @@ export const useDragAndDrop = <T>({
 
       draggedItemIdRef.current = itemId;
       itemsRef.current = items;
+      draggedItemRef.current = item;
       setCurrentDraggingItem(item);
       setIsDragging(true);
     },
