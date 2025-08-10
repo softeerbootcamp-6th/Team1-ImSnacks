@@ -6,6 +6,7 @@ import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.service.MyWorkService;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/myWork")
@@ -53,5 +56,15 @@ public class MyWorkController {
     public ResponseEntity<CustomResponseBody<ModifyMyWorkResponse>> modifyMyWork(@RequestBody ModifyMyWorkRequest request, @PreAuthorize Long memberId) {
         ModifyMyWorkResponse modifyMyWorkResponse = myWorkService.modifyMyWork(request, memberId);
         return ResponseUtil.success(modifyMyWorkResponse);
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "오늘의 내 농작업 목록 조회")
+    @ApiResponse(responseCode = "200", description = "오늘의 내 농작업 목록 조회 성공")
+    @ApiResponse(responseCode = "400", description = "오늘의 내 농작업 목록 조회 실패")
+    @GetMapping("/today")
+    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfTodayResponse>>> getMyWorksOfToday(@PreAuthorize Long memberId) {
+        List<GetMyWorksOfTodayResponse> myWorksOfToday = myWorkService.getMyWorksOfToday(memberId);
+        return ResponseUtil.success(myWorksOfToday);
     }
 }
