@@ -8,14 +8,15 @@ import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
+import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.INVALID_MEMBER_ID;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
@@ -27,6 +28,7 @@ public class WeatherService {
 
     private final MemberRepository memberRepository;
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
+    private final WeatherRiskRepository weatherRiskRepository;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric){
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
@@ -55,7 +57,20 @@ public class WeatherService {
     }
 
     public GetFcstRiskResponse getWeatherRisk(Long memberId){
-        return null;
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
+        Farm farm = member.getFarm();
+
+        if(farm == null){
+            throw new MemberException(NO_FARM_INFO);
+        }
+
+        int nx = farm.getNx();
+        int ny = farm.getNy();
+
+        List<WeatherRisk> weatherRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
+        List<GetFcstRiskResponse.WeatherRiskDto> weatherRiskDtos = getRemovedOverLappingDTO(weatherRisks);
+
+        return new GetFcstRiskResponse(weatherRiskDtos);
     }
 
     private List<GetWeatherGraphResponse.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {
@@ -105,5 +120,58 @@ public class WeatherService {
 
     private int getUpperLimit(int value){
         return ((value / 5) + 1) * 5;
+    }
+
+    private List<GetFcstRiskResponse.WeatherRiskDto> getRemovedOverLappingDTO(List<WeatherRisk> weatherRisks){
+        class LinePoint implements Comparable<LinePoint> {
+            int time;
+            boolean isStart;
+            WeatherRisk risk;
+            LinePoint(int time, boolean isStart, WeatherRisk risk) {
+                this.time = time;
+                this.isStart = isStart;
+                this.risk = risk;
+            }
+            @Override
+            public int compareTo(LinePoint o) {
+                if (this.time != o.time) return Integer.compare(this.time, o.time);
+                return Boolean.compare(!this.isStart, !o.isStart); // start(true) 우선
+            }
+        }
+
+        //각 구간의 시작점, 끝점을 List로 저장
+        List<LinePoint> linePoints = new ArrayList<>();
+        for (WeatherRisk r : weatherRisks) {
+            linePoints.add(new LinePoint(r.getStartTime(), true, r));
+            linePoints.add(new LinePoint(r.getEndTime(), false, r));
+        }
+        Collections.sort(linePoints);
+
+        //우선순위 Comparator (enum클래스의 ordinal이 높을수록 우선순위 높음)
+        Comparator<WeatherRisk> prioComp = Comparator
+                .comparingInt((WeatherRisk r) -> r.getType().ordinal())
+                .reversed();
+        TreeSet<WeatherRisk> actives = new TreeSet<>(prioComp.thenComparingLong(WeatherRisk::getWeatherRiskId));
+
+        List<GetFcstRiskResponse.WeatherRiskDto> result = new ArrayList<>();
+        int lastTime = -1;
+        WeatherRisk currentShow = null;
+
+        //TreeSet에 하나씩 넣으면서 우선순위에 따른 구간 계산
+        for (LinePoint lp : linePoints) {
+            if (lastTime != -1 && lastTime < lp.time && currentShow != null) {
+                result.add(new GetFcstRiskResponse.WeatherRiskDto(currentShow.getType().getDescription(), String.valueOf(lastTime), String.valueOf(lp.time)));
+            }
+            if (lp.isStart) {
+                actives.add(lp.risk);
+            } else {
+                actives.remove(lp.risk);
+            }
+            currentShow = actives.isEmpty() ? null : actives.first();
+            lastTime = lp.time;
+        }
+
+        // 필요한 응답으로 리턴 가공
+        return result;
     }
 }
