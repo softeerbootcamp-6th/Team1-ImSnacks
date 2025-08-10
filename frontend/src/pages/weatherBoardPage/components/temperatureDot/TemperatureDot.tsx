@@ -1,6 +1,6 @@
 import { FLAT_ICON } from '@/constants/flatIcons';
 import { Typography } from '@/styles/typography';
-import { getTemperatureColor } from '../../utils/weeklyTemperatureUtil';
+import { getTemperatureColor } from '../../utils/temperatureUtil';
 import { FlexStyles } from '@/styles/commonStyles';
 
 const TemperatureDot = ({

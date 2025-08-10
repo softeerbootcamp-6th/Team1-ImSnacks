@@ -1,10 +1,10 @@
-import type { WeatherMetrics } from '@/types/weather.types';
+import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
 
 const WEATHER_UNIT = {
-  precipitation: 'mm',
-  temperature: '°C',
-  humidity: '%',
-  windSpeed: 'm/s',
+  [WEATHER_METRICS.PRECIPITATION]: 'mm',
+  [WEATHER_METRICS.TEMPERATURE]: '°',
+  [WEATHER_METRICS.HUMIDITY]: '%',
+  [WEATHER_METRICS.WIND_SPEED]: 'm/s',
 };
 
 export const getUnit = (metric: WeatherMetrics) => {
