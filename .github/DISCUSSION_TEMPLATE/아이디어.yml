@@ -13,8 +13,8 @@ body:
   - type: textarea
     id: mention
     attributes:
-      label:🚶 아이디어 공유 대상
-      description: 아이디어 공유 전달이 필요한 사람들을 태그해주세요. (예: @username)
+      label: 🚶 아이디어 공유 대상
+      description: 아이디어 공유 전달이 필요한 사람들을 태그해주세요.
       placeholder: 예) @username
     validations:
       required: false
