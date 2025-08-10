@@ -160,7 +160,22 @@ public class WeatherService {
         //TreeSet에 하나씩 넣으면서 우선순위에 따른 구간 계산
         for (LinePoint lp : linePoints) {
             if (lastTime != -1 && lastTime < lp.time && currentShow != null) {
-                result.add(new GetFcstRiskResponse.WeatherRiskDto(currentShow.getType().getDescription(), String.valueOf(lastTime), String.valueOf(lp.time)));
+                if (!result.isEmpty()) {
+                    GetFcstRiskResponse.WeatherRiskDto prev = result.get(result.size() - 1);
+                    // 위험 종류가 같고, 시간 끊김 없이 연속되면 합침
+                    if (prev.category().equals(currentShow.getType().getDescription())
+                            && prev.endTime().equals(String.valueOf(lastTime))) {
+                        GetFcstRiskResponse.WeatherRiskDto merged =
+                                new GetFcstRiskResponse.WeatherRiskDto(prev.category(), prev.startTime(), String.valueOf(lp.time));
+                        result.set(result.size() - 1, merged);
+                    } else {
+                        result.add(new GetFcstRiskResponse.WeatherRiskDto(currentShow.getType().getDescription(),
+                                String.valueOf(lastTime), String.valueOf(lp.time)));
+                    }
+                } else {
+                    result.add(new GetFcstRiskResponse.WeatherRiskDto(currentShow.getType().getDescription(),
+                            String.valueOf(lastTime), String.valueOf(lp.time)));
+                }
             }
             if (lp.isStart) {
                 actives.add(lp.risk);
@@ -171,7 +186,6 @@ public class WeatherService {
             lastTime = lp.time;
         }
 
-        // 필요한 응답으로 리턴 가공
         return result;
     }
 }
