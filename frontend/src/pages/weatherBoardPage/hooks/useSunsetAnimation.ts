@@ -77,10 +77,6 @@ export const useSunsetAnimation = ({
   // SVG 관련 계산
   const viewBox = `${-radius} ${-radius} ${radius * 2} ${radius}`;
   const semicircleStrokePath = `M -${radius} 0 A ${radius} ${radius} 0 0 1 ${radius} 0`;
-  
-  // 베이스 라인은 viewBox 전체 너비에 맞게
-  const baseLineX1 = -radius;
-  const baseLineX2 = radius;
 
   const clipId = useId();
 
@@ -97,7 +93,5 @@ export const useSunsetAnimation = ({
     radius,
     viewBox,
     semicircleStrokePath,
-    baseLineX1,
-    baseLineX2,
   };
 };
