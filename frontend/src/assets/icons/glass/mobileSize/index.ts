@@ -1,0 +1,9 @@
+export { default as CloudyMobile } from './CloudyMobile.svg';
+export { default as CloudyNightMobile } from './CloudyNightMobile.svg';
+export { default as HeavyRainMobile } from './HeavyRainMobile.svg';
+export { default as LessCloudyMobile } from './LessCloudyMobile.svg';
+export { default as NightMobile } from './NightMobile.svg';
+export { default as RainMobile } from './RainMobile.svg';
+export { default as SnowMobile } from './SnowMobile.svg';
+export { default as SunnyMobile } from './SunnyMobile.svg';
+export { default as WindMobile } from './WindMobile.svg';
