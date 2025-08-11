@@ -25,6 +25,8 @@ public class ShortTermWeatherDto {
         private int temperature;
         private int humidity;
         private double windSpeed;
+        private double snow;
+        private int skyStatus;
     }
 
     @Getter
