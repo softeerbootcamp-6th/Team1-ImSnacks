@@ -50,7 +50,7 @@ class MyWorkTest {
     }
 
     private static RecommendedWork createRecommendedWork() {
-        RecommendedWork recommendedWork = new RecommendedWork(1L, "qiLLR3K", true, false, true, false, true, true, false);
+        RecommendedWork recommendedWork = new RecommendedWork(1L, "qiLLR3K", true, false, true, false, true, true, false, "추천추천");
         return recommendedWork;
     }
 
