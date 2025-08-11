@@ -43,4 +43,13 @@ public class WeatherController {
     public ResponseEntity<CustomResponseBody<GetFcstRiskResponse>> getFcstRiskResponse(@PreAuthorize Long memberId){
         return ResponseUtil.success(weatherService.getWeatherRisk(memberId));
     }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "날씨 요약 조회")
+    @ApiResponse(responseCode = "200", description = "날씨 요약 조회 성공")
+    @ApiResponse(responseCode = "400", description = "날씨 요약 조회 실패")
+    @GetMapping("/now")
+    public ResponseEntity<CustomResponseBody<GetWeatherConditionResponse>> getWeatherCondition(@PreAuthorize Long memberId){
+        return ResponseUtil.success(weatherService.getWeatherCondition(memberId));
+    }
 }
