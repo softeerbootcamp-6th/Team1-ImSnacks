@@ -7,6 +7,7 @@ const WeatherBoardUV = css`
   ${CommonStyles.weatherBoardContainer}
   position: relative;
   padding-bottom: 12px;
+  box-sizing: border-box;
 `;
 
 const WeatherBoardUVTitle = css`

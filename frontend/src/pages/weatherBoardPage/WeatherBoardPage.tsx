@@ -62,7 +62,7 @@ const WeatherBoardPage = () => {
               `}
             >
               <WeatherBoardPrecipitation value={30} />
-              <WeatherBoardHumidity />
+              <WeatherBoardHumidity humidityValue={60} />
               <WeatherBoardWind direction="남서풍" speed={10} degree={270} />
             </div>
           </div>
@@ -84,7 +84,7 @@ const WeatherBoardPage = () => {
           `}
         >
           <WeatherBoardUV value={8} startTime="08:00" endTime="18:00" />
-          <WeatherBoardDust />
+          <WeatherBoardDust fineDustValue={55} ultrafineDustValue={78} />
           <WeatherBoardSunset startTime="01:00" endTime="01:50" />
         </div>
       </div>
