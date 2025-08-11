@@ -5,7 +5,7 @@ const updateBlockWorkTime = (
   block: WorkBlockType,
   position: { x: number; y: number }
 ) => {
-  const newStartHour = Math.round(position.x / 100);
+  const newStartHour = position.x / 100;
   const newStartMinutes = Math.round((position.x % 100) * 0.6);
 
   const originalStartTime = dayjs(block.startTime);
