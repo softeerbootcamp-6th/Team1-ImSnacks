@@ -21,6 +21,7 @@ public class LifeCycle {
     private int duration;
     private int defaultStartMonth;
     private int defaultEndMonth;
+    private int step;
 
     @Enumerated(EnumType.STRING)
     private LifeCyclePeriod defaultStartPeriod;
