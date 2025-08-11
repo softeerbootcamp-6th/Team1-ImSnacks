@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "WeatherRisk")
@@ -18,13 +19,12 @@ public class WeatherRisk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long weatherRiskId;
-    private LocalDate fcstDate;
-    private int startTime;
-    private int endTime;
-    @Enumerated(EnumType.STRING)
-    private WeatherRiskType type;
-
+    private Long jobExecutionId;
+    private LocalDate fcstDate; //지워야 함
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private int nx;
     private int ny;
-    private Long jobExecutionId;
+    @Enumerated(EnumType.STRING)
+    private WeatherRiskType type;
 }
