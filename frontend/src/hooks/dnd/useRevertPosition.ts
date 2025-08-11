@@ -18,7 +18,7 @@ export const useRevertPosition = <
   initialPosition,
 }: RevertPositionProps<T>) => {
   const checkAndRevert = useCallback(
-    (containerRect: DOMRect) => {
+    (containerRect: DOMRect, scrollOffset: number) => {
       if (!draggedItem || !initialPosition) {
         return;
       }
@@ -28,9 +28,9 @@ export const useRevertPosition = <
       const itemHeight = draggedItem.height || 0;
 
       const isWithinBounds =
-        x >= 0 &&
+        x >= 0 + scrollOffset &&
         y >= 0 &&
-        x + itemWidth <= containerRect.width &&
+        x + itemWidth <= containerRect.width + scrollOffset &&
         y + itemHeight <= containerRect.height;
 
       if (!isWithinBounds) {

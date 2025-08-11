@@ -4,16 +4,18 @@ import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
-import type { WorkBlockType } from '@/types/workCard.type';
+import type { Position, WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
+import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks } = useWorkBlocks();
 
   const [scrollOffset, setScrollOffset] = useState(0);
+  const [initialPosition, setInitialPosition] = useState<Position | null>(null);
 
   const {
     containerRef,
@@ -29,10 +31,29 @@ const WorkContainer = () => {
     onPositionChange: updated => updateWorkBlocks(updated),
   });
 
+  const { checkAndRevert } = useRevertPosition<WorkBlockType>({
+    draggedItem: draggedItemRef.current,
+    initialPosition,
+    getItemPosition: block => block.position,
+    onRevert: () => {
+      if (!draggedItemRef.current || !initialPosition) return;
+      const revertId = draggedItemRef.current.id;
+      const reverted = workBlocks.map(block =>
+        block.id === revertId
+          ? updateBlockWorkTime(block, initialPosition, 100)
+          : block
+      );
+      updateWorkBlocks(reverted);
+    },
+  });
+
   const handleEndDrag = () => {
     const draggingId = draggedItemRef.current?.id;
     if (draggingId !== null && draggingId !== undefined) {
-      //TODO: 컨테이너 밖으로 나갈 시 원복
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        checkAndRevert(rect, scrollOffset);
+      }
     }
     endDrag();
   };
@@ -113,6 +134,7 @@ const WorkContainer = () => {
                     `,
                   ]}
                   onMouseDown={e => {
+                    setInitialPosition(block.position);
                     startDrag(e, id, workBlocks);
                   }}
                 >
