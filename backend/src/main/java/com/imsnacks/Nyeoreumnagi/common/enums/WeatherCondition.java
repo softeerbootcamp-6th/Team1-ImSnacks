@@ -9,8 +9,8 @@ public enum WeatherCondition {
     RAIN("비"),
     HEAVY_RAIN("폭우"),
     SNOW("눈"),
-    NIGHT("맑은 밤"),
-    CLOUDY_NIGHT("흐린 밤"),
+    NIGHT("맑음"),
+    CLOUDY_NIGHT("흐림"),
     ;
 
     private final String keyword;
