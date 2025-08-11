@@ -1,5 +1,4 @@
-import { createPortal } from 'react-dom';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
@@ -8,54 +7,7 @@ import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
 import type { WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
-
-const DragOverlay = ({
-  isDragging,
-  draggedItem,
-  position,
-  children,
-  containerRef,
-  scrollOffset,
-}: {
-  isDragging: boolean;
-  draggedItem: WorkBlockType | null;
-  position: { x: number; y: number };
-  children: React.ReactNode;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  scrollOffset: number;
-}) => {
-  const getAdjustedPosition = useCallback(() => {
-    if (!containerRef?.current) return position;
-
-    const containerRect = containerRef.current.getBoundingClientRect();
-    console.log(scrollOffset);
-
-    return {
-      x: containerRect.left + position.x - scrollOffset,
-      y: containerRect.top + position.y,
-    };
-  }, [position, containerRef, scrollOffset]);
-
-  if (!isDragging || !draggedItem) return null;
-
-  const adjustedPosition = getAdjustedPosition();
-
-  return createPortal(
-    <div
-      style={{
-        position: 'fixed',
-        left: adjustedPosition.x,
-        top: adjustedPosition.y,
-        pointerEvents: 'auto',
-        zIndex: 1000,
-        transform: 'translate(-50%, -50%)',
-      }}
-    >
-      {children}
-    </div>,
-    document.body
-  );
-};
+import DragOverlay from '@/components/dnd/DragOverlay';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks } = useWorkBlocks();
@@ -79,7 +31,7 @@ const WorkContainer = () => {
   const handleEndDrag = () => {
     const draggingId = draggedItemRef.current?.id;
     if (draggingId !== null && draggingId !== undefined) {
-      //TODO: 컨테이너 밖으로 나갈 시 삭제
+      //TODO: 컨테이너 밖으로 나갈 시 원복
     }
     endDrag();
   };
@@ -150,7 +102,7 @@ const WorkContainer = () => {
                     <WorkCardRegister
                       id={id}
                       cropName={cropName}
-                      workName={`overlay-${workName}`}
+                      workName={workName}
                       workTime={workTime}
                       isDragging={isDragging}
                       width={width}

@@ -31,6 +31,8 @@ export const useDragAndDrop = <T>({
 
   const [isDragging, setIsDragging] = useState(false);
 
+  const containerRect = containerRef.current?.getBoundingClientRect();
+
   const startDrag = useCallback(
     (e: React.MouseEvent, itemId: number | string, items: T[]) => {
       const container = containerRef.current;
@@ -119,5 +121,6 @@ export const useDragAndDrop = <T>({
     isItemDragging,
     draggedItemRef,
     latestMousePos,
+    containerRect,
   };
 };
