@@ -66,6 +66,8 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
         double windSpeed = 0;
         int temperature = 0;
         int humidity = 0;
+        double snow = 0;
+        int skyStatus = 0;
 
         for (VilageFcstResponseDto.Item item : weatherInfos) {
             String category = item.getCategory();
@@ -84,10 +86,16 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
                 case "WSD":
                     windSpeed = parseDoubleOrDefault(value, 0);
                     break;
+                case "SNO":
+                    snow = parseSnowDoubleOrDefault(value, 0);
+                    break;
+                case "SKY":
+                    skyStatus = parseSkyStatusOrDefault(value, 1);
+                    break;
             }
         }
 
-        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed);
+        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed, snow, skyStatus);
     }
 
     private double parseDoubleOrDefault(String value, double defaultValue) {
@@ -109,6 +117,30 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
     }
 
     private int parseIntOrDefault(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private double parseSnowDoubleOrDefault(String value, double defaultValue) {
+        try {
+            if (value.equals("적설없음"))
+                return defaultValue;
+            if (value.equals("5.0cm 이상"))
+                return 5;
+            if (value.contains("cm")) {
+                String valueWithoutUnit = value.substring(0, value.indexOf("cm"));
+                return Double.parseDouble(valueWithoutUnit);
+            }
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private int parseSkyStatusOrDefault(String value, int defaultValue) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
