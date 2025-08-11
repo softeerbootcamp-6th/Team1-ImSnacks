@@ -1,6 +1,8 @@
 package com.imsnacks.Nyeoreumnagi.weather.service;
 
+import java.time.LocalTime;
+
 public interface SunriseSunSetTime {
-    double getSunriseTime();
-    double getSunSetTime();
+    LocalTime getSunriseTime();
+    LocalTime getSunSetTime();
 }
