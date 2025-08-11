@@ -13,7 +13,7 @@ import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
 import animateBlock from '../../utils/animateBlock';
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
@@ -162,6 +162,7 @@ const WorkContainer = () => {
                     workTime={workTime}
                     isDragging={isItemDragging(id)}
                     width={width}
+                    onDelete={() => removeWorkBlock(id)}
                   />
                 </div>
               </>
