@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
@@ -16,6 +16,15 @@ const WorkContainer = () => {
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
+  const latestBlocksRef = useRef<WorkBlockType[]>(workBlocks);
+  const revertAnimationRef = useRef<number | null>(null);
+  const [isRevertingItemId, setIsRevertingItemId] = useState<number | null>(
+    null
+  );
+
+  useEffect(() => {
+    latestBlocksRef.current = workBlocks;
+  }, [workBlocks]);
 
   const {
     containerRef,
@@ -36,14 +45,50 @@ const WorkContainer = () => {
     initialPosition,
     getItemPosition: block => block.position,
     onRevert: () => {
+      setIsRevertingItemId(draggedItemRef.current?.id || null);
       if (!draggedItemRef.current || !initialPosition) return;
+
       const revertId = draggedItemRef.current.id;
-      const reverted = workBlocks.map(block =>
-        block.id === revertId
-          ? updateBlockWorkTime(block, initialPosition, 100)
-          : block
-      );
-      updateWorkBlocks(reverted);
+      const currentPos = draggedItemRef.current.position;
+
+      const animateRevert = (
+        blockId: number,
+        from: Position,
+        to: Position,
+        durationMs: number = 250
+      ) => {
+        if (revertAnimationRef.current !== null) {
+          cancelAnimationFrame(revertAnimationRef.current);
+          revertAnimationRef.current = null;
+        }
+
+        const start = performance.now();
+        const step = (now: number) => {
+          const elapsed = now - start;
+          const t = Math.min(1, elapsed / durationMs);
+          const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+          const x = from.x + (to.x - from.x) * eased;
+          const y = from.y + (to.y - from.y) * eased;
+
+          const updated = latestBlocksRef.current.map(block =>
+            block.id === blockId
+              ? updateBlockWorkTime(block, { x, y }, 100)
+              : block
+          );
+          updateWorkBlocks(updated);
+
+          if (t < 1) {
+            revertAnimationRef.current = requestAnimationFrame(step);
+          } else {
+            revertAnimationRef.current = null;
+            setIsRevertingItemId(null);
+          }
+        };
+
+        revertAnimationRef.current = requestAnimationFrame(step);
+      };
+
+      animateRevert(revertId as number, currentPos, initialPosition);
     },
   });
 
@@ -106,7 +151,7 @@ const WorkContainer = () => {
 
             return (
               <>
-                {isItemDragging(id) && (
+                {(isItemDragging(id) || isRevertingItemId === id) && (
                   <DragOverlay
                     key={`overlay-${id}`}
                     position={overlayPosition}
