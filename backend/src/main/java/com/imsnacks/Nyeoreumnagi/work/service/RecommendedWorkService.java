@@ -42,12 +42,12 @@ public class RecommendedWorkService {
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final FarmRepository farmRepository;
 
-    static final int HIGH_TEMP = 30;
-    static final int LOW_TEMP = 5;
-    static final int HIGH_HUMIDITY = 80;
-    static final int LOW_HUMIDITY = 30;
-    static final double STRONG_WIND = 14.0;
-    static final double RAIN_MM = 0.1;
+    private static final int HIGH_TEMP = 30;
+    private static final int LOW_TEMP = 5;
+    private static final int HIGH_HUMIDITY = 80;
+    private static final int LOW_HUMIDITY = 30;
+    private static final double STRONG_WIND = 14.0;
+    private static final double RAIN_MM = 0.1;
 
 
     public RecommendWorksResponse recommendWorks(Long myCropId, Long memberId) {
@@ -109,7 +109,7 @@ public class RecommendedWorkService {
     }
 
 
-    public List<RecommendedWorksResponse> windowsForWork(RecommendedWork work,
+    private List<RecommendedWorksResponse> windowsForWork(RecommendedWork work,
                                                           List<ShortTermWeatherForecast> forecasts,
                                                           int minHours) {
         List<ShortTermWeatherForecast> sorted = forecasts.stream()
