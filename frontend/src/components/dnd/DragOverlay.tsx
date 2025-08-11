@@ -1,6 +1,5 @@
 import { useCallback, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { css } from '@emotion/react';
 import S from './DragOverlay.style';
 
 interface DragOverlayProps {
@@ -30,17 +29,7 @@ const DragOverlay = ({
   const adjustedPosition = getAdjustedPosition();
 
   return createPortal(
-    <div
-      css={[
-        S.DragOverlay(adjustedPosition),
-        css`
-          position: fixed;
-          z-index: 1000;
-        `,
-      ]}
-    >
-      {children}
-    </div>,
+    <div css={[S.DragOverlay(adjustedPosition)]}>{children}</div>,
     document.body
   );
 };
