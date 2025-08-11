@@ -5,6 +5,7 @@ import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefingResponse;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,5 +43,15 @@ public class WeatherController {
     @GetMapping("/fcstRisk")
     public ResponseEntity<CustomResponseBody<GetFcstRiskResponse>> getFcstRiskResponse(@PreAuthorize Long memberId){
         return ResponseUtil.success(weatherService.getWeatherRisk(memberId));
+    }
+
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "날씨 브리핑 조회")
+    @ApiResponse(responseCode = "200", description = "날씨 브리핑 조회 성공")
+    @ApiResponse(responseCode = "400", description = "날씨 브리핑 조회 실패")
+    @GetMapping("/briefing")
+    public ResponseEntity<CustomResponseBody<GetWeatherBriefingResponse>> getWeatherBriefingResponse(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getWeatherBriefing(memberId));
     }
 }
