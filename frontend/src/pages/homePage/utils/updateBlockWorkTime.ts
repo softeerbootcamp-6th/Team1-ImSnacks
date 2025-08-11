@@ -3,10 +3,11 @@ import type { WorkBlockType } from '@/types/workCard.type';
 
 const updateBlockWorkTime = (
   block: WorkBlockType,
-  position: { x: number; y: number }
+  position: { x: number; y: number },
+  px: number
 ) => {
-  const newStartHour = position.x / 100;
-  const newStartMinutes = Math.round((position.x % 100) * 0.6);
+  const newStartHour = position.x / px;
+  const newStartMinutes = Math.round((position.x % px) * 0.6);
 
   const originalStartTime = dayjs(block.startTime);
   const originalEndTime = dayjs(block.endTime);
