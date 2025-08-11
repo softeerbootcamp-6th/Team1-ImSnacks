@@ -6,6 +6,7 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
@@ -72,6 +73,10 @@ public class WeatherService {
         List<GetFcstRiskResponse.WeatherRiskDto> weatherRiskDtos = WeatherRiskIntervalMerger.merge(weatherRisks);
 
         return new GetFcstRiskResponse(weatherRiskDtos);
+    }
+
+    public GetWeatherConditionResponse getWeatherCondition(Long memberId){
+        return null;
     }
 
     private List<GetWeatherGraphResponse.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {

@@ -5,6 +5,7 @@ import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import io.swagger.v3.oas.annotations.Operation;
