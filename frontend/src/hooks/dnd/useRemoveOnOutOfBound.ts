@@ -7,6 +7,7 @@ interface UseRemoveOnOutOfBoundProps<T> {
   getItemPosition: (item: T) => { x: number; y: number };
   getItemWidth: (item: T) => number;
   onRemove: (id: number | string) => void;
+  offset?: number;
 }
 
 const useRemoveOnOutOfBound = <T>({
@@ -16,6 +17,7 @@ const useRemoveOnOutOfBound = <T>({
   getItemPosition,
   getItemWidth,
   onRemove,
+  offset = 15,
 }: UseRemoveOnOutOfBoundProps<T>) => {
   // 드래그 종료 시 호출
   const checkAndRemove = (id: number | string) => {
@@ -25,7 +27,12 @@ const useRemoveOnOutOfBound = <T>({
     const { x, y } = getItemPosition(item);
     const width = getItemWidth(item);
 
-    if (x < 0 || y < 0 || x + width > rect.width || y > rect.height) {
+    if (
+      x < 0 - offset ||
+      y < 0 - offset ||
+      x + width > rect.width + offset ||
+      y > rect.height + offset
+    ) {
       onRemove(id);
     }
   };
