@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import NavBar from './navBar/NavBar';
 import { gradientStyles } from '@/styles/gradientStyles';
 import { css } from '@emotion/react';
 

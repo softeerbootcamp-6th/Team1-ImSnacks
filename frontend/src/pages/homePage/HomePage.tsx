@@ -1,4 +1,3 @@
-import DesktopHomePage from './desktop/DesktopHomePage';
 import MobileHomePage from './mobile/MobileHomePage';
 
 const HomePage = () => {
