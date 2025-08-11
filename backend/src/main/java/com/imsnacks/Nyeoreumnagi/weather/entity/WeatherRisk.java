@@ -24,7 +24,10 @@ public class WeatherRisk {
     @Enumerated(EnumType.STRING)
     private WeatherRiskType type;
 
+    @Column(name = "nx")
     private int nx;
+    @Column(name = "ny")
     private int ny;
+    @Column(name = "job_execution_id")
     private Long jobExecutionId;
 }
