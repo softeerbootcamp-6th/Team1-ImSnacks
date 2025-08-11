@@ -10,6 +10,7 @@ import useWorkBlocks from '@/contexts/useWorkBlocks';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
+import animateBlock from '../../utils/animateBlock';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks } = useWorkBlocks();
@@ -51,44 +52,15 @@ const WorkContainer = () => {
       const revertId = draggedItemRef.current.id;
       const currentPos = draggedItemRef.current.position;
 
-      const animateRevert = (
-        blockId: number,
-        from: Position,
-        to: Position,
-        durationMs: number = 250
-      ) => {
-        if (revertAnimationRef.current !== null) {
-          cancelAnimationFrame(revertAnimationRef.current);
-          revertAnimationRef.current = null;
-        }
-
-        const start = performance.now();
-        const step = (now: number) => {
-          const elapsed = now - start;
-          const t = Math.min(1, elapsed / durationMs);
-          const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
-          const x = from.x + (to.x - from.x) * eased;
-          const y = from.y + (to.y - from.y) * eased;
-
-          const updated = latestBlocksRef.current.map(block =>
-            block.id === blockId
-              ? updateBlockWorkTime(block, { x, y }, 100)
-              : block
-          );
-          updateWorkBlocks(updated);
-
-          if (t < 1) {
-            revertAnimationRef.current = requestAnimationFrame(step);
-          } else {
-            revertAnimationRef.current = null;
-            setIsRevertingItemId(null);
-          }
-        };
-
-        revertAnimationRef.current = requestAnimationFrame(step);
-      };
-
-      animateRevert(revertId as number, currentPos, initialPosition);
+      animateBlock(
+        revertAnimationRef,
+        setIsRevertingItemId,
+        latestBlocksRef,
+        updateWorkBlocks,
+        revertId as number,
+        currentPos,
+        initialPosition
+      );
     },
   });
 
