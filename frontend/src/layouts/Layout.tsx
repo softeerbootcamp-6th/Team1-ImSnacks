@@ -18,11 +18,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
           : gradientStyles.backgroundAfternoonClear}
       `}
     >
-      <NavBar isWeatherPage={isWeatherPage} />
+      {/* <NavBar isWeatherPage={isWeatherPage} /> */}
       <main
-        css={css`
-          max-width: 1328px;
-        `}
+      // css={css`
+      //   max-width: 1328px;
+      // `}
       >
         {children}
       </main>
