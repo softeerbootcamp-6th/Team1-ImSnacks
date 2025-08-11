@@ -37,14 +37,6 @@ const WorkContainer = () => {
     endDrag();
   };
 
-  const generateDragOverlay = (
-    id: number,
-    e: React.MouseEvent,
-    workBlocks: WorkBlockType[]
-  ) => {
-    startDrag(e, id, workBlocks);
-  };
-
   return (
     <>
       <div
@@ -121,7 +113,7 @@ const WorkContainer = () => {
                     `,
                   ]}
                   onMouseDown={e => {
-                    generateDragOverlay(id, e, workBlocks);
+                    startDrag(e, id, workBlocks);
                   }}
                 >
                   <WorkCardRegister
