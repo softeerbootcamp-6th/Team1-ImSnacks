@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
-import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
-import useRemoveOnOutOfBound from '@/hooks/dnd/useRemoveOnOutOfBound';
 import type { WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
+import useWorkBlocks from '@/contexts/useWorkBlocks';
+import DragOverlay from '@/components/dnd/DragOverlay';
+import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 
 const WorkContainer = () => {
-  const [workBlocks, setWorkBlocks] = useState(getInitialWorkBlocks());
+  const { workBlocks, updateWorkBlocks } = useWorkBlocks();
+
+  const [scrollOffset, setScrollOffset] = useState(0);
 
   const {
     containerRef,
@@ -19,26 +22,17 @@ const WorkContainer = () => {
     updatePosition,
     endDrag,
     isItemDragging,
-    currentDraggingItem,
+    draggedItemRef,
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
     getItemPosition: block => block.position,
-    onPositionChange: updated => setWorkBlocks(updated),
-  });
-
-  const { checkAndRemove } = useRemoveOnOutOfBound<WorkBlockType>({
-    containerRef: containerRef as React.RefObject<HTMLElement>,
-    items: workBlocks,
-    getItemId: block => block.id,
-    getItemPosition: block => block.position,
-    getItemWidth: block => block.width,
-    onRemove: id => setWorkBlocks(blocks => blocks.filter(b => b.id !== id)),
+    onPositionChange: updated => updateWorkBlocks(updated),
   });
 
   const handleEndDrag = () => {
-    const draggingId = currentDraggingItem?.id;
+    const draggingId = draggedItemRef.current?.id;
     if (draggingId !== null && draggingId !== undefined) {
-      checkAndRemove(draggingId);
+      //TODO: 컨테이너 밖으로 나갈 시 원복
     }
     endDrag();
   };
@@ -58,23 +52,6 @@ const WorkContainer = () => {
           width: 100%;
         `}
       >
-        {isDragging && currentDraggingItem && (
-          <WorkCardRegister
-            key={currentDraggingItem.id}
-            id={currentDraggingItem.id}
-            cropName={currentDraggingItem.cropName}
-            workName={currentDraggingItem.workName}
-            workTime={currentDraggingItem.workTime}
-            isDragging={isDragging}
-            width={currentDraggingItem.width}
-            x={currentDraggingItem.position.x}
-            y={currentDraggingItem.position.y}
-            onMouseDown={e => {
-              startDrag(e, currentDraggingItem.id, workBlocks);
-            }}
-          />
-        )}
-
         <div
           css={css`
             overflow-x: auto;
@@ -95,23 +72,62 @@ const WorkContainer = () => {
               border-radius: 4px;
             }
           `}
+          onScroll={e => {
+            setScrollOffset(e.currentTarget.scrollLeft);
+          }}
         >
-          {workBlocks.map(block => (
-            <WorkCardRegister
-              key={block.id}
-              id={block.id}
-              cropName={block.cropName}
-              workName={block.workName}
-              workTime={block.workTime}
-              isDragging={isItemDragging(block.id)}
-              width={block.width}
-              x={block.position.x}
-              y={block.position.y}
-              onMouseDown={e => {
-                startDrag(e, block.id, workBlocks);
-              }}
-            />
-          ))}
+          {workBlocks.map(block => {
+            const { id, workName, cropName, workTime, width, position } = block;
+            const overlayPosition = {
+              x: position.x,
+              y: position.y,
+            };
+
+            return (
+              <>
+                {isItemDragging(id) && (
+                  <DragOverlay
+                    key={`overlay-${id}`}
+                    position={overlayPosition}
+                    containerRef={containerRef}
+                    scrollOffset={scrollOffset}
+                  >
+                    <WorkCardRegister
+                      id={id}
+                      cropName={cropName}
+                      workName={workName}
+                      workTime={workTime}
+                      isDragging={isDragging}
+                      width={width}
+                    />
+                  </DragOverlay>
+                )}
+                <div
+                  css={[
+                    DragOverlayStyle.DragOverlay({
+                      x: position.x,
+                      y: position.y,
+                    }),
+                    css`
+                      position: absolute;
+                    `,
+                  ]}
+                  onMouseDown={e => {
+                    startDrag(e, id, workBlocks);
+                  }}
+                >
+                  <WorkCardRegister
+                    id={id}
+                    cropName={block.cropName}
+                    workName={workName}
+                    workTime={workTime}
+                    isDragging={isItemDragging(id)}
+                    width={width}
+                  />
+                </div>
+              </>
+            );
+          })}
           <div
             css={css`
               display: flex;

@@ -69,8 +69,8 @@ export const Assets = {
   // Global/Button
   Global: {
     Button: {
-      Default: GrayScale.G400,
-      Pressed: GrayScale.White,
+      Default: GrayScale.G200,
+      Pressed: ColorPrimary.B700,
       Hover: ColorPrimary.B300,
       Disabled: GrayScale.G200,
     },
