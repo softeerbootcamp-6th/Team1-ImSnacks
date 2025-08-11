@@ -8,6 +8,7 @@ import type { WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
 import DragOverlay from '@/components/dnd/DragOverlay';
+import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks } = useWorkBlocks();
@@ -110,14 +111,15 @@ const WorkContainer = () => {
                   </DragOverlay>
                 )}
                 <div
-                  style={{
-                    position: 'absolute',
-                    left: position.x,
-                    top: position.y,
-                    pointerEvents: 'auto',
-                    zIndex: 1000,
-                    transform: 'translate(-50%, -50%)',
-                  }}
+                  css={[
+                    DragOverlayStyle.DragOverlay({
+                      x: position.x,
+                      y: position.y,
+                    }),
+                    css`
+                      position: absolute;
+                    `,
+                  ]}
                   onMouseDown={e => {
                     generateDragOverlay(id, e, workBlocks);
                   }}

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { WorkBlockType } from '@/types/workCard.type';
+import S from './DragOverlay.style';
 
 const DragOverlay = ({
   isDragging,
@@ -33,18 +34,7 @@ const DragOverlay = ({
   const adjustedPosition = getAdjustedPosition();
 
   return createPortal(
-    <div
-      style={{
-        position: 'fixed',
-        left: adjustedPosition.x,
-        top: adjustedPosition.y,
-        pointerEvents: 'auto',
-        zIndex: 1000,
-        transform: 'translate(-50%, -50%)',
-      }}
-    >
-      {children}
-    </div>,
+    <div css={S.DragOverlay(adjustedPosition)}>{children}</div>,
     document.body
   );
 };
