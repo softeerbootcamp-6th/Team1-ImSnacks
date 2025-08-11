@@ -1,10 +1,15 @@
 package com.imsnacks.Nyeoreumnagi.weather.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Builder;
 
 @Entity
 @Table(name = "ShortTermWeatherForecast")
@@ -35,4 +40,10 @@ public class ShortTermWeatherForecast {
 
     @Column(name = "wind_speed", nullable = false)
     private double windSpeed;
+
+    @Column(name = "snow", nullable = false)
+    private double snow;
+
+    @Column(name = "sky_status", nullable = false)
+    private int skyStatus;
 }
