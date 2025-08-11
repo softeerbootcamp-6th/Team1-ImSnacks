@@ -6,6 +6,8 @@ import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
+import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
+import com.imsnacks.Nyeoreumnagi.work.exception.CropResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<CustomResponseBody<Void>> handleMemberException(MemberException ex) {
         MemberResponseStatus status = ex.getStatus();
+        return ResponseUtil.error(status.getCode(), status.getMessage());
+    }
+
+    @ExceptionHandler(CropException.class)
+    public ResponseEntity<CustomResponseBody<Void>> handleCropException(CropException ex) {
+        CropResponseStatus status = ex.getStatus();
         return ResponseUtil.error(status.getCode(), status.getMessage());
     }
 
