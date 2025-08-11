@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "DashboardTodayWeather")
 @IdClass(DashboardTodayWeatherId.class)
@@ -30,32 +32,32 @@ public class DashboardTodayWeather {
     private double windDirection;
 
     @Column(name = "max_temperature", nullable = false)
-    private double maxTemperature;
+    private int maxTemperature;
 
     @Column(name = "max_uv_index", nullable = false)
-    private double maxUVIndex;
+    private int maxUVIndex;
 
     @Column(name = "max_uv_start", nullable = false)
-    private double maxUVStart;
+    private LocalTime maxUVStart;
 
     @Column(name = "max_uv_end", nullable = false)
-    private double maxUVEnd;
+    private LocalTime maxUVEnd;
 
     @Column(name = "pm_10_value", nullable = false)
     private double pm10Value;
 
     @Column(name = "pm_10_grade", nullable = false)
-    private double pm10Grade;
+    private int pm10Grade;
 
     @Column(name = "pm_25_value", nullable = false)
     private double pm25Value;
 
     @Column(name = "pm_25_grade", nullable = false)
-    private double pm25Grade;
+    private int pm25Grade;
 
     @Column(name = "sunrise_time", nullable = false)
-    private double sunriseTime;
+    private LocalTime sunriseTime;
 
     @Column(name = "sunset_time", nullable = false)
-    private double sunSetTime;
+    private LocalTime sunSetTime;
 }
