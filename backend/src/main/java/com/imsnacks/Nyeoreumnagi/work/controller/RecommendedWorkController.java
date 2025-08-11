@@ -28,7 +28,7 @@ public class RecommendedWorkController {
     @Operation(summary = "내 작물의 생육 단계와 날씨를 고려한 농작업 추천 목록 조회")
     @ApiResponse(responseCode = "200", description = "농작업 추천 목록 조회 성공")
     @ApiResponse(responseCode = "400", description = "농작업 추천 목록 조회 실패")
-    @GetMapping("/today")
+    @GetMapping("/recommendation")
     public ResponseEntity<CustomResponseBody<RecommendWorksResponse>> recommendWorks(@RequestParam(required = false) Long myCropId, @PreAuthorize Long memberId) {
         RecommendWorksResponse responses = recommendedWorkService.recommendWorks(myCropId, memberId);
         return ResponseUtil.success(responses);
