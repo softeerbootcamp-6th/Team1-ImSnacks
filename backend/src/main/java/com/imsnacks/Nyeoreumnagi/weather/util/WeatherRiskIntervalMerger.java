@@ -33,8 +33,8 @@ public class WeatherRiskIntervalMerger {
     private static List<LinePoint> getLinePoints(List<WeatherRisk> risks) {
         List<LinePoint> points = new ArrayList<>();
         for (WeatherRisk r : risks) {
-            points.add(new LinePoint(r.getStartTime(), true, r));
-            points.add(new LinePoint(r.getEndTime(), false, r));
+            points.add(new LinePoint(r.getStartTime().getHour(), true, r));
+            points.add(new LinePoint(r.getEndTime().getHour(), false, r));
         }
         return points;
     }

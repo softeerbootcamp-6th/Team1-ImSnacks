@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class WeatherServiceTest {
+
+    private static final LocalDateTime BASE = LocalDateTime.of(2025, 8, 5, 0, 0);
 
     @InjectMocks
     private WeatherService weatherService;
@@ -82,30 +85,39 @@ class WeatherServiceTest {
         Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
         Member member = new Member(1L, "", "", "", "", null, farm);
 
+        LocalDateTime startA = BASE.withHour(1);
+        LocalDateTime endA = BASE.withHour(6);
         WeatherRisk riskA = WeatherRisk.builder()
                 .weatherRiskId(10L)
                 .fcstDate(LocalDate.now())
-                .startTime(1)
-                .endTime(6)
+                .startTime(startA)
+                .endTime(endA)
                 .type(WeatherRiskType.RAIN) // ordinal 1
                 .nx(60).ny(120).jobExecutionId(77L)
                 .build();
+
+        LocalDateTime startB = BASE.withHour(3);
+        LocalDateTime endB = BASE.withHour(8);
         WeatherRisk riskB = WeatherRisk.builder()
                 .weatherRiskId(11L)
                 .fcstDate(LocalDate.now())
-                .startTime(3)
-                .endTime(8)
+                .startTime(startB)
+                .endTime(endB)
                 .type(WeatherRiskType.FROST) // ordinal 2
                 .nx(60).ny(120).jobExecutionId(77L)
                 .build();
+
+        LocalDateTime startC = BASE.withHour(5);
+        LocalDateTime endC = BASE.withHour(7);
         WeatherRisk riskC = WeatherRisk.builder()
                 .weatherRiskId(12L)
                 .fcstDate(LocalDate.now())
-                .startTime(5)
-                .endTime(7)
+                .startTime(startC)
+                .endTime(endC)
                 .type(WeatherRiskType.ABNORMAL_HEAT) // ordinal 3 가장 높음!
                 .nx(60).ny(120).jobExecutionId(77L)
                 .build();
+
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(60,120))
                 .thenReturn(Arrays.asList(riskA, riskB, riskC));
