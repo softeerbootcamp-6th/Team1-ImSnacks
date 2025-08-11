@@ -7,6 +7,7 @@ import { CROPS } from '@/constants/crops';
 import type { WorkBlockType } from '@/types/workCard.type';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
 import { calculateTimeToPosition } from '../../utils/getInitialWorkBlocks';
+import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
 
 const RegisterWorkContainer = () => {
   const crops = CROPS;
@@ -56,7 +57,11 @@ const RegisterWorkContainer = () => {
               key={crop.id}
               size="Small"
               text={crop.name}
-              status={selectedCrop.id === crop.id ? 'Pressed' : 'Default'}
+              status={
+                selectedCrop.id === crop.id
+                  ? BTN_SELECT_CHIP_STATUSES.PRESSED
+                  : BTN_SELECT_CHIP_STATUSES.DEFAULT
+              }
               onClick={() => handleCropClick(crop)}
             />
           ))}

@@ -43,7 +43,6 @@ export const useDragAndDrop = <T>({
 
       const rect = container.getBoundingClientRect();
       const position = getItemPosition(item);
-      console.log('position', position);
       dragOffsetRef.current = {
         x: e.clientX - rect.left - position.x,
         y: e.clientY - rect.top - position.y,

@@ -6,11 +6,7 @@ import {
   type WorkBlocksContextType,
 } from './WorkBlocksContext';
 
-interface WorkBlocksProviderProps {
-  children: ReactNode;
-}
-
-const WorkBlocksProvider = ({ children }: WorkBlocksProviderProps) => {
+const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>(
     getInitialWorkBlocks()
   );
