@@ -35,6 +35,8 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
                         .temperature(weatherForecastByTime.getTemperature())
                         .humidity(weatherForecastByTime.getHumidity())
                         .windSpeed(weatherForecastByTime.getWindSpeed())
+                        .snow(weatherForecastByTime.getSnow())
+                        .skyStatus(weatherForecastByTime.getSkyStatus())
                         .build());
             });
 
