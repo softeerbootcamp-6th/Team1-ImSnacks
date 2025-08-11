@@ -1,18 +1,20 @@
-import React, { useCallback } from 'react';
+import { useCallback, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import S from './DragOverlay.style';
+
+interface DragOverlayProps {
+  position: { x: number; y: number };
+  children: ReactNode;
+  containerRef: RefObject<HTMLDivElement | null>;
+  scrollOffset: number;
+}
 
 const DragOverlay = ({
   position,
   children,
   containerRef,
   scrollOffset,
-}: {
-  position: { x: number; y: number };
-  children: React.ReactNode;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  scrollOffset: number;
-}) => {
+}: DragOverlayProps) => {
   const getAdjustedPosition = useCallback(() => {
     if (!containerRef?.current) return position;
 
