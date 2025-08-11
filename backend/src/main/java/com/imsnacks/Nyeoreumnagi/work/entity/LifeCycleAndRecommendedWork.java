@@ -1,6 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.work.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 public class LifeCycleAndRecommendedWork {
@@ -13,6 +14,7 @@ public class LifeCycleAndRecommendedWork {
 
     @MapsId("recommendedWorkId")
     @ManyToOne(fetch = FetchType.LAZY)
+    @Getter
     private RecommendedWork recommendedWork;
 
 
