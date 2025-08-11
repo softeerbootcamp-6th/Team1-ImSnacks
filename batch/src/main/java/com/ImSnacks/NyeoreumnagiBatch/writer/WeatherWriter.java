@@ -5,6 +5,7 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRisk;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
 import com.ImSnacks.NyeoreumnagiBatch.writer.repository.ShortTermWeatherForecast;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
@@ -21,6 +23,7 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto> {
 
     @Override
     public void write(Chunk<? extends ShortTermWeatherDto> chunk)  {
+        log.info("writing data...");
         List<com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast> forecasts = new ArrayList<>();
         List<WeatherRisk> weatherRisks = new ArrayList<>();
 

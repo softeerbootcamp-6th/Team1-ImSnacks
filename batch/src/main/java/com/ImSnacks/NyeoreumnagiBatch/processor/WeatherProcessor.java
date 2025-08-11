@@ -5,6 +5,7 @@ import com.ImSnacks.NyeoreumnagiBatch.processor.utils.ForecastTimeUtils;
 import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.LinkedHashMap;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, ShortTermWeatherDto> {
@@ -24,6 +26,7 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
 
     @Override
     public ShortTermWeatherDto process(VilageFcstResponseDto response) throws Exception {
+        log.info("processing vilage fcst response...");
         //24시간 이내 정보만 filtering
         List<VilageFcstResponseDto.Item> within24HoursWeatherInfo = response.getWeatherInfo().stream()
                 .filter(ForecastTimeUtils::isWithin24Hours)
