@@ -54,7 +54,7 @@ public class RecommendedWorkService {
         List<MyCrop> myCropList = new ArrayList<>();
         if (myCropId == null) {
             myCropList = myCropRepository.findAllByOrderByCrop_Id();
-            myCropId = myCropList.get(myCropList.size() - 1).getId();
+            myCropId = myCropList.get(0).getId();
         }
         MyCrop myCrop = myCropRepository.findById(myCropId).orElseThrow(() -> new CropException(MY_CROP_NOT_FOUND));
         List<LifeCycle> lifeCyclesOrderByStep = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
