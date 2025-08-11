@@ -127,7 +127,7 @@ const WorkContainer = () => {
                     cropName={block.cropName}
                     workName={workName}
                     workTime={workTime}
-                    isDragging={isDragging}
+                    isDragging={isItemDragging(id)}
                     width={width}
                   />
                 </div>
