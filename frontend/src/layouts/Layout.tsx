@@ -19,9 +19,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
     >
       {/* <NavBar isWeatherPage={isWeatherPage} /> */}
       <main
-      // css={css`
-      //   max-width: 1328px;
-      // `}
+        // css={css`
+        //   max-width: 1328px;
+        // `}
+        css={css`
+          width: 100%;
+        `}
       >
         {children}
       </main>
