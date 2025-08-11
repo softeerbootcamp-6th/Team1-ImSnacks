@@ -155,8 +155,6 @@ class WeatherServiceTest {
         Member member = new Member(1L, "", "", "", "", null, farm);
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
-        LocalTime sunrise = LocalTime.of(6,0);
-        LocalTime sunset = LocalTime.of(19,0);
 
         when(forecast.getFcstTime()).thenReturn(LocalDateTime.now().getHour());
         when(forecast.getWeatherCondition(sunriseSunSetTime)).thenReturn(WeatherCondition.SUNNY);
