@@ -80,7 +80,7 @@ public class RecommendedWorkService {
                 .stream().map(LifeCycleAndRecommendedWork::getRecommendedWork)
                 .forEach(recommendedWork -> recommendedWorksResponse.addAll(windowsForWork(recommendedWork, forecasts)));
 
-        List<RecommendWorksResponse.MyCropResponse> myCropResponses = myCropList.stream().map(my -> RecommendWorksResponse.MyCropResponse.of(my.getId(), my.getCrop().getName())).toList();
+        List<RecommendWorksResponse.MyCropResponse> myCropResponses = myCropList.stream().map(my -> new RecommendWorksResponse.MyCropResponse(my.getId(), my.getCrop().getName())).toList();
         return new RecommendWorksResponse(recommendedWorksResponse, myCropResponses);
     }
 
@@ -132,7 +132,7 @@ public class RecommendedWorkService {
                         // 연속이 끊김 → 이전 구간 종료 처리
                         int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                         if (hours >= minHours) {
-                            result.add(RecommendedWorksResponse.of(
+                            result.add(new RecommendedWorksResponse(
                                     work.getId(),
                                     winStart.toString(),
                                     prevOk.plusHours(1).toString(),
@@ -148,7 +148,7 @@ public class RecommendedWorkService {
                 if (winStart != null) {
                     int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                     if (hours >= minHours) {
-                        result.add(RecommendedWorksResponse.of(
+                        result.add(new RecommendedWorksResponse(
                                 work.getId(),
                                 winStart.toString(),
                                 prevOk.plusHours(1).toString(),
@@ -165,7 +165,7 @@ public class RecommendedWorkService {
         if (winStart != null) {
             int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
             if (hours >= minHours) {
-                result.add(RecommendedWorksResponse.of(
+                result.add(new RecommendedWorksResponse(
                         work.getId(),
                         winStart.toString(),
                         prevOk.plusHours(1).toString(),
