@@ -10,6 +10,7 @@ const MobileHomePage = () => {
         weatherKeyword="구름 많음"
         temperature={25}
       />
+      <div css={S.MobileHomeContentWrapper}>asdf</div>
     </div>
   );
 };
