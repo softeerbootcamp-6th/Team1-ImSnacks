@@ -48,7 +48,9 @@ const WorkContainer = () => {
       <div
         ref={containerRef}
         onMouseMove={e => {
-          updatePosition(e, (block, pos) => updateBlockWorkTime(block, pos));
+          updatePosition(e, (block, pos) =>
+            updateBlockWorkTime(block, pos, 100)
+          );
         }}
         onMouseUp={handleEndDrag}
         onMouseLeave={handleEndDrag}
