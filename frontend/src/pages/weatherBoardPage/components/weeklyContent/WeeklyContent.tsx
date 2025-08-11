@@ -1,10 +1,10 @@
 import { FLAT_ICON } from '@/constants/flatIcons';
-import type { WeatherConditions } from '@/types/weather.types';
+import type { WeatherConditionsType } from '@/types/weather.types';
 import S from './WeeklyContent.style';
 
 interface WeeklyContentProps {
   title: string;
-  weather: WeatherConditions;
+  weather: WeatherConditionsType;
   highestTemperature: number;
   lowestTemperature: number;
 }
