@@ -1,11 +1,10 @@
-import { type RefObject } from 'react';
 import { createPortal } from 'react-dom';
+import { useCallback, useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
-import useRemoveOnOutOfBound from '@/hooks/dnd/useRemoveOnOutOfBound';
 import type { WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
@@ -15,20 +14,38 @@ const DragOverlay = ({
   draggedItem,
   position,
   children,
+  containerRef,
+  scrollOffset,
 }: {
   isDragging: boolean;
   draggedItem: WorkBlockType | null;
   position: { x: number; y: number };
   children: React.ReactNode;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  scrollOffset: number;
 }) => {
+  const getAdjustedPosition = useCallback(() => {
+    if (!containerRef?.current) return position;
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    console.log(scrollOffset);
+
+    return {
+      x: containerRect.left + position.x - scrollOffset,
+      y: containerRect.top + position.y,
+    };
+  }, [position, containerRef, scrollOffset]);
+
   if (!isDragging || !draggedItem) return null;
+
+  const adjustedPosition = getAdjustedPosition();
 
   return createPortal(
     <div
       style={{
         position: 'fixed',
-        left: position.x,
-        top: position.y,
+        left: adjustedPosition.x,
+        top: adjustedPosition.y,
         pointerEvents: 'auto',
         zIndex: 1000,
         transform: 'translate(-50%, -50%)',
@@ -41,7 +58,9 @@ const DragOverlay = ({
 };
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks } = useWorkBlocks();
+
+  const [scrollOffset, setScrollOffset] = useState(0);
 
   const {
     containerRef,
@@ -51,28 +70,26 @@ const WorkContainer = () => {
     endDrag,
     isItemDragging,
     draggedItemRef,
-    latestMousePos,
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
     getItemPosition: block => block.position,
     onPositionChange: updated => updateWorkBlocks(updated),
   });
 
-  // const { checkAndRemove } = useRemoveOnOutOfBound<WorkBlockType>({
-  //   containerRef: containerRef as RefObject<HTMLElement>,
-  //   items: workBlocks,
-  //   getItemId: block => block.id,
-  //   getItemPosition: block => block.position,
-  //   getItemWidth: block => block.width,
-  //   onRemove: id => removeWorkBlock(id),
-  // });
-
   const handleEndDrag = () => {
     const draggingId = draggedItemRef.current?.id;
     if (draggingId !== null && draggingId !== undefined) {
-      //checkAndRemove(draggingId);
+      //TODO: 컨테이너 밖으로 나갈 시 삭제
     }
     endDrag();
+  };
+
+  const generateDragOverlay = (
+    id: number,
+    e: React.MouseEvent,
+    workBlocks: WorkBlockType[]
+  ) => {
+    startDrag(e, id, workBlocks);
   };
 
   return (
@@ -108,24 +125,50 @@ const WorkContainer = () => {
               border-radius: 4px;
             }
           `}
+          onScroll={e => {
+            setScrollOffset(e.currentTarget.scrollLeft);
+          }}
         >
           {workBlocks.map(block => {
-            const { id, workName, workTime, width, position } = block;
-            if (isItemDragging(id)) {
-              const mousePosition = latestMousePos.current;
-              const overlayPosition = mousePosition
-                ? {
-                    x: mousePosition.x - width / 2,
-                    y: mousePosition.y - 20,
-                  }
-                : position;
+            const { id, workName, cropName, workTime, width, position } = block;
+            const overlayPosition = {
+              x: position.x,
+              y: position.y,
+            };
 
-              return (
-                <DragOverlay
-                  key={`overlay-${id}`}
-                  isDragging={isDragging}
-                  draggedItem={draggedItemRef.current}
-                  position={overlayPosition}
+            return (
+              <>
+                {isItemDragging(id) && (
+                  <DragOverlay
+                    key={`overlay-${id}`}
+                    isDragging={isDragging}
+                    draggedItem={draggedItemRef.current}
+                    position={overlayPosition}
+                    containerRef={containerRef}
+                    scrollOffset={scrollOffset}
+                  >
+                    <WorkCardRegister
+                      id={id}
+                      cropName={cropName}
+                      workName={`overlay-${workName}`}
+                      workTime={workTime}
+                      isDragging={isDragging}
+                      width={width}
+                    />
+                  </DragOverlay>
+                )}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: position.x,
+                    top: position.y,
+                    pointerEvents: 'auto',
+                    zIndex: 1000,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                  onMouseDown={e => {
+                    generateDragOverlay(id, e, workBlocks);
+                  }}
                 >
                   <WorkCardRegister
                     id={id}
@@ -134,28 +177,9 @@ const WorkContainer = () => {
                     workTime={workTime}
                     isDragging={isDragging}
                     width={width}
-                    x={0}
-                    y={0}
-                    onMouseDown={() => {}}
                   />
-                </DragOverlay>
-              );
-            }
-            return (
-              <WorkCardRegister
-                key={id}
-                id={id}
-                cropName={block.cropName}
-                workName={workName}
-                workTime={workTime}
-                isDragging={isItemDragging(id)}
-                width={width}
-                x={position.x}
-                y={position.y}
-                onMouseDown={e => {
-                  startDrag(e, id, workBlocks);
-                }}
-              />
+                </div>
+              </>
             );
           })}
           <div

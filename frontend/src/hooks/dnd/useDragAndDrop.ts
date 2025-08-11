@@ -118,5 +118,6 @@ export const useDragAndDrop = <T>({
     endDrag,
     isItemDragging,
     draggedItemRef,
+    latestMousePos,
   };
 };
