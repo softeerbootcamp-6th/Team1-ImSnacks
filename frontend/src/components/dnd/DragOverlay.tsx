@@ -1,18 +1,13 @@
 import React, { useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import type { WorkBlockType } from '@/types/workCard.type';
 import S from './DragOverlay.style';
 
 const DragOverlay = ({
-  isDragging,
-  draggedItem,
   position,
   children,
   containerRef,
   scrollOffset,
 }: {
-  isDragging: boolean;
-  draggedItem: WorkBlockType | null;
   position: { x: number; y: number };
   children: React.ReactNode;
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -28,8 +23,6 @@ const DragOverlay = ({
       y: containerRect.top + position.y,
     };
   }, [position, containerRef, scrollOffset]);
-
-  if (!isDragging || !draggedItem) return null;
 
   const adjustedPosition = getAdjustedPosition();
 

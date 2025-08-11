@@ -86,8 +86,6 @@ const WorkContainer = () => {
                 {isItemDragging(id) && (
                   <DragOverlay
                     key={`overlay-${id}`}
-                    isDragging={isDragging}
-                    draggedItem={draggedItemRef.current}
                     position={overlayPosition}
                     containerRef={containerRef}
                     scrollOffset={scrollOffset}
