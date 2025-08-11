@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 @Component
 @RequiredArgsConstructor
 public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, ShortTermWeatherDto> {
-    private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD");
+    private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD", "SNO", "SKY");
 
     private final List<WeatherRiskFilter> weatherRiskFilters;
 
@@ -78,22 +78,22 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
 
             switch (category) {
                 case "PCP":
-                    precipitation = parseDoubleOrDefault(value, 0);
+                    precipitation = parseDoubleOrDefault(value);
                     break;
                 case "TMP":
-                    temperature = parseIntOrDefault(value, 0);
+                    temperature = parseIntOrDefault(value);
                     break;
                 case "REH":
-                    humidity = parseIntOrDefault(value, 0);
+                    humidity = parseIntOrDefault(value);
                     break;
                 case "WSD":
-                    windSpeed = parseDoubleOrDefault(value, 0);
+                    windSpeed = parseDoubleOrDefault(value);
                     break;
                 case "SNO":
-                    snow = parseSnowDoubleOrDefault(value, 0);
+                    snow = parseSnowDoubleOrDefault(value);
                     break;
                 case "SKY":
-                    skyStatus = parseSkyStatusOrDefault(value, 1);
+                    skyStatus = parseSkyStatusOrDefault(value);
                     break;
             }
         }
@@ -101,10 +101,10 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
         return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed, snow, skyStatus);
     }
 
-    private double parseDoubleOrDefault(String value, double defaultValue) {
+    private double parseDoubleOrDefault(String value) {
         try {
             if (value.equals("강수없음"))
-                return defaultValue;
+                return 0;
             if (value.equals("30.0~50.0mm"))
                 return 40;
             if (value.equals("50.0mm 이상"))
@@ -115,22 +115,22 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
             }
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
-            return defaultValue;
+            return 0;
         }
     }
 
-    private int parseIntOrDefault(String value, int defaultValue) {
+    private int parseIntOrDefault(String value) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return defaultValue;
+            return 0;
         }
     }
 
-    private double parseSnowDoubleOrDefault(String value, double defaultValue) {
+    private double parseSnowDoubleOrDefault(String value) {
         try {
             if (value.equals("적설없음"))
-                return defaultValue;
+                return 0;
             if (value.equals("5.0cm 이상"))
                 return 5;
             if (value.contains("cm")) {
@@ -139,15 +139,15 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
             }
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
-            return defaultValue;
+            return 0;
         }
     }
 
-    private int parseSkyStatusOrDefault(String value, int defaultValue) {
+    private int parseSkyStatusOrDefault(String value) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return defaultValue;
+            return 1;
         }
     }
 }
