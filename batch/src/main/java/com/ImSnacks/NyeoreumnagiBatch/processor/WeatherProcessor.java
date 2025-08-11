@@ -1,5 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.processor;
 
+import com.ImSnacks.NyeoreumnagiBatch.processor.dto.VilageFcstItemsDto;
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.processor.utils.ForecastTimeUtils;
 import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.WeatherRiskFilter;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +31,23 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
     public ShortTermWeatherDto process(VilageFcstResponseDto response) throws Exception {
         log.info("processing vilage fcst response...");
         //24시간 이내 정보만 filtering
-        List<VilageFcstResponseDto.Item> within24HoursWeatherInfo = response.getWeatherInfo().stream()
+        List<VilageFcstItemsDto> within24HoursWeatherInfo = response.getWeatherInfo().stream()
                 .filter(ForecastTimeUtils::isWithin24Hours)
-                .toList();
+                .map(item -> {
+                    return new VilageFcstItemsDto(
+                            item.getCategory(),
+                            LocalDateTime.parse(item.getFcstDate() + item.getFcstTime(), DateTimeFormatter.ofPattern("yyyyMMddHHmm")),
+                            item.getFcstValue(),
+                            item.getNx(),
+                            item.getNy()
+                    );
+                }).toList();
 
         //필요한 metric만 뽑아서 시간별로 그룹핑
-        Map<String, List<VilageFcstResponseDto.Item>> map = within24HoursWeatherInfo.stream()
+        Map<LocalDateTime, List<VilageFcstItemsDto>> map = within24HoursWeatherInfo.stream()
                 .filter(item -> targetCategories.contains(item.getCategory()))
                 .collect(Collectors.groupingBy(
-                        VilageFcstResponseDto.Item::getFcstTime,
+                        VilageFcstItemsDto::getFcstDateTime,
                         LinkedHashMap::new,
                         Collectors.toList()
                 ));
@@ -62,8 +73,8 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
                 .build();
     }
 
-    private ShortTermWeatherDto.WeatherForecastByTimeDto extractInfo(String fcstTimeStr, List<VilageFcstResponseDto.Item> weatherInfos) {
-        int fcstTime = ForecastTimeUtils.getIntegerFromAPITime(fcstTimeStr);
+    private ShortTermWeatherDto.WeatherForecastByTimeDto extractInfo(LocalDateTime fcstDateTime, List<VilageFcstItemsDto> weatherInfos) {
+        int fcstTime = ForecastTimeUtils.getIntegerFromAPITime(fcstDateTime);
 
         double precipitation = 0;
         double windSpeed = 0;
@@ -72,7 +83,7 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
         double snow = 0;
         int skyStatus = 0;
 
-        for (VilageFcstResponseDto.Item item : weatherInfos) {
+        for (VilageFcstItemsDto item : weatherInfos) {
             String category = item.getCategory();
             String value = item.getFcstValue();
 

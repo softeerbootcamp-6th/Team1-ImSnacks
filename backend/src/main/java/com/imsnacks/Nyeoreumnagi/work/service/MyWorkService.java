@@ -6,8 +6,9 @@ import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
-import com.imsnacks.Nyeoreumnagi.work.dto.response.ResgisterMyWorkResponse;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
@@ -18,6 +19,12 @@ import com.imsnacks.Nyeoreumnagi.work.repository.RecommendedWorkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static com.imsnacks.Nyeoreumnagi.common.util.TimeValidator.validateTime;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.MEMBER_NOT_FOUND;
@@ -33,7 +40,7 @@ public class MyWorkService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ResgisterMyWorkResponse registerMyWork(RegisterMyWorkRequest request, Long memberId) {
+    public RegisterMyWorkResponse registerMyWork(RegisterMyWorkRequest request, Long memberId) {
         if (!validateTime(request.startTime(), request.endTime())) {
             throw new WorkException(INVALID_MY_WORK_TIME);
         }
@@ -55,7 +62,7 @@ public class MyWorkService {
         );
 
         MyWork savedMyWork = myWorkRepository.save(myWork);
-        return new ResgisterMyWorkResponse(savedMyWork.getId());
+        return new RegisterMyWorkResponse(savedMyWork.getId());
     }
 
     @Transactional
@@ -65,7 +72,7 @@ public class MyWorkService {
             throw new WorkException(MY_WORK_NOT_FOUND);
         }
 
-        if(!myWork.isDone()){
+        if (!myWork.isDone()) {
             throw new WorkException(MY_WORK_NOT_COMPLETED);
         }
 
@@ -85,5 +92,19 @@ public class MyWorkService {
 
         myWork.modifyWorkTime(request.startTime(), request.endTime());
         return new ModifyMyWorkResponse(myWork.getId());
+    }
+
+    public List<GetMyWorksOfTodayResponse> getMyWorksOfToday(Long memberId) {
+        List<MyWork> myWorks = myWorkRepository.findByMember_IdAndStartTimeAfter(memberId, LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0)));
+        return myWorks.stream().map(myWork ->
+                new GetMyWorksOfTodayResponse(
+                        myWork.getId(),
+                        myWork.getCropName(),
+                        myWork.getRecommendedWorkName(),
+                        myWork.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + myWork.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                        myWork.getStartTime().toString(),
+                        myWork.getEndTime().toString()
+                )
+        ).toList();
     }
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -33,8 +34,8 @@ public class ShortTermWeatherDto {
     @Builder
     @AllArgsConstructor
     public static class WeatherRiskDto {
-        private int startTime;
-        private int endTime;
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
         private WeatherRiskType name;
     }
 }

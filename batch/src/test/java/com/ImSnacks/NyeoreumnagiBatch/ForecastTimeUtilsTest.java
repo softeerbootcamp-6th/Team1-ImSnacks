@@ -3,6 +3,10 @@ package com.ImSnacks.NyeoreumnagiBatch;
 import com.ImSnacks.NyeoreumnagiBatch.processor.utils.ForecastTimeUtils;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -52,32 +56,32 @@ class ForecastTimeUtilsTest {
 
     @Test
     void _24시간_내의_시간_정수로_뽑기_성공() {
-        assertThat(ForecastTimeUtils.getIntegerFromAPITime("0000")).isEqualTo(0);
-        assertThat(ForecastTimeUtils.getIntegerFromAPITime("0100")).isEqualTo(1);
-        assertThat(ForecastTimeUtils.getIntegerFromAPITime("0930")).isEqualTo(9);
-        assertThat(ForecastTimeUtils.getIntegerFromAPITime("1230")).isEqualTo(12);
-        assertThat(ForecastTimeUtils.getIntegerFromAPITime("2359")).isEqualTo(23);
+        assertThat(ForecastTimeUtils.getIntegerFromAPITime(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0)))).isEqualTo(0);
+        assertThat(ForecastTimeUtils.getIntegerFromAPITime(LocalDateTime.of(LocalDate.now(), LocalTime.of(1,0)))).isEqualTo(1);
+        assertThat(ForecastTimeUtils.getIntegerFromAPITime(LocalDateTime.of(LocalDate.now(), LocalTime.of(9,30)))).isEqualTo(9);
+        assertThat(ForecastTimeUtils.getIntegerFromAPITime(LocalDateTime.of(LocalDate.now(), LocalTime.of(12,30)))).isEqualTo(12);
+        assertThat(ForecastTimeUtils.getIntegerFromAPITime(LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59)))).isEqualTo(23);
     }
 
-    @Test
-    void HHMM_형식이_아닌_경우_예외처리() {
-        assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime("930"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("시간 형식은 HHmm이어야 합니다.");
-    }
+//    @Test
+//    void HHMM_형식이_아닌_경우_예외처리() {
+//        assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime(LocalDateTime.of(LocalDate.now(), LocalTime.of(9,30))))
+//                .isInstanceOf(IllegalArgumentException.class)
+//                .hasMessage("시간 형식은 HHmm이어야 합니다.");
+//    }
 
-    @Test
-    void HHMM_형식이_아닌_경우_예외처리2() {
-        assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime("12300"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("시간 형식은 HHmm이어야 합니다.");
-    }
+//    @Test
+//    void HHMM_형식이_아닌_경우_예외처리2() {
+//        assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime("12300"))
+//                .isInstanceOf(IllegalArgumentException.class)
+//                .hasMessage("시간 형식은 HHmm이어야 합니다.");
+//    }
 
-    @Test
-    void 숫자변환_실패_예외처리() {
-        assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime("ABCD"))
-                .isInstanceOf(NumberFormatException.class);
-    }
+//    @Test
+//    void 숫자변환_실패_예외처리() {
+//        assertThatThrownBy(() -> ForecastTimeUtils.getIntegerFromAPITime("ABCD"))
+//                .isInstanceOf(NumberFormatException.class);
+//    }
 
     @Test
     void shouldThrowNullPointerException_whenTimeIsNull() {

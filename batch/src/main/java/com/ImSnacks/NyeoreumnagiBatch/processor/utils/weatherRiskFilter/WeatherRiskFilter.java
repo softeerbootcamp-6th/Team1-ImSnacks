@@ -1,9 +1,10 @@
 package com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter;
 
-import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
+import com.ImSnacks.NyeoreumnagiBatch.processor.dto.VilageFcstItemsDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,34 +12,34 @@ import java.util.Map;
 
 public abstract class WeatherRiskFilter {
 
-    public abstract List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<String, List<VilageFcstResponseDto.Item>> metrics);
+    public abstract List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<LocalDateTime, List<VilageFcstItemsDto>> metrics);
 
-    protected List<ShortTermWeatherDto.WeatherRiskDto> groupingSameContinuousRisk(Map<Integer, WeatherRiskType> riskPerTime) {
+    protected List<ShortTermWeatherDto.WeatherRiskDto> groupingSameContinuousRisk(Map<LocalDateTime, WeatherRiskType> riskPerTime) {
         List<ShortTermWeatherDto.WeatherRiskDto> risks = new ArrayList<>();
 
         if (riskPerTime.isEmpty()) return risks;
 
-        List<Integer> sortedTimes = new ArrayList<>(riskPerTime.keySet());
+        List<LocalDateTime> sortedTimes = new ArrayList<>(riskPerTime.keySet());
         Collections.sort(sortedTimes);
 
-        Integer startTime = null;
-        Integer prevTime = null;
+        LocalDateTime startTime = null;
+        LocalDateTime prevTime = null;
         WeatherRiskType currentType = null;
 
         for (int i = 0; i < sortedTimes.size(); i++) {
-            Integer time = sortedTimes.get(i);
-            WeatherRiskType type = riskPerTime.get(time);
+            LocalDateTime dateTime = sortedTimes.get(i);
+            WeatherRiskType type = riskPerTime.get(dateTime);
 
             if (currentType == null) {
-                startTime = time;
-                prevTime = time;
+                startTime = dateTime;
+                prevTime = dateTime;
                 currentType = type;
-            } else if (type.equals(currentType) && isNextHour(prevTime, time)) {
-                prevTime = time;
+            } else if (type.equals(currentType) && prevTime.plusHours(1L).equals(dateTime)) {
+                prevTime = dateTime;
             } else {
                 risks.add(new ShortTermWeatherDto.WeatherRiskDto(startTime, prevTime, currentType));
-                startTime = time;
-                prevTime = time;
+                startTime = dateTime;
+                prevTime = dateTime;
                 currentType = type;
             }
         }
@@ -52,10 +53,8 @@ public abstract class WeatherRiskFilter {
             ShortTermWeatherDto.WeatherRiskDto first = risks.get(0);
             ShortTermWeatherDto.WeatherRiskDto last = risks.get(risks.size() - 1);
 
-            if (first.getStartTime() == 0 &&
-                    last.getEndTime() == 23 &&
-                    first.getName() == last.getName() &&
-                    isNextHour(last.getEndTime(), first.getStartTime())) {
+            if (first.getName() == last.getName() &&
+                    last.getEndTime().plusHours(1L).equals(first.getStartTime())) {
 
                 ShortTermWeatherDto.WeatherRiskDto merged = new ShortTermWeatherDto.WeatherRiskDto(
                         last.getStartTime(), first.getEndTime(), first.getName()
@@ -69,7 +68,4 @@ public abstract class WeatherRiskFilter {
         return risks;
     }
 
-    private boolean isNextHour(int prev, int current) {
-        return (prev + 1) % 24 == current;
-    }
 }
