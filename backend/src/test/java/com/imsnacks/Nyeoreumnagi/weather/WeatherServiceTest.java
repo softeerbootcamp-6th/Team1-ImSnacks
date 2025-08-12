@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.weather;
 
+import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
@@ -7,11 +8,15 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
+import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
+import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
+import com.imsnacks.Nyeoreumnagi.weather.service.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,14 +25,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,9 +49,12 @@ class WeatherServiceTest {
     @Mock
     private MemberRepository memberRepository;
     @Mock
-    private ShortTermWeatherForecastRepository weatherRepository;
+    private ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     @Mock
     private WeatherRiskRepository weatherRiskRepository;
+    @Mock
+    private DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+
 
     @Test
     void getWeatherGraph_성공() {
@@ -64,7 +78,7 @@ class WeatherServiceTest {
                 .toList();
 
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(weatherRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
+        given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
 
         // when
         GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
@@ -131,5 +145,67 @@ class WeatherServiceTest {
         assertThat(risks.get(3).category()).isEqualTo(WeatherRiskType.FROST.getDescription());
         assertThat(risks.get(3).startTime()).isEqualTo("7");
         assertThat(risks.get(3).endTime()).isEqualTo("8");
+    }
+
+    @Test
+    void 정상_날씨_조회_성공() {
+        // given
+        long memberId = 1L;
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Member member = new Member(1L, "", "", "", "", null, farm);
+        ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
+        SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
+
+        when(forecast.getFcstTime()).thenReturn(LocalDateTime.now().getHour());
+        when(forecast.getWeatherCondition(sunriseSunSetTime)).thenReturn(WeatherCondition.SUNNY);
+        when(forecast.getTemperature()).thenReturn(23);
+        when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
+        when(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).thenReturn(java.util.List.of(forecast));
+        when(dashboardTodayWeatherRepository.findByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
+
+        // when
+        GetWeatherConditionResponse response = weatherService.getWeatherCondition(memberId);
+
+        // then
+        assertThat(response.weatherCondition()).isEqualTo(WeatherCondition.SUNNY.toString());
+        assertThat(response.weatherKeyword()).isEqualTo(WeatherCondition.SUNNY.getKeyword());
+        assertThat(response.temperature()).isEqualTo(23);
+    }
+
+    @Test
+    void 존재하지_않는_회원_예외() {
+        // given
+        Long invalidId = 999L;
+        when(memberRepository.findById(invalidId)).thenReturn(java.util.Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> weatherService.getWeatherCondition(invalidId))
+                .isInstanceOf(MemberException.class);
+    }
+
+    @Test
+    void 농장정보_없음_예외() {
+        // given
+        Member member = new Member(1L, "", "", "", "", null, null);
+        when(member.getFarm()).thenReturn(null);
+        when(memberRepository.findById(any())).thenReturn(java.util.Optional.of(member));
+
+        // when & then
+        assertThatThrownBy(() -> weatherService.getWeatherCondition(1L))
+                .isInstanceOf(MemberException.class);
+    }
+
+    @Test
+    void 날씨정보_없음_예외() {
+        // given
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Member member = new Member(1L, "", "", "", "", null, farm);
+        when(memberRepository.findById(any())).thenReturn(java.util.Optional.of(member));
+        when(shortTermWeatherForecastRepository.findAllByNxAndNy(anyInt(), anyInt()))
+                .thenReturn(java.util.List.of());
+
+        // when & then
+        assertThatThrownBy(() -> weatherService.getWeatherCondition(1L))
+                .isInstanceOf(WeatherException.class);
     }
 }

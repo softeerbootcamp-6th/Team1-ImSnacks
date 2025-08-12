@@ -8,6 +8,8 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropResponseStatus;
+import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
+import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(WeatherException.class)
+    public ResponseEntity<CustomResponseBody<Void>> handleWeatherException(WeatherException ex) {
+        WeatherResponseStatus status = ex.getStatus();
+        return ResponseUtil.error(status.getCode(), status.getMessage());
+    }
+
     @ExceptionHandler(WorkException.class)
     public ResponseEntity<CustomResponseBody<Void>> handleWorkException(WorkException ex) {
         WorkResponseStatus status = ex.getStatus();
