@@ -50,13 +50,12 @@ jobs:
             echo "AWS_REGION is NOT set"
           fi
 
-      - name: Configure AWS Credentials
+      - name: AWS Credentials 설정
         if: success()
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_FE_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_FE_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_FE_REGION }}
+          role-to-assume: ${{ secrets.FE_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_FE_REGION }}
 
       - name: Test AWS Configuration
         if: success()
