@@ -2,14 +2,12 @@ package com.imsnacks.Nyeoreumnagi.weather.entity;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ToString
 @Entity
 @Table(name = "WeatherRisk")
 @Getter
