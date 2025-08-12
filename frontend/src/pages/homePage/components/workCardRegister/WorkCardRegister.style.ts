@@ -82,6 +82,12 @@ const WorkCardTime = css`
   color: ${Assets.Text.WorkCard.Default.Body};
 `;
 
+const WorkCardDeleteButton = css`
+  color: ${ColorStatus.Global.Red};
+  ${Typography.Caption_S}
+  font-weight: 700;
+`;
+
 export default {
   WorkCardContainer,
   WorkCardContent,
@@ -90,4 +96,5 @@ export default {
   WorkCardTitle,
   WorkCardCropName,
   WorkCardTime,
+  WorkCardDeleteButton,
 };

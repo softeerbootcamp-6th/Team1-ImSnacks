@@ -6,6 +6,11 @@ export interface WorkCardType {
   isCompleted: boolean;
 }
 
+export interface Position {
+  x: number;
+  y: number;
+}
+
 export interface WorkBlockType {
   id: number;
   cropName: string;
@@ -13,6 +18,6 @@ export interface WorkBlockType {
   workTime: string;
   startTime: string;
   endTime: string;
-  position: { x: number; y: number };
+  position: Position;
   width: number;
 }
