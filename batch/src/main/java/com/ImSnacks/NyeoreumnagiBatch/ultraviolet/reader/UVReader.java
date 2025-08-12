@@ -1,7 +1,9 @@
 package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader;
 
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.dto.UVReaderResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.UniqueNxNyRepository;
+import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.dto.UVReaderResponseDtoWithNxNy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
@@ -17,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Component
 @StepScope
-public class UVReader implements ItemReader<UVReaderResponseDto> {
+public class UVReader implements ItemReader<UVReaderResponseDtoWithNxNy> {
 
     @Autowired
     private final UVApiCaller apiCaller;
@@ -25,7 +27,7 @@ public class UVReader implements ItemReader<UVReaderResponseDto> {
     private final UniqueNxNyRepository uniqueNxNyRepository;
     private final String baseDateTime;
 
-    private static List<String> areaCodes = null;
+    private static List<UniqueNxNy> areaCodes = null;
     private static int areaCodesIndex = 0;
 
     UVReader(@Value("#{jobParameters['base_date_time']}") String baseDateTime,
@@ -38,14 +40,22 @@ public class UVReader implements ItemReader<UVReaderResponseDto> {
     }
 
     @Override
-    public UVReaderResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public UVReaderResponseDtoWithNxNy read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         log.info("Reading UV API response");
+
         setAreaCodes();
-        String areaCode = getNextAreaCode();
+        if (areaCodesIndex >= areaCodes.size()) {
+            log.info("areaCodes size: " + areaCodes.size());
+            return null;
+        }
+        String areaCode = areaCodes.get(areaCodesIndex).getAreaCode();
+        int nx = areaCodes.get(areaCodesIndex).getId().getNx();
+        int ny = areaCodes.get(areaCodesIndex).getId().getNy();
+        areaCodesIndex++;
 
         try {
             UVReaderResponseDto dto = apiCaller.call(areaCode, baseDateTime);
-            return dto;
+            return new UVReaderResponseDtoWithNxNy(nx, ny, dto);
         } catch (Exception e) {
             log.error("API 호출 중 오류!", e);
             throw e;
@@ -56,16 +66,5 @@ public class UVReader implements ItemReader<UVReaderResponseDto> {
         if(areaCodes == null) {
             areaCodes = uniqueNxNyRepository.findAreaCodes();
         }
-    }
-
-    private String getNextAreaCode(){
-        if (areaCodesIndex >= areaCodes.size()) {
-            log.info("areaCodes size: " + areaCodes.size());
-            return null;
-        }
-        String areaCode = areaCodes.get(areaCodesIndex);
-        areaCodesIndex++;
-
-        return areaCode;
     }
 }
