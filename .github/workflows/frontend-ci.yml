@@ -50,10 +50,8 @@ jobs:
               ? "✅ 빌드 테스트 성공!"
               : "❌ 빌드 테스트 실패 😭";
 
-            const { owner, name: repo } = context.payload.pull_request.base.repo;
-            await github.rest.issues.createComment({
-              owner,
-              repo,
+             await github.rest.issues.createComment({
+              ...context.repo,
               issue_number: context.payload.pull_request.number,
               body: comment
             });
