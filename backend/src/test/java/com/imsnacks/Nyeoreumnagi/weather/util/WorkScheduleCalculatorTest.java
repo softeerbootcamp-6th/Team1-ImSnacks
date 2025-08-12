@@ -1,18 +1,12 @@
-package com.imsnacks.Nyeoreumnagi.work.service;
+package com.imsnacks.Nyeoreumnagi.weather.util;
 
-import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
-import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
-import com.imsnacks.Nyeoreumnagi.work.repository.LifeCycleAndRecommendedWorkRepository;
-import com.imsnacks.Nyeoreumnagi.work.repository.LifeCycleRepository;
-import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
+import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -34,22 +28,11 @@ import static org.mockito.Mockito.*;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class RecommendationServiceTest {
+class WorkScheduleCalculatorTest {
 
-    @InjectMocks
-    private RecommendedWorkService service;
+    private final WorkScheduleCalculator workScheduleCalculator = new WorkScheduleCalculator();
+
     private RecommendedWork work;
-
-    @Mock
-    private MyCropRepository myCropRepository;
-    @Mock
-    private LifeCycleRepository lifeCycleRepository;
-    @Mock
-    private LifeCycleAndRecommendedWorkRepository lifeCycleAndRecommendedWorkRepository;
-    @Mock
-    private ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
-    @Mock
-    private FarmRepository farmRepository;
 
     @BeforeEach
     void setUp() {
@@ -94,6 +77,10 @@ class RecommendationServiceTest {
         return LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0)).toString();
     }
 
+    private String ts(long plusDay, int hour) {
+        return LocalDateTime.of(LocalDate.now().plusDays(plusDay), LocalTime.of(hour, 0)).toString();
+    }
+
     @Test
     void MyWork_연속_시간대는_하나의_윈도우로_묶인다() {
         // 00~05시 OK
@@ -102,13 +89,29 @@ class RecommendationServiceTest {
         );
 
         List<RecommendedWorksResponse> out =
-                service.windowsForWork(work, fcsts, /*minHours=*/1);
+                workScheduleCalculator.windowsForWork(work, fcsts, LocalDateTime.of(2025, 8, 12, 0, 0));
 
         assertEquals(1, out.size());
         assertEquals("추천해요", out.get(0).recommendation());
         assertEquals(ts(0), out.get(0).startTime());
         // 반개방 [start, end) 로직 → 6시가 끝
         assertEquals(ts(6), out.get(0).endTime());
+    }
+
+    @Test
+    void 다음날_시간도_제대로_정렬한다() {
+        List<ShortTermWeatherForecast> fcsts = List.of(
+                okFcst(23), okFcst(0), okFcst(1), okFcst(2), ngFcst(4), ngFcst(5)
+        );
+
+        List<RecommendedWorksResponse> out =
+                workScheduleCalculator.windowsForWork(work, fcsts,  LocalDateTime.of(2025, 8, 12, 23, 0));
+
+        assertEquals(1, out.size());
+        assertEquals("추천해요", out.get(0).recommendation());
+        assertEquals(ts(23), out.get(0).startTime());
+        // 반개방 [start, end) 로직 → 6시가 끝
+        assertEquals(ts(1, 3), out.get(0).endTime());
     }
 
     @Test
@@ -121,7 +124,7 @@ class RecommendationServiceTest {
         );
 
         List<RecommendedWorksResponse> out =
-                service.windowsForWork(work, fcsts, 1);
+                workScheduleCalculator.windowsForWork(work, fcsts, LocalDateTime.of(2025, 8, 12, 0, 0));
 
         assertEquals(2, out.size());
 
@@ -145,7 +148,7 @@ class RecommendationServiceTest {
         );
 
         List<RecommendedWorksResponse> out =
-                service.windowsForWork(work, fcsts, /*minHours=*/2);
+                workScheduleCalculator.windowsForWork(work, fcsts, LocalDateTime.of(2025, 8, 12, 0, 0));
 
         // 00~01 한 시간짜리 구간은 필터됨, 02~05(종료는 5시)만 남음
         assertEquals(1, out.size());
@@ -162,7 +165,7 @@ class RecommendationServiceTest {
         );
 
         List<RecommendedWorksResponse> out =
-                service.windowsForWork(work, fcsts, 1);
+                workScheduleCalculator.windowsForWork(work, fcsts, LocalDateTime.of(2025, 8, 12, 0, 0));
 
         assertEquals(1, out.size());
         assertEquals(ts(20), out.get(0).startTime());
@@ -181,7 +184,7 @@ class RecommendationServiceTest {
         );
 
         List<RecommendedWorksResponse> out =
-                service.windowsForWork(work, fcsts, 1);
+                workScheduleCalculator.windowsForWork(work, fcsts, LocalDateTime.of(2025, 8, 12, 0, 0));
 
         assertTrue(out.isEmpty());
     }
