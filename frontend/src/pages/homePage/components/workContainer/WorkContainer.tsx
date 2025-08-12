@@ -1,19 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import { GrayScale } from '@/styles/colors';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
-import type { WorkBlockType } from '@/types/workCard.type';
+import type { Position, WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
+import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
+import animateBlock from '../../utils/animateBlock';
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
 
   const [scrollOffset, setScrollOffset] = useState(0);
+  const [initialPosition, setInitialPosition] = useState<Position | null>(null);
+  const latestBlocksRef = useRef<WorkBlockType[]>(workBlocks);
+  const revertAnimationRef = useRef<number | null>(null);
+  const [isRevertingItemId, setIsRevertingItemId] = useState<number | null>(
+    null
+  );
+
+  useEffect(() => {
+    latestBlocksRef.current = workBlocks;
+  }, [workBlocks]);
 
   const {
     containerRef,
@@ -29,10 +41,36 @@ const WorkContainer = () => {
     onPositionChange: updated => updateWorkBlocks(updated),
   });
 
+  const { checkAndRevert } = useRevertPosition<WorkBlockType>({
+    draggedItem: draggedItemRef.current,
+    initialPosition,
+    getItemPosition: block => block.position,
+    onRevert: () => {
+      setIsRevertingItemId(draggedItemRef.current?.id || null);
+      if (!draggedItemRef.current || !initialPosition) return;
+
+      const revertId = draggedItemRef.current.id;
+      const currentPos = draggedItemRef.current.position;
+
+      animateBlock(
+        revertAnimationRef,
+        setIsRevertingItemId,
+        latestBlocksRef,
+        updateWorkBlocks,
+        revertId as number,
+        currentPos,
+        initialPosition
+      );
+    },
+  });
+
   const handleEndDrag = () => {
     const draggingId = draggedItemRef.current?.id;
     if (draggingId !== null && draggingId !== undefined) {
-      //TODO: 컨테이너 밖으로 나갈 시 원복
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        checkAndRevert(rect, scrollOffset);
+      }
     }
     endDrag();
   };
@@ -85,7 +123,7 @@ const WorkContainer = () => {
 
             return (
               <>
-                {isItemDragging(id) && (
+                {(isItemDragging(id) || isRevertingItemId === id) && (
                   <DragOverlay
                     key={`overlay-${id}`}
                     position={overlayPosition}
@@ -113,6 +151,7 @@ const WorkContainer = () => {
                     `,
                   ]}
                   onMouseDown={e => {
+                    setInitialPosition(block.position);
                     startDrag(e, id, workBlocks);
                   }}
                 >
@@ -123,6 +162,7 @@ const WorkContainer = () => {
                     workTime={workTime}
                     isDragging={isItemDragging(id)}
                     width={width}
+                    onDelete={() => removeWorkBlock(id)}
                   />
                 </div>
               </>

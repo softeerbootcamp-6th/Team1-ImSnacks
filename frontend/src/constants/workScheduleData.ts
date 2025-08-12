@@ -38,7 +38,7 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: '2025-08-11',
+    date: '2025-08-12',
     workCardData: [
       {
         id: 4,

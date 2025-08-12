@@ -1,5 +1,6 @@
 import S from './WorkCardRegister.style';
 import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
+import useVisibility from '@/hooks/useVisibility';
 
 interface WorkCardRegisterProps {
   id?: number;
@@ -11,6 +12,7 @@ interface WorkCardRegisterProps {
   y?: number;
   onMouseDown?: (e: React.MouseEvent) => void;
   width?: number;
+  onDelete?: () => void;
 }
 
 const WorkCardRegister = ({
@@ -22,16 +24,23 @@ const WorkCardRegister = ({
   y = 0,
   onMouseDown,
   width,
+  onDelete,
 }: WorkCardRegisterProps) => {
+  const { show, hide, isVisible } = useVisibility();
   return (
     <div
       css={S.WorkCardContainer({ isDragging, x, y, width })}
       onMouseDown={onMouseDown}
+      onMouseEnter={show}
+      onMouseLeave={hide}
     >
       <WorkCardRegisterContent
         cropName={cropName}
         workName={workName}
         workTime={workTime}
+        isVisible={isVisible}
+        isDragging={isDragging}
+        onDelete={onDelete}
       />
     </div>
   );
