@@ -30,7 +30,7 @@ public class UVApiCaller {
 
         UriComponents uri = builder
                 .queryParam(SERVICE_KEY.toString(), secretKey)
-                .queryParam(PAGE_NUM.toString(), 1)
+                .queryParam(PAGE_NO.toString(), 1)
                 .queryParam(NUM_OF_ROWS.toString(), 10)
                 .queryParam(DATA_TYPE.toString(), "JSON")
                 .queryParam(AREA_NO.toString(), areaCode)
