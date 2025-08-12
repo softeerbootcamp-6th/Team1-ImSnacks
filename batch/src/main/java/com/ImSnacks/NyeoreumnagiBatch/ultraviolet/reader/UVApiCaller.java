@@ -2,6 +2,8 @@ package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.dto.UVReaderResponseDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -15,14 +17,28 @@ public class UVApiCaller {
     @Value("${api.service.uv-key}")
     private String secretKey;
 
-    public UVReaderResponseDto call(String areaCode, String time){
+    public UVReaderResponseDto call(String areaCode, String time) throws JsonProcessingException {
         RestClient restClient = RestClient.create();
         String uriString = buildUriString(areaCode, time);
 
-        return restClient.get()
+//        return restClient.get()
+//                .uri(uriString)
+//                .retrieve()
+//                .body(UVReaderResponseDto.class);
+
+        String rawResponse = restClient.get()
                 .uri(uriString)
+                .header("User-Agent", "Mozilla/5.0 (compatible; OpenApiTester;)")
+                .header("Accept", "application/json") // 혹은 application/xml 등
                 .retrieve()
-                .body(UVReaderResponseDto.class);
+                .body(String.class); // 우선 String으로 받음
+
+        System.out.println(uriString);
+        System.out.println("==== Raw Response ====");
+        System.out.println(rawResponse);
+
+        UVReaderResponseDto dto = new ObjectMapper().readValue(rawResponse, UVReaderResponseDto.class);
+        return dto;
     }
 
     private String buildUriString(String areaCode, String time){
@@ -37,6 +53,6 @@ public class UVApiCaller {
                 .queryParam(TIME.toString(), time)
                 .build();
 
-        return uri.encode().toUriString();
+        return uri.toUriString();
     }
 }

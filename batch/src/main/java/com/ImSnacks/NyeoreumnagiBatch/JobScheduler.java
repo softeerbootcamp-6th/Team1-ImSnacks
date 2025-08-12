@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -14,19 +15,24 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JobScheduler {
     private final JobLauncher jobLauncher;
-    private final Job job;
+
+    @Qualifier("weatherJob")
+    private final Job weatherJob;
+
+    @Qualifier("uvJob")
+    private final Job uvJob;
 
     //2시부터 3시간 간격으로 15분마다 매일
-    @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
     public void runWeatherJob() throws Exception {
         JobParameters params = JobParams.getWeatherJobParam();
-        jobLauncher.run(job, params);
+        jobLauncher.run(weatherJob, params);
     }
 
     //매일 새벽 0시 1분에 실행
-    @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 46 0,18 * * *", zone = "Asia/Seoul")
     public void runUVJob() throws Exception {
         JobParameters params = JobParams.getUVJobParam();
-        jobLauncher.run(job, params);
+        jobLauncher.run(uvJob, params);
     }
 }
