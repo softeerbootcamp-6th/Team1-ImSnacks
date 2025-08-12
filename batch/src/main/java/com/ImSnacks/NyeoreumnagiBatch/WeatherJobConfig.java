@@ -18,8 +18,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @RequiredArgsConstructor
 public class WeatherJobConfig {
-    private final JobRepository jobRepository;
-    private final PlatformTransactionManager transactionManager;
     private final WeatherReader weatherReader;
     private final WeatherWriter weatherWriter;
     private final WeatherProcessor weatherProcessor;
