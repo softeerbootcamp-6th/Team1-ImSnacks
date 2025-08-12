@@ -4,6 +4,7 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import type { WeatherConditionsType } from '@/types/weather.types';
 import { css } from '@emotion/react';
+import S from './MobileHeader.styles';
 
 interface MobileHeaderProps {
   weatherCondition: WeatherConditionsType;
@@ -20,24 +21,8 @@ const MobileHeader = ({
     GLASS_MOBILE_ICON[weatherCondition as keyof typeof GLASS_MOBILE_ICON];
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        margin: '0 20px 32px 20px',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
-        alignSelf: 'stretch',
-        position: 'relative',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-end',
-          gap: Spacing.Spacing300,
-        }}
-      >
+    <div css={S.MobileHeader}>
+      <div css={S.MobileHeaderContent}>
         <h1
           css={css`
             ${Typography.Headline};
@@ -56,16 +41,7 @@ const MobileHeader = ({
           7월 23일, {weatherKeyword}
         </div>
       </div>
-      <GlassIconComponent
-        width={110}
-        height={88}
-        css={css`
-          position: absolute;
-          top: 0;
-          right: 0;
-          z-index: 1;
-        `}
-      />
+      <GlassIconComponent width={110} height={88} css={S.MobileHeaderIcon} />
     </div>
   );
 };
