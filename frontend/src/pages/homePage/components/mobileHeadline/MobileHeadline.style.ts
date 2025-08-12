@@ -1,49 +1,40 @@
-import { Assets, GrayScale, Opacity } from '@/styles/colors';
+import { GrayScale, Opacity } from '@/styles/colors';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { DropShadow } from '@/styles/effects';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
-const Headline = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 124px;
-  position: relative;
-  margin-bottom: ${Spacing.Spacing800};
-`;
-
-const GreetingMessage = css`
-  color: ${Assets.Text.Global.Clear};
-  ${Typography.Headline}
-  gap: ${Spacing.Spacing400};
+const MobileHeadline = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  align-self: stretch;
+  gap: ${Spacing.Spacing300};
+  color: ${GrayScale.White};
+`;
+
+const MobileGreetingMessage = css`
+  ${Typography.Body_L_500}
 `;
 
 const WeatherRisk = css`
   gap: ${Spacing.Spacing300};
   align-self: stretch;
-`;
-
-const WeatherRiskText = css`
-  border-radius: 12px;
+  border-radius: 16px;
   ${customBorderGradientStyles.gradientBorder};
   background: ${Opacity.White.W200};
   ${DropShadow.Ds200};
-  padding: 2px 16px;
+  padding: 8px 12px;
 `;
 
-const HeadlineWeather = css`
+const MobileHeadlineWeather = css`
   display: flex;
   justify-content: flex-end;
   align-items: center;
 `;
 
-const HeadlineDate = css`
+const MobileHeadlineDate = css`
   color: ${GrayScale.White};
   ${Typography.Body_L_500}
   display: flex;
@@ -52,7 +43,7 @@ const HeadlineDate = css`
   margin-right: 200px;
 `;
 
-const HeadlineWeatherIcon = css`
+const MobileHeadlineWeatherIcon = css`
   position: absolute;
   top: 0;
   right: 0;
@@ -60,11 +51,10 @@ const HeadlineWeatherIcon = css`
 `;
 
 export default {
-  Headline,
-  GreetingMessage,
+  MobileHeadline,
+  MobileGreetingMessage,
   WeatherRisk,
-  WeatherRiskText,
-  HeadlineWeather,
-  HeadlineDate,
-  HeadlineWeatherIcon,
+  MobileHeadlineWeather,
+  MobileHeadlineDate,
+  MobileHeadlineWeatherIcon,
 };

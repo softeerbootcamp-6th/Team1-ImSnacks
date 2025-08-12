@@ -10,7 +10,7 @@ const WorkChip = ({ chipType, ...props }: WorkChipProps) => {
   return (
     <button css={S.WorkChip(chipType)} {...props}>
       <div css={S.WorkChipDot(chipType)} />
-      {chipType === WORK_CHIP_TYPES.COMPLETE ? '완료' : '미완료'}
+      {chipType === WORK_CHIP_TYPES.COMPLETED ? '완료' : '미완료'}
     </button>
   );
 };

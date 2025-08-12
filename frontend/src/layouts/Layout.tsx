@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import NavBar from './navBar/NavBar';
 import { gradientStyles } from '@/styles/gradientStyles';
 import { css } from '@emotion/react';
+import NavBar from './navBar/NavBar';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const isWeatherPage = window.location.pathname === '/weather-board';
@@ -23,6 +23,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
         css={css`
           max-width: 1328px;
         `}
+        // css={css`
+        //   width: 100%;
+        // `}
       >
         {children}
       </main>

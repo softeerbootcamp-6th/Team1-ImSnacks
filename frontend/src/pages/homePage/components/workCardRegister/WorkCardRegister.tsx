@@ -1,12 +1,10 @@
-import { Spacing } from '@/styles/spacing';
-import { FlexStyles } from '@/styles/commonStyles';
-import { css } from '@emotion/react';
 import S from './WorkCardRegister.style';
-import type { CropNameType } from '@/types/crop.type';
+import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
 import useVisibility from '@/hooks/useVisibility';
 import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useResize } from '@/pages/homePage/hooks/useResize';
+import { css } from '@emotion/react';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -82,6 +80,12 @@ const WorkCardRegister = ({
           </div>
         </div>
         {isVisible && !isResizing && !isDragging && (
+        <WorkCardRegisterContent
+          cropName={cropName}
+          workName={workName}
+          workTime={workTime}
+        />
+        {isVisible && !isDragging && (
           <button
             onClick={onDelete}
             onMouseDown={e => e.stopPropagation()}
