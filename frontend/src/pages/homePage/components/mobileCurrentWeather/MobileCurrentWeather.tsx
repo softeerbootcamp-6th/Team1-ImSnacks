@@ -22,12 +22,12 @@ const MobileCurrentWeather = ({
       <div css={S.MobileCurrentWeatherContentWrapper}>
         <div css={S.MobileCurrentWeatherContentRow}>
           {weatherData.slice(0, 2).map((item: MobileCurrentWeatherProps) => (
-            <MobileCurrentWeatherContent data={item} />
+            <MobileCurrentWeatherContent key={item.metricType} data={item} />
           ))}
         </div>
         <div css={S.MobileCurrentWeatherContentRow}>
           {weatherData.slice(2).map((item: MobileCurrentWeatherProps) => (
-            <MobileCurrentWeatherContent data={item} />
+            <MobileCurrentWeatherContent key={item.metricType} data={item} />
           ))}
         </div>
       </div>
