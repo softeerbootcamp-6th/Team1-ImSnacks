@@ -36,7 +36,7 @@ public final class Briefing {
         final StringBuilder sb = new StringBuilder();
         final boolean isAM = (time.get(ChronoField.AMPM_OF_DAY) == AM);
         sb.append(isAM ? AM_KOR : PM_KOR).append(SPACE);
-        sb.append(Integer.toString(time.get(ChronoField.CLOCK_HOUR_OF_AMPM))); // the hour within the AM/PM, from 1 to 12.
+        sb.append(time.get(ChronoField.CLOCK_HOUR_OF_AMPM)); // the hour within the AM/PM, from 1 to 12.
         sb.append(OCLOCK_KOR);
         return sb.toString();
     }
