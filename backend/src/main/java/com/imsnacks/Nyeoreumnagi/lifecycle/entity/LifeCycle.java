@@ -1,6 +1,6 @@
-package com.imsnacks.Nyeoreumnagi.work.entity;
+package com.imsnacks.Nyeoreumnagi.lifecycle.entity;
 
-import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCyclePeriod;
+import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
