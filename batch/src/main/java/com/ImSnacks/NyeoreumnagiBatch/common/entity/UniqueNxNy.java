@@ -16,5 +16,5 @@ public class UniqueNxNy {
     @EmbeddedId
     private NxNyId id;
 
-    private int areaCode;
+    private String areaCode;
 }
