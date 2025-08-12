@@ -4,10 +4,9 @@ import { css } from '@emotion/react';
 import S from './WorkCardRegister.style';
 import type { CropNameType } from '@/types/crop.type';
 import useVisibility from '@/hooks/useVisibility';
-import { useCallback, useRef, useState } from 'react';
+import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
-import dayjs from 'dayjs';
-import { calculateTimeToPosition } from '../../utils/getInitialWorkBlocks';
+import { useResize } from '@/pages/homePage/hooks/useResize';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -25,89 +24,14 @@ const WorkCardRegister = ({
   onResize,
 }: WorkCardRegisterProps) => {
   const { show, hide, isVisible } = useVisibility();
-  const resizeRef = useRef<{
-    startX: number;
-    startTime: dayjs.Dayjs;
-    endTime: dayjs.Dayjs;
-    direction: 'left' | 'right';
-  } | null>(null);
-
   const [newWidth, setNewWidth] = useState(block.width);
 
-  const handleResizeStart = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>, direction: 'left' | 'right') => {
-      e.stopPropagation();
-
-      if (!onResize || !block.width) return;
-
-      const startTime = dayjs(block.startTime);
-      const endTime = dayjs(block.endTime);
-
-      resizeRef.current = {
-        startX: e.clientX,
-        startTime,
-        endTime,
-        direction,
-      };
-
-      const handleMouseMove = (moveEvent: MouseEvent) => {
-        if (!resizeRef.current) return;
-
-        const { startX, startTime, endTime, direction } = resizeRef.current;
-        const deltaX = moveEvent.clientX - startX;
-
-        // 100px = 1시간 (60분)
-        const minutesPerPixel = 60 / 100;
-        const deltaMinutes = deltaX * minutesPerPixel;
-
-        let newStartTime = startTime;
-        let newEndTime = endTime;
-
-        if (direction === 'left') {
-          // 왼쪽 핸들: 시작 시간 변경
-          newStartTime = startTime.add(deltaMinutes, 'minute');
-        } else {
-          // 오른쪽 핸들: 종료 시간 변경
-          newEndTime = endTime.add(deltaMinutes, 'minute');
-        }
-
-        // 최소 30분 이상 유지
-        const durationMinutes = newEndTime.diff(newStartTime, 'minute');
-        if (durationMinutes < 30) return;
-
-        const { x: newX, width: newWidth } = calculateTimeToPosition(
-          newStartTime.toISOString(),
-          newEndTime.toISOString()
-        );
-
-        setNewWidth(newWidth);
-
-        onResize({
-          ...block,
-          position: {
-            x: newX,
-            y: block.position.y,
-          },
-          startTime: newStartTime.toISOString(),
-          endTime: newEndTime.toISOString(),
-          workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
-            'HH:mm'
-          )}`,
-          width: newWidth,
-        });
-      };
-
-      const handleMouseUp = () => {
-        resizeRef.current = null;
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
-
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+  const { handleResizeStart } = useResize({
+    onResize: newBlock => {
+      setNewWidth(newBlock.width);
+      onResize?.(newBlock);
     },
-    [onResize, block]
-  );
+  });
 
   return (
     <div
@@ -120,7 +44,7 @@ const WorkCardRegister = ({
       {!isDragging && onResize && (
         <div
           css={S.WorkCardResizeHandleLeft}
-          onMouseDown={e => handleResizeStart(e, 'left')}
+          onMouseDown={e => handleResizeStart(e, block, 'left')}
         />
       )}
 
@@ -128,7 +52,7 @@ const WorkCardRegister = ({
       {!isDragging && onResize && (
         <div
           css={S.WorkCardResizeHandleRight}
-          onMouseDown={e => handleResizeStart(e, 'right')}
+          onMouseDown={e => handleResizeStart(e, block, 'right')}
         />
       )}
 

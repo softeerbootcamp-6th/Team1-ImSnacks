@@ -27,10 +27,8 @@ const WorkCardContainer = ({
   width: ${width ? `${width}px` : 'auto'};
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: ${isDragging ? 'none' : 'all 0.2s ease'};
   z-index: ${isDragging ? 1000 : 1};
   user-select: none;
-  will-change: transform;
 
   cursor: grab;
 
