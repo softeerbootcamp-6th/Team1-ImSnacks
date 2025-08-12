@@ -3,7 +3,7 @@ package com.ImSnacks.NyeoreumnagiBatch;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity.WeatherRiskType;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRiskType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

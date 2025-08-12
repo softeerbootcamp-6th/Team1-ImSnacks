@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto;
 
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity.WeatherRiskType;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRiskType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

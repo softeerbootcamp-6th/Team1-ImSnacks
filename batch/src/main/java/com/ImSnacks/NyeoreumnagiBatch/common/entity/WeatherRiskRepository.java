@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity;
+package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

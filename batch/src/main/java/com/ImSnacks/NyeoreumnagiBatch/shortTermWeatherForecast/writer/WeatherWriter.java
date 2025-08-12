@@ -1,11 +1,11 @@
 package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer;
 
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity.ShortTermWeatherForecast;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity.WeatherRisk;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity.WeatherRiskRepository;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRisk;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRiskRepository;
 import lombok.extern.slf4j.Slf4j;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.repository.ShortTermWeatherForecastRepository;
+import com.ImSnacks.NyeoreumnagiBatch.common.repository.ShortTermWeatherForecastRepository;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;

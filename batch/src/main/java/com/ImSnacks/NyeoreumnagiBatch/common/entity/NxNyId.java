@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.entity;
+package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

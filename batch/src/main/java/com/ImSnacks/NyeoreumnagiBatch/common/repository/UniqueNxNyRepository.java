@@ -1,7 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.common.repository;
 
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.entity.NxNyId;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.entity.UniqueNxNy;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNyId;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -2,7 +2,7 @@ package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.utils.
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.dto.VilageFcstItemsDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity.WeatherRiskType;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRiskType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
