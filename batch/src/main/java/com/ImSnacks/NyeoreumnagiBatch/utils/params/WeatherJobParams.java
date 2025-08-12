@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.utils.params;
 
-import com.ImSnacks.NyeoreumnagiBatch.reader.ApiRequestValues;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiRequestValues;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 

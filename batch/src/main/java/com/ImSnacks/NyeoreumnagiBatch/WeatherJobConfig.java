@@ -1,10 +1,10 @@
 package com.ImSnacks.NyeoreumnagiBatch;
 
-import com.ImSnacks.NyeoreumnagiBatch.processor.WeatherProcessor;
-import com.ImSnacks.NyeoreumnagiBatch.reader.WeatherReader;
-import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.writer.WeatherWriter;
-import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.WeatherReader;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.WeatherWriter;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

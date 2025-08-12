@@ -1,10 +1,10 @@
 package com.ImSnacks.NyeoreumnagiBatch.filterTest;
 
-import com.ImSnacks.NyeoreumnagiBatch.processor.dto.VilageFcstItemsDto;
-import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.RainFilter;
-import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.WeatherRiskFilter;
-import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
-import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskType;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.dto.VilageFcstItemsDto;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.utils.weatherRiskFilter.RainFilter;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.utils.weatherRiskFilter.WeatherRiskFilter;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.entity.WeatherRiskType;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
