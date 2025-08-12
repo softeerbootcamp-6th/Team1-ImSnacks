@@ -1,6 +1,6 @@
 export const WORK_CHIP_TYPES = {
-  COMPLETE: 'complete',
-  INCOMPLETE: 'incomplete',
+  COMPLETED: 'COMPLETED',
+  INCOMPLETED: 'INCOMPLETED',
 } as const;
 
 export const WORK_CHIP_STATUSES = {

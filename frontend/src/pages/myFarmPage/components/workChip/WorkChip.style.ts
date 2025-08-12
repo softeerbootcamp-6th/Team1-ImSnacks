@@ -13,7 +13,7 @@ const getWorkChipColorByType = (
   type: WorkChipType,
   status: WorkChipStatus
 ) => css`
-  ${type === WORK_CHIP_TYPES.COMPLETE
+  ${type === WORK_CHIP_TYPES.COMPLETED
     ? completeWorkChipColorByStatus[status]
     : incompleteWorkChipColorByStatus[status]}
 `;
@@ -22,7 +22,7 @@ const getWorkChipDotColorByType = (
   type: WorkChipType,
   status: WorkChipStatus
 ) => css`
-  ${type === WORK_CHIP_TYPES.COMPLETE
+  ${type === WORK_CHIP_TYPES.COMPLETED
     ? completeWorkChipDotColorByStatus[status]
     : incompleteWorkChipDotColorByStatus[status]}
 `;

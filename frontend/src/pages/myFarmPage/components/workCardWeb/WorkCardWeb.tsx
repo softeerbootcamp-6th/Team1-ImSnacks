@@ -28,7 +28,7 @@ const WorkCardWeb = ({
       </div>
       <WorkChip
         chipType={
-          isCompleted ? WORK_CHIP_TYPES.COMPLETE : WORK_CHIP_TYPES.INCOMPLETE
+          isCompleted ? WORK_CHIP_TYPES.COMPLETED : WORK_CHIP_TYPES.INCOMPLETED
         }
       />
     </div>
