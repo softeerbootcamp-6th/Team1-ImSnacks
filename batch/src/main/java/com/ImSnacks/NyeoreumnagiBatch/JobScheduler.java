@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableScheduling
 @RequiredArgsConstructor
-public class WeatherJobScheduler {
+public class JobScheduler {
     private final JobLauncher jobLauncher;
     private final Job weatherJob;
 
