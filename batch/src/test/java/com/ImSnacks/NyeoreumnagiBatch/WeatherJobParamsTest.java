@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch;
 
-import com.ImSnacks.NyeoreumnagiBatch.utils.params.WeatherJobParams;
+import com.ImSnacks.NyeoreumnagiBatch.common.params.WeatherJobParams;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 

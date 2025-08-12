@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.utils.repository;
+package com.ImSnacks.NyeoreumnagiBatch.common.repository;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.entity.NxNyId;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.entity.UniqueNxNy;

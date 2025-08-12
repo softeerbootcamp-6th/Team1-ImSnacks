@@ -1,7 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.dto.UVReaderResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.utils.repository.UniqueNxNyRepository;
+import com.ImSnacks.NyeoreumnagiBatch.common.repository.UniqueNxNyRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
