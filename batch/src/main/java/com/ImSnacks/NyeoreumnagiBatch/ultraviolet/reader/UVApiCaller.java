@@ -15,7 +15,7 @@ public class UVApiCaller {
     @Value("${api.service.uv-key}")
     private String secretKey;
 
-    public UVReaderResponseDto call(int areaCode, String time){
+    public UVReaderResponseDto call(String areaCode, String time){
         RestClient restClient = RestClient.create();
         String uriString = buildUriString(areaCode, time);
 
@@ -25,7 +25,7 @@ public class UVApiCaller {
                 .body(UVReaderResponseDto.class);
     }
 
-    private String buildUriString(int areaCode, String time){
+    private String buildUriString(String areaCode, String time){
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(UV_URL.toString());
 
         UriComponents uri = builder
