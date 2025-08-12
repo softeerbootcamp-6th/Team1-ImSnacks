@@ -21,8 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,8 +35,6 @@ import static org.mockito.BDDMockito.given;
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class WeatherBriefingTest {
-    private static final Logger log = LoggerFactory.getLogger(WeatherBriefingTest.class);
-
     private static final LocalDateTime BASE = LocalDateTime.of(2025, 8, 12, 0, 0);
 
     @InjectMocks
@@ -162,7 +158,6 @@ class WeatherBriefingTest {
                     .jobExecutionId(1L)
                     .build();
             risks.add(r);
-            System.out.println(r.toString());
         }
         given(riskRepo.findByNxAndNyWithMaxJobExecutionId(nx, ny)).willReturn(risks);
 
