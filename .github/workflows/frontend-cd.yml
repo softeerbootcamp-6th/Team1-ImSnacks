@@ -34,15 +34,10 @@ jobs:
         if: success()
         run: |
           echo "Checking if AWS secrets are set..."
-          if [ -n "${{ secrets.AWS_FE_ACCESS_KEY }}" ]; then
-            echo "AWS_FE_ACCESS_KEY is set"
+          if [ -n "${{ secrets.FE_OIDC_ROLE_ARN }}" ]; then
+            echo "FE_OIDC_ROLE_ARN is set"
           else
-            echo "AWS_FE_ACCESS_KEY is NOT set"
-          fi
-          if [ -n "${{ secrets.AWS_FE_SECRET_ACCESS_KEY }}" ]; then
-            echo "AWS_SECRET_ACCESS_KEY is set"
-          else
-            echo "AWS_SECRET_ACCESS_KEY is NOT set"
+            echo "FE_OIDC_ROLE_ARN is NOT set"
           fi
           if [ -n "${{ secrets.AWS_FE_REGION }}" ]; then
             echo "AWS_REGION is set: ${{ secrets.AWS_FE_REGION }}"
@@ -50,13 +45,12 @@ jobs:
             echo "AWS_REGION is NOT set"
           fi
 
-      - name: Configure AWS Credentials
+      - name: AWS Credentials 설정
         if: success()
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_FE_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_FE_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_FE_REGION }}
+          role-to-assume: ${{ secrets.FE_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_FE_REGION }}
 
       - name: Test AWS Configuration
         if: success()
