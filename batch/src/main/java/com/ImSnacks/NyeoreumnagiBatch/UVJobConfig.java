@@ -23,7 +23,7 @@ public class UVJobConfig {
     private final UVWriter uvWriter;
 
     @Bean
-    public Job weatherJob(JobRepository jobRepository, Step uvStep) {
+    public Job uvJob(JobRepository jobRepository, Step uvStep) {
         return new JobBuilder("uvJob", jobRepository)
                 .start(uvStep)
                 .build();
