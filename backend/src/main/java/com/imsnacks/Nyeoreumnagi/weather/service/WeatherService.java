@@ -105,32 +105,31 @@ public class WeatherService {
         return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature);
     }
 
-    public GetWeatherBriefingResponse getWeatherBriefing(Long memberId) {
+    public GetWeatherBriefingResponse getWeatherBriefing(final Long memberId) {
         assert(memberId != null);
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        Farm farm = member.getFarm();
+        final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+        final Farm farm = member.getFarm();
         if (farm == null) {
             throw new MemberException(NO_FARM_INFO);
         }
 
-        int nx = farm.getNx();
-        int ny = farm.getNy();
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
 
-        List<WeatherRisk> allRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
+        final List<WeatherRisk> allRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
         if (allRisks.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
             return new GetWeatherBriefingResponse(false, "");
         }
 
-        LocalDateTime now = LocalDateTime.now(ZoneId.of(Briefing.KST));
-        List<WeatherRisk> filteredRisk = allRisks.stream()
+        final LocalDateTime now = LocalDateTime.now(ZoneId.of(Briefing.KST));
+        final List<WeatherRisk> filteredRisk = allRisks.stream()
                 .filter(r -> r.getEndTime().isAfter(now))
-                .sorted(Briefing.RISK_COMPARATOR)
+                .sorted(Briefing.RISK_COMPARATOR) // 우선 순위가 가장 앞서는 것이 맨 앞에 오도록 정렬한다.
                 .toList();
         if (filteredRisk.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
             return new GetWeatherBriefingResponse(false, "");
         }
-        WeatherRisk risk = filteredRisk.get(0);
-        String msg = Briefing.buildMsg(risk);
+        final String msg = Briefing.buildMsg(filteredRisk.get(0));
 
         return new GetWeatherBriefingResponse(true, msg);
     }
