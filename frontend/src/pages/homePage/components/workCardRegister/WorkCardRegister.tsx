@@ -65,27 +65,12 @@ const WorkCardRegister = ({
           align-items: center;
         `}
       >
-        <div css={S.WorkCardContent}>
-          <div css={S.WorkCardColorBar(block.cropName as CropNameType)} />
-          <div css={S.WorkCardInfo}>
-            <div
-              css={css`
-                ${FlexStyles.flexRow} gap:${Spacing.Spacing300}
-              `}
-            >
-              <div css={S.WorkCardTitle}>{block.workName}</div>
-              <div css={S.WorkCardCropName}> {block.cropName}</div>
-            </div>
-            <div css={S.WorkCardTime}>{block.workTime}</div>
-          </div>
-        </div>
-        {isVisible && !isResizing && !isDragging && (
         <WorkCardRegisterContent
-          cropName={cropName}
-          workName={workName}
-          workTime={workTime}
+          cropName={block.cropName}
+          workName={block.workName}
+          workTime={block.workTime}
         />
-        {isVisible && !isDragging && (
+        {isVisible && !isResizing && !isDragging && (
           <button
             onClick={onDelete}
             onMouseDown={e => e.stopPropagation()}
