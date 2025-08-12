@@ -44,7 +44,7 @@ const getInitialWorkBlocks = (newWorkBlocks?: WorkBlockType[]) => {
       startTime: work.startTime,
       endTime: work.endTime,
       position: { x, y: 50 }, // 기본 y 위치
-      width,
+      size: { width, height: 52 },
     });
   });
 

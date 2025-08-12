@@ -10,7 +10,7 @@ import useWorkBlocks from '@/contexts/useWorkBlocks';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
-import animateBlock from '../../utils/animateBlock';
+import animateBlock from '@/utils/animateBlock';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
@@ -66,6 +66,7 @@ const WorkContainer = () => {
 
       const revertId = draggedItemRef.current.id;
       const currentPos = draggedItemRef.current.position;
+      console.log('checkAndRevert');
 
       animateBlock(
         revertAnimationRef,
@@ -94,6 +95,57 @@ const WorkContainer = () => {
       }
     }
 
+    if (draggingBlock) {
+      const {
+        position: { x: blockX, y: blockY },
+        size: { width: blockWidth, height: blockHeight },
+      } = draggingBlock;
+
+      const centerX = blockX + blockWidth / 2;
+      const centerY = blockY + blockHeight / 2;
+
+      // 다른 블록과의 충돌 검사
+      const hasCollision = workBlocks.some(block => {
+        if (block.id === draggingBlock.id) return false;
+
+        const otherCenterX = block.position.x + block.size.width / 2;
+        const otherCenterY = block.position.y + block.size.height / 2;
+
+        const distanceX = Math.abs(centerX - otherCenterX);
+        const distanceY = Math.abs(centerY - otherCenterY);
+
+        if (
+          distanceX < blockWidth / 2 + block.size.width / 2 &&
+          distanceY < blockHeight / 2 + block.size.height / 2
+        ) {
+          return true;
+        }
+
+        return false;
+      });
+
+      if (hasCollision) {
+        // 충돌이 있으면 원래 위치로 되돌리기
+        setIsRevertingItemId(draggingBlock.id);
+
+        if (initialPosition) {
+          animateBlock(
+            revertAnimationRef,
+            setIsRevertingItemId,
+            latestBlocksRef,
+            updateWorkBlocks,
+            draggingBlock.id,
+            draggingBlock.position,
+            initialPosition
+          );
+        }
+        setDraggingBlock(null);
+        endDrag();
+
+        return;
+      }
+    }
+
     // 드래그가 끝나면 임시 상태를 실제 workBlocks에 반영
     if (draggingBlock) {
       const updatedBlocks = workBlocks.map(block =>
@@ -109,11 +161,9 @@ const WorkContainer = () => {
   const handleResize = (blockId: number, newBlock: WorkBlockType) => {
     if (draggingBlock && draggingBlock.id === blockId) {
       // 드래그 중일 때는 임시 상태만 업데이트
-      console.log('is dragging');
       setDraggingBlock(newBlock);
     } else {
       // 드래그 중이 아닐 때는 즉시 업데이트
-      console.log('is not dragging');
       const updatedBlocks = workBlocks.map(b =>
         b.id === blockId ? newBlock : b
       );
@@ -194,7 +244,6 @@ const WorkContainer = () => {
                 </DragOverlay>
               );
             }
-
             return (
               <div
                 key={id}

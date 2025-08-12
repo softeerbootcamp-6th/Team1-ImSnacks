@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { Position } from '@/types/workCard.type';
+import type { Position, Size } from '@/types/workCard.type';
 
 interface RevertPositionProps<T> {
   draggedItem: T | null;
@@ -8,9 +8,7 @@ interface RevertPositionProps<T> {
   initialPosition: Position | null;
 }
 
-export const useRevertPosition = <
-  T extends { width?: number; height?: number }
->({
+export const useRevertPosition = <T extends { size?: Size }>({
   draggedItem,
   onRevert,
   getItemPosition,
@@ -23,8 +21,8 @@ export const useRevertPosition = <
       }
 
       const { x, y } = getItemPosition(draggedItem);
-      const itemWidth = draggedItem.width || 0;
-      const itemHeight = draggedItem.height || 0;
+      const itemWidth = draggedItem.size?.width || 0;
+      const itemHeight = draggedItem.size?.height || 0;
 
       const isWithinBounds =
         x >= 0 + scrollOffset &&

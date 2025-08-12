@@ -22,12 +22,12 @@ const WorkCardRegister = ({
   onResize,
 }: WorkCardRegisterProps) => {
   const { show, hide, isVisible } = useVisibility();
-  const [newWidth, setNewWidth] = useState(block.width);
+  const [newWidth, setNewWidth] = useState(block.size.width);
   const [isResizing, setIsResizing] = useState(false);
 
   const { handleResizeStart } = useResize({
     onResize: newBlock => {
-      setNewWidth(newBlock.width);
+      setNewWidth(newBlock.size.width);
       setIsResizing(true);
       onResize?.(newBlock);
     },
@@ -35,7 +35,13 @@ const WorkCardRegister = ({
 
   return (
     <div
-      css={S.WorkCardContainer({ isDragging, width: newWidth })}
+      css={S.WorkCardContainer({
+        isDragging,
+        size: {
+          width: newWidth,
+          height: block.size.height,
+        },
+      })}
       onMouseDown={onMouseDown}
       onMouseEnter={show}
       onMouseLeave={hide}
