@@ -1,40 +1,63 @@
 import S from './WorkCardRegister.style';
 import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
 import useVisibility from '@/hooks/useVisibility';
+import { useState } from 'react';
+import type { WorkBlockType } from '@/types/workCard.type';
+import { useResize } from '@/pages/homePage/hooks/useResize';
 import { css } from '@emotion/react';
 
 interface WorkCardRegisterProps {
-  id?: number;
-  cropName: string;
-  workName: string;
-  workTime: string;
   isDragging?: boolean;
-  x?: number;
-  y?: number;
+  block: WorkBlockType;
   onMouseDown?: (e: React.MouseEvent) => void;
-  width?: number;
   onDelete?: () => void;
+  onResize?: (newBlock: WorkBlockType) => void;
 }
 
 const WorkCardRegister = ({
-  cropName,
-  workName,
-  workTime,
   isDragging = false,
-  x = 0,
-  y = 0,
+  block,
   onMouseDown,
-  width,
   onDelete,
+  onResize,
 }: WorkCardRegisterProps) => {
   const { show, hide, isVisible } = useVisibility();
+  const [newWidth, setNewWidth] = useState(block.width);
+  const [isResizing, setIsResizing] = useState(false);
+
+  const { handleResizeStart } = useResize({
+    onResize: newBlock => {
+      setNewWidth(newBlock.width);
+      setIsResizing(true);
+      onResize?.(newBlock);
+    },
+  });
+
   return (
     <div
-      css={S.WorkCardContainer({ isDragging, x, y, width })}
+      css={S.WorkCardContainer({ isDragging, width: newWidth })}
       onMouseDown={onMouseDown}
       onMouseEnter={show}
       onMouseLeave={hide}
     >
+      {/* 왼쪽 리사이징 핸들 */}
+      {!isDragging && onResize && (
+        <div
+          css={S.WorkCardResizeHandleLeft}
+          onMouseDown={e => handleResizeStart(e, block, 'left')}
+          onMouseUp={() => setIsResizing(false)}
+        />
+      )}
+
+      {/* 오른쪽 리사이징 핸들 */}
+      {!isDragging && onResize && (
+        <div
+          css={S.WorkCardResizeHandleRight}
+          onMouseDown={e => handleResizeStart(e, block, 'right')}
+          onMouseUp={() => setIsResizing(false)}
+        />
+      )}
+
       <div
         css={css`
           display: flex;
@@ -43,11 +66,11 @@ const WorkCardRegister = ({
         `}
       >
         <WorkCardRegisterContent
-          cropName={cropName}
-          workName={workName}
-          workTime={workTime}
+          cropName={block.cropName}
+          workName={block.workName}
+          workTime={block.workTime}
         />
-        {isVisible && !isDragging && (
+        {isVisible && !isResizing && !isDragging && (
           <button
             onClick={onDelete}
             onMouseDown={e => e.stopPropagation()}
