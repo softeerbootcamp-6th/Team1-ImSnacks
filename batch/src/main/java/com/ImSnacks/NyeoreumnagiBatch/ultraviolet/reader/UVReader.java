@@ -39,6 +39,7 @@ public class UVReader implements ItemReader<UVReaderResponseDto> {
 
     @Override
     public UVReaderResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+        log.info("Reading UV API response");
         setAreaCodes();
         String areaCode = getNextAreaCode();
 
