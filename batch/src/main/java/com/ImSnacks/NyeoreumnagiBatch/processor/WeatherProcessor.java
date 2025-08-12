@@ -1,13 +1,17 @@
 package com.ImSnacks.NyeoreumnagiBatch.processor;
 
+import com.ImSnacks.NyeoreumnagiBatch.processor.dto.VilageFcstItemsDto;
 import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.processor.utils.ForecastTimeUtils;
 import com.ImSnacks.NyeoreumnagiBatch.processor.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,25 +19,35 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.LinkedHashMap;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, ShortTermWeatherDto> {
-    private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD");
+    private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD", "SNO", "SKY");
 
     private final List<WeatherRiskFilter> weatherRiskFilters;
 
     @Override
     public ShortTermWeatherDto process(VilageFcstResponseDto response) throws Exception {
+        log.info("processing vilage fcst response...");
         //24시간 이내 정보만 filtering
-        List<VilageFcstResponseDto.Item> within24HoursWeatherInfo = response.getWeatherInfo().stream()
+        List<VilageFcstItemsDto> within24HoursWeatherInfo = response.getWeatherInfo().stream()
                 .filter(ForecastTimeUtils::isWithin24Hours)
-                .toList();
+                .map(item -> {
+                    return new VilageFcstItemsDto(
+                            item.getCategory(),
+                            LocalDateTime.parse(item.getFcstDate() + item.getFcstTime(), DateTimeFormatter.ofPattern("yyyyMMddHHmm")),
+                            item.getFcstValue(),
+                            item.getNx(),
+                            item.getNy()
+                    );
+                }).toList();
 
         //필요한 metric만 뽑아서 시간별로 그룹핑
-        Map<String, List<VilageFcstResponseDto.Item>> map = within24HoursWeatherInfo.stream()
+        Map<LocalDateTime, List<VilageFcstItemsDto>> map = within24HoursWeatherInfo.stream()
                 .filter(item -> targetCategories.contains(item.getCategory()))
                 .collect(Collectors.groupingBy(
-                        VilageFcstResponseDto.Item::getFcstTime,
+                        VilageFcstItemsDto::getFcstDateTime,
                         LinkedHashMap::new,
                         Collectors.toList()
                 ));
@@ -59,41 +73,49 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
                 .build();
     }
 
-    private ShortTermWeatherDto.WeatherForecastByTimeDto extractInfo(String fcstTimeStr, List<VilageFcstResponseDto.Item> weatherInfos) {
-        int fcstTime = ForecastTimeUtils.getIntegerFromAPITime(fcstTimeStr);
+    private ShortTermWeatherDto.WeatherForecastByTimeDto extractInfo(LocalDateTime fcstDateTime, List<VilageFcstItemsDto> weatherInfos) {
+        int fcstTime = ForecastTimeUtils.getIntegerFromAPITime(fcstDateTime);
 
         double precipitation = 0;
         double windSpeed = 0;
         int temperature = 0;
         int humidity = 0;
+        double snow = 0;
+        int skyStatus = 0;
 
-        for (VilageFcstResponseDto.Item item : weatherInfos) {
+        for (VilageFcstItemsDto item : weatherInfos) {
             String category = item.getCategory();
             String value = item.getFcstValue();
 
             switch (category) {
                 case "PCP":
-                    precipitation = parseDoubleOrDefault(value, 0);
+                    precipitation = parseDoubleOrDefault(value);
                     break;
                 case "TMP":
-                    temperature = parseIntOrDefault(value, 0);
+                    temperature = parseIntOrDefault(value);
                     break;
                 case "REH":
-                    humidity = parseIntOrDefault(value, 0);
+                    humidity = parseIntOrDefault(value);
                     break;
                 case "WSD":
-                    windSpeed = parseDoubleOrDefault(value, 0);
+                    windSpeed = parseDoubleOrDefault(value);
+                    break;
+                case "SNO":
+                    snow = parseSnowDoubleOrDefault(value);
+                    break;
+                case "SKY":
+                    skyStatus = parseSkyStatusOrDefault(value);
                     break;
             }
         }
 
-        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed);
+        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed, snow, skyStatus);
     }
 
-    private double parseDoubleOrDefault(String value, double defaultValue) {
+    private double parseDoubleOrDefault(String value) {
         try {
             if (value.equals("강수없음"))
-                return defaultValue;
+                return 0;
             if (value.equals("30.0~50.0mm"))
                 return 40;
             if (value.equals("50.0mm 이상"))
@@ -104,15 +126,39 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
             }
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
-            return defaultValue;
+            return 0;
         }
     }
 
-    private int parseIntOrDefault(String value, int defaultValue) {
+    private int parseIntOrDefault(String value) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return defaultValue;
+            return 0;
+        }
+    }
+
+    private double parseSnowDoubleOrDefault(String value) {
+        try {
+            if (value.equals("적설없음"))
+                return 0;
+            if (value.equals("5.0cm 이상"))
+                return 5;
+            if (value.contains("cm")) {
+                String valueWithoutUnit = value.substring(0, value.indexOf("cm"));
+                return Double.parseDouble(valueWithoutUnit);
+            }
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private int parseSkyStatusOrDefault(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 1;
         }
     }
 }
