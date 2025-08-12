@@ -7,8 +7,6 @@ const Headline = () => {
   const nickName = '밤비';
   const data = {
     hasWeatherRisk: true,
-    startHour: 11,
-    endHour: 15,
     message: '오전 11시부터 오후 3시까지 우박',
   };
 
