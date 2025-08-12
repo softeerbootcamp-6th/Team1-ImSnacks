@@ -30,7 +30,7 @@ public class UVReader implements ItemReader<UVReaderResponseDtoWithNxNy> {
     private static List<UniqueNxNy> areaCodes = null;
     private static int areaCodesIndex = 0;
 
-    UVReader(@Value("#{jobParameters['base_date_time']}") String baseDateTime,
+    UVReader(@Value("#{jobParameters['time']}") String baseDateTime,
              UVApiCaller apiCaller,
              UniqueNxNyRepository uniqueNxNyRepository)
     {
