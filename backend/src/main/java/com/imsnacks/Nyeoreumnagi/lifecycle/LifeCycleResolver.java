@@ -19,8 +19,8 @@ public class LifeCycleResolver {
         long myCropAge = ChronoUnit.DAYS.between(myCrop.getGerminationTime(), requestDateTime);
         for (LifeCycle lifeCycle : lifeCyclesOrderByStep) {
             myCropAge -= lifeCycle.getDuration();
+            nowLifeCycleId = lifeCycle.getId();
             if (myCropAge <= 0) {
-                nowLifeCycleId = lifeCycle.getId();
                 return nowLifeCycleId;
             }
         }
