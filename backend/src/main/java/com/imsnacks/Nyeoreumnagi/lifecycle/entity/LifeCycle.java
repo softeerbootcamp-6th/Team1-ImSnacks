@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.work.entity;
 
+import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCyclePeriod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

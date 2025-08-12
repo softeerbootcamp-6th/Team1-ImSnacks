@@ -2,6 +2,7 @@ package com.imsnacks.Nyeoreumnagi.work.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycle;
 
 @Entity
 public class LifeCycleAndRecommendedWork {

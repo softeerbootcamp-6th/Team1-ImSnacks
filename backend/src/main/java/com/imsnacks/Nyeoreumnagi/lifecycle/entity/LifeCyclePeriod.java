@@ -1,4 +1,4 @@
-package com.imsnacks.Nyeoreumnagi.work.entity;
+package com.imsnacks.Nyeoreumnagi.lifecycle.entity;
 
 public enum LifeCyclePeriod {
     EARLY,
