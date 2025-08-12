@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { gradientStyles } from '@/styles/gradientStyles';
 import { css } from '@emotion/react';
+import NavBar from './navBar/NavBar';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const isWeatherPage = window.location.pathname === '/weather-board';
@@ -17,14 +18,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
           : gradientStyles.backgroundAfternoonClear}
       `}
     >
-      {/* <NavBar isWeatherPage={isWeatherPage} /> */}
+      <NavBar isWeatherPage={isWeatherPage} />
       <main
-        // css={css`
-        //   max-width: 1328px;
-        // `}
         css={css`
-          width: 100%;
+          max-width: 1328px;
         `}
+        // css={css`
+        //   width: 100%;
+        // `}
       >
         {children}
       </main>
