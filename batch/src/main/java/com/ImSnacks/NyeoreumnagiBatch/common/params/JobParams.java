@@ -1,6 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.common.params;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiRequestValues;
+import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.enums.UVApiRequestValue;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 
@@ -11,10 +12,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-public class WeatherJobParams {
+public class JobParams {
     private static final List<Integer> BASE_TIMES = Arrays.asList(2, 5, 8, 11, 14, 17, 20, 23);
 
-    public static JobParameters get() {
+    public static JobParameters getWeatherJobParam() {
         LocalDate nowDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
         int nowHour = LocalTime.now().getHour();
         if (nowHour < 2) { // 00시, 01시의 경우, 전날 23시를 base로 한다.
@@ -27,6 +28,14 @@ public class WeatherJobParams {
         return new JobParametersBuilder()
                 .addString(ApiRequestValues.BASE_DATE.toString(), baseDate)
                 .addString(ApiRequestValues.BASE_TIME.toString(), baseTime)
+                .toJobParameters();
+    }
+
+    public static JobParameters getUVJobParam(){
+        LocalDate nowDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        String baseDate = nowDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        return new JobParametersBuilder()
+                .addString(UVApiRequestValue.TIME.toString(), baseDate + "00")
                 .toJobParameters();
     }
 
