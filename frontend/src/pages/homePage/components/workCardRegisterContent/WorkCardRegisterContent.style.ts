@@ -40,6 +40,10 @@ const WorkCardTime = css`
   color: ${Assets.Text.WorkCard.Default.Body};
 `;
 
+const CompletedTextStyle = css`
+  text-decoration-line: line-through;
+`;
+
 export default {
   WorkCardContent,
   WorkCardColorBar,
@@ -47,4 +51,5 @@ export default {
   WorkCardTitle,
   WorkCardCropName,
   WorkCardTime,
+  CompletedTextStyle,
 };
