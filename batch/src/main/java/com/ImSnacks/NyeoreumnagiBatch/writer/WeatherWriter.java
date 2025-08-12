@@ -4,6 +4,7 @@ import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRisk;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherRiskRepository;
+import lombok.extern.slf4j.Slf4j;
 import com.ImSnacks.NyeoreumnagiBatch.writer.repository.ShortTermWeatherForecastRepository;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 @StepScope
 public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecutionListener {
@@ -33,6 +35,7 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
 
     @Override
     public void write(Chunk<? extends ShortTermWeatherDto> chunk) {
+        log.info("writing data...");
         List<ShortTermWeatherForecast> forecasts = new ArrayList<>();
         List<WeatherRisk> weatherRisks = new ArrayList<>();
 
@@ -47,6 +50,8 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
                         .temperature(weatherForecastByTime.getTemperature())
                         .humidity(weatherForecastByTime.getHumidity())
                         .windSpeed(weatherForecastByTime.getWindSpeed())
+                        .snow(weatherForecastByTime.getSnow())
+                        .skyStatus(weatherForecastByTime.getSkyStatus())
                         .build());
             });
 
