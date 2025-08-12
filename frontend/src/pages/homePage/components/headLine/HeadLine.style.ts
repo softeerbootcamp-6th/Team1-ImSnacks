@@ -1,9 +1,9 @@
+import { css } from '@emotion/react';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { DropShadow } from '@/styles/effects';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
-import { css } from '@emotion/react';
 
 const Headline = css`
   display: flex;

@@ -1,5 +1,5 @@
 import WorkBlocksProvider from '@/contexts/WorkBlocksProvider';
-import HeadLine from '../components/headLine/HeadLine';
+import Headline from '../components/headline/Headline';
 import MainGraph from '../components/mainGraph/MainGraph';
 import S from './DesktopHomePage.style';
 import WorkContainer from '../components/workContainer/WorkContainer';
@@ -8,7 +8,7 @@ import RegisterWorkContainer from '../components/registerWorkContainer/RegisterW
 const DesktopHomePage = () => {
   return (
     <div css={S.DesktopHomePage}>
-      <HeadLine />
+      <Headline />
       <MainGraph />
       <WorkBlocksProvider>
         <WorkContainer />

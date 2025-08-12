@@ -1,9 +1,9 @@
 import { getSubjectParticle } from '@/utils/koreanParticleUtil';
-import S from './HeadLine.style';
+import S from './Headline.style';
 import { LessCloudy } from '@/assets/iconComponents';
 import { css } from '@emotion/react';
 
-const HeadLine = () => {
+const Headline = () => {
   const nickName = '밤비';
   const data = {
     hasWeatherRisk: true,
@@ -49,4 +49,4 @@ const HeadLine = () => {
     </div>
   );
 };
-export default HeadLine;
+export default Headline;
