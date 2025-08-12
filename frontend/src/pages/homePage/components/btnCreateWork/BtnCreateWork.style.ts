@@ -33,7 +33,7 @@ const BtnCreateWorkDisabled = css`
   border: 1px dashed ${GrayScale.White};
 `;
 
-const BtnCreateWorkBase = css`
+const BtnCreateWorkBase = (isDragging: boolean = false) => css`
   ${Typography.Body_S_400}
   ${SizeSmall}
   border-radius: ${BorderRadius.Base.S_Hard};
@@ -43,11 +43,19 @@ const BtnCreateWorkBase = css`
   justify-content: center;
   border: 0.5px solid ${GrayScale.G300};
   transition: all 0.1s ease-in-out;
-  cursor: pointer;
+  cursor: ${isDragging ? 'grabbing' : 'grab'};
+  user-select: none;
+  opacity: ${isDragging ? 0.7 : 1};
+  transform: ${isDragging ? 'scale(0.95)' : 'scale(1)'};
+  position: relative;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
-export const BtnCreateWork = css`
-  ${BtnCreateWorkBase}
+export const BtnCreateWork = (isDragging: boolean = false) => css`
+  ${BtnCreateWorkBase(isDragging)}
   ${BtnCreateWorkDefault}
 
   &:hover {

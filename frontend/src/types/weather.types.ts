@@ -21,5 +21,5 @@ export const WEATHER_CONDITIONS = {
   CLOUDY_NIGHT: 'CLOUDY_NIGHT',
 } as const;
 
-export type WeatherConditions =
+export type WeatherConditionsType =
   (typeof WEATHER_CONDITIONS)[keyof typeof WEATHER_CONDITIONS];

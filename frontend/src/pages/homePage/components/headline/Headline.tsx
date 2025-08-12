@@ -1,14 +1,12 @@
 import { getSubjectParticle } from '@/utils/koreanParticleUtil';
-import S from './HeadLine.style';
+import S from './Headline.style';
 import { LessCloudy } from '@/assets/iconComponents';
 import { css } from '@emotion/react';
 
-const HeadLine = () => {
+const Headline = () => {
   const nickName = '밤비';
   const data = {
     hasWeatherRisk: true,
-    startHour: 11,
-    endHour: 15,
     message: '오전 11시부터 오후 3시까지 우박',
   };
 
@@ -49,4 +47,4 @@ const HeadLine = () => {
     </div>
   );
 };
-export default HeadLine;
+export default Headline;

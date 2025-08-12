@@ -1,10 +1,9 @@
 import WorkChip from '../workChip/WorkChip';
 import { WORK_CHIP_TYPES } from '@/types/workChip.type';
 import S from './WorkCardWeb.style';
-import type { CropNameType } from '@/types/crop.type';
 
 interface WorkCardWebProps {
-  cropName: CropNameType;
+  cropName: string;
   workName: string;
   workTime: string;
   isCompleted: boolean;
@@ -28,7 +27,7 @@ const WorkCardWeb = ({
       </div>
       <WorkChip
         chipType={
-          isCompleted ? WORK_CHIP_TYPES.COMPLETE : WORK_CHIP_TYPES.INCOMPLETE
+          isCompleted ? WORK_CHIP_TYPES.COMPLETED : WORK_CHIP_TYPES.INCOMPLETED
         }
       />
     </div>

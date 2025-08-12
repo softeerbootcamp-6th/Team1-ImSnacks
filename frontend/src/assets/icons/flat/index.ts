@@ -23,3 +23,5 @@ export { default as IC24GermsIcon } from './IC24Germs.svg?react';
 export { default as IC24HeavyRainIcon } from './IC24HeavyRain.svg?react';
 export { default as IC24ArrowLeftIcon } from './IC24ArrowLeft.svg?react';
 export { default as IC24ArrowRightIcon } from './IC24ArrowRight.svg?react';
+export { default as WindArrow } from './WindArrow.svg?react';
+export { default as SunEffect } from './SunEffect.svg?react';
