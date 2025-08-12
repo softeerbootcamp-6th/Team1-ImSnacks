@@ -1,6 +1,7 @@
 import S from './WorkCardRegister.style';
 import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
 import useVisibility from '@/hooks/useVisibility';
+import { css } from '@emotion/react';
 
 interface WorkCardRegisterProps {
   id?: number;
@@ -34,14 +35,28 @@ const WorkCardRegister = ({
       onMouseEnter={show}
       onMouseLeave={hide}
     >
-      <WorkCardRegisterContent
-        cropName={cropName}
-        workName={workName}
-        workTime={workTime}
-        isVisible={isVisible}
-        isDragging={isDragging}
-        onDelete={onDelete}
-      />
+      <div
+        css={css`
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        `}
+      >
+        <WorkCardRegisterContent
+          cropName={cropName}
+          workName={workName}
+          workTime={workTime}
+        />
+        {isVisible && !isDragging && (
+          <button
+            onClick={onDelete}
+            onMouseDown={e => e.stopPropagation()}
+            css={S.WorkCardDeleteButton}
+          >
+            삭제
+          </button>
+        )}
+      </div>
     </div>
   );
 };

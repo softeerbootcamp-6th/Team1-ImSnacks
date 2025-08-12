@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
-import { GrayScale } from '@/styles/colors';
+import { ColorStatus, GrayScale } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
+import { Typography } from '@/styles/typography';
 
 interface WorkCardContainerProps {
   isDragging: boolean;
@@ -45,6 +46,13 @@ const WorkCardContainer = ({
   }
 `;
 
+const WorkCardDeleteButton = css`
+  color: ${ColorStatus.Global.Red};
+  ${Typography.Caption_S}
+  font-weight: 700;
+`;
+
 export default {
   WorkCardContainer,
+  WorkCardDeleteButton,
 };
