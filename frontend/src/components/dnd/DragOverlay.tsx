@@ -29,7 +29,7 @@ const DragOverlay = ({
   const adjustedPosition = getAdjustedPosition();
 
   return createPortal(
-    <div css={[S.DragOverlay(adjustedPosition)]}>{children}</div>,
+    <div css={S.DragOverlay(adjustedPosition)}>{children}</div>,
     document.body
   );
 };

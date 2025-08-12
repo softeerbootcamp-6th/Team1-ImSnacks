@@ -59,7 +59,11 @@ const WorkCardRegister = ({
           </div>
         </div>
         {isVisible && !isDragging && (
-          <button onClick={onDelete} onMouseDown={e => e.stopPropagation()}>
+          <button
+            onClick={onDelete}
+            onMouseDown={e => e.stopPropagation()}
+            css={S.WorkCardDeleteButton}
+          >
             삭제
           </button>
         )}
