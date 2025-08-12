@@ -48,7 +48,7 @@ public final class Briefing {
             final LocalDateTime now = LocalDateTime.now();
 
             // 1. 시작 시각이 현재 시각과 가깝다
-            // 차이가 1시간 이내라면 특보 우선 순위를 따른다.
+            // r1와 r2의 각 시작시간의 차이가 1시간 이내라면 특보 우선 순위를 따른다.
             final long betweenR1 = Math.abs(ChronoUnit.MINUTES.between(now, r1.getStartTime()));
             final long betweenR2 = Math.abs(ChronoUnit.MINUTES.between(now, r2.getStartTime()));
             if (betweenR1 != betweenR2 && Math.abs(ChronoUnit.HOURS.between(r1.getStartTime(), r2.getStartTime())) > 1) {
