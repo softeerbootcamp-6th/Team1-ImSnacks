@@ -54,4 +54,8 @@ public record UVReaderResponseDto(
             String h72,
             String h75
     ){}
+
+    public Item getItems() {
+            return response.body.items.get(0);
+    }
 }
