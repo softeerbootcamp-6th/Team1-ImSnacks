@@ -40,4 +40,10 @@ public class ShortTermWeatherForecast {
 
     @Column(name = "wind_speed", nullable = false)
     private double windSpeed;
+
+    @Column(name = "snow", nullable = false)
+    private double snow;
+
+    @Column(name = "sky_status", nullable = false)
+    private int skyStatus;
 }

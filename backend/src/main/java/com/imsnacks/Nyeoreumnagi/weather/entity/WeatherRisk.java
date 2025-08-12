@@ -23,8 +23,12 @@ public class WeatherRisk {
     private LocalDate fcstDate; //지워야 함
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @Column(name = "nx")
     private int nx;
+    @Column(name = "ny")
     private int ny;
     @Enumerated(EnumType.STRING)
     private WeatherRiskType type;
+    @Column(name = "job_execution_id")
+    private Long jobExecutionId;
 }

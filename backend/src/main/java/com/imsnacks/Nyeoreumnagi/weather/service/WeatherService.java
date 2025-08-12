@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.weather.service;
 
+import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
@@ -7,10 +8,12 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefingResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
+import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
@@ -78,6 +81,7 @@ public class WeatherService {
     private final MemberRepository memberRepository;
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final WeatherRiskRepository weatherRiskRepository;
+    private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric){
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
@@ -122,7 +126,31 @@ public class WeatherService {
         return new GetFcstRiskResponse(weatherRiskDtos);
     }
 
-    // 브리핑 api
+    public GetWeatherConditionResponse getWeatherCondition(Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
+        Farm farm = member.getFarm();
+
+        if(farm == null){
+            throw new MemberException(NO_FARM_INFO);
+        }
+
+        int nx = farm.getNx();
+        int ny = farm.getNy();
+
+        int nowTime = LocalDateTime.now().getHour();
+        ShortTermWeatherForecast weatherInfoNearest = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
+                .stream()
+                .filter(weather -> weather.getFcstTime() <= nowTime)
+                .max(Comparator.comparingInt(ShortTermWeatherForecast::getFcstTime))
+                .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
+
+        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findByNxAndNy(nx, ny);
+        WeatherCondition weatherCondition = weatherInfoNearest.getWeatherCondition(sunriseSunSetTime);
+        int temperature = weatherInfoNearest.getTemperature();
+
+        return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature);
+    }
+
     public GetWeatherBriefingResponse getWeatherBriefing(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
         Farm farm = member.getFarm();
