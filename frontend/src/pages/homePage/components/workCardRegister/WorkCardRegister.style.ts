@@ -8,30 +8,25 @@ import type { CropNameType } from '@/types/crop.type';
 
 interface WorkCardContainerProps {
   isDragging: boolean;
-  x: number;
-  y: number;
   width?: number;
 }
 
 const WorkCardContainer = ({
   isDragging,
-  x = 0,
-  y = 0,
   width,
 }: WorkCardContainerProps) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   gap: ${Spacing.Spacing300};
   padding: ${Spacing.Spacing200} ${Spacing.Spacing300};
   border-radius: ${BorderRadius.Base.S_Hard};
   background-color: ${GrayScale.White};
   border: 1px solid ${GrayScale.G200};
   width: ${width ? `${width}px` : 'auto'};
-  transform: translate(${x}px, ${y}px);
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  opacity: ${isDragging ? 0.5 : 1};
   transition: ${isDragging ? 'none' : 'all 0.2s ease'};
   z-index: ${isDragging ? 1000 : 1};
   user-select: none;
@@ -88,6 +83,36 @@ const WorkCardDeleteButton = css`
   font-weight: 700;
 `;
 
+const WorkCardResizeHandle = css`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  cursor: ew-resize;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${GrayScale.G300};
+  }
+
+  &:active {
+    background-color: ${GrayScale.G400};
+  }
+`;
+
+const WorkCardResizeHandleLeft = css`
+  ${WorkCardResizeHandle}
+  left: 0;
+  border-radius: ${BorderRadius.Base.S_Hard} 0 0 ${BorderRadius.Base.S_Hard};
+`;
+
+const WorkCardResizeHandleRight = css`
+  ${WorkCardResizeHandle}
+  right: 0;
+  border-radius: 0 ${BorderRadius.Base.S_Hard} ${BorderRadius.Base.S_Hard} 0;
+`;
+
 export default {
   WorkCardContainer,
   WorkCardContent,
@@ -97,4 +122,6 @@ export default {
   WorkCardCropName,
   WorkCardTime,
   WorkCardDeleteButton,
+  WorkCardResizeHandleLeft,
+  WorkCardResizeHandleRight,
 };

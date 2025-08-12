@@ -23,6 +23,11 @@ const WorkContainer = () => {
     null
   );
 
+  // 드래그 중인 블록
+  const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
+    null
+  );
+
   useEffect(() => {
     latestBlocksRef.current = workBlocks;
   }, [workBlocks]);
@@ -38,7 +43,17 @@ const WorkContainer = () => {
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
     getItemPosition: block => block.position,
-    onPositionChange: updated => updateWorkBlocks(updated),
+    onPositionChange: updated => {
+      //드래그 중인 블록만 업데이트
+      if (draggingBlock) {
+        const updatedBlock = updated.find(
+          block => block.id === draggingBlock.id
+        );
+        if (updatedBlock) {
+          setDraggingBlock(updatedBlock);
+        }
+      }
+    },
   });
 
   const { checkAndRevert } = useRevertPosition<WorkBlockType>({
@@ -64,6 +79,12 @@ const WorkContainer = () => {
     },
   });
 
+  const handleStartDrag = (e: React.MouseEvent, block: WorkBlockType) => {
+    setInitialPosition(block.position);
+    setDraggingBlock(block);
+    startDrag(e, block.id, workBlocks);
+  };
+
   const handleEndDrag = () => {
     const draggingId = draggedItemRef.current?.id;
     if (draggingId !== null && draggingId !== undefined) {
@@ -72,7 +93,32 @@ const WorkContainer = () => {
         checkAndRevert(rect, scrollOffset);
       }
     }
+
+    // 드래그가 끝나면 임시 상태를 실제 workBlocks에 반영
+    if (draggingBlock) {
+      const updatedBlocks = workBlocks.map(block =>
+        block.id === draggingBlock.id ? draggingBlock : block
+      );
+      updateWorkBlocks(updatedBlocks);
+      setDraggingBlock(null);
+    }
+
     endDrag();
+  };
+
+  const handleResize = (blockId: number, newBlock: WorkBlockType) => {
+    if (draggingBlock && draggingBlock.id === blockId) {
+      // 드래그 중일 때는 임시 상태만 업데이트
+      console.log('is dragging');
+      setDraggingBlock(newBlock);
+    } else {
+      // 드래그 중이 아닐 때는 즉시 업데이트
+      console.log('is not dragging');
+      const updatedBlocks = workBlocks.map(b =>
+        b.id === blockId ? newBlock : b
+      );
+      updateWorkBlocks(updatedBlocks);
+    }
   };
 
   return (
@@ -115,57 +161,61 @@ const WorkContainer = () => {
           }}
         >
           {workBlocks.map(block => {
-            const { id, workName, cropName, workTime, width, position } = block;
-            const overlayPosition = {
-              x: position.x,
-              y: position.y,
-            };
+            const { id, position } = block;
+            const isCurrentlyDragging =
+              isItemDragging(id) || isRevertingItemId === id;
 
-            return (
-              <>
-                {(isItemDragging(id) || isRevertingItemId === id) && (
-                  <DragOverlay
-                    key={`overlay-${id}`}
-                    position={overlayPosition}
-                    containerRef={containerRef}
-                    scrollOffset={scrollOffset}
-                  >
-                    <WorkCardRegister
-                      id={id}
-                      cropName={cropName}
-                      workName={workName}
-                      workTime={workTime}
-                      isDragging={isDragging}
-                      width={width}
-                    />
-                  </DragOverlay>
-                )}
-                <div
-                  css={[
-                    DragOverlayStyle.DragOverlay({
-                      x: position.x,
-                      y: position.y,
-                    }),
-                    css`
-                      position: absolute;
-                    `,
-                  ]}
-                  onMouseDown={e => {
-                    setInitialPosition(block.position);
-                    startDrag(e, id, workBlocks);
-                  }}
+            // 드래그 중인 블록은 DragOverlay만 렌더링
+            if (isCurrentlyDragging) {
+              const overlayPosition = {
+                x:
+                  draggingBlock?.id === id
+                    ? draggingBlock.position.x
+                    : position.x,
+                y:
+                  draggingBlock?.id === id
+                    ? draggingBlock.position.y
+                    : position.y,
+              };
+
+              return (
+                <DragOverlay
+                  key={`overlay-${id}`}
+                  position={overlayPosition}
+                  containerRef={containerRef}
+                  scrollOffset={scrollOffset}
                 >
                   <WorkCardRegister
-                    id={id}
-                    cropName={block.cropName}
-                    workName={workName}
-                    workTime={workTime}
-                    isDragging={isItemDragging(id)}
-                    width={width}
+                    block={draggingBlock?.id === id ? draggingBlock : block}
+                    isDragging={isDragging}
                     onDelete={() => removeWorkBlock(id)}
+                    onResize={newBlock => handleResize(id, newBlock)}
                   />
-                </div>
-              </>
+                </DragOverlay>
+              );
+            }
+
+            return (
+              <div
+                key={id}
+                css={[
+                  DragOverlayStyle.DragOverlay({
+                    x: position.x,
+                    y: position.y,
+                  }),
+                  css`
+                    position: absolute;
+                  `,
+                ]}
+                onMouseDown={e => handleStartDrag(e, block)}
+              >
+                <WorkCardRegister
+                  block={block}
+                  isDragging={false}
+                  onDelete={() => removeWorkBlock(id)}
+                  onResize={newBlock => handleResize(id, newBlock)}
+                />
+              </div>
             );
           })}
           <div
