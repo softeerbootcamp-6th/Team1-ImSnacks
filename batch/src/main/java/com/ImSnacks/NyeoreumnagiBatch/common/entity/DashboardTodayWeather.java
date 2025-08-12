@@ -1,9 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalTime;
 
@@ -11,8 +9,10 @@ import java.time.LocalTime;
 @Table(name = "DashboardTodayWeather")
 @IdClass(DashboardTodayWeatherId.class)
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DashboardTodayWeather {
     @Id
     private int nx;
