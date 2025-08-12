@@ -25,10 +25,12 @@ const WorkCardRegister = ({
 }: WorkCardRegisterProps) => {
   const { show, hide, isVisible } = useVisibility();
   const [newWidth, setNewWidth] = useState(block.width);
+  const [isResizing, setIsResizing] = useState(false);
 
   const { handleResizeStart } = useResize({
     onResize: newBlock => {
       setNewWidth(newBlock.width);
+      setIsResizing(true);
       onResize?.(newBlock);
     },
   });
@@ -45,6 +47,7 @@ const WorkCardRegister = ({
         <div
           css={S.WorkCardResizeHandleLeft}
           onMouseDown={e => handleResizeStart(e, block, 'left')}
+          onMouseUp={() => setIsResizing(false)}
         />
       )}
 
@@ -53,6 +56,7 @@ const WorkCardRegister = ({
         <div
           css={S.WorkCardResizeHandleRight}
           onMouseDown={e => handleResizeStart(e, block, 'right')}
+          onMouseUp={() => setIsResizing(false)}
         />
       )}
 
@@ -77,7 +81,7 @@ const WorkCardRegister = ({
             <div css={S.WorkCardTime}>{block.workTime}</div>
           </div>
         </div>
-        {isVisible && !isDragging && (
+        {isVisible && !isResizing && !isDragging && (
           <button
             onClick={onDelete}
             onMouseDown={e => e.stopPropagation()}
