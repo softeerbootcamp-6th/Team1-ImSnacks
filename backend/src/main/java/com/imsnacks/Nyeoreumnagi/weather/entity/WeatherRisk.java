@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -19,7 +20,6 @@ public class WeatherRisk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long weatherRiskId;
-    private Long jobExecutionId;
     private LocalDate fcstDate; //지워야 함
     private LocalDateTime startTime;
     private LocalDateTime endTime;
