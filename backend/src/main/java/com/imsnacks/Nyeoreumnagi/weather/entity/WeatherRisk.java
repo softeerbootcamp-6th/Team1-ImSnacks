@@ -7,7 +7,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@ToString
 @Entity
 @Table(name = "WeatherRisk")
 @Getter
