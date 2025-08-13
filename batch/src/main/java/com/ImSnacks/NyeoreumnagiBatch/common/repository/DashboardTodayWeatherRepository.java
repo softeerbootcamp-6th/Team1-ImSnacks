@@ -11,9 +11,12 @@ import java.util.List;
 
 public interface DashboardTodayWeatherRepository extends JpaRepository<DashboardTodayWeather, DashboardTodayWeatherId> {
     @Query("""
-        select d
-        from DashboardTodayWeather d
-        where (d.nx, d.ny) in :coords
-    """)
-    List<DashboardTodayWeather> findByNxNyIn(@Param("coords") List<NxNy> coords);
+   select d
+   from DashboardTodayWeather d
+   where d.nx in :nxList and d.ny in :nyList
+""")
+    List<DashboardTodayWeather> findByNxInAndNyIn(
+            @Param("nxList") List<Integer> nxList,
+            @Param("nyList") List<Integer> nyList
+    );
 }

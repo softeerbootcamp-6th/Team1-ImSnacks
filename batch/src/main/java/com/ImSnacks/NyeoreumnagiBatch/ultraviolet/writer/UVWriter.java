@@ -2,7 +2,6 @@ package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.writer;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.DashboardTodayWeather;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.DashboardTodayWeatherRepository;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.processor.dto.UVProcessorResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +25,15 @@ public class UVWriter implements ItemWriter<UVProcessorResponseDto> {
         log.info("Writing UV started");
 
         List<? extends UVProcessorResponseDto> items = chunk.getItems();
-        List<NxNy> nxNyList = items.stream()
-                .map(i -> new NxNy(i.nx(), i.ny()))
+        List<Integer> nxList = items.stream()
+                .map(i -> i.nx())
+                .toList();
+        List<Integer> nyList = items.stream()
+                .map(i -> i.ny())
                 .toList();
 
         Map<NxNy, DashboardTodayWeather> existingMap = dashboardTodayWeatherRepository
-                .findByNxNyIn(nxNyList).stream()
+                .findByNxInAndNyIn(nxList, nyList).stream()
                 .collect(Collectors.toMap(
                         e -> new NxNy(e.getNx(), e.getNy()),
                         e -> e
