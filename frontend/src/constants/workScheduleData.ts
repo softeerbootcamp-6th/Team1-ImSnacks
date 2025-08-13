@@ -61,7 +61,7 @@ export const WORK_SCHEDULE_DATA = [
       {
         id: 6,
         cropName: '단감',
-        workName: '가을 거름',
+        workName: '병해충 방제',
         workTime: '06:20 - 08:10',
         startTime: '2025-08-07T06:20:00',
         endTime: '2025-08-07T08:10:00',

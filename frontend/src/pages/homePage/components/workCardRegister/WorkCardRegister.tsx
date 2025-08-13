@@ -94,6 +94,7 @@ const WorkCardRegister = ({
         `}
       >
         <WorkCardRegisterContent
+          width={newWidth}
           cropName={block.cropName}
           workName={block.workName}
           workTime={block.workTime}
@@ -104,7 +105,7 @@ const WorkCardRegister = ({
             onMouseDown={e => e.stopPropagation()}
             css={S.WorkCardDeleteButton}
           >
-            삭제
+            ×
           </button>
         )}
       </div>
