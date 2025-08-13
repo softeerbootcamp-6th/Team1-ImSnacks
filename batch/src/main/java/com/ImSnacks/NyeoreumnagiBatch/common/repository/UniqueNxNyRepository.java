@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface UniqueNxNyRepository extends JpaRepository<UniqueNxNy, NxNyId> {
     @Query("SELECT u FROM UniqueNxNy u")
-    List<UniqueNxNy> findAreaCodes();
+    List<UniqueNxNy> findUniqueNxNy();
 }
