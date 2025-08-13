@@ -23,7 +23,7 @@ api:
   service:
     key: ${OPEN_API_KEY}
     uv-key: ${UV_OPEN_API_KEY}
-    sunriseset: ${SUNRISESET_API_KEY}
+    sunriseset-key: ${SUNRISESET_API_KEY}
 
 ---
 
