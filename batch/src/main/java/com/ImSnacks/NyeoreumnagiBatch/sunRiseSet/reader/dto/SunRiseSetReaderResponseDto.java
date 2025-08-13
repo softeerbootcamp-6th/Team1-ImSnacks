@@ -55,4 +55,12 @@ public record SunRiseSetReaderResponseDto (
             String sunset,
             String suntransit
     ) {}
+
+    public String getSunRise(){
+        return body.items.item.get(0).sunrise;
+    }
+
+    public String getSunset(){
+        return body.items.item.get(0).sunset;
+    }
 }
