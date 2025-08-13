@@ -1,6 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.work.service;
 
 import com.imsnacks.Nyeoreumnagi.lifecycle.LifeCycleResolver;
+import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
@@ -9,7 +10,6 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse.RecommendedWorksResponse;
-import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
