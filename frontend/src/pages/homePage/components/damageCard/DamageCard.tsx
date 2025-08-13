@@ -1,8 +1,5 @@
 import { DAMAGE_GRAPHIC } from '@/constants/damageGraphic';
-import { Assets } from '@/styles/colors';
-import { Typography } from '@/styles/typography';
 import type { PestDamagesType, WeatherDamagesType } from '@/types/damage.type';
-import { css } from '@emotion/react';
 import S from './DamageCard.style';
 
 interface DamageCardProps extends React.HTMLAttributes<HTMLDivElement> {
