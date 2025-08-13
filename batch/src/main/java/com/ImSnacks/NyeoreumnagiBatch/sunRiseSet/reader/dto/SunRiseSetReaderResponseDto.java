@@ -6,8 +6,11 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
 
 public record SunRiseSetReaderResponseDto (
+        @JacksonXmlProperty(localName = "script")
         Script[] script,
+        @JacksonXmlProperty(localName = "header")
         Header header,
+        @JacksonXmlProperty(localName = "body")
         Body body
 ){
     public record Script() {} // <script/> 빈 태그
@@ -20,6 +23,7 @@ public record SunRiseSetReaderResponseDto (
     ) {}
 
     public record Body(
+            @JacksonXmlProperty(localName = "items")
             Items items,
             @JacksonXmlProperty(localName = "numOfRows")
             int numOfRows,
