@@ -1,12 +1,13 @@
 import { css } from '@emotion/react';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { Opacity } from '@/styles/colors';
+import { BorderRadius } from '@/styles/borderRadius';
 
 const DamagePestArrowButton = css`
   width: 68px;
   height: 218px;
   flex-shrink: 0;
-  border-radius: var(--Border-radius, 16px);
+  border-radius: ${BorderRadius.Base.Soft};
   ${customBorderGradientStyles.gradientBorder};
   background: ${Opacity.White.W200};
 
