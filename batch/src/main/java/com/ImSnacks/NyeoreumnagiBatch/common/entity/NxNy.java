@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.writer;
+package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

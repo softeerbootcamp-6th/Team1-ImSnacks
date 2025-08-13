@@ -1,6 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.writer;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.DashboardTodayWeather;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.DashboardTodayWeatherRepository;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.processor.dto.UVProcessorResponseDto;
 import lombok.RequiredArgsConstructor;
