@@ -7,9 +7,6 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
@@ -87,7 +84,7 @@ class WeatherServiceTest {
         given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
 
         // when
-        GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
+        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph response = weatherService.getWeatherGraph(memberId, metric);
 
         // then
         assertThat(response.weatherMetric()).isEqualTo(metric);
@@ -140,8 +137,8 @@ class WeatherServiceTest {
                 .thenReturn(Arrays.asList(riskA, riskB, riskC));
 
         //when
-        GetFcstRiskResponse response = weatherService.getWeatherRisk(memberId);
-        List<GetFcstRiskResponse.WeatherRiskDto> risks = response.items();
+        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk response = weatherService.getWeatherRisk(memberId);
+        List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto> risks = response.items();
 
         //then
         assertThat(risks.size()).isEqualTo(4);
@@ -178,7 +175,7 @@ class WeatherServiceTest {
         when(dashboardTodayWeatherRepository.findByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
 
         // when
-        GetWeatherConditionResponse response = weatherService.getWeatherCondition(memberId);
+        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherCondition response = weatherService.getWeatherCondition(memberId);
 
         // then
         assertThat(response.weatherCondition()).isEqualTo(WeatherCondition.SUNNY.toString());

@@ -6,7 +6,6 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefingResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
@@ -87,10 +86,10 @@ class WeatherBriefingTest {
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
 
         // when
-        final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
+        final com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing actual = service.getWeatherBriefing(memberId);
 
         // then
-        final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(false, "");
+        final com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing expected = new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing(false, "");
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -123,11 +122,11 @@ class WeatherBriefingTest {
         given(riskRepo.findByNxAndNyWithMaxJobExecutionId(nx, ny)).willReturn(risks);
 
         // when
-        final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
+        final com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing actual = service.getWeatherBriefing(memberId);
 
         // then
         final String msg = Briefing.buildMsg(r);
-        final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(true, msg);
+        final com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing expected = new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing(true, msg);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -162,12 +161,12 @@ class WeatherBriefingTest {
         given(riskRepo.findByNxAndNyWithMaxJobExecutionId(nx, ny)).willReturn(risks);
 
         // when
-        final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
+        final com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing actual = service.getWeatherBriefing(memberId);
 
         // then
         final WeatherRisk 폭우 = risks.get(risks.size() - 1);
         final String msg = Briefing.buildMsg(폭우);
-        final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(true, msg);
+        final com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing expected = new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing(true, msg);
         assertThat(actual).isEqualTo(expected);
     }
 
