@@ -26,6 +26,6 @@ public class SunRiseSetProcessor implements ItemProcessor<SunRiseSetReaderRespon
 
     private LocalTime parseStringToLocalTime(String str) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HHmm");
-        return LocalTime.parse(str, formatter);
+        return LocalTime.parse(str.trim(), formatter);
     }
 }
