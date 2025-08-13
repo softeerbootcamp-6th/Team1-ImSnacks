@@ -3,8 +3,9 @@ import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegister
 import useVisibility from '@/hooks/useVisibility';
 import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
-import { useResize } from '@/pages/homePage/hooks/useResize';
+import { useChangeTimeByResize } from '@/pages/homePage/hooks/useChangeTimeByResize';
 import { css } from '@emotion/react';
+import { useResizeCollision } from '@/hooks/useResizeCollision';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -12,6 +13,10 @@ interface WorkCardRegisterProps {
   onMouseDown?: (e: React.MouseEvent) => void;
   onDelete?: () => void;
   onResize?: (newBlock: WorkBlockType) => void;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
+  scrollOffset?: number;
+  allBlocks?: WorkBlockType[];
+  updateWorkBlocks?: (blocks: WorkBlockType[]) => void;
 }
 
 const WorkCardRegister = ({
@@ -20,22 +25,45 @@ const WorkCardRegister = ({
   onMouseDown,
   onDelete,
   onResize,
+  containerRef,
+  scrollOffset = 0,
+  allBlocks = [],
+  updateWorkBlocks,
 }: WorkCardRegisterProps) => {
   const { show, hide, isVisible } = useVisibility();
-  const [newWidth, setNewWidth] = useState(block.width);
+  const [newWidth, setNewWidth] = useState(block.size.width);
   const [isResizing, setIsResizing] = useState(false);
 
-  const { handleResizeStart } = useResize({
+  const { handleResizeCollision } = useResizeCollision({
+    containerRef,
+    scrollOffset,
+    allBlocks,
+    updateWorkBlocks: updateWorkBlocks || (() => {}),
+  });
+
+  const { handleResizeStart } = useChangeTimeByResize({
     onResize: newBlock => {
-      setNewWidth(newBlock.width);
+      setNewWidth(newBlock.size.width);
       setIsResizing(true);
       onResize?.(newBlock);
     },
   });
 
+  // 리사이징 후 충돌 검사 및 위치 조정
+  const handleResizeEnd = () => {
+    setIsResizing(false);
+    handleResizeCollision(block, newWidth);
+  };
+
   return (
     <div
-      css={S.WorkCardContainer({ isDragging, width: newWidth })}
+      css={S.WorkCardContainer({
+        isDragging,
+        size: {
+          width: newWidth,
+          height: block.size.height,
+        },
+      })}
       onMouseDown={onMouseDown}
       onMouseEnter={show}
       onMouseLeave={hide}
@@ -45,7 +73,7 @@ const WorkCardRegister = ({
         <div
           css={S.WorkCardResizeHandleLeft}
           onMouseDown={e => handleResizeStart(e, block, 'left')}
-          onMouseUp={() => setIsResizing(false)}
+          onMouseUp={handleResizeEnd}
         />
       )}
 
@@ -54,7 +82,7 @@ const WorkCardRegister = ({
         <div
           css={S.WorkCardResizeHandleRight}
           onMouseDown={e => handleResizeStart(e, block, 'right')}
-          onMouseUp={() => setIsResizing(false)}
+          onMouseUp={handleResizeEnd}
         />
       )}
 
@@ -66,6 +94,7 @@ const WorkCardRegister = ({
         `}
       >
         <WorkCardRegisterContent
+          width={newWidth}
           cropName={block.cropName}
           workName={block.workName}
           workTime={block.workTime}
@@ -76,7 +105,7 @@ const WorkCardRegister = ({
             onMouseDown={e => e.stopPropagation()}
             css={S.WorkCardDeleteButton}
           >
-            삭제
+            ×
           </button>
         )}
       </div>
