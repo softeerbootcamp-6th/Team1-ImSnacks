@@ -17,6 +17,7 @@ const WorkContainer = () => {
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
+  const [futurePosition, setFuturePosition] = useState<Position | null>(null);
   const latestBlocksRef = useRef<WorkBlockType[]>(workBlocks);
   const revertAnimationRef = useRef<number | null>(null);
   const [isRevertingItemId, setIsRevertingItemId] = useState<number | null>(
@@ -44,8 +45,100 @@ const WorkContainer = () => {
     onPositionChange: updated => {
       // workBlocks를 직접 업데이트하여 즉시 반영
       updateWorkBlocks(updated);
+
+      // futurePosition 업데이트 - 충돌하지 않는 위치 계산
+      if (draggingBlockId !== null) {
+        const draggedBlock = updated.find(
+          block => block.id === draggingBlockId
+        );
+        if (draggedBlock) {
+          const collisionFreePosition = findCollisionFreePosition(
+            draggedBlock,
+            updated.filter(block => block.id !== draggingBlockId)
+          );
+          setFuturePosition(collisionFreePosition);
+        }
+      }
     },
   });
+
+  // 충돌하지 않는 위치를 찾는 함수
+  const findCollisionFreePosition = (
+    draggedBlock: WorkBlockType,
+    otherBlocks: WorkBlockType[]
+  ): Position => {
+    const { position, size } = draggedBlock;
+    let newPosition = { ...position };
+
+    // 다른 블록들과의 충돌 검사
+    const hasCollision = otherBlocks.some(block => {
+      const otherCenterX = block.position.x + block.size.width / 2;
+      const otherCenterY = block.position.y + block.size.height / 2;
+
+      const draggedCenterX = newPosition.x + size.width / 2;
+      const draggedCenterY = newPosition.y + size.height / 2;
+
+      const distanceX = Math.abs(draggedCenterX - otherCenterX);
+      const distanceY = Math.abs(draggedCenterY - otherCenterY);
+
+      return (
+        distanceX < size.width / 2 + block.size.width / 2 &&
+        distanceY < size.height / 2 + block.size.height / 2
+      );
+    });
+
+    if (hasCollision) {
+      // 충돌이 있으면 가장 가까운 충돌하지 않는 위치 찾기
+      let offset = 10; // 10px씩 이동
+      const maxAttempts = 50; // 최대 시도 횟수
+      let attempts = 0;
+
+      while (hasCollision && attempts < maxAttempts) {
+        // 여러 방향으로 시도
+        const directions = [
+          { x: offset, y: 0 }, // 오른쪽
+          { x: -offset, y: 0 }, // 왼쪽
+          { x: 0, y: offset }, // 아래
+          { x: 0, y: -offset }, // 위
+          { x: offset, y: offset }, // 대각선
+          { x: -offset, y: -offset },
+        ];
+
+        for (const direction of directions) {
+          const testPosition = {
+            x: position.x + direction.x,
+            y: position.y + direction.y,
+          };
+
+          const testHasCollision = otherBlocks.some(block => {
+            const otherCenterX = block.position.x + block.size.width / 2;
+            const otherCenterY = block.position.y + block.size.height / 2;
+
+            const testCenterX = testPosition.x + size.width / 2;
+            const testCenterY = testPosition.y + size.height / 2;
+
+            const testDistanceX = Math.abs(testCenterX - otherCenterX);
+            const testDistanceY = Math.abs(testCenterY - otherCenterY);
+
+            return (
+              testDistanceX < size.width / 2 + block.size.width / 2 &&
+              testDistanceY < size.height / 2 + block.size.height / 2
+            );
+          });
+
+          if (!testHasCollision) {
+            newPosition = testPosition;
+            return newPosition;
+          }
+        }
+
+        offset += 10;
+        attempts++;
+      }
+    }
+
+    return newPosition;
+  };
 
   const { checkAndRevert } = useRevertPosition<WorkBlockType>({
     draggedItem: draggedItemRef.current,
@@ -74,6 +167,7 @@ const WorkContainer = () => {
   const handleStartDrag = (e: React.MouseEvent, block: WorkBlockType) => {
     setInitialPosition(block.position);
     setDraggingBlockId(block.id);
+    setFuturePosition(null); // 드래그 시작 시 초기화
     draggedItemRef.current = block;
     startDrag(e, block.id, workBlocks);
   };
@@ -119,10 +213,9 @@ const WorkContainer = () => {
         });
 
         if (hasCollision) {
-          // 충돌이 있으면 원래 위치로 되돌리기
-          setIsRevertingItemId(draggingId);
-
-          if (initialPosition) {
+          // 충돌이 있으면 futurePosition으로 이동
+          if (futurePosition) {
+            // animateBlock을 사용하여 부드럽게 이동
             animateBlock(
               revertAnimationRef,
               setIsRevertingItemId,
@@ -130,11 +223,27 @@ const WorkContainer = () => {
               updateWorkBlocks,
               draggingId,
               draggingBlock.position,
-              initialPosition
+              futurePosition
             );
+          } else {
+            // futurePosition이 없으면 원래 위치로 되돌리기
+            setIsRevertingItemId(draggingId);
+
+            if (initialPosition) {
+              animateBlock(
+                revertAnimationRef,
+                setIsRevertingItemId,
+                latestBlocksRef,
+                updateWorkBlocks,
+                draggingId,
+                draggingBlock.position,
+                initialPosition
+              );
+            }
           }
 
           setDraggingBlockId(null);
+          setFuturePosition(null);
           endDrag();
           return;
         }
@@ -143,6 +252,7 @@ const WorkContainer = () => {
 
     // 드래그가 끝나면 workBlocks는 이미 업데이트되어 있음
     setDraggingBlockId(null);
+    setFuturePosition(null); // 드래그 종료 시 정리
     endDrag();
   };
 
