@@ -20,7 +20,6 @@ public final class Briefing {
 
     public static String buildMsg(final WeatherRisk risk) {
         assert(risk != null);
-        //TODO 리스크의 시작 시각이 현재 시각 이전인 경우, "<현재 시각>부터"로 전달할 것인가?
         final String from = getClockHourAsString(risk.getStartTime()); // <오전/오후> <1-12>시
         final String to = getClockHourAsString(risk.getEndTime());
 
