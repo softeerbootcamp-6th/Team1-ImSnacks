@@ -17,4 +17,6 @@ public class UniqueNxNy {
     private NxNyId id;
 
     private String areaCode;
+    private Double latitude;
+    private Double longitude;
 }
