@@ -44,7 +44,7 @@ public final class Briefing {
 
         @Override
         public int compare(final WeatherRisk r1, final WeatherRisk r2) {
-            final LocalDateTime now = LocalDateTime.now();
+            final LocalDateTime now = LocalDateTime.now(java.time.ZoneId.of(KST));
 
             // 1. 시작 시각이 현재 시각과 가깝다
             // r1와 r2의 각 시작시간의 차이가 1시간 이내라면 특보 우선 순위를 따른다.
