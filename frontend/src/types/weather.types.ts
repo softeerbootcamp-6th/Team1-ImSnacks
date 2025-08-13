@@ -23,15 +23,3 @@ export const WEATHER_CONDITIONS = {
 
 export type WeatherConditionsType =
   (typeof WEATHER_CONDITIONS)[keyof typeof WEATHER_CONDITIONS];
-
-export const WEATHER_DAMAGES = {
-  SUNBURN: 'SUNBURN',
-  WATER_DEFFICIENCY: 'WATER_DEFFICIENCY',
-  POOR_COLORING: 'POOR_COLORING',
-  FRUIT_CRAKING: 'FRUIT_CRAKING',
-  FRUIT_DROP: 'FRUIT_DROP',
-  FLOWER_DROP: 'FLOWER_DROP',
-} as const;
-
-export type WeatherDamagesType =
-  (typeof WEATHER_DAMAGES)[keyof typeof WEATHER_DAMAGES];
