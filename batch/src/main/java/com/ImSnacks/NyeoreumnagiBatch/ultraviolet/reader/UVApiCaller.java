@@ -10,6 +10,14 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+
 import static com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.enums.UVApiRequestValue.*;
 
 @Component
@@ -17,42 +25,30 @@ public class UVApiCaller {
     @Value("${api.service.uv-key}")
     private String secretKey;
 
-    public UVReaderResponseDto call(String areaCode, String time) throws JsonProcessingException {
-        RestClient restClient = RestClient.create();
+    public UVReaderResponseDto call(String areaCode, String time) throws IOException, InterruptedException {
         String uriString = buildUriString(areaCode, time);
 
-//        return restClient.get()
-//                .uri(uriString)
-//                .retrieve()
-//                .body(UVReaderResponseDto.class);
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uriString))
+                .header("Content-type", "application/json")
+                .GET()
+                .build();
 
-        String rawResponse = restClient.get()
-                .uri(uriString)
-                .header("User-Agent", "Mozilla/5.0 (compatible; OpenApiTester;)")
-                .header("Accept", "application/json") // 혹은 application/xml 등
-                .retrieve()
-                .body(String.class); // 우선 String으로 받음
-
-        System.out.println(uriString);
-        System.out.println("==== Raw Response ====");
-        System.out.println(rawResponse);
-
-        UVReaderResponseDto dto = new ObjectMapper().readValue(rawResponse, UVReaderResponseDto.class);
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        UVReaderResponseDto dto = new ObjectMapper().readValue(response.body(), UVReaderResponseDto.class);
         return dto;
     }
 
-    private String buildUriString(String areaCode, String time){
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(UV_URL.toString());
+    private String buildUriString(String areaCode, String timeStr){
+        String serviceKey = URLEncoder.encode(secretKey, StandardCharsets.UTF_8);
+        String areaNo = URLEncoder.encode(areaCode, StandardCharsets.UTF_8);
+        String time = URLEncoder.encode(timeStr, StandardCharsets.UTF_8);
+        String dataType = URLEncoder.encode("JSON", StandardCharsets.UTF_8);
 
-        UriComponents uri = builder
-                .queryParam(SERVICE_KEY.toString(), secretKey)
-                .queryParam(PAGE_NO.toString(), 1)
-                .queryParam(NUM_OF_ROWS.toString(), 10)
-                .queryParam(DATA_TYPE.toString(), "JSON")
-                .queryParam(AREA_NO.toString(), areaCode)
-                .queryParam(TIME.toString(), time)
-                .build();
-
-        return uri.toUriString();
+        return String.format(
+                UV_URL.toString(),
+                serviceKey, areaNo, time, dataType
+        );
     }
 }
