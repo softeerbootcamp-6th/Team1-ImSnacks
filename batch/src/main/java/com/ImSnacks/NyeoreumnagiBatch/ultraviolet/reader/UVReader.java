@@ -64,7 +64,7 @@ public class UVReader implements ItemReader<UVReaderResponseDtoWithNxNy> {
 
     private void setAreaCodes(){
         if(areaCodes == null) {
-            areaCodes = uniqueNxNyRepository.findAreaCodes();
+            areaCodes = uniqueNxNyRepository.findUniqueNxNy();
         }
     }
 }

@@ -9,7 +9,6 @@ import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.dto.UVReaderResponseDto
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.dto.UVReaderResponseDtoWithNxNy;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
-import org.springframework.batch.item.*;
 
 import java.util.*;
 
@@ -28,8 +27,8 @@ class UVReaderTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), "1100000000"));
-        when(uniqueNxNyRepository.findAreaCodes()).thenReturn(areaCodes);
+        List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), "1100000000", 35.1, 127.1));
+        when(uniqueNxNyRepository.findUniqueNxNy()).thenReturn(areaCodes);
         reader = new UVReader("2025081300", apiCaller, uniqueNxNyRepository);
         // Static 변수 초기화 강제
         try {
