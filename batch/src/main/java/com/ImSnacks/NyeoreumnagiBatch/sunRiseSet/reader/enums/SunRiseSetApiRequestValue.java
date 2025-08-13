@@ -1,7 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.sunRiseSet.reader.enums;
 
 public enum SunRiseSetApiRequestValue {
-    SUNRISESET_URL("https://apis.data.go.kr/B090041/openapi/service/RiseSetInfoService?serviceKey=%s&locdate=%s&latitude=%s&longitude=%s&dnYn=%s"),
+    SUNRISESET_URL("https://apis.data.go.kr/B090041/openapi/service/RiseSetInfoService/getLCRiseSetInfo?serviceKey=%s&locdate=%s&latitude=%s&longitude=%s&dnYn=%s"),
     SERVICE_KEY("serviceKey"),
     LOCDATE("locdate"),
     LATITUDE("latitude"),
