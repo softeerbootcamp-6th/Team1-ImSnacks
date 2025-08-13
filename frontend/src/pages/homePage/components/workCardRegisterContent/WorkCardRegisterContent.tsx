@@ -15,6 +15,7 @@ interface WorkCardRegisterProps {
 }
 
 const WorkCardRegisterContent = ({
+  width,
   cropName,
   workName,
   workTime,
@@ -28,20 +29,33 @@ const WorkCardRegisterContent = ({
       <div css={S.WorkCardInfo}>
         <div
           css={css`
-            ${FlexStyles.flexRow} gap:${Spacing.Spacing300}
+            ${FlexStyles.flexRow} gap:${Spacing.Spacing300};
+            ${width &&
+            width < 120 &&
+            css`
+              word-break: break-all;
+            `}
           `}
         >
-          <div css={[S.WorkCardTitle, isCompleted && S.CompletedTextStyle]}>
-            {workName}
-          </div>
-          <div css={[S.WorkCardCropName, isCompleted && S.CompletedTextStyle]}>
-            {' '}
-            {cropName}
-          </div>
+          {width && width > 100 && (
+            <div css={[S.WorkCardTitle, isCompleted && S.CompletedTextStyle]}>
+              {workName}
+            </div>
+          )}
+          {width && width > 120 && (
+            <div
+              css={[S.WorkCardCropName, isCompleted && S.CompletedTextStyle]}
+            >
+              {' '}
+              {cropName}
+            </div>
+          )}
         </div>
-        <div css={[S.WorkCardTime, isCompleted && S.CompletedTextStyle]}>
-          {workTime}
-        </div>
+        {width && width > 120 && (
+          <div css={[S.WorkCardTime, isCompleted && S.CompletedTextStyle]}>
+            {workTime}
+          </div>
+        )}
       </div>
     </div>
   );

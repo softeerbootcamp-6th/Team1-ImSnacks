@@ -7,7 +7,7 @@ interface UseResizeProps {
   onResize: (newBlock: WorkBlockType) => void;
 }
 
-export const useResize = ({ onResize }: UseResizeProps) => {
+export const useChangeTimeByResize = ({ onResize }: UseResizeProps) => {
   const resizeRef = useRef<{
     startX: number;
     startTime: dayjs.Dayjs;
@@ -23,7 +23,7 @@ export const useResize = ({ onResize }: UseResizeProps) => {
     ) => {
       e.stopPropagation();
 
-      if (!block.width) return;
+      if (!block.size?.width) return;
 
       const startTime = dayjs(block.startTime);
       const endTime = dayjs(block.endTime);
@@ -76,7 +76,7 @@ export const useResize = ({ onResize }: UseResizeProps) => {
           workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
             'HH:mm'
           )}`,
-          width: newWidth,
+          size: { width: newWidth, height: block.size.height },
         });
       };
 
