@@ -37,4 +37,6 @@ public class RecommendedWork {
 
     @Column(name = "strong_wind", nullable = false)
     private boolean strongWind;
+
+    private String recommendation;
 }
