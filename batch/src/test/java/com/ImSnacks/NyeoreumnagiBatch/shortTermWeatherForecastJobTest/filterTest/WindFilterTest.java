@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecastTest.filterTest;
+package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecastJobTest.filterTest;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.dto.VilageFcstItemsDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.utils.weatherRiskFilter.WeatherRiskFilter;

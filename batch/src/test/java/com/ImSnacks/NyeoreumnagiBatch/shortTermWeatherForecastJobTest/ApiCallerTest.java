@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecastTest;
+package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecastJobTest;
 
 import jakarta.transaction.Transactional;
 import org.springframework.boot.test.context.SpringBootTest;

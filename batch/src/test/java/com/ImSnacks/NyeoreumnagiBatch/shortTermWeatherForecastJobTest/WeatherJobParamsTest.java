@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecastTest;
+package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecastJobTest;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.params.JobParams;
 import org.junit.jupiter.api.Test;
