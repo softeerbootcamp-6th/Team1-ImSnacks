@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch;
+package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecastTest;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
