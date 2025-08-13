@@ -17,10 +17,14 @@ public record UVReaderResponseDto(
 
     public record Body(
             String dataType,
-            List<Item> items,
+            Items items,
             int pageNo,
             int numOfRows,
             int totalCount
+    ){}
+
+    public record Items(
+            List<Item> item
     ){}
 
     public record Item(
@@ -56,6 +60,6 @@ public record UVReaderResponseDto(
     ){}
 
     public Item getItems() {
-            return response.body.items.get(0);
+            return response.body.items.item.get(0);
     }
 }
