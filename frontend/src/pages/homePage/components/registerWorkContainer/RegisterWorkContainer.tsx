@@ -31,8 +31,8 @@ const RegisterWorkContainer = () => {
 
     const newWorkBlock: WorkBlockType = {
       id: Date.now(),
-      position: { x, y: 50 },
-      width,
+      position: { x, y: 40 },
+      size: { width, height: 50 },
       cropName: selectedCrop?.name || '기본',
       workName: workName,
       workTime: '09:00 - 10:00',

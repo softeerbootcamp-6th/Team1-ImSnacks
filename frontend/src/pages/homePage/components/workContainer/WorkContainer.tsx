@@ -23,10 +23,8 @@ const WorkContainer = () => {
     null
   );
 
-  // 드래그 중인 블록
-  const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
-    null
-  );
+  // 드래그 중인 블록의 ID만 추적
+  const [draggingBlockId, setDraggingBlockId] = useState<number | null>(null);
 
   useEffect(() => {
     latestBlocksRef.current = workBlocks;
@@ -44,15 +42,8 @@ const WorkContainer = () => {
     getItemId: block => block.id,
     getItemPosition: block => block.position,
     onPositionChange: updated => {
-      //드래그 중인 블록만 업데이트
-      if (draggingBlock) {
-        const updatedBlock = updated.find(
-          block => block.id === draggingBlock.id
-        );
-        if (updatedBlock) {
-          setDraggingBlock(updatedBlock);
-        }
-      }
+      // workBlocks를 직접 업데이트하여 즉시 반영
+      updateWorkBlocks(updated);
     },
   });
 
@@ -82,86 +73,86 @@ const WorkContainer = () => {
 
   const handleStartDrag = (e: React.MouseEvent, block: WorkBlockType) => {
     setInitialPosition(block.position);
-    setDraggingBlock(block);
+    setDraggingBlockId(block.id);
+    draggedItemRef.current = block;
     startDrag(e, block.id, workBlocks);
   };
 
   const handleEndDrag = () => {
-    const draggingId = draggedItemRef.current?.id;
-    if (draggingId !== null && draggingId !== undefined) {
+    const draggingId = draggingBlockId;
+    if (draggingId !== null) {
       const rect = containerRef.current?.getBoundingClientRect();
       if (rect) {
         checkAndRevert(rect, scrollOffset);
       }
     }
 
-    if (draggingBlock) {
-      const {
-        position: { x: blockX, y: blockY },
-        size: { width: blockWidth, height: blockHeight },
-      } = draggingBlock;
+    if (draggingId !== null) {
+      const draggingBlock = workBlocks.find(block => block.id === draggingId);
+      if (draggingBlock) {
+        const {
+          position: { x: blockX, y: blockY },
+          size: { width: blockWidth, height: blockHeight },
+        } = draggingBlock;
 
-      const centerX = blockX + blockWidth / 2;
-      const centerY = blockY + blockHeight / 2;
+        const centerX = blockX + blockWidth / 2;
+        const centerY = blockY + blockHeight / 2;
 
-      // 다른 블록과의 충돌 검사
-      const hasCollision = workBlocks.some(block => {
-        if (block.id === draggingBlock.id) return false;
+        // 다른 블록과의 충돌 검사
+        const hasCollision = workBlocks.some(block => {
+          if (block.id === draggingId) return false;
 
-        const otherCenterX = block.position.x + block.size.width / 2;
-        const otherCenterY = block.position.y + block.size.height / 2;
+          const otherCenterX = block.position.x + block.size.width / 2;
+          const otherCenterY = block.position.y + block.size.height / 2;
 
-        const distanceX = Math.abs(centerX - otherCenterX);
-        const distanceY = Math.abs(centerY - otherCenterY);
+          const distanceX = Math.abs(centerX - otherCenterX);
+          const distanceY = Math.abs(centerY - otherCenterY);
 
-        if (
-          distanceX < blockWidth / 2 + block.size.width / 2 &&
-          distanceY < blockHeight / 2 + block.size.height / 2
-        ) {
-          return true;
+          if (
+            distanceX < blockWidth / 2 + block.size.width / 2 &&
+            distanceY < blockHeight / 2 + block.size.height / 2
+          ) {
+            return true;
+          }
+
+          return false;
+        });
+
+        if (hasCollision) {
+          // 충돌이 있으면 원래 위치로 되돌리기
+          setIsRevertingItemId(draggingId);
+
+          if (initialPosition) {
+            animateBlock(
+              revertAnimationRef,
+              setIsRevertingItemId,
+              latestBlocksRef,
+              updateWorkBlocks,
+              draggingId,
+              draggingBlock.position,
+              initialPosition
+            );
+          }
+
+          setDraggingBlockId(null);
+          endDrag();
+          return;
         }
-
-        return false;
-      });
-
-      if (hasCollision) {
-        // 충돌이 있으면 원래 위치로 되돌리기
-        setIsRevertingItemId(draggingBlock.id);
-
-        if (initialPosition) {
-          animateBlock(
-            revertAnimationRef,
-            setIsRevertingItemId,
-            latestBlocksRef,
-            updateWorkBlocks,
-            draggingBlock.id,
-            draggingBlock.position,
-            initialPosition
-          );
-        }
-        setDraggingBlock(null);
-        endDrag();
-
-        return;
       }
     }
 
-    // 드래그가 끝나면 임시 상태를 실제 workBlocks에 반영
-    if (draggingBlock) {
-      const updatedBlocks = workBlocks.map(block =>
-        block.id === draggingBlock.id ? draggingBlock : block
-      );
-      updateWorkBlocks(updatedBlocks);
-      setDraggingBlock(null);
-    }
-
+    // 드래그가 끝나면 workBlocks는 이미 업데이트되어 있음
+    setDraggingBlockId(null);
     endDrag();
   };
 
   const handleResize = (blockId: number, newBlock: WorkBlockType) => {
-    if (draggingBlock && draggingBlock.id === blockId) {
-      // 드래그 중일 때는 임시 상태만 업데이트
-      setDraggingBlock(newBlock);
+    if (draggingBlockId === blockId) {
+      // 드래그 중일 때는 workBlocks를 직접 업데이트
+      const updatedBlocks = workBlocks.map(b =>
+        b.id === blockId ? newBlock : b
+      );
+      updateWorkBlocks(updatedBlocks);
     } else {
       // 드래그 중이 아닐 때는 즉시 업데이트
       const updatedBlocks = workBlocks.map(b =>
@@ -219,12 +210,14 @@ const WorkContainer = () => {
             if (isCurrentlyDragging) {
               const overlayPosition = {
                 x:
-                  draggingBlock?.id === id
-                    ? draggingBlock.position.x
+                  draggingBlockId === id
+                    ? workBlocks.find(b => b.id === id)?.position.x ||
+                      position.x
                     : position.x,
                 y:
-                  draggingBlock?.id === id
-                    ? draggingBlock.position.y
+                  draggingBlockId === id
+                    ? workBlocks.find(b => b.id === id)?.position.y ||
+                      position.y
                     : position.y,
               };
 
@@ -236,7 +229,7 @@ const WorkContainer = () => {
                   scrollOffset={scrollOffset}
                 >
                   <WorkCardRegister
-                    block={draggingBlock?.id === id ? draggingBlock : block}
+                    block={workBlocks.find(b => b.id === id) || block}
                     isDragging={isDragging}
                     onDelete={() => removeWorkBlock(id)}
                     onResize={newBlock => handleResize(id, newBlock)}
