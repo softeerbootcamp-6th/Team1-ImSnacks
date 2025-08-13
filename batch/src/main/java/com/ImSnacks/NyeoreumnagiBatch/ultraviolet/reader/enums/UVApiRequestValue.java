@@ -1,7 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.enums;
 
 public enum UVApiRequestValue {
-    UV_URL("https://apis.data.go.kr/1360000/LivingWthrIdxServiceV4/getUVIdxV4"),
+    UV_URL("http://apis.data.go.kr/1360000/LivingWthrIdxServiceV4/getUVIdxV4?serviceKey=%s&areaNo=%s&time=%s&dataType=%s"),
     SERVICE_KEY("serviceKey"),
     PAGE_NO("pageNo"),
     NUM_OF_ROWS("numOfRows"),
