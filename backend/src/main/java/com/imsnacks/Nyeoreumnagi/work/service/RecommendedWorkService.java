@@ -16,6 +16,7 @@ import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
 import com.imsnacks.Nyeoreumnagi.work.repository.LifeCycleAndRecommendedWorkRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.LifeCycleRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
+import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
