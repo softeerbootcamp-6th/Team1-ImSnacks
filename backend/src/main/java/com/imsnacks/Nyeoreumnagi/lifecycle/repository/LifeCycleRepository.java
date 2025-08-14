@@ -1,4 +1,4 @@
-package com.imsnacks.Nyeoreumnagi.work.repository;
+package com.imsnacks.Nyeoreumnagi.lifecycle.repository;
 
 import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import org.springframework.data.jpa.repository.JpaRepository;
