@@ -10,7 +10,7 @@ interface WorkCardRegisterProps {
   cropName: string;
   workName: string;
   workTime: string;
-  width: number;
+  width?: number;
   status?: WorkChipType;
 }
 
