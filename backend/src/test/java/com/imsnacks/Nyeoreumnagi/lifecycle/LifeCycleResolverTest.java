@@ -1,6 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.lifecycle;
 
-import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycle;
+import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import org.junit.jupiter.api.Test;

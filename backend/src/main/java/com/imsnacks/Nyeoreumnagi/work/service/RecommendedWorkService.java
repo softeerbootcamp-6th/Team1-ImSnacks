@@ -6,16 +6,15 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
-import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse.RecommendedWorksResponse;
-import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
 import com.imsnacks.Nyeoreumnagi.work.repository.LifeCycleAndRecommendedWorkRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.LifeCycleRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
+import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +51,7 @@ public class RecommendedWorkService {
             myCropId = myCropList.get(0).getId();
         }
         MyCrop myCrop = myCropRepository.findById(myCropId).orElseThrow(() -> new CropException(MY_CROP_NOT_FOUND));
-        List<LifeCycle> lifeCyclesOrderByStep = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
+        List<com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle> lifeCyclesOrderByStep = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
 
         long nowLifeCycleId = lifeCycleResolver.calculateLifeCycle(myCrop, lifeCyclesOrderByStep, now);
 
