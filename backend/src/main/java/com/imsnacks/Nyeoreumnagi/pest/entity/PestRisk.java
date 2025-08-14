@@ -16,16 +16,16 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access=lombok.AccessLevel.PROTECTED)
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name="PestRisk")
+@Table(name = "PestRisk")
 @Entity
 public class PestRisk {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long pestRiskId;
 
-    @Column(name="name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @OneToMany()
