@@ -39,7 +39,7 @@ const DamagePestArrowButton = ({
               ? '병충해 정보를 확인할 수 있어요'
               : '주의해야 할 기상 피해 정보를 볼 수 있어요'
           }
-          type={'Default'}
+          type="Default"
         />
       )}
     </div>
