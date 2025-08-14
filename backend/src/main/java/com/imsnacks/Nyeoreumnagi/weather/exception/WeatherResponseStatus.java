@@ -6,6 +6,7 @@ public enum WeatherResponseStatus {
     NO_WEATHER_VALUE(3003, "해당 지역에 날씨 데이터가 없습니다."),
     CANNOT_CALCULATE_WEATHER_CONDITION(3004, "기상 요약을 할 수 없습니다."),
     NO_UV_INFO(3005, "해당 지역 자외선 정보가 없습니다."),
+    NO_SUNRISE_SET(3006, "해당 지역 일출몰 정보가 없습니다."),
     ;
 
     private final int code;
