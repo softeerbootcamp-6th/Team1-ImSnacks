@@ -178,7 +178,7 @@ class WeatherServiceTest {
         when(forecast.getTemperature()).thenReturn(23);
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).thenReturn(java.util.List.of(forecast));
-        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
+        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(Optional.ofNullable(sunriseSunSetTime));
 
         // when
         GetWeatherConditionResponse response = weatherService.getWeatherCondition(memberId);
@@ -202,7 +202,7 @@ class WeatherServiceTest {
         when(sunriseSunSetTime.getSunSetTime()).thenReturn(LocalTime.of(19, 22));
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
+        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(Optional.of(sunriseSunSetTime));
 
         // when
         GetSunRiseSetTimeResponse response = weatherService.getSunRiseSetTime(memberId);
