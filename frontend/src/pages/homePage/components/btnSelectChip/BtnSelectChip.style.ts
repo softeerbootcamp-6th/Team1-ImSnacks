@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Assets } from '@/styles/colors';
+import { Assets, GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
@@ -31,8 +31,9 @@ const BtnSelectChipStatusStyle = {
     color: ${Assets.Text.Button.SelectChip.Hover};
   `,
   Disabled: css`
-    background-color: ${Assets.Global.Button.Disabled};
+    background-color: ${GrayScale.White};
     color: ${Assets.Text.Button.SelectChip.Disabled};
+    cursor: default;
   `,
 };
 

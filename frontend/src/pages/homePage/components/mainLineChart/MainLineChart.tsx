@@ -9,7 +9,7 @@ import {
 } from 'recharts';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
 import { getUnit } from '@/utils/getUnit';
-import { generateYTicks, getProcessedData } from '../../utils/LineChartUtil';
+import { generateYTicks, getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
 import CustomizedDot from '../customizedDot/CustomizedDot';
 import CustomTooltip from '../customizedTootip/CustomizedTooltip';
