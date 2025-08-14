@@ -1,4 +1,5 @@
 import type { Position, Size, WorkBlockType } from '@/types/workCard.type';
+import { getYCoordinate } from '@/constants/workTimeCoordinate';
 
 // 충돌 감지 함수
 export const hasCollision = (
@@ -43,55 +44,29 @@ export const findCollisionFreePosition = (
   scrollOffset: number
 ): Position => {
   const { position, size } = draggedBlock;
-  let newPosition = { ...position };
+  let offset = 0;
+  const maxAttempts = 50;
+  const yLayers = [1, 2, 3].map(layer => getYCoordinate(layer));
 
-  // 다른 블록들과의 충돌 검사
-  const hasCollisionWithOthers = otherBlocks.some(block =>
-    hasCollision(draggedBlock, block)
-  );
+  for (let attempts = 0; attempts < maxAttempts; attempts++) {
+    // y좌표는 3단계로 고정되어 있고 x좌표만 이동, y좌표 위에서부터 아래로 탐색
+    for (const y of yLayers) {
+      for (const dir of [offset, -offset]) {
+        const testPosition = { x: position.x + dir, y };
 
-  if (hasCollisionWithOthers) {
-    // 충돌이 있으면 가장 가까운 충돌하지 않는 위치 찾기
-    let offset = 10; // 10px씩 이동
-    const maxAttempts = 50; // 최대 시도 횟수
-    let attempts = 0;
-
-    while (hasCollisionWithOthers && attempts < maxAttempts) {
-      // 여러 방향으로 시도
-      const directions = [
-        { x: offset, y: 0 }, // 오른쪽
-        { x: -offset, y: 0 }, // 왼쪽
-        { x: 0, y: offset }, // 아래
-        { x: 0, y: -offset }, // 위
-      ];
-
-      for (const direction of directions) {
-        const testPosition = {
-          x: position.x + direction.x,
-          y: position.y + direction.y,
-        };
-
-        // 컨테이너 경계 내부인지 확인
         if (!isWithinBounds(testPosition, size, containerRect, scrollOffset)) {
-          continue; // 경계를 벗어나면 다음 방향 시도
+          continue;
         }
 
-        // 테스트 위치에서 충돌 검사
-        const testBlock = { ...draggedBlock, position: testPosition };
-        const testHasCollision = otherBlocks.some(block =>
-          hasCollision(testBlock, block)
+        const collision = otherBlocks.some(block =>
+          hasCollision({ ...draggedBlock, position: testPosition }, block)
         );
 
-        if (!testHasCollision) {
-          newPosition = testPosition;
-          return newPosition;
-        }
+        if (!collision) return testPosition;
       }
-
-      offset += 10;
-      attempts++;
     }
+    offset += 10;
   }
 
-  return newPosition;
+  return position;
 };
