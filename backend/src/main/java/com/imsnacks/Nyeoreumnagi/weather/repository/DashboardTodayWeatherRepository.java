@@ -6,7 +6,9 @@ import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSet
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface DashboardTodayWeatherRepository extends JpaRepository<DashboardTodayWeather, DashboardTodayWeatherId> {
     SunriseSunSetTime findSunRiseSetByNxAndNy(int nx, int ny);
-    UVInfo findUVByNxAndNy(int nx, int ny);
+    Optional<UVInfo> findUVByNxAndNy(int nx, int ny);
 }
