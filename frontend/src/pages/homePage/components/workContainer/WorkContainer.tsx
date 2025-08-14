@@ -110,9 +110,7 @@ const WorkContainer = () => {
       if (rect) {
         checkAndRevert(rect, scrollOffset);
       }
-    }
 
-    if (draggingId !== null) {
       const draggingBlock = workBlocks.find(block => block.id === draggingId);
       if (draggingBlock) {
         // 다른 블록과의 충돌 검사

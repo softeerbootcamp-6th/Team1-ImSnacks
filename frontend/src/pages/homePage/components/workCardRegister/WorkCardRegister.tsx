@@ -3,7 +3,7 @@ import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegister
 import useVisibility from '@/hooks/useVisibility';
 import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
-import { useResize } from '@/pages/homePage/hooks/useResize';
+import { useChangeTimeByResize } from '@/pages/homePage/hooks/useChangeTimeByResize';
 import { css } from '@emotion/react';
 import { useResizeCollision } from '@/hooks/useResizeCollision';
 
@@ -41,7 +41,7 @@ const WorkCardRegister = ({
     updateWorkBlocks: updateWorkBlocks || (() => {}),
   });
 
-  const { handleResizeStart } = useResize({
+  const { handleResizeStart } = useChangeTimeByResize({
     onResize: newBlock => {
       setNewWidth(newBlock.size.width);
       setIsResizing(true);
@@ -94,6 +94,7 @@ const WorkCardRegister = ({
         `}
       >
         <WorkCardRegisterContent
+          width={newWidth}
           cropName={block.cropName}
           workName={block.workName}
           workTime={block.workTime}
@@ -104,7 +105,7 @@ const WorkCardRegister = ({
             onMouseDown={e => e.stopPropagation()}
             css={S.WorkCardDeleteButton}
           >
-            삭제
+            ×
           </button>
         )}
       </div>

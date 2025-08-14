@@ -3,6 +3,7 @@ import { groupDataRecordStructure } from '@/utils/groupDataRecord';
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
 import type { CropNameType } from '@/types/crop.type';
+import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 
 // 시간을 픽셀 위치로 변환하는 함수
 export const calculateTimeToPosition = (startTime: string, endTime: string) => {
@@ -32,9 +33,45 @@ const getInitialWorkBlocks = (newWorkBlocks?: WorkBlockType[]) => {
         dayjs(new Date()).format('YYYY-MM-DD')
       ] || [];
 
-  todayWorkScheduleData.forEach(work => {
+  const sortedWorks = [...todayWorkScheduleData].sort(
+    (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf()
+  );
+
+  sortedWorks.forEach((work, index) => {
     // startTime과 endTime을 직접 사용하여 x 위치와 너비 계산
     const { x, width } = calculateTimeToPosition(work.startTime, work.endTime);
+
+    // 이전 작업들과 겹치는지 확인하여 yLayer 결정
+    let currentYLayer = 1;
+
+    if (index > 0) {
+      const previousWork = sortedWorks[index - 1];
+
+      // 시간이 겹치는지 확인
+      const workStart = dayjs(work.startTime).valueOf();
+      const workEnd = dayjs(work.endTime).valueOf();
+      const prevStart = dayjs(previousWork.startTime).valueOf();
+      const prevEnd = dayjs(previousWork.endTime).valueOf();
+
+      const isOverlapping = !(workStart >= prevEnd || workEnd <= prevStart);
+
+      if (isOverlapping) {
+        // 겹치는 경우, 이전 작업의 yLayer보다 큰 값 사용
+        const previousBlock = blocks.find(
+          block => block.id === previousWork.id
+        );
+        if (previousBlock) {
+          const previousY = Number(previousBlock.position.y);
+          const previousYLayer = Math.floor(previousY / 52) + 1;
+          currentYLayer = Math.max(currentYLayer, previousYLayer);
+        }
+      }
+    }
+
+    // 안전한 y 좌표 계산
+    const yCoordinate =
+      WORK_TIME_Y_COORDINATE[currentYLayer as 1 | 2 | 3] ||
+      WORK_TIME_Y_COORDINATE[1];
 
     blocks.push({
       id: work.id,
@@ -43,7 +80,7 @@ const getInitialWorkBlocks = (newWorkBlocks?: WorkBlockType[]) => {
       workTime: work.workTime,
       startTime: work.startTime,
       endTime: work.endTime,
-      position: { x, y: 35 }, // 기본 y 위치
+      position: { x, y: yCoordinate },
       size: { width, height: 52 },
     });
   });

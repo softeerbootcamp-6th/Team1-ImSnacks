@@ -28,11 +28,17 @@ const WorkCardInfo = css`
 const WorkCardTitle = css`
   ${Typography.Body_S_400}
   color: ${Assets.Text.WorkCard.Default.Headline};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const WorkCardCropName = css`
   ${Typography.Caption_S}
   color: ${Assets.Text.WorkCard.Default.Headline};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const WorkCardTime = css`

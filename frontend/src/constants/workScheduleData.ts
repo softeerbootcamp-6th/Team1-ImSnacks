@@ -38,7 +38,7 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: '2025-08-13',
+    date: '2025-08-14',
     workCardData: [
       {
         id: 4,
@@ -61,10 +61,19 @@ export const WORK_SCHEDULE_DATA = [
       {
         id: 6,
         cropName: '단감',
-        workName: '가을 거름',
+        workName: '병해충 방제',
         workTime: '06:20 - 08:10',
         startTime: '2025-08-07T06:20:00',
         endTime: '2025-08-07T08:10:00',
+        isCompleted: true,
+      },
+      {
+        id: 7,
+        cropName: '배',
+        workName: '병해충 방제',
+        workTime: '06:50 - 09:10',
+        startTime: '2025-08-07T06:50:00',
+        endTime: '2025-08-07T09:10:00',
         isCompleted: true,
       },
     ],

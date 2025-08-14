@@ -4,6 +4,7 @@ import MainGraph from '../components/mainGraph/MainGraph';
 import S from './DesktopHomePage.style';
 import WorkContainer from '../components/workContainer/WorkContainer';
 import RegisterWorkContainer from '../components/registerWorkContainer/RegisterWorkContainer';
+import DamagePests from '../components/damagePests/DamagePests';
 
 const DesktopHomePage = () => {
   return (
@@ -14,6 +15,7 @@ const DesktopHomePage = () => {
         <WorkContainer />
         <RegisterWorkContainer />
       </WorkBlocksProvider>
+      <DamagePests />
     </div>
   );
 };
