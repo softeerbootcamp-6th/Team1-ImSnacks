@@ -98,7 +98,7 @@ public class WeatherService {
                 .max(Comparator.comparingInt(ShortTermWeatherForecast::getFcstTime))
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
 
-        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny);
+        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_SUNRISE_SET));
         WeatherCondition weatherCondition = weatherInfoNearest.getWeatherCondition(sunriseSunSetTime);
         int temperature = weatherInfoNearest.getTemperature();
 
@@ -145,7 +145,7 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny);
+        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_SUNRISE_SET));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         String startTime = sunriseSunSetTime.getSunriseTime().format(formatter);
