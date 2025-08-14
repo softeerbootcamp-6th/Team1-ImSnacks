@@ -103,8 +103,8 @@ class WeatherBriefingTest {
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
 
-        final LocalDateTime from = LocalDateTime.now().minusHours(1);
-        final LocalDateTime to = LocalDateTime.now().plusHours(2);
+        final LocalDateTime from = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).minusHours(1);
+        final LocalDateTime to = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).plusHours(2);
         final WeatherRiskType type = WeatherRiskType.RAIN;
 
         WeatherRisk r = WeatherRisk.builder()
@@ -141,8 +141,8 @@ class WeatherBriefingTest {
 
         final long jobExecutionId = 1L;
         final LocalDate fcstDate = LocalDate.now();
-        final LocalDateTime from = LocalDateTime.now().minusHours(1);
-        final LocalDateTime to = LocalDateTime.now().plusHours(2);
+        final LocalDateTime from = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).minusHours(1);
+        final LocalDateTime to = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).plusHours(2);
 
         final Random rand = new Random();
         long riskId = 1;
@@ -172,7 +172,7 @@ class WeatherBriefingTest {
 
     @Test
     void 기상상황_비교자() {
-        final var now = LocalDateTime.now();
+        final var now = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST));
         final var from = now.minusHours(2);
         final var to = now.plusHours(2);
         final WeatherRisk r1 = WeatherRisk.builder()
