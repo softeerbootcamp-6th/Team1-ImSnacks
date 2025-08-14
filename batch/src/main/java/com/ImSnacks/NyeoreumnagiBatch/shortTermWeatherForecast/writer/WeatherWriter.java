@@ -52,6 +52,7 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
                         .windSpeed(weatherForecastByTime.getWindSpeed())
                         .snow(weatherForecastByTime.getSnow())
                         .skyStatus(weatherForecastByTime.getSkyStatus())
+                        .wind_direction(weatherForecastByTime.getWindDirection())
                         .build());
             });
 
