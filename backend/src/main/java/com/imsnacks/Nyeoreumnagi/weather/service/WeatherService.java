@@ -6,9 +6,6 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
@@ -20,10 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.ZoneId;
+import java.util.Comparator;
+import java.util.List;
 
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.INVALID_MEMBER_ID;
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
 
 @Service
@@ -35,11 +33,11 @@ public class WeatherService {
     private final WeatherRiskRepository weatherRiskRepository;
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
 
-    public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
+    public com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph getWeatherGraph(Long memberId, WeatherMetric weatherMetric) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
         Farm farm = member.getFarm();
 
-        if(farm == null){
+        if (farm == null) {
             throw new MemberException(NO_FARM_INFO);
         }
 
@@ -47,25 +45,25 @@ public class WeatherService {
         int ny = farm.getNy();
 
         List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny);
-        if(weatherInfos.isEmpty()){
+        if (weatherInfos.isEmpty()) {
             throw new WeatherException(NO_WEATHER_LOCATION);
         }
 
         int maxValue = getMaxValue(weatherInfos, weatherMetric);
         int minValue = getMinValue(weatherInfos, weatherMetric);
-        List<GetWeatherGraphResponse.ValuePerTime> valuePerTimes = extractWeatherGraphInfos(weatherInfos, weatherMetric, LocalDateTime.now().getHour()+1);
+        List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph.ValuePerTime> valuePerTimes = extractWeatherGraphInfos(weatherInfos, weatherMetric, LocalDateTime.now().getHour() + 1);
 
         int maxLimit = getUpperLimit(maxValue);
         int minLimit = getLowerLimit(minValue, weatherMetric);
 
-        return new GetWeatherGraphResponse(maxLimit, minLimit, weatherMetric, valuePerTimes);
+        return new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph(maxLimit, minLimit, weatherMetric, valuePerTimes);
     }
 
-    public GetFcstRiskResponse getWeatherRisk(Long memberId){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
+    public com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk getWeatherRisk(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
         Farm farm = member.getFarm();
 
-        if(farm == null){
+        if (farm == null) {
             throw new MemberException(NO_FARM_INFO);
         }
 
@@ -73,16 +71,16 @@ public class WeatherService {
         int ny = farm.getNy();
 
         List<WeatherRisk> weatherRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
-        List<GetFcstRiskResponse.WeatherRiskDto> weatherRiskDtos = WeatherRiskIntervalMerger.merge(weatherRisks);
+        List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto> weatherRiskDtos = WeatherRiskIntervalMerger.merge(weatherRisks);
 
-        return new GetFcstRiskResponse(weatherRiskDtos);
+        return new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk(weatherRiskDtos);
     }
 
-    public GetWeatherConditionResponse getWeatherCondition(Long memberId){
+    public com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherCondition getWeatherCondition(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
         Farm farm = member.getFarm();
 
-        if(farm == null){
+        if (farm == null) {
             throw new MemberException(NO_FARM_INFO);
         }
 
@@ -100,15 +98,44 @@ public class WeatherService {
         WeatherCondition weatherCondition = weatherInfoNearest.getWeatherCondition(sunriseSunSetTime);
         int temperature = weatherInfoNearest.getTemperature();
 
-        return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature);
+        return new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherCondition(weatherCondition.toString(), weatherCondition.getKeyword(), temperature);
     }
 
-    private List<GetWeatherGraphResponse.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {
+    public com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing getWeatherBriefing(final Long memberId) {
+        assert(memberId != null);
+        final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+        final Farm farm = member.getFarm();
+        if (farm == null) {
+            throw new MemberException(NO_FARM_INFO);
+        }
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        final List<WeatherRisk> allRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
+        if (allRisks.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
+            return new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing(false, "");
+        }
+
+        final LocalDateTime now = LocalDateTime.now(ZoneId.of(Briefing.KST));
+        final List<WeatherRisk> filteredRisk = allRisks.stream()
+                .filter(r -> r.getEndTime().isAfter(now))
+                .sorted(Briefing.RISK_COMPARATOR) // 우선 순위가 가장 앞서는 것이 맨 앞에 오도록 정렬한다.
+                .toList();
+        if (filteredRisk.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
+            return new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing(false, "");
+        }
+        final String msg = Briefing.buildMsg(filteredRisk.get(0));
+
+        return new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing(true, msg);
+    }
+
+    private List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {
         return forecasts.stream()
                 .map(f -> {
                     String name = String.format("%02d", f.getFcstTime());
                     double value = getValue(f, metric);
-                    return new GetWeatherGraphResponse.ValuePerTime(name, value);
+                    return new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph.ValuePerTime(name, value);
                 })
                 .sorted(Comparator.comparingInt(v -> {
                     int hour = Integer.parseInt(v.name());
@@ -133,22 +160,27 @@ public class WeatherService {
 
     private double getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
         switch (metric) {
-            case PERCIPITATION: return forecast.getPrecipitation();
-            case TEMPERATURE: return forecast.getTemperature();
-            case HUMIDITY: return forecast.getHumidity();
-            case WIND_SPEED: return forecast.getWindSpeed();
-            default: throw new WeatherException(INVALID_WEATHER_METRIC);
+            case PERCIPITATION:
+                return forecast.getPrecipitation();
+            case TEMPERATURE:
+                return forecast.getTemperature();
+            case HUMIDITY:
+                return forecast.getHumidity();
+            case WIND_SPEED:
+                return forecast.getWindSpeed();
+            default:
+                throw new WeatherException(INVALID_WEATHER_METRIC);
         }
     }
 
-    private int getLowerLimit(int value, WeatherMetric metric){
-        if(metric.equals(WeatherMetric.TEMPERATURE)){
+    private int getLowerLimit(int value, WeatherMetric metric) {
+        if (metric.equals(WeatherMetric.TEMPERATURE)) {
             return ((value - 1) / 5) * 5;
         }
         return (value == 0) ? 0 : ((value - 1) / 5) * 5;
     }
 
-    private int getUpperLimit(int value){
+    private int getUpperLimit(int value) {
         return ((value / 5) + 1) * 5;
     }
 }

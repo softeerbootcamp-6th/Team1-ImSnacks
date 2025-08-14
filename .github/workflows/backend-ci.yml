@@ -1,10 +1,18 @@
 name: backend-ci.yml
 
-on:
-  pull_request_target: # pull_request:
-    branches: [ "be" ] # 브랜치 이름 변경
+# on:
+#   pull_request_target: # pull_request:
+#     branches: [ "be" ] # 브랜치 이름 변경
+# permissions: write-all
 
-permissions: write-all
+on:
+  pull_request:
+    branches: [ "be" ]
+
+permissions:
+  contents: read  # 코드 읽기 권한만 (보안 최소화)
+  pull-requests: write  # PR 코멘트 작성
+  checks: write  # 필요시 체크 상태 업데이트
 
 jobs:
   setting:
