@@ -4,6 +4,10 @@ on:
   push:
     branches: [main, dev]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -50,7 +54,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.FE_OIDC_ROLE_ARN }}
-          aws-region: ${{ env.AWS_FE_REGION }}
+          aws-region: ${{ secrets.AWS_FE_REGION }}
 
       - name: Test AWS Configuration
         if: success()
