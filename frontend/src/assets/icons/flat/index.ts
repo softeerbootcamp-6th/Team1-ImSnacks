@@ -25,3 +25,5 @@ export { default as IC24ArrowLeftIcon } from './IC24ArrowLeft.svg?react';
 export { default as IC24ArrowRightIcon } from './IC24ArrowRight.svg?react';
 export { default as WindArrow } from './WindArrow.svg?react';
 export { default as SunEffect } from './SunEffect.svg?react';
+export { default as RightArrowCircleBtn } from './RightArrowCircleBtn.svg?react';
+export { default as LeftArrowCircleBtn } from './LeftArrowCircleBtn.svg?react';

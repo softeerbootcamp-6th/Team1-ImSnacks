@@ -20,7 +20,11 @@ const BtnSelectChip = ({
   ...props
 }: BtnSelectChipProps) => {
   return (
-    <button css={S.BtnSelectChip(size, status)} {...props}>
+    <button
+      css={S.BtnSelectChip(size, status)}
+      {...props}
+      disabled={status === BTN_SELECT_CHIP_STATUSES.DISABLED}
+    >
       {text}
     </button>
   );

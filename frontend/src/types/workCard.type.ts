@@ -11,6 +11,11 @@ export interface Position {
   y: number;
 }
 
+export interface Size {
+  width: number;
+  height: number;
+}
+
 export interface WorkBlockType {
   id: number;
   cropName: string;
@@ -19,5 +24,5 @@ export interface WorkBlockType {
   startTime: string;
   endTime: string;
   position: Position;
-  width: number;
+  size: Size;
 }

@@ -3,16 +3,14 @@ import { ColorStatus, GrayScale } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
+import type { Size } from '@/types/workCard.type';
 
 interface WorkCardContainerProps {
   isDragging: boolean;
-  width?: number;
+  size: Size;
 }
 
-const WorkCardContainer = ({
-  isDragging,
-  width,
-}: WorkCardContainerProps) => css`
+const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -22,7 +20,8 @@ const WorkCardContainer = ({
   border-radius: ${BorderRadius.Base.S_Hard};
   background-color: ${GrayScale.White};
   border: 1px solid ${GrayScale.G200};
-  width: ${width ? `${width}px` : 'auto'};
+  width: ${size.width ? `${size.width}px` : 'auto'};
+  height: ${size.height ? `${size.height}px` : 'auto'};
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: ${isDragging ? 1000 : 1};
