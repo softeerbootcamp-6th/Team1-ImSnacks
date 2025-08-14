@@ -15,6 +15,7 @@ import {
   findCollisionFreePosition,
   hasCollision,
 } from '@/utils/collisionUtils';
+import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
@@ -147,6 +148,34 @@ const WorkContainer = () => {
             }
           }
 
+          setDraggingBlockId(null);
+          setFuturePosition(null);
+          endDrag();
+          return;
+        }
+        if (
+          !Object.values(WORK_TIME_Y_COORDINATE).includes(
+            draggingBlock.position.y
+          )
+        ) {
+          const closestY = Object.values(WORK_TIME_Y_COORDINATE).reduce(
+            (closest, current) => {
+              return Math.abs(current - draggingBlock.position.y) <
+                Math.abs(closest - draggingBlock.position.y)
+                ? current
+                : closest;
+            },
+            WORK_TIME_Y_COORDINATE[1]
+          );
+          animateBlock(
+            revertAnimationRef,
+            setIsRevertingItemId,
+            latestBlocksRef,
+            updateWorkBlocks,
+            draggingId,
+            draggingBlock.position,
+            { x: draggingBlock.position.x, y: closestY }
+          );
           setDraggingBlockId(null);
           setFuturePosition(null);
           endDrag();
