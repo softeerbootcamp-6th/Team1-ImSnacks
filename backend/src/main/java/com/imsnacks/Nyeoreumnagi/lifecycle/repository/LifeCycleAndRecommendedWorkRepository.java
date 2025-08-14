@@ -1,4 +1,4 @@
-package com.imsnacks.Nyeoreumnagi.work.repository;
+package com.imsnacks.Nyeoreumnagi.lifecycle.repository;
 
 import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWorkId;
