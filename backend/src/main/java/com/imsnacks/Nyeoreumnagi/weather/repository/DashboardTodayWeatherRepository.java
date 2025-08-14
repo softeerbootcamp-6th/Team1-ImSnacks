@@ -6,5 +6,5 @@ import com.imsnacks.Nyeoreumnagi.weather.service.SunriseSunSetTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DashboardTodayWeatherRepository extends JpaRepository<DashboardTodayWeather, DashboardTodayWeatherId> {
-    SunriseSunSetTime findByNxAndNy(int nx, int ny);
+    SunriseSunSetTime findSunRiseSetByNxAndNy(int nx, int ny);
 }

@@ -175,7 +175,7 @@ class WeatherServiceTest {
         when(forecast.getTemperature()).thenReturn(23);
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).thenReturn(java.util.List.of(forecast));
-        when(dashboardTodayWeatherRepository.findByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
+        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
 
         // when
         GetWeatherConditionResponse response = weatherService.getWeatherCondition(memberId);
