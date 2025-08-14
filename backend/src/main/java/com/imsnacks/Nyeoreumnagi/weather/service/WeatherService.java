@@ -6,10 +6,8 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefingResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardTodayWeather;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -98,7 +97,7 @@ public class WeatherService {
                 .max(Comparator.comparingInt(ShortTermWeatherForecast::getFcstTime))
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
 
-        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findByNxAndNy(nx, ny);
+        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny);
         WeatherCondition weatherCondition = weatherInfoNearest.getWeatherCondition(sunriseSunSetTime);
         int temperature = weatherInfoNearest.getTemperature();
 
@@ -132,6 +131,26 @@ public class WeatherService {
         final String msg = Briefing.buildMsg(filteredRisk.get(0));
 
         return new GetWeatherBriefingResponse(true, msg);
+    }
+
+    public GetSunRiseSetTimeResponse getSunRiseSetTime(final Long memberId) {
+        assert(memberId != null);
+        final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+        final Farm farm = member.getFarm();
+        if (farm == null) {
+            throw new MemberException(NO_FARM_INFO);
+        }
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String startTime = sunriseSunSetTime.getSunriseTime().format(formatter);
+        String endTime = sunriseSunSetTime.getSunSetTime().format(formatter);
+
+        return new GetSunRiseSetTimeResponse(startTime, endTime);
     }
 
     private List<GetWeatherGraphResponse.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {
