@@ -1,25 +1,9 @@
 package com.imsnacks.Nyeoreumnagi.weather.util;
 
-import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
-import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
-import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-
-import static com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 
 /**

@@ -1,7 +1,8 @@
 package com.imsnacks.Nyeoreumnagi.work.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 
 public interface LifeCycleRepository extends JpaRepository<LifeCycle, Integer> {

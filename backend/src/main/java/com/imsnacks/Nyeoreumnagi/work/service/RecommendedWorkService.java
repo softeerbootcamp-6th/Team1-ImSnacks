@@ -6,8 +6,10 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
+import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse.RecommendedWorksResponse;
+import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
@@ -51,7 +53,7 @@ public class RecommendedWorkService {
             myCropId = myCropList.get(0).getId();
         }
         MyCrop myCrop = myCropRepository.findById(myCropId).orElseThrow(() -> new CropException(MY_CROP_NOT_FOUND));
-        List<com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle> lifeCyclesOrderByStep = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
+        List<LifeCycle> lifeCyclesOrderByStep = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
 
         long nowLifeCycleId = lifeCycleResolver.calculateLifeCycle(myCrop, lifeCyclesOrderByStep, now);
 
