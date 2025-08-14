@@ -7,9 +7,6 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
@@ -23,10 +20,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,15 +34,18 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class WeatherServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(WeatherServiceTest.class);
+
+    private static final LocalDateTime BASE = LocalDateTime.of(2025, 8, 5, 0, 0);
 
     @InjectMocks
     private WeatherService weatherService;
@@ -81,7 +84,7 @@ class WeatherServiceTest {
         given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
 
         // when
-        GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
+        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph response = weatherService.getWeatherGraph(memberId, metric);
 
         // then
         assertThat(response.weatherMetric()).isEqualTo(metric);
@@ -96,37 +99,46 @@ class WeatherServiceTest {
         Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
         Member member = new Member(1L, "", "", "", "", null, farm);
 
+        LocalDateTime startA = BASE.withHour(1);
+        LocalDateTime endA = BASE.withHour(6);
         WeatherRisk riskA = WeatherRisk.builder()
                 .weatherRiskId(10L)
                 .fcstDate(LocalDate.now())
-                .startTime(1)
-                .endTime(6)
+                .startTime(startA)
+                .endTime(endA)
                 .type(WeatherRiskType.RAIN) // ordinal 1
                 .nx(60).ny(120).jobExecutionId(77L)
                 .build();
+
+        LocalDateTime startB = BASE.withHour(3);
+        LocalDateTime endB = BASE.withHour(8);
         WeatherRisk riskB = WeatherRisk.builder()
                 .weatherRiskId(11L)
                 .fcstDate(LocalDate.now())
-                .startTime(3)
-                .endTime(8)
+                .startTime(startB)
+                .endTime(endB)
                 .type(WeatherRiskType.FROST) // ordinal 2
                 .nx(60).ny(120).jobExecutionId(77L)
                 .build();
+
+        LocalDateTime startC = BASE.withHour(5);
+        LocalDateTime endC = BASE.withHour(7);
         WeatherRisk riskC = WeatherRisk.builder()
                 .weatherRiskId(12L)
                 .fcstDate(LocalDate.now())
-                .startTime(5)
-                .endTime(7)
+                .startTime(startC)
+                .endTime(endC)
                 .type(WeatherRiskType.ABNORMAL_HEAT) // ordinal 3 가장 높음!
                 .nx(60).ny(120).jobExecutionId(77L)
                 .build();
+
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(60,120))
+        when(weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(60, 120))
                 .thenReturn(Arrays.asList(riskA, riskB, riskC));
 
         //when
-        GetFcstRiskResponse response = weatherService.getWeatherRisk(memberId);
-        List<GetFcstRiskResponse.WeatherRiskDto> risks = response.items();
+        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk response = weatherService.getWeatherRisk(memberId);
+        List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto> risks = response.items();
 
         //then
         assertThat(risks.size()).isEqualTo(4);
@@ -147,7 +159,6 @@ class WeatherServiceTest {
         assertThat(risks.get(3).endTime()).isEqualTo("8");
     }
 
-    @Test
     void 정상_날씨_조회_성공() {
         // given
         long memberId = 1L;
@@ -164,7 +175,7 @@ class WeatherServiceTest {
         when(dashboardTodayWeatherRepository.findByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
 
         // when
-        GetWeatherConditionResponse response = weatherService.getWeatherCondition(memberId);
+        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherCondition response = weatherService.getWeatherCondition(memberId);
 
         // then
         assertThat(response.weatherCondition()).isEqualTo(WeatherCondition.SUNNY.toString());

@@ -1,6 +1,5 @@
 package com.imsnacks.Nyeoreumnagi.weather.util;
 
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.service.LinePoint;
 
@@ -8,12 +7,12 @@ import java.util.*;
 
 public class WeatherRiskIntervalMerger {
 
-    public static List<GetFcstRiskResponse.WeatherRiskDto> merge(List<WeatherRisk> risks) {
+    public static List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto> merge(List<WeatherRisk> risks) {
         List<LinePoint> points = getLinePoints(risks);
         Collections.sort(points);
 
         TreeSet<WeatherRisk> actives = new TreeSet<>(getRiskComparator());
-        List<GetFcstRiskResponse.WeatherRiskDto> merged = new ArrayList<>();
+        List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto> merged = new ArrayList<>();
 
         int lastTime = -1;
         WeatherRisk showing = null;
@@ -33,8 +32,8 @@ public class WeatherRiskIntervalMerger {
     private static List<LinePoint> getLinePoints(List<WeatherRisk> risks) {
         List<LinePoint> points = new ArrayList<>();
         for (WeatherRisk r : risks) {
-            points.add(new LinePoint(r.getStartTime(), true, r));
-            points.add(new LinePoint(r.getEndTime(), false, r));
+            points.add(new LinePoint(r.getStartTime().getHour(), true, r));
+            points.add(new LinePoint(r.getEndTime().getHour(), false, r));
         }
         return points;
     }
@@ -45,17 +44,17 @@ public class WeatherRiskIntervalMerger {
                 .thenComparingLong(WeatherRisk::getWeatherRiskId);
     }
 
-    private static void addOrMergeInterval(List<GetFcstRiskResponse.WeatherRiskDto> merged, WeatherRisk risk, int start, int end) {
+    private static void addOrMergeInterval(List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto> merged, WeatherRisk risk, int start, int end) {
         String riskType = risk.getType().getDescription();
         String s = String.valueOf(start);
         String e = String.valueOf(end);
         if (!merged.isEmpty()) {
-            GetFcstRiskResponse.WeatherRiskDto last = merged.get(merged.size() - 1);
+            com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto last = merged.get(merged.size() - 1);
             if (last.category().equals(riskType) && last.endTime().equals(s)) {
-                merged.set(merged.size() - 1, new GetFcstRiskResponse.WeatherRiskDto(last.category(), last.startTime(), e));
+                merged.set(merged.size() - 1, new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto(last.category(), last.startTime(), e));
                 return;
             }
         }
-        merged.add(new GetFcstRiskResponse.WeatherRiskDto(riskType, s, e));
+        merged.add(new com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto(riskType, s, e));
     }
 }
