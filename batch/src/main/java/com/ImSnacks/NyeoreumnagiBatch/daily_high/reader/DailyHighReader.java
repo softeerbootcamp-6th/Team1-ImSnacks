@@ -2,9 +2,7 @@ package com.ImSnacks.NyeoreumnagiBatch.daily_high.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.ShortTermWeatherForecast;
-import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.ShortTermWeatherForecastRepository;
-import com.ImSnacks.NyeoreumnagiBatch.common.repository.UniqueNxNyRepository;
 import com.ImSnacks.NyeoreumnagiBatch.daily_high.reader.dto.DailyHighReaderResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +45,7 @@ public class DailyHighReader implements ItemReader<DailyHighReaderResponseDto> {
                             .collect(Collectors.groupingBy(
                                     stw -> new NxNy(stw.getNx(), stw.getNy())
                             ));
+           iterator = weatherInfos.entrySet().iterator();
         }
     }
 }
