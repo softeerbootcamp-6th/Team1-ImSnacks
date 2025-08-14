@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout';
 import HomePage from '@/pages/homePage/HomePage';
 import MyFarmPage from '@/pages/myFarmPage/MyFarmPage';
 import WeatherBoardPage from '@/pages/weatherBoardPage/WeatherBoardPage';
+import LoginPage from '@/pages/loginPage/LoginPage';
 
 export const Router = () => {
   const routes = useRoutes([
@@ -29,6 +30,10 @@ export const Router = () => {
         {
           element: <div>My Page</div>,
           path: 'my-page',
+        },
+        {
+          element: <LoginPage />,
+          path: 'login',
         },
       ],
     },
