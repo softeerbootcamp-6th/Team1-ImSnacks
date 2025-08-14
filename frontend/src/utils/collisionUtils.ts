@@ -21,6 +21,17 @@ export const hasCollision = (
   );
 };
 
+export const hasCollisionWithOthers = (
+  draggingBlock: WorkBlockType,
+  workBlocks: WorkBlockType[],
+  draggingBlockId: number
+): boolean => {
+  return workBlocks.some(block => {
+    if (block.id === draggingBlockId) return false;
+    return hasCollision(draggingBlock, block);
+  });
+};
+
 // 컨테이너 경계 내부인지 확인하는 함수
 export const isWithinBounds = (
   position: Position,

@@ -13,7 +13,7 @@ import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
 import animateBlock from '@/utils/animateBlock';
 import {
   findCollisionFreePosition,
-  hasCollision,
+  hasCollisionWithOthers,
 } from '@/utils/collisionUtils';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 
@@ -42,7 +42,7 @@ const WorkContainer = () => {
     startDrag,
     updatePosition,
     endDrag,
-    isItemDragging,
+    isDraggingItem,
     draggedItemRef,
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
@@ -115,12 +115,13 @@ const WorkContainer = () => {
       const draggingBlock = workBlocks.find(block => block.id === draggingId);
       if (draggingBlock) {
         // 다른 블록과의 충돌 검사
-        const hasCollisionWithOthers = workBlocks.some(block => {
-          if (block.id === draggingId) return false;
-          return hasCollision(draggingBlock, block);
-        });
+        const isCollision = hasCollisionWithOthers(
+          draggingBlock,
+          workBlocks,
+          draggingId
+        );
 
-        if (hasCollisionWithOthers) {
+        if (isCollision) {
           if (futurePosition) {
             animateBlock(
               revertAnimationRef,
@@ -247,7 +248,7 @@ const WorkContainer = () => {
           {workBlocks.map(block => {
             const { id, position } = block;
             const isCurrentlyDragging =
-              isItemDragging(id) || isRevertingItemId === id;
+              isDraggingItem(id) || isRevertingItemId === id;
 
             // 드래그 중인 블록은 DragOverlay만 렌더링
             if (isCurrentlyDragging) {
