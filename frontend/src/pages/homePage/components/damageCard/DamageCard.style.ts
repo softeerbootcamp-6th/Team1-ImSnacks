@@ -2,18 +2,18 @@ import { Assets } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
-const DamageCard = (selectedName: string | null, name: string) => css`
+const DamageCard = (selectedRiskName: string | null, name: string) => css`
   width: 342px;
   height: 218px;
   position: relative;
   backdrop-filter: blur(6px);
   border-radius: 16px;
   cursor: pointer;
-  opacity: ${selectedName && selectedName !== name ? 0.2 : 1};
+  opacity: ${selectedRiskName && selectedRiskName !== name ? 0.2 : 1};
   transition: transform 0.3s ease-in-out;
 
   &:hover {
-    transform: ${selectedName !== name && 'rotate(10deg)'};
+    transform: ${selectedRiskName !== name && 'rotate(10deg)'};
   }
 `;
 

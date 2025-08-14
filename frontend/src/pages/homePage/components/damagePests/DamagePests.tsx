@@ -15,11 +15,11 @@ const DamagePests = () => {
   const { isVisible, toggle } = useVisibility(true);
   const [title, setTitle] = useState('');
   const [damageInfoCardContent, setDamageInfoCardContent] = useState('');
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [selectedRiskName, setSelectedRiskName] = useState<string | null>(null);
 
   const containerRef = useClickOutside<HTMLDivElement>(
-    () => setSelectedName(null),
-    { enabled: !!selectedName }
+    () => setSelectedRiskName(null),
+    { enabled: !!selectedRiskName }
   );
 
   const parentWidth = 866;
@@ -80,14 +80,14 @@ const DamagePests = () => {
       setTitle('오늘 날씨에는 이런 병해충을 조심하세요.');
       setDamageInfoCardContent('병해충 정보를 볼 작물을 선택하세요.');
     }
-    setSelectedName(null);
+    setSelectedRiskName(null);
   }, [isVisible]);
 
   const handleCardClick = (name: string) => {
-    if (selectedName === name) {
-      setSelectedName(null);
+    if (selectedRiskName === name) {
+      setSelectedRiskName(null);
     } else {
-      setSelectedName(name);
+      setSelectedRiskName(name);
     }
   };
 
@@ -112,14 +112,16 @@ const DamagePests = () => {
                     position: absolute;
                     top: 0;
                     left: ${index * 262}px;
-                    z-index: ${selectedName === item.name ? 999 : index + 1};
+                    z-index: ${selectedRiskName === item.name
+                      ? 999
+                      : index + 1};
                   `}
                 >
                   <DamageCard
                     name={item.name}
                     description={item.description}
                     damageType={item.damageType}
-                    selectedName={selectedName}
+                    selectedRiskName={selectedRiskName}
                     onClick={() => handleCardClick(item.name)}
                   />
                 </div>
@@ -154,14 +156,16 @@ const DamagePests = () => {
                       index,
                       count: pestRisks.length,
                     })}px;
-                    z-index: ${selectedName === item.name ? 999 : index + 1};
+                    z-index: ${selectedRiskName === item.name
+                      ? 999
+                      : index + 1};
                   `}
                 >
                   <DamageCard
                     name={item.name}
                     description={item.description}
                     damageType={item.damageType}
-                    selectedName={selectedName}
+                    selectedRiskName={selectedRiskName}
                     onClick={() => handleCardClick(item.name)}
                   />
                 </div>
