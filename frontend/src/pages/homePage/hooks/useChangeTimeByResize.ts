@@ -7,7 +7,7 @@ interface UseResizeProps {
   onResize: (newBlock: WorkBlockType) => void;
 }
 
-export const useResize = ({ onResize }: UseResizeProps) => {
+export const useChangeTimeByResize = ({ onResize }: UseResizeProps) => {
   const resizeRef = useRef<{
     startX: number;
     startTime: dayjs.Dayjs;
