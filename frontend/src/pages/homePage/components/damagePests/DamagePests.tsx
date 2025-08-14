@@ -1,5 +1,5 @@
 import { Typography } from '@/styles/typography';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import DamageInfoCard from '../damageInfoCard/DamageInfoCard';
 import DamageCard from '../damageCard/DamageCard';
 import DamagePestArrowButton from '../damagePestArrowButton/DamagePestArrowButton';
@@ -7,14 +7,20 @@ import { PEST_DAMAGES, WEATHER_DAMAGES } from '@/types/damage.type';
 import S from './DamagePests.style';
 import { css } from '@emotion/react';
 import { getLeft } from '../../utils/damagePestsUtil';
+import useVisibility from '@/hooks/useVisibility';
+import { useClickOutside } from '@/hooks/handleClickOutside';
 
 const DamagePests = () => {
   const nickName = '밤비';
-  const [isWeatherVisible, setIsWeatherVisible] = useState(true);
+  const { isVisible, toggle } = useVisibility(true);
   const [title, setTitle] = useState('');
   const [damageInfoCardContent, setDamageInfoCardContent] = useState('');
   const [selectedName, setSelectedName] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+
+  const containerRef = useClickOutside<HTMLDivElement>(
+    () => setSelectedName(null),
+    { enabled: !!selectedName }
+  );
 
   const parentWidth = 866;
   const componentWidth = 342;
@@ -66,7 +72,7 @@ const DamagePests = () => {
   ];
 
   useEffect(() => {
-    if (isWeatherVisible) {
+    if (isVisible) {
       const WeatherRisk = '폭우';
       setTitle(`${WeatherRisk}에는 특히 이런 피해를 입을 수 있어요.`);
       setDamageInfoCardContent(`${nickName}님의 작물도 주의가 필요해요!`);
@@ -75,30 +81,7 @@ const DamagePests = () => {
       setDamageInfoCardContent('병해충 정보를 볼 작물을 선택하세요.');
     }
     setSelectedName(null);
-  }, [isWeatherVisible]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setSelectedName(null);
-      }
-    };
-
-    if (selectedName) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [selectedName]);
-
-  const handleWeatherVisibility = (isWeatherVisible: boolean) => {
-    setIsWeatherVisible(!isWeatherVisible);
-  };
+  }, [isVisible]);
 
   const handleCardClick = (name: string) => {
     if (selectedName === name) {
@@ -114,10 +97,10 @@ const DamagePests = () => {
         {title}
       </div>
       <div css={S.DamagePestsContentWrapper}>
-        {isWeatherVisible ? (
+        {isVisible ? (
           <>
             <DamageInfoCard
-              isWeatherVisible={isWeatherVisible}
+              isWeatherVisible={isVisible}
               content={damageInfoCardContent}
               cropList={[{ myCropName: '복숭아' }, { myCropName: '포도' }]}
             />
@@ -143,18 +126,18 @@ const DamagePests = () => {
               ))}
             </div>
             <DamagePestArrowButton
-              onClick={() => handleWeatherVisibility(isWeatherVisible)}
-              isWeatherVisible={isWeatherVisible}
+              onClick={() => toggle()}
+              isWeatherVisible={isVisible}
             />
           </>
         ) : (
           <>
             <DamagePestArrowButton
-              onClick={() => handleWeatherVisibility(isWeatherVisible)}
-              isWeatherVisible={isWeatherVisible}
+              onClick={() => toggle()}
+              isWeatherVisible={isVisible}
             />
             <DamageInfoCard
-              isWeatherVisible={isWeatherVisible}
+              isWeatherVisible={isVisible}
               content={damageInfoCardContent}
               cropList={[{ myCropName: '복숭아' }, { myCropName: '포도' }]}
             />
