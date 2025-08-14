@@ -7,13 +7,14 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
-import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardTodayWeather;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -151,6 +152,33 @@ public class WeatherService {
         String endTime = sunriseSunSetTime.getSunSetTime().format(formatter);
 
         return new GetSunRiseSetTimeResponse(startTime, endTime);
+    }
+
+    public GetUVInfoResponse getUVInfo(final Long memberId) {
+        assert(memberId != null);
+        final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+        final Farm farm = member.getFarm();
+        if (farm == null) {
+            throw new MemberException(NO_FARM_INFO);
+        }
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        UVInfo uvInfo = dashboardTodayWeatherRepository.findUVByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_UV_INFO));
+        validateUVInfo(uvInfo);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String startTime = uvInfo.getMaxUVStart().format(formatter);
+        String endTime = uvInfo.getMaxUVEnd().format(formatter);
+
+        return new GetUVInfoResponse(startTime, endTime, uvInfo.getMaxUVIndex());
+    }
+
+    private void validateUVInfo(UVInfo uvInfo) {
+        if(uvInfo.getMaxUVStart() == null || uvInfo.getMaxUVEnd() == null) {
+            throw new WeatherException(NO_UV_INFO);
+        }
     }
 
     private List<GetWeatherGraphResponse.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {
