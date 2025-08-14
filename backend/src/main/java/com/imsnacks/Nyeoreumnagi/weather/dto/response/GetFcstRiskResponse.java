@@ -2,7 +2,7 @@ package com.imsnacks.Nyeoreumnagi.weather.dto.response;
 
 import java.util.List;
 
-public record GetFcstRisk(
+public record GetFcstRiskResponse(
         List<WeatherRiskDto> items
 ){
     public record  WeatherRiskDto(
