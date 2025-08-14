@@ -6,21 +6,21 @@ interface DamageCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   description: string;
   damageType: WeatherDamagesType | PestDamagesType;
-  selectedName?: string | null;
+  selectedRiskName?: string | null;
 }
 
 const DamageCard = ({
   name,
   description,
   damageType,
-  selectedName = null,
+  selectedRiskName = null,
   ...props
 }: DamageCardProps) => {
   const DamageGraphicComponent = DAMAGE_GRAPHIC[damageType];
-  const opacity = selectedName === name ? 0.9 : 0.6;
+  const opacity = selectedRiskName === name ? 0.9 : 0.6;
 
   return (
-    <div css={S.DamageCard(selectedName, name)} {...props}>
+    <div css={S.DamageCard(selectedRiskName, name)} {...props}>
       <DamageGraphicComponent
         width={342}
         height={218}

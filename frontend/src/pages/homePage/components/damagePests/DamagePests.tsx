@@ -126,14 +126,14 @@ const DamagePests = () => {
               ))}
             </div>
             <DamagePestArrowButton
-              onClick={() => toggle()}
+              onClick={toggle}
               isWeatherVisible={isVisible}
             />
           </>
         ) : (
           <>
             <DamagePestArrowButton
-              onClick={() => toggle()}
+              onClick={toggle}
               isWeatherVisible={isVisible}
             />
             <DamageInfoCard
