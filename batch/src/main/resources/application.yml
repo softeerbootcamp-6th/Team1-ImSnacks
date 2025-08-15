@@ -7,6 +7,11 @@ spring:
 
   jpa:
     hibernate.ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+
 
   batch:
     job:
@@ -19,6 +24,10 @@ spring:
   #      schema-locations: classpath:init-farm.sql
 #      data-locations: classpath:insert_unique_nxny.sql
 
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
 api:
   service:
     key: ${OPEN_API_KEY}
