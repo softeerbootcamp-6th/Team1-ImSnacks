@@ -1,6 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.common.params;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiRequestValues;
+import com.ImSnacks.NyeoreumnagiBatch.sunRiseSet.reader.enums.SunRiseSetApiRequestValue;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.enums.UVApiRequestValue;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -36,6 +37,14 @@ public class JobParams {
         String baseDate = nowDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         return new JobParametersBuilder()
                 .addString(UVApiRequestValue.TIME.toString(), baseDate + "00")
+                .toJobParameters();
+    }
+
+    public static JobParameters getSunRiseSetJobParam(){
+        LocalDate nowDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        String baseDate = nowDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        return new JobParametersBuilder()
+                .addString(SunRiseSetApiRequestValue.LOCDATE.toString(), baseDate)
                 .toJobParameters();
     }
 

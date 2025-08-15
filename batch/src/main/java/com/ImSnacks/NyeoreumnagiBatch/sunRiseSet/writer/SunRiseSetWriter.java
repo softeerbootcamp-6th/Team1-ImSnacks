@@ -1,9 +1,9 @@
-package com.ImSnacks.NyeoreumnagiBatch.ultraviolet.writer;
+package com.ImSnacks.NyeoreumnagiBatch.sunRiseSet.writer;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.DashboardTodayWeather;
-import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.DashboardTodayWeatherRepository;
-import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.processor.dto.UVProcessorResponseDto;
+import com.ImSnacks.NyeoreumnagiBatch.sunRiseSet.processor.dto.SunRiseSetProcessorResponseDto;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
@@ -18,14 +18,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UVWriter implements ItemWriter<UVProcessorResponseDto> {
+public class SunRiseSetWriter implements ItemWriter<SunRiseSetProcessorResponseDto> {
 
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
 
-    public void write(Chunk<? extends UVProcessorResponseDto> chunk) throws Exception {
-        log.info("Writing UV started");
+    @Override
+    public void write(Chunk<? extends SunRiseSetProcessorResponseDto> chunk) throws Exception {
+        log.info("Writing SunRiseSet started");
 
-        List<? extends UVProcessorResponseDto> items = chunk.getItems();
+        List<? extends SunRiseSetProcessorResponseDto> items = chunk.getItems();
         List<Integer> nxList = items.stream()
                 .map(i -> i.nx())
                 .toList();
@@ -41,8 +42,7 @@ public class UVWriter implements ItemWriter<UVProcessorResponseDto> {
                 ));
 
         List<DashboardTodayWeather> entitiesToSave = new ArrayList<>();
-
-        for (UVProcessorResponseDto item : items) {
+        for (SunRiseSetProcessorResponseDto item : items) {
             NxNy key = new NxNy(item.nx(), item.ny());
             DashboardTodayWeather entity = existingMap.getOrDefault(key,
                     DashboardTodayWeather.builder()
@@ -51,9 +51,8 @@ public class UVWriter implements ItemWriter<UVProcessorResponseDto> {
                             .build()
             );
 
-            entity.setMaxUVIndex(item.maxUVIndex());
-            entity.setMaxUVStart(item.maxUVStartTime());
-            entity.setMaxUVEnd(item.maxUVEndTime());
+            entity.setSunriseTime(item.sunRise());
+            entity.setSunSetTime(item.sunSet());
             entitiesToSave.add(entity);
         }
 
