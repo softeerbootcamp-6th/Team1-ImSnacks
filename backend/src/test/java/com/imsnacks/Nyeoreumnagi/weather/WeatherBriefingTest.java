@@ -115,7 +115,7 @@ class WeatherBriefingTest {
                 .endTime(to)
                 .nx(nx)
                 .ny(ny)
-                .type(type)
+                .name(type)
                 .jobExecutionId(1L)
                 .build();
 
@@ -154,7 +154,7 @@ class WeatherBriefingTest {
                     .fcstDate(fcstDate)
                     .startTime(from.withMinute(rand.nextInt(60)))
                     .endTime(to.withMinute(rand.nextInt(60)))
-                    .type(type)
+                    .name(type)
                     .jobExecutionId(1L)
                     .build();
             risks.add(r);
@@ -183,7 +183,7 @@ class WeatherBriefingTest {
                 .endTime(to.withMinute(57))
                 .nx(11)
                 .ny(11)
-                .type(WeatherRiskType.STRONG_WIND)
+                .name(WeatherRiskType.STRONG_WIND)
                 .jobExecutionId(1L)
                 .build();
         final WeatherRisk r2 = WeatherRisk.builder()
@@ -193,7 +193,7 @@ class WeatherBriefingTest {
                 .endTime(to.withMinute(8))
                 .nx(11)
                 .ny(11)
-                .type(WeatherRiskType.TORRENTIAL_RAIN)
+                .name(WeatherRiskType.TORRENTIAL_RAIN)
                 .jobExecutionId(1L)
                 .build();
         final int actual = Briefing.RISK_COMPARATOR.compare(r1, r2);
