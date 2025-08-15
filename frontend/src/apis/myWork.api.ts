@@ -1,16 +1,17 @@
 import type { ApiRes } from './res';
 import HTTP from './http';
+import type {
+  RegisterMyWorkRequest,
+  RegisterMyWorkResponse,
+} from '@/types/openapiGenerator';
 
 export const getMyWork = async (): Promise<ApiRes> => {
   const res = await HTTP.get('/myWork');
   return res;
 };
 
-//TODO: body 타입 정의
-export const postMyWork = async (body: unknown): Promise<ApiRes> => {
-  const res = await HTTP.post('/myWork', body);
-  return res;
-};
+export const postMyWork = (body: RegisterMyWorkRequest) =>
+  HTTP.post<RegisterMyWorkRequest, RegisterMyWorkResponse>('/myWork', body);
 
 export const patchMyWork = async (body: unknown): Promise<ApiRes> => {
   const res = await HTTP.patch('/myWork', body);

@@ -1,5 +1,6 @@
 import { token } from '@/store/token';
 const baseUrl = import.meta.env.VITE_API_URL;
+import type { ApiRes } from './res';
 
 const customFetch = async (url: string, options: RequestInit) => {
   if (!baseUrl) {
@@ -44,14 +45,27 @@ const customFetch = async (url: string, options: RequestInit) => {
 };
 
 const HTTP = {
-  get: (url: string) => customFetch(url, { method: 'GET' }),
-  post: <T>(url: string, body: T) =>
+  get: <TResponse>(url: string): Promise<ApiRes<TResponse>> =>
+    customFetch(url, { method: 'GET' }),
+  post: <TRequest, TResponse>(
+    url: string,
+    body: TRequest
+  ): Promise<ApiRes<TResponse>> =>
     customFetch(url, { method: 'POST', body: JSON.stringify(body) }),
-  put: <T>(url: string, body: T) =>
+  put: <TRequest, TResponse>(
+    url: string,
+    body: TRequest
+  ): Promise<ApiRes<TResponse>> =>
     customFetch(url, { method: 'PUT', body: JSON.stringify(body) }),
-  patch: <T>(url: string, body: T) =>
+  patch: <TRequest, TResponse>(
+    url: string,
+    body: TRequest
+  ): Promise<ApiRes<TResponse>> =>
     customFetch(url, { method: 'PATCH', body: JSON.stringify(body) }),
-  delete: <T>(url: string, body: T) =>
+  delete: <TRequest, TResponse>(
+    url: string,
+    body: TRequest
+  ): Promise<ApiRes<TResponse>> =>
     customFetch(url, { method: 'DELETE', body: JSON.stringify(body) }),
 };
 
