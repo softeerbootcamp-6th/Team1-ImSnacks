@@ -14,7 +14,6 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherReposit
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -146,6 +145,7 @@ public class WeatherService {
         final int ny = farm.getNy();
 
         SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_SUNRISE_SET));
+        validateSunriseSetTime(sunriseSunSetTime);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         String startTime = sunriseSunSetTime.getSunriseTime().format(formatter);
@@ -178,6 +178,12 @@ public class WeatherService {
     private void validateUVInfo(UVInfo uvInfo) {
         if(uvInfo.getMaxUVStart() == null || uvInfo.getMaxUVEnd() == null) {
             throw new WeatherException(NO_UV_INFO);
+        }
+    }
+
+    private void validateSunriseSetTime(final SunriseSunSetTime sunriseSunSetTime) {
+        if (sunriseSunSetTime == null || sunriseSunSetTime.getSunriseTime() == null || sunriseSunSetTime.getSunSetTime() == null) {
+            throw new WeatherException(NO_SUNRISE_SET);
         }
     }
 
