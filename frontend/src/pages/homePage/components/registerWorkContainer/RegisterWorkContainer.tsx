@@ -6,7 +6,7 @@ import S from './RegisterWorkContainer.style';
 import { CROPS } from '@/constants/crops';
 import type { WorkBlockType } from '@/types/workCard.type';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
-import { calculateTimeToPosition } from '../../utils/getInitialWorkBlocks';
+import calculateTimeToPosition from '../../utils/calculateTimeToPosition';
 import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/utils/collisionUtils';
