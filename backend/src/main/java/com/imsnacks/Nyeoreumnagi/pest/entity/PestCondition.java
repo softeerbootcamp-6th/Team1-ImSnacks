@@ -7,10 +7,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,9 +27,11 @@ import java.time.Month;
 public class PestCondition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "pest_condition_id")
     private Long pestConditionId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "pest_risk_id")
+    @ManyToOne
     private PestRisk pestRisk;
 
     @Enumerated(EnumType.STRING)
@@ -59,6 +61,10 @@ public class PestCondition {
     @Enumerated(EnumType.STRING)
     @Column(name = "weather_code", nullable = false)
     private RainCode rainCode;
+
+    public void assignPest(PestRisk pestRisk) {
+        this.pestRisk = pestRisk;
+    }
 
     public enum MonthPhase {
         EARLY,
