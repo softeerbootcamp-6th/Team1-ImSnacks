@@ -2,9 +2,11 @@ package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
 public class MidTempRegionCode {
     @Id
     @Getter
@@ -15,4 +17,9 @@ public class MidTempRegionCode {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private MidLandForecastRegionCode landRegionCode;
+
+    public MidTempRegionCode(String regionCode, String regionName) {
+        this.regionCode = regionCode;
+        this.regionName = regionName;
+    }
 }
