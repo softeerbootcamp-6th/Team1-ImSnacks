@@ -3,6 +3,7 @@ package com.ImSnacks.NyeoreumnagiBatch.uvJobTest;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNyId;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.UniqueNxNyRepository;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.entity.MidTempRegionCode;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.UVApiCaller;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.UVReader;
 import com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.dto.UVReaderResponseDto;
@@ -27,7 +28,7 @@ class UVReaderTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), "1100000000", 34.1, 127.1));
+        List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), new MidTempRegionCode("11B10101","서울"), "1100000000", 34.1, 127.1));
         when(uniqueNxNyRepository.findAll()).thenReturn(areaCodes);
         reader = new UVReader("2025081300", apiCaller, uniqueNxNyRepository);
         // Static 변수 초기화 강제
