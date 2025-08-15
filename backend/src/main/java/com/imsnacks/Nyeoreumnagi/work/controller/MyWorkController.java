@@ -63,8 +63,8 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "오늘의 내 농작업 목록 조회 성공")
     @ApiResponse(responseCode = "400", description = "오늘의 내 농작업 목록 조회 실패")
     @GetMapping("/today")
-    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfTodayResponse>>> getMyWorksOfToday(@PreAuthorize Long memberId) {
-        List<GetMyWorksOfTodayResponse> myWorksOfToday = myWorkService.getMyWorksOfToday(memberId);
+    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfTodayResponse>>> getMyWorksOfToday(@RequestParam(defaultValue = "false") boolean isMobile, @PreAuthorize Long memberId) {
+        List<GetMyWorksOfTodayResponse> myWorksOfToday = myWorkService.getMyWorksOfToday(isMobile, memberId);
         return ResponseUtil.success(myWorksOfToday);
     }
 }
