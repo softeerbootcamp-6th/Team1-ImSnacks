@@ -69,7 +69,7 @@ class MyWorkTest {
     @Test
     void isDone_실행_시_myWork가_미완료_상태이면_false_를_반환한다() {
         MyWork myWork = createMyWork();
-        myWork.setWorkStatus(WorkStatus.NOT_COMPLETED);
+        myWork.setWorkStatus(WorkStatus.INCOMPLETED);
 
         boolean myWorkDone = myWork.isDone();
 

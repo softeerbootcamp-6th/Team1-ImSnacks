@@ -7,7 +7,6 @@ import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
-import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfWeeklyResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
@@ -24,15 +23,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.imsnacks.Nyeoreumnagi.common.util.TimeValidator.validateTime;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.MEMBER_NOT_FOUND;
+import static com.imsnacks.Nyeoreumnagi.work.entity.WorkStatus.*;
 import static com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus.*;
 
 @Service
@@ -73,8 +73,12 @@ public class MyWorkService {
     @Transactional
     public void deleteMyWork(DeleteMyWorkRequest request, Long memberId) {
         MyWork myWork = myWorkRepository.findById(request.myWorkId()).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
-        if (!myWork.getMember().getId().equals(memberId)) {
+        if (myWork.getMember().getId() != memberId) {
             throw new WorkException(MY_WORK_NOT_FOUND);
+        }
+
+        if (!myWork.isDone()) {
+            throw new WorkException(MY_WORK_NOT_COMPLETED);
         }
 
         myWorkRepository.deleteById(request.myWorkId());
@@ -95,18 +99,38 @@ public class MyWorkService {
         return new ModifyMyWorkResponse(myWork.getId());
     }
 
-    public List<GetMyWorksOfTodayResponse> getMyWorksOfToday(Long memberId) {
+    public List<GetMyWorksOfTodayResponse> getMyWorksOfToday(boolean isMobile, Long memberId) {
         List<MyWork> myWorks = myWorkRepository.findByMember_IdAndStartTimeAfter(memberId, LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0)));
-        return myWorks.stream().map(myWork ->
+        Stream<GetMyWorksOfTodayResponse> responseStream = myWorks.stream().map(myWork ->
                 new GetMyWorksOfTodayResponse(
                         myWork.getId(),
                         myWork.getCropName(),
                         myWork.getRecommendedWorkName(),
                         myWork.getWorkTimeZone(),
                         myWork.getStartTime().toString(),
-                        myWork.getEndTime().toString()
+                        myWork.getEndTime().toString(),
+                        myWork.getWorkStatus()
                 )
-        ).toList();
+        );
+
+        if(isMobile){
+            return responseStream.sorted(Comparator
+                            .comparing(GetMyWorksOfTodayResponse::status, (s1, s2) -> {
+                                if (s1.equals(INCOMPLETED) && s2.equals(COMPLETED)) {
+                                    return -1;
+                                }
+                                if (s1.equals(COMPLETED) && s2.equals(INCOMPLETED)) {
+                                    return 1;
+                                }
+                                return 0;
+                            })
+                            .thenComparing(GetMyWorksOfTodayResponse::startTime)
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        return responseStream.sorted(Comparator.comparing(GetMyWorksOfTodayResponse::startTime))
+                .collect(Collectors.toList());
     }
 
     public List<GetMyWorksOfWeeklyResponse> getMyWorksOfWeekly(LocalDate startDate, Long memberId) {
