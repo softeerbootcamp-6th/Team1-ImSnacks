@@ -6,8 +6,12 @@ public enum WorkResponseStatus {
     INVALID_MY_WORK_TIME(7003, "농작업 시간이 유효하지 않습니다."),
     MY_WORK_NOT_FOUND(7004, "해당 작업이 존재하지 않습니다."),
     MY_WORK_NOT_COMPLETED(7005, "해당 작업이 완료되지 않았습니다."),
-    LIFE_CYCLE_NOT_FOUND(7006, "일치하는 생육 단계가 존재하지 않습니다.")
-    ;
+    LIFE_CYCLE_NOT_FOUND(7006, "일치하는 생육 단계가 존재하지 않습니다."),
+    NULL_RECOMMENDED_WORK_ID(7006, "recommendedWorkId가 null입니다."),
+    NULL_MY_CROP_ID(7007, "myCropId가 null입니다."),
+    NULL_START_TIME(7008, "startTime이 null입니다."),
+    NULL_END_TIME(7009, "end이 null입니다."),
+    NULL_MY_WORK_ID(7010, "myWorkId가 null입니다.");
 
     private int code;
     private String message;
