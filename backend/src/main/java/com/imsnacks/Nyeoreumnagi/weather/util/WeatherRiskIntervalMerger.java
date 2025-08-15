@@ -40,13 +40,13 @@ public class WeatherRiskIntervalMerger {
     }
 
     private static Comparator<WeatherRisk> getRiskComparator() {
-        return Comparator.comparingInt((WeatherRisk r) -> r.getType().ordinal())
+        return Comparator.comparingInt((WeatherRisk r) -> r.getName().ordinal())
                 .reversed()
                 .thenComparingLong(WeatherRisk::getWeatherRiskId);
     }
 
     private static void addOrMergeInterval(List<GetFcstRiskResponse.WeatherRiskDto> merged, WeatherRisk risk, int start, int end) {
-        String riskType = risk.getType().getDescription();
+        String riskType = risk.getName().getDescription();
         String s = String.valueOf(start);
         String e = String.valueOf(end);
         if (!merged.isEmpty()) {

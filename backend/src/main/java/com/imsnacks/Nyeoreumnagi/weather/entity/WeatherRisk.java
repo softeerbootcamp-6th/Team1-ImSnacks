@@ -35,7 +35,7 @@ public class WeatherRisk {
     @Column(name = "ny")
     private int ny;
     @Enumerated(EnumType.STRING)
-    private WeatherRiskType type;
+    private WeatherRiskType name;
     @Column(name = "job_execution_id")
     private Long jobExecutionId;
 }

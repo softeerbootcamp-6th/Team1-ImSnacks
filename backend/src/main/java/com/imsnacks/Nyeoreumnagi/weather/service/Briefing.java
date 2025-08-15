@@ -26,7 +26,7 @@ public final class Briefing {
         final StringBuilder sb = new StringBuilder();
         sb.append(from).append(FROM_KOR).append(SPACE);
         sb.append(to).append(TO_KOR).append(SPACE);
-        sb.append(risk.getType().getDescription());
+        sb.append(risk.getName().getDescription());
 
         return sb.toString();
     }
@@ -55,8 +55,8 @@ public final class Briefing {
             }
 
             // 2. 특보 우선 순위
-            final long t1 = r1.getType().ordinal();
-            final long t2 = r2.getType().ordinal();
+            final long t1 = r1.getName().ordinal();
+            final long t2 = r2.getName().ordinal();
             if (t1 != t2) {
                 return (t1 > t2) ? -1 : 1;
             }
