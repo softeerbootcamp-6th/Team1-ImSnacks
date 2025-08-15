@@ -17,6 +17,30 @@ import {
 } from '@/utils/collisionUtils';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 
+const findFuturePosition = (
+  updated: WorkBlockType[],
+  draggingBlockId: number | null,
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  scrollOffset: number
+) => {
+  if (!draggingBlockId) return;
+
+  const draggedBlock = updated.find(block => block.id === draggingBlockId);
+  if (!draggedBlock) return;
+
+  const container = containerRef.current;
+  if (!container) return;
+
+  const containerRect = container.getBoundingClientRect();
+  const collisionFreePosition = findCollisionFreePosition(
+    draggedBlock,
+    updated.filter(block => block.id !== draggingBlockId),
+    containerRect,
+    scrollOffset
+  );
+  return collisionFreePosition;
+};
+
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
 
@@ -52,23 +76,14 @@ const WorkContainer = () => {
       updateWorkBlocks(updated);
 
       // futurePosition 업데이트 - 충돌하지 않는 위치 계산
-      if (draggingBlockId !== null) {
-        const draggedBlock = updated.find(
-          block => block.id === draggingBlockId
-        );
-        if (draggedBlock) {
-          const container = containerRef.current;
-          if (container) {
-            const containerRect = container.getBoundingClientRect();
-            const collisionFreePosition = findCollisionFreePosition(
-              draggedBlock,
-              updated.filter(block => block.id !== draggingBlockId),
-              containerRect,
-              scrollOffset
-            );
-            setFuturePosition(collisionFreePosition);
-          }
-        }
+      const futurePosition = findFuturePosition(
+        updated,
+        draggingBlockId,
+        containerRef,
+        scrollOffset
+      );
+      if (futurePosition) {
+        setFuturePosition(futurePosition);
       }
     },
   });

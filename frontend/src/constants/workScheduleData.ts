@@ -38,15 +38,15 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: '2025-08-14',
+    date: '2025-08-15',
     workCardData: [
       {
         id: 4,
         cropName: '배',
         workName: '관수',
         workTime: '00:00 - 03:00',
-        startTime: '2025-08-07T00:00:00',
-        endTime: '2025-08-07T03:00:00',
+        startTime: '2025-08-15T00:00:00',
+        endTime: '2025-08-15T03:00:00',
         isCompleted: true,
       },
       {
@@ -54,8 +54,8 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '복숭아',
         workName: '웃거름',
         workTime: '03:20 - 05:10',
-        startTime: '2025-08-07T03:20:00',
-        endTime: '2025-08-07T05:10:00',
+        startTime: '2025-08-15T03:20:00',
+        endTime: '2025-08-15T05:10:00',
         isCompleted: true,
       },
       {
@@ -63,8 +63,8 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '단감',
         workName: '병해충 방제',
         workTime: '06:20 - 08:10',
-        startTime: '2025-08-07T06:20:00',
-        endTime: '2025-08-07T08:10:00',
+        startTime: '2025-08-15T06:20:00',
+        endTime: '2025-08-15T08:10:00',
         isCompleted: true,
       },
       {
@@ -72,8 +72,8 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '배',
         workName: '병해충 방제',
         workTime: '06:50 - 09:10',
-        startTime: '2025-08-07T06:50:00',
-        endTime: '2025-08-07T09:10:00',
+        startTime: '2025-08-15T06:50:00',
+        endTime: '2025-08-15T09:10:00',
         isCompleted: true,
       },
       {
@@ -81,8 +81,8 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '배',
         workName: '병해충 방제',
         workTime: '08:30 - 10:10',
-        startTime: '2025-08-07T08:30:00',
-        endTime: '2025-08-07T10:10:00',
+        startTime: '2025-08-15T08:30:00',
+        endTime: '2025-08-15T10:10:00',
         isCompleted: true,
       },
       {
@@ -90,8 +90,8 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '배',
         workName: '병해충 방제',
         workTime: '07:50 - 09:10',
-        startTime: '2025-08-07T07:50:00',
-        endTime: '2025-08-07T09:10:00',
+        startTime: '2025-08-15T07:50:00',
+        endTime: '2025-08-15T09:10:00',
         isCompleted: true,
       },
     ],
