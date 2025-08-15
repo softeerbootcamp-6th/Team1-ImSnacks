@@ -5,29 +5,37 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
+import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.entity.SevenDayWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WeatherService {
@@ -36,6 +44,8 @@ public class WeatherService {
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final WeatherRiskRepository weatherRiskRepository;
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    private final FarmRepository farmRepository;
+    private final SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
@@ -106,7 +116,7 @@ public class WeatherService {
     }
 
     public GetWeatherBriefingResponse getWeatherBriefing(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
         final Farm farm = member.getFarm();
         if (farm == null) {
@@ -135,7 +145,7 @@ public class WeatherService {
     }
 
     public GetSunRiseSetTimeResponse getSunRiseSetTime(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
         final Farm farm = member.getFarm();
         if (farm == null) {
@@ -156,7 +166,7 @@ public class WeatherService {
     }
 
     public GetUVInfoResponse getUVInfo(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
         final Farm farm = member.getFarm();
         if (farm == null) {
@@ -176,8 +186,24 @@ public class WeatherService {
         return new GetUVInfoResponse(startTime, endTime, uvInfo.getMaxUVIndex());
     }
 
+    public List<GetSevenDaysForecastResponse> getSevenDaysForecast(Long memberId) {
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+        String regionCode = farm.getMidTempRegionCode();
+        List<SevenDayWeatherForecast> sevenDayWeatherForecasts = sevenDayWeatherForecastRepository.findByRegionCodeAndDateBetween(regionCode, LocalDate.now(), LocalDate.now().plusDays(6));
+
+        return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
+                forecast.getDate().isEqual(LocalDate.now()) ? "오늘" :
+                        forecast.getDate().isEqual(LocalDate.now().plusDays(1)) ? "내일" :
+                                forecast.getDate().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREA),
+                forecast.getWeatherCondition(),
+                forecast.getMaxTemperature(),
+                forecast.getMinTemperature()
+        )).toList();
+
+    }
+
     private void validateUVInfo(UVInfo uvInfo) {
-        if(uvInfo.getMaxUVStart() == null || uvInfo.getMaxUVEnd() == null) {
+        if (uvInfo.getMaxUVStart() == null || uvInfo.getMaxUVEnd() == null) {
             throw new WeatherException(NO_UV_INFO);
         }
     }

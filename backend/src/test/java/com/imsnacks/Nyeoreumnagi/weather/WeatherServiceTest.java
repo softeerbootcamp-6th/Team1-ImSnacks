@@ -6,15 +6,15 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
+import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetSunRiseSetTimeResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.entity.SevenDayWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
@@ -26,22 +26,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,8 +48,6 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class WeatherServiceTest {
-    private static final Logger log = LoggerFactory.getLogger(WeatherServiceTest.class);
-
     private static final LocalDateTime BASE = LocalDateTime.of(2025, 8, 5, 0, 0);
 
     @InjectMocks
@@ -63,7 +60,10 @@ class WeatherServiceTest {
     private WeatherRiskRepository weatherRiskRepository;
     @Mock
     private DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
-
+    @Mock
+    private FarmRepository farmRepository;
+    @Mock
+    private SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository;
 
     @Test
     void getWeatherGraph_성공() {
@@ -71,7 +71,7 @@ class WeatherServiceTest {
         Long memberId = 1L;
         WeatherMetric metric = WeatherMetric.TEMPERATURE;
 
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         Member member = new Member(1L, "", "", "", "", null, farm);
 
         List<ShortTermWeatherForecast> forecasts = IntStream.range(0, 24)
@@ -102,7 +102,7 @@ class WeatherServiceTest {
     void 기상_특보_겹침_우선순위대로_반환_성공() {
         //given
         long memberId = 1L;
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         Member member = new Member(1L, "", "", "", "", null, farm);
 
         LocalDateTime startA = BASE.withHour(1);
@@ -168,7 +168,7 @@ class WeatherServiceTest {
     void 정상_날씨_조회_성공() {
         // given
         long memberId = 1L;
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         Member member = new Member(1L, "", "", "", "", null, farm);
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
@@ -194,7 +194,7 @@ class WeatherServiceTest {
         Long memberId = 1L;
 
         // given: member, farm, sunrise/sunset mock
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         Member member = new Member(1L, "", "", "", "", null, farm);
 
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
@@ -238,7 +238,7 @@ class WeatherServiceTest {
     @Test
     void 날씨정보_없음_예외() {
         // given
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         Member member = new Member(1L, "", "", "", "", null, farm);
         when(memberRepository.findById(any())).thenReturn(java.util.Optional.of(member));
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(anyInt(), anyInt()))
@@ -247,5 +247,56 @@ class WeatherServiceTest {
         // when & then
         assertThatThrownBy(() -> weatherService.getWeatherCondition(1L))
                 .isInstanceOf(WeatherException.class);
+    }
+
+    @Test
+    void getSevenDaysForecast_정상적으로_호출되었을_때_7일치_예보를_반환한다() {
+        long memberId = 1L;
+        String regionCode = "regionCode";
+        Farm mockFarm = new Farm(1L, "mockFarmName", "region123", "sdfsdf", "sfd", 12.0, 54.2, 5, 2, regionCode, null);
+        List<SevenDayWeatherForecast> mockForecasts = new ArrayList<>();
+        int minTemp = 15;
+        int maxTemp = 25;
+
+        for (int i = 0; i < 7; i++) {
+            mockForecasts.add(
+                    new SevenDayWeatherForecast(
+                            "region123",
+                            LocalDate.now().plusDays(i),
+                            maxTemp + i,
+                            minTemp + i,
+                            null
+                    )
+            );
+        }
+
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(mockFarm));
+        when(sevenDayWeatherForecastRepository.findByRegionCodeAndDateBetween(
+                eq(regionCode), any(LocalDate.class), any(LocalDate.class)
+        )).thenReturn(mockForecasts);
+
+        List<GetSevenDaysForecastResponse> result = weatherService.getSevenDaysForecast(memberId);
+
+        assertNotNull(result);
+        assertEquals(7, result.size());
+
+        assertEquals("오늘", result.get(0).dayOfWeek());
+        assertEquals(maxTemp, result.get(0).maxTemperature());
+        assertEquals(minTemp, result.get(0).minTemperature());
+
+        assertEquals("내일", result.get(1).dayOfWeek());
+    }
+
+    @Test
+    void 멤버의_농장정보가_없을_때_MemberException이_발생한다() {
+        long memberId = 1L;
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.empty());
+
+        // When & Then (실행 및 검증)
+        MemberException exception = assertThrows(MemberException.class, () -> {
+            weatherService.getSevenDaysForecast(memberId);
+        });
+
+        assertEquals(NO_FARM_INFO, exception.getStatus());
     }
 }
