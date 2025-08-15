@@ -27,8 +27,8 @@ const RegisterWorkContainer = () => {
 
   const handleCreateWork = (workName: string) => {
     const now = dayjs();
-    const newStartTime = now.hour(now.hour() + 3).minute(0);
-    const newEndTime = now.hour(now.hour() + 5).minute(0);
+    const newStartTime = now.add(3, 'hour').minute(0);
+    const newEndTime = now.add(5, 'hour').minute(0);
     const { x, width } = calculateTimeToPosition(
       newStartTime.toISOString(),
       newEndTime.toISOString()

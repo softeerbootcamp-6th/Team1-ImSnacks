@@ -1,6 +1,8 @@
+import dayjs from 'dayjs';
+
 export const WORK_SCHEDULE_DATA = [
   {
-    date: '2025-08-08',
+    date: dayjs().subtract(2, 'day').format('YYYY-MM-DD'),
     workCardData: [
       {
         id: 1,
@@ -14,7 +16,7 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: '2025-08-07',
+    date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
     workCardData: [
       {
         id: 2,
@@ -38,60 +40,78 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: '2025-08-15',
+    date: dayjs().format('YYYY-MM-DD'),
     workCardData: [
       {
         id: 4,
         cropName: '배',
         workName: '관수',
-        workTime: '13:00 - 15:00',
-        startTime: '2025-08-15T13:00:00',
-        endTime: '2025-08-15T15:00:00',
+        workTime:
+          dayjs().add(1, 'hour').add(10, 'minute').format('HH:mm') +
+          ' - ' +
+          dayjs().add(2, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: dayjs().add(1, 'hour').add(10, 'minute').toISOString(),
+        endTime: dayjs().add(2, 'hour').add(30, 'minute').toISOString(),
         isCompleted: true,
       },
       {
         id: 5,
         cropName: '복숭아',
         workName: '웃거름',
-        workTime: '15:20 - 17:10',
-        startTime: '2025-08-15T15:20:00',
-        endTime: '2025-08-15T17:10:00',
+        workTime:
+          dayjs().add(1, 'hour').add(10, 'minute').format('HH:mm') +
+          ' - ' +
+          dayjs().add(2, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: dayjs().add(1, 'hour').add(10, 'minute').toISOString(),
+        endTime: dayjs().add(2, 'hour').add(30, 'minute').toISOString(),
         isCompleted: true,
       },
       {
         id: 6,
         cropName: '단감',
         workName: '병해충 방제',
-        workTime: '17:20 - 19:10',
-        startTime: '2025-08-15T17:20:00',
-        endTime: '2025-08-15T19:10:00',
+        workTime:
+          dayjs().add(3, 'hour').add(10, 'minute').format('HH:mm') +
+          ' - ' +
+          dayjs().add(4, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: dayjs().add(3, 'hour').add(10, 'minute').toISOString(),
+        endTime: dayjs().add(4, 'hour').add(30, 'minute').toISOString(),
         isCompleted: true,
       },
       {
         id: 7,
         cropName: '배',
         workName: '병해충 방제',
-        workTime: '19:20 - 21:10',
-        startTime: '2025-08-15T19:20:00',
-        endTime: '2025-08-15T21:10:00',
+        workTime:
+          dayjs().add(5, 'hour').add(10, 'minute').format('HH:mm') +
+          ' - ' +
+          dayjs().add(6, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: dayjs().add(4, 'hour').add(10, 'minute').toISOString(),
+        endTime: dayjs().add(5, 'hour').add(30, 'minute').toISOString(),
         isCompleted: true,
       },
       {
         id: 8,
         cropName: '배',
         workName: '병해충 방제',
-        workTime: '21:20 - 03:10',
-        startTime: '2025-08-15T21:20:00',
-        endTime: '2025-08-16T03:10:00',
+        workTime:
+          dayjs().add(7, 'hour').add(10, 'minute').format('HH:mm') +
+          ' - ' +
+          dayjs().add(12, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: dayjs().add(8, 'hour').add(10, 'minute').toISOString(),
+        endTime: dayjs().add(12, 'hour').add(30, 'minute').toISOString(),
         isCompleted: true,
       },
       {
         id: 9,
         cropName: '배',
         workName: '23시 방제',
-        workTime: '23:20 - 03:10',
-        startTime: '2025-08-15T23:20:00',
-        endTime: '2025-08-16T03:10:00',
+        workTime:
+          dayjs().add(10, 'hour').add(10, 'minute').format('HH:mm') +
+          ' - ' +
+          dayjs().add(15, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: dayjs().add(10, 'hour').add(10, 'minute').toISOString(),
+        endTime: dayjs().add(15, 'hour').add(30, 'minute').toISOString(),
         isCompleted: true,
       },
     ],
