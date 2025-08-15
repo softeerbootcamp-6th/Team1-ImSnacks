@@ -49,7 +49,7 @@ public class SunRiseSetReader implements ItemReader<SunRiseSetReaderResponseDtoW
         }
 
         UniqueNxNy uniqueNxNy = location.get(locationIndex);
-        int nx = uniqueNxNy.getId().getNx();;
+        int nx = uniqueNxNy.getId().getNx();
         int ny = uniqueNxNy.getId().getNy();
         double longitude = uniqueNxNy.getLatitude();
         double latitude = uniqueNxNy.getLongitude();
