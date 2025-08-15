@@ -14,5 +14,5 @@ export const backgroundTheme: Record<WeatherConditionsType, SerializedStyles> =
     SNOW: gradientStyles.backgroundAfternoonCloudy,
     NIGHT: gradientStyles.backgroundNightClear,
     CLOUDY_NIGHT: gradientStyles.backgroundNightClear,
-    HIT_WAVE: gradientStyles.backgroundAfternoonHot,
+    HEAT_WAVE: gradientStyles.backgroundAfternoonHot,
   };

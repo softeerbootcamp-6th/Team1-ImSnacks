@@ -27,5 +27,5 @@ export const GLASS_ICON: Record<
   LESS_CLOUDY: LessCloudyIcon,
   NIGHT: NightIcon,
   RAIN: RainIcon,
-  HIT_WAVE: SunnyIcon,
+  HEAT_WAVE: SunnyIcon,
 };

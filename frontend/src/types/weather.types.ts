@@ -19,7 +19,7 @@ export const WEATHER_CONDITIONS = {
   SNOW: 'SNOW',
   NIGHT: 'NIGHT',
   CLOUDY_NIGHT: 'CLOUDY_NIGHT',
-  HIT_WAVE: 'HIT_WAVE',
+  HEAT_WAVE: 'HEAT_WAVE',
 } as const;
 
 export type WeatherConditionsType =
