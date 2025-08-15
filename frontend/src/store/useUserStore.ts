@@ -5,7 +5,7 @@ export const useUserStore = create<{
   setNickName: (nickName: string) => void;
   resetNickName: () => void;
 }>(set => ({
-  nickName: '', // string
+  nickName: '',
   setNickName: (nickName: string) => set({ nickName }),
   resetNickName: () => set({ nickName: '' }),
 }));
