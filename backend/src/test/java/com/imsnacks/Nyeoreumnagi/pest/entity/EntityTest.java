@@ -35,8 +35,14 @@ public class EntityTest {
         PestRisk risk = PestRisk.builder()
                 .name("응애")
                 .build();
-        risk.addCondition(new PestCondition());
+        PestCondition cond = new PestCondition();
+        Crop crop = new Crop();
+
+        risk.assignCrop(crop);
+        risk.addCondition(cond);
 
         assertThat(risk.getName()).isEqualTo("응애");
+        assertThat(risk.getConditions().get(0)).isEqualTo(cond);
+        assertThat(risk.getCrop()).isEqualTo(crop);
     }
 }
