@@ -145,12 +145,19 @@ public class WeatherService {
         final int ny = farm.getNy();
 
         SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny);
+        validateSunriseSetTime(sunriseSunSetTime);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         String startTime = sunriseSunSetTime.getSunriseTime().format(formatter);
         String endTime = sunriseSunSetTime.getSunSetTime().format(formatter);
 
         return new GetSunRiseSetTimeResponse(startTime, endTime);
+    }
+
+    private void validateSunriseSetTime(final SunriseSunSetTime sunriseSunSetTime) {
+        if (sunriseSunSetTime == null || sunriseSunSetTime.getSunriseTime() == null || sunriseSunSetTime.getSunSetTime() == null) {
+            throw new WeatherException(NO_SUNRISE_SET);
+        }
     }
 
     private List<GetWeatherGraphResponse.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {
