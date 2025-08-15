@@ -1,8 +1,11 @@
 import dayjs from 'dayjs';
 
+dayjs.locale('ko');
+const now = dayjs();
+
 export const WORK_SCHEDULE_DATA = [
   {
-    date: dayjs().subtract(2, 'day').format('YYYY-MM-DD'),
+    date: now.subtract(2, 'day').format('YYYY-MM-DD'),
     workCardData: [
       {
         id: 1,
@@ -16,7 +19,7 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+    date: now.subtract(1, 'day').format('YYYY-MM-DD'),
     workCardData: [
       {
         id: 2,
@@ -40,18 +43,24 @@ export const WORK_SCHEDULE_DATA = [
     ],
   },
   {
-    date: dayjs().format('YYYY-MM-DD'),
+    date: now.format('YYYY-MM-DD'),
     workCardData: [
       {
         id: 4,
         cropName: '배',
         workName: '관수',
         workTime:
-          dayjs().add(1, 'hour').add(10, 'minute').format('HH:mm') +
+          now.add(1, 'hour').add(10, 'minute').format('HH:mm') +
           ' - ' +
-          dayjs().add(2, 'hour').add(30, 'minute').format('HH:mm'),
-        startTime: dayjs().add(1, 'hour').add(10, 'minute').toISOString(),
-        endTime: dayjs().add(2, 'hour').add(30, 'minute').toISOString(),
+          now.add(2, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: now
+          .add(1, 'hour')
+          .add(10, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
+        endTime: now
+          .add(2, 'hour')
+          .add(30, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
         isCompleted: true,
       },
       {
@@ -59,11 +68,17 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '복숭아',
         workName: '웃거름',
         workTime:
-          dayjs().add(1, 'hour').add(10, 'minute').format('HH:mm') +
+          now.add(1, 'hour').add(10, 'minute').format('HH:mm') +
           ' - ' +
-          dayjs().add(2, 'hour').add(30, 'minute').format('HH:mm'),
-        startTime: dayjs().add(1, 'hour').add(10, 'minute').toISOString(),
-        endTime: dayjs().add(2, 'hour').add(30, 'minute').toISOString(),
+          now.add(2, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: now
+          .add(1, 'hour')
+          .add(10, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
+        endTime: now
+          .add(2, 'hour')
+          .add(30, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
         isCompleted: true,
       },
       {
@@ -71,11 +86,17 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '단감',
         workName: '병해충 방제',
         workTime:
-          dayjs().add(3, 'hour').add(10, 'minute').format('HH:mm') +
+          now.add(3, 'hour').add(10, 'minute').format('HH:mm') +
           ' - ' +
-          dayjs().add(4, 'hour').add(30, 'minute').format('HH:mm'),
-        startTime: dayjs().add(3, 'hour').add(10, 'minute').toISOString(),
-        endTime: dayjs().add(4, 'hour').add(30, 'minute').toISOString(),
+          now.add(4, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: now
+          .add(3, 'hour')
+          .add(10, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
+        endTime: now
+          .add(4, 'hour')
+          .add(30, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
         isCompleted: true,
       },
       {
@@ -83,11 +104,17 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '배',
         workName: '병해충 방제',
         workTime:
-          dayjs().add(5, 'hour').add(10, 'minute').format('HH:mm') +
+          now.add(5, 'hour').add(10, 'minute').format('HH:mm') +
           ' - ' +
-          dayjs().add(6, 'hour').add(30, 'minute').format('HH:mm'),
-        startTime: dayjs().add(4, 'hour').add(10, 'minute').toISOString(),
-        endTime: dayjs().add(5, 'hour').add(30, 'minute').toISOString(),
+          now.add(6, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: now
+          .add(5, 'hour')
+          .add(10, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
+        endTime: now
+          .add(6, 'hour')
+          .add(30, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
         isCompleted: true,
       },
       {
@@ -95,11 +122,17 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '배',
         workName: '병해충 방제',
         workTime:
-          dayjs().add(7, 'hour').add(10, 'minute').format('HH:mm') +
+          now.add(7, 'hour').add(10, 'minute').format('HH:mm') +
           ' - ' +
-          dayjs().add(12, 'hour').add(30, 'minute').format('HH:mm'),
-        startTime: dayjs().add(8, 'hour').add(10, 'minute').toISOString(),
-        endTime: dayjs().add(12, 'hour').add(30, 'minute').toISOString(),
+          now.add(12, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: now
+          .add(7, 'hour')
+          .add(10, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
+        endTime: now
+          .add(12, 'hour')
+          .add(30, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
         isCompleted: true,
       },
       {
@@ -107,11 +140,17 @@ export const WORK_SCHEDULE_DATA = [
         cropName: '배',
         workName: '23시 방제',
         workTime:
-          dayjs().add(10, 'hour').add(10, 'minute').format('HH:mm') +
+          now.add(10, 'hour').add(10, 'minute').format('HH:mm') +
           ' - ' +
-          dayjs().add(15, 'hour').add(30, 'minute').format('HH:mm'),
-        startTime: dayjs().add(10, 'hour').add(10, 'minute').toISOString(),
-        endTime: dayjs().add(15, 'hour').add(30, 'minute').toISOString(),
+          now.add(15, 'hour').add(30, 'minute').format('HH:mm'),
+        startTime: now
+          .add(10, 'hour')
+          .add(10, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
+        endTime: now
+          .add(15, 'hour')
+          .add(30, 'minute')
+          .format('YYYY-MM-DDTHH:mm'),
         isCompleted: true,
       },
     ],

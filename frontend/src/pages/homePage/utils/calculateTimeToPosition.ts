@@ -5,15 +5,15 @@ const calculateTimeToPosition = (startTime: string, endTime: string) => {
   const startDateTime = dayjs(startTime);
   const endDateTime = dayjs(endTime);
 
-  // 시작 시간을 분으로 변환 (자정 기준)
-  const startTotalMinutes = startDateTime.hour() * 60 + startDateTime.minute();
-  const endTotalMinutes = endDateTime.hour() * 60 + endDateTime.minute();
+  const baseDateTime = dayjs()
+    .set('minute', 0)
+    .set('second', 0)
+    .set('millisecond', 0);
 
-  // 작업 시간의 길이 (분)
-  const durationMinutes = endTotalMinutes - startTotalMinutes;
+  const durationMinutes = endDateTime.diff(startDateTime, 'minute');
+  const relativeMinutes = startDateTime.diff(baseDateTime, 'minute');
 
-  // WorkCell 너비(92px) + gap(8px) = 100px, 1시간 = 60분
-  const x = (startTotalMinutes / 60) * 100;
+  const x = (relativeMinutes / 60) * 100;
   const width = (durationMinutes / 60) * 100;
 
   return { x, width };
