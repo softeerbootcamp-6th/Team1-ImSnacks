@@ -1,37 +1,16 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { postLogin } from '@/apis/auth.api';
-import { token } from '@/store/token';
 import S from './LoginPage.style';
-import { useUserStore } from '@/store/useUserStore';
+import { useLogin } from './hooks/useLogin';
 
 const LoginPage = () => {
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    try {
-      const res = await postLogin({ identifier, password });
-      if (res.code === 200) {
-        token.set(res.data.accessToken!);
-        useUserStore.setState({ nickName: res.data.nickname });
-        navigate('/');
-      } else {
-        setError('이메일 또는 비밀번호가 올바르지 않습니다.');
-      }
-    } catch {
-      setError('로그인 중 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    identifier,
+    password,
+    isLoading,
+    error,
+    handleIdentifierChange,
+    handlePasswordChange,
+    handleSubmit,
+  } = useLogin();
 
   return (
     <>
@@ -50,7 +29,7 @@ const LoginPage = () => {
                 id="identifier"
                 type="text"
                 value={identifier}
-                onChange={e => setIdentifier(e.target.value)}
+                onChange={e => handleIdentifierChange(e.target.value)}
                 placeholder="아이디를 입력하세요"
                 css={S.LoginInput}
                 required
@@ -65,7 +44,7 @@ const LoginPage = () => {
                 id="password"
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => handlePasswordChange(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
                 css={S.LoginInput}
                 required
