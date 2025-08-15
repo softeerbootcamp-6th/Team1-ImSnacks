@@ -38,6 +38,8 @@ public class Farm {
     @Column(nullable = false)
     private Integer ny;
 
+    private String midTempRegionCode;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Member member;
 }

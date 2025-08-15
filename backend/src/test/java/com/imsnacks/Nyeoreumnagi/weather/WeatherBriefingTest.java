@@ -82,7 +82,7 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
 
@@ -100,7 +100,7 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
 
@@ -136,7 +136,7 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
 
