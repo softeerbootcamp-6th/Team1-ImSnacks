@@ -66,7 +66,7 @@ public class SunRiseSetReader implements ItemReader<SunRiseSetReaderResponseDtoW
 
     private void setLocation(){
         if(location == null) {
-            location = uniqueNxNyRepository.findUniqueNxNy();
+            location = uniqueNxNyRepository.findAll();
         }
     }
 }

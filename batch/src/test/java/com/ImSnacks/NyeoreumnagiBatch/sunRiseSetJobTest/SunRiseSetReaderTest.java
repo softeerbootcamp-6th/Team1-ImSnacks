@@ -33,7 +33,7 @@ class SunRiseSetReaderTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), "1100000000", 35.1, 127.1));
-        when(uniqueNxNyRepository.findUniqueNxNy()).thenReturn(areaCodes);
+        when(uniqueNxNyRepository.findAll()).thenReturn(areaCodes);
         reader = new SunRiseSetReader("20250813", apiCaller, uniqueNxNyRepository);
         // Static 변수 초기화 강제
         try {
