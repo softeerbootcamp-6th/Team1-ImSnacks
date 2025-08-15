@@ -10,7 +10,7 @@ public enum WorkResponseStatus {
     NULL_RECOMMENDED_WORK_ID(7006, "recommendedWorkId가 null입니다."),
     NULL_MY_CROP_ID(7007, "myCropId가 null입니다."),
     NULL_START_TIME(7008, "startTime이 null입니다."),
-    NULL_END_TIME(7009, "end이 null입니다."),
+    NULL_END_TIME(7009, "endTime이 null입니다."),
     NULL_MY_WORK_ID(7010, "myWorkId가 null입니다.");
 
     private int code;
