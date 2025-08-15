@@ -1,6 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.common.auth.controller;
 
 import com.imsnacks.Nyeoreumnagi.common.auth.dto.request.LoginRequest;
+import com.imsnacks.Nyeoreumnagi.common.auth.dto.response.LoginResponse;
 import com.imsnacks.Nyeoreumnagi.common.auth.jwt.AuthTokens;
 import com.imsnacks.Nyeoreumnagi.common.auth.jwt.JwtProvider;
 import com.imsnacks.Nyeoreumnagi.common.auth.service.AuthService;
@@ -8,24 +9,17 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.INCORRECT_PASSWORD;
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.MEMBER_NOT_FOUND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -60,10 +54,10 @@ class AuthControllerTest {
 
         LoginRequest request = new LoginRequest("testUser", "1234");
 
-        AuthTokens tokens = authService.login(request);
+        LoginResponse response = authService.login(request);
 
-        assertThat(tokens.getAccessToken()).isEqualTo(accessToken);
-        assertThat(tokens.getRefreshToken()).isEqualTo(refreshToken);
+        assertThat(response.accessToken()).isEqualTo(accessToken);
+        assertThat(response.refreshToken()).isEqualTo(refreshToken);
 
         verify(memberRepository, times(1)).findOneByIdentifier(identifier);
         verify(jwtProvider, times(1)).createToken(1L);
