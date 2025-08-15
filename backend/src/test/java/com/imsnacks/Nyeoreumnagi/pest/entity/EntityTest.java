@@ -50,8 +50,8 @@ public class EntityTest {
     void Crop_생성_성공() {
         Crop crop = new Crop();
         PestRisk risk = new PestRisk();
-        risk.assignCrop(crop);
-        assertThat(risk.getCrop()).isEqualTo(crop);
+        crop.addPestRisk(risk);
+        assertThat(crop.getPestRisks().get(0)).isEqualTo(risk);
     }
 
 }
