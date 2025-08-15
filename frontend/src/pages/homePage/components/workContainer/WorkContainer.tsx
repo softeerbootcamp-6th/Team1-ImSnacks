@@ -19,6 +19,7 @@ import {
   cleanupDragState,
 } from '../../utils/workContainerUtils';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
+import MainGraph from '../mainGraph/MainGraph';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
@@ -206,6 +207,7 @@ const WorkContainer = () => {
             setScrollOffset(e.currentTarget.scrollLeft);
           }}
         >
+          <MainGraph />
           {workBlocks.map(block => {
             const { id, position } = block;
             const isCurrentlyDragging =
