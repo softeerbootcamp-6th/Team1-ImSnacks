@@ -18,6 +18,7 @@ export * from './GetWeatherBriefing';
 export * from './GetWeatherCondition';
 export * from './GetWeatherGraph';
 export * from './LoginRequest';
+export * from './LoginResponse';
 export * from './ModifyMyWorkRequest';
 export * from './ModifyMyWorkResponse';
 export * from './MyCropResponse';

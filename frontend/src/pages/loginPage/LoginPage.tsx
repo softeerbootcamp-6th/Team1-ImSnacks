@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { postLogin } from '@/apis/auth.api';
 import { token } from '@/store/token';
 import S from './LoginPage.style';
+import { useUserStore } from '@/store/useUserStore';
 
 const LoginPage = () => {
   const [identifier, setIdentifier] = useState('');
@@ -20,6 +21,7 @@ const LoginPage = () => {
       const res = await postLogin({ identifier, password });
       if (res.code === 200) {
         token.set(res.data.accessToken!);
+        useUserStore.setState({ nickName: res.data.nickname });
         navigate('/');
       } else {
         setError('이메일 또는 비밀번호가 올바르지 않습니다.');

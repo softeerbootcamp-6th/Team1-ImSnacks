@@ -1,5 +1,5 @@
 import HTTP from './http';
-import { LoginRequest, AuthTokens } from '@/types/openapiGenerator';
+import { LoginRequest, LoginResponse } from '@/types/openapiGenerator';
 
 export const postLogin = (body: LoginRequest) =>
-  HTTP.post<LoginRequest, AuthTokens>('/auth/login', body);
+  HTTP.post<LoginRequest, LoginResponse>('/auth/login', body);
