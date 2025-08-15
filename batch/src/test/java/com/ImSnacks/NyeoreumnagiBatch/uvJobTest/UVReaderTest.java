@@ -29,7 +29,7 @@ class UVReaderTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), "1100000000"));
-        when(uniqueNxNyRepository.findAreaCodes()).thenReturn(areaCodes);
+        when(uniqueNxNyRepository.findAll()).thenReturn(areaCodes);
         reader = new UVReader("2025081300", apiCaller, uniqueNxNyRepository);
         // Static 변수 초기화 강제
         try {
