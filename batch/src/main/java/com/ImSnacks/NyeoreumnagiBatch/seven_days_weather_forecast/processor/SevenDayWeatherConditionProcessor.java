@@ -1,7 +1,5 @@
-package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast;
+package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor;
 
-import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTotalForecastResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherForecastResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherConditionDto;
 import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherCondition;
@@ -12,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

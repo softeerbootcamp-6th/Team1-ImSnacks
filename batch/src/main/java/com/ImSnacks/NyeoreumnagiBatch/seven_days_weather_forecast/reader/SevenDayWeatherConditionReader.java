@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast;
+package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherForecastResponseDto;
 import lombok.extern.slf4j.Slf4j;

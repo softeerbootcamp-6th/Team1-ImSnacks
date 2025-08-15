@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast;
+package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor;
 
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastResponseDto;
