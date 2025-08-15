@@ -4,7 +4,7 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 
 import java.util.List;
 
-public record GetWeatherGraph(
+public record GetWeatherGraphResponse(
         int max,
         int min,
         WeatherMetric weatherMetric,
