@@ -57,6 +57,7 @@ public class ShortTermWeatherForecast {
         if(precipitation > 0) return WeatherCondition.RAIN;
         if(windSpeed >= 14) return WeatherCondition.STRONG_WIND;
         if(fcstTime >= times.getSunriseTime().getHour() && fcstTime < times.getSunSetTime().getHour()){
+            if(temperature >= 33) return WeatherCondition.HEAT_WAVE;
             if(skyStatus == 1) return WeatherCondition.SUNNY;
             if(skyStatus == 3) return WeatherCondition.LESS_CLOUDY;
             if(skyStatus == 4) return WeatherCondition.CLOUDY;
