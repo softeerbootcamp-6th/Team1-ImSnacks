@@ -11,118 +11,14 @@ import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
 import animateBlock from '@/utils/animateBlock';
+import { hasCollisionWithOthers } from '@/utils/collisionUtils';
 import {
-  findCollisionFreePosition,
-  hasCollisionWithOthers,
-} from '@/utils/collisionUtils';
+  findFuturePosition,
+  handleCollisionRevert,
+  moveToValidPosition,
+  cleanupDragState,
+} from '../../utils/workContainerUtils';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
-
-const findFuturePosition = (
-  updated: WorkBlockType[],
-  draggingBlockId: number | null,
-  containerRef: React.RefObject<HTMLDivElement | null>,
-  scrollOffset: number
-) => {
-  if (!draggingBlockId) return;
-
-  const draggedBlock = updated.find(block => block.id === draggingBlockId);
-  if (!draggedBlock) return;
-
-  const container = containerRef.current;
-  if (!container) return;
-
-  const containerRect = container.getBoundingClientRect();
-  const collisionFreePosition = findCollisionFreePosition(
-    draggedBlock,
-    updated.filter(block => block.id !== draggingBlockId),
-    containerRect,
-    scrollOffset
-  );
-  return collisionFreePosition;
-};
-
-const handleCollisionRevert = (
-  draggingId: number,
-  draggingBlock: WorkBlockType,
-  futurePosition: Position | null,
-  initialPosition: Position | null,
-  revertAnimationRef: React.RefObject<number | null>,
-  setIsRevertingItemId: React.Dispatch<React.SetStateAction<number | null>>,
-  latestBlocksRef: React.RefObject<WorkBlockType[]>,
-  updateWorkBlocks: (blocks: WorkBlockType[]) => void
-) => {
-  if (futurePosition) {
-    animateBlock(
-      revertAnimationRef,
-      setIsRevertingItemId,
-      latestBlocksRef,
-      updateWorkBlocks,
-      draggingId,
-      draggingBlock.position,
-      futurePosition
-    );
-  } else {
-    // futurePosition이 없으면 원래 위치로 되돌리기
-    setIsRevertingItemId(draggingId);
-
-    if (initialPosition) {
-      animateBlock(
-        revertAnimationRef,
-        setIsRevertingItemId,
-        latestBlocksRef,
-        updateWorkBlocks,
-        draggingId,
-        draggingBlock.position,
-        initialPosition
-      );
-    }
-  }
-};
-
-const handleInvalidPositionRevert = (
-  draggingId: number,
-  draggingBlock: WorkBlockType,
-  revertAnimationRef: React.RefObject<number | null>,
-  setIsRevertingItemId: React.Dispatch<React.SetStateAction<number | null>>,
-  latestBlocksRef: React.RefObject<WorkBlockType[]>,
-  updateWorkBlocks: (blocks: WorkBlockType[]) => void
-) => {
-  if (
-    !Object.values(WORK_TIME_Y_COORDINATE).includes(draggingBlock.position.y)
-  ) {
-    const closestY = Object.values(WORK_TIME_Y_COORDINATE).reduce(
-      (closest, current) => {
-        return Math.abs(current - draggingBlock.position.y) <
-          Math.abs(closest - draggingBlock.position.y)
-          ? current
-          : closest;
-      },
-      WORK_TIME_Y_COORDINATE[1]
-    );
-
-    animateBlock(
-      revertAnimationRef,
-      setIsRevertingItemId,
-      latestBlocksRef,
-      updateWorkBlocks,
-      draggingId,
-      draggingBlock.position,
-      { x: draggingBlock.position.x, y: closestY }
-    );
-    return true;
-  }
-  return false;
-};
-
-const cleanupDragState = (
-  setDraggingBlockId: React.Dispatch<React.SetStateAction<number | null>>,
-  setFuturePosition: React.Dispatch<React.SetStateAction<Position | null>>,
-  endDrag: () => void
-) => {
-  setDraggingBlockId(null);
-  setFuturePosition(null);
-  endDrag();
-};
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
@@ -235,7 +131,8 @@ const WorkContainer = () => {
         }
 
         // 유효하지 않은 위치 검사 및 되돌리기
-        const isInvalidPosition = handleInvalidPositionRevert(
+        const isInvalidPosition = moveToValidPosition(
+          Object.values(WORK_TIME_Y_COORDINATE),
           draggingId,
           draggingBlock,
           revertAnimationRef,
