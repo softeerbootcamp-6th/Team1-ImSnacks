@@ -8,6 +8,8 @@ import type { WorkBlockType } from '@/types/workCard.type';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
 import { calculateTimeToPosition } from '../../utils/getInitialWorkBlocks';
 import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
+import { getYCoordinate } from '@/constants/workTimeCoordinate';
+import { findCollisionFreePosition } from '@/utils/collisionUtils';
 
 const RegisterWorkContainer = () => {
   const crops = CROPS;
@@ -17,28 +19,61 @@ const RegisterWorkContainer = () => {
     name: string;
   }>(crops[0]);
 
-  const { addWorkBlock } = useWorkBlocks();
+  const { addWorkBlock, workBlocks } = useWorkBlocks();
 
   const handleCropClick = (crop: { id: number; name: string }) => {
     setSelectedCrop(crop);
   };
 
   const handleCreateWork = (workName: string) => {
+    const now = dayjs();
+    const newStartTime = now.hour(now.hour() + 3).minute(0);
+    const newEndTime = now.hour(now.hour() + 5).minute(0);
     const { x, width } = calculateTimeToPosition(
-      dayjs().hour(9).minute(0).toISOString(),
-      dayjs().hour(10).minute(0).toISOString()
+      newStartTime.toISOString(),
+      newEndTime.toISOString()
     );
 
-    const newWorkBlock: WorkBlockType = {
+    // 임시 블록 생성하여 겹침 검사용으로 사용
+    const tempBlock: WorkBlockType = {
       id: Date.now(),
-      position: { x, y: 40 },
+      position: { x, y: getYCoordinate(1) },
       size: { width, height: 50 },
       cropName: selectedCrop?.name || '기본',
       workName: workName,
-      workTime: '09:00 - 10:00',
-      startTime: dayjs().hour(9).minute(0).toISOString(),
-      endTime: dayjs().hour(10).minute(0).toISOString(),
+      workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
+        'HH:mm'
+      )}`,
+      startTime: newStartTime.toISOString(),
+      endTime: newEndTime.toISOString(),
     };
+
+    // 기존 블록들과 겹치지 않는 새로운 포지션 찾기
+    const containerRect = {
+      x: 0,
+      y: 0,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      top: 0,
+      right: window.innerWidth,
+      bottom: window.innerHeight,
+      left: 0,
+      toJSON: () => ({}),
+    } as DOMRect;
+    const scrollOffset = 0; // 스크롤 오프셋은 0으로 설정
+
+    const collisionFreePosition = findCollisionFreePosition(
+      tempBlock,
+      workBlocks,
+      containerRect,
+      scrollOffset
+    );
+
+    const newWorkBlock: WorkBlockType = {
+      ...tempBlock,
+      position: collisionFreePosition,
+    };
+
     addWorkBlock(newWorkBlock);
   };
 
