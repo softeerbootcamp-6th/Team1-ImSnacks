@@ -38,11 +38,13 @@ export const useLogin = (): UseLoginReturn => {
 
     if (!identifier) {
       setError('아이디를 입력해주세요.');
+      setIsLoading(false);
       return;
     }
 
     if (!password) {
       setError('비밀번호를 입력해주세요.');
+      setIsLoading(false);
       return;
     }
 
