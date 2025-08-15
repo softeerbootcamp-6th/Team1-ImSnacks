@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast;
+package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer;
 
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherConditionDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.entity.MidTempRegionCode;

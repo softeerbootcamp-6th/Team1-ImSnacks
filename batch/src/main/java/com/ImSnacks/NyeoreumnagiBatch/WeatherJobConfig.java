@@ -1,17 +1,17 @@
 package com.ImSnacks.NyeoreumnagiBatch;
 
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayTemperatureProcessor;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayWeatherConditionProcessor;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDayTemperatureReader;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDayWeatherConditionReader;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDayTemperatureWriter;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDayWeatherConditionWriter;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.WeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.WeatherWriter;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
-import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.*;
-import com.ImSnacks.NyeoreumnagiBatch.processor.WeatherProcessor;
-import com.ImSnacks.NyeoreumnagiBatch.reader.WeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.*;
-import com.ImSnacks.NyeoreumnagiBatch.reader.dto.VilageFcstResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.writer.WeatherWriter;
-import com.ImSnacks.NyeoreumnagiBatch.writer.dto.ShortTermWeatherDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -54,7 +54,7 @@ public class WeatherJobConfig {
 
     @Bean
     public Job sevenDayTemperatureJob(JobRepository jobRepository, Step sevenDayTemperatureStep) {
-        log.info("sevenDayWeatherConditionStep Start");
+        log.info("sevenDayTemperatureStep Start");
         return new JobBuilder("sevenDayTemperatureJob", jobRepository)
                 .start(sevenDayTemperatureStep)
                 .build();

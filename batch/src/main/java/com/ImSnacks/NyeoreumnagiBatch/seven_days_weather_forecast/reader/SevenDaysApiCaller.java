@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast;
+package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherForecastResponseDto;
@@ -14,9 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static com.ImSnacks.NyeoreumnagiBatch.reader.ApiRequestValues.*;
-import static com.ImSnacks.NyeoreumnagiBatch.reader.ApiRequestValues.DATA_TYPE;
-import static com.ImSnacks.NyeoreumnagiBatch.reader.ApiRequestValues.PAGE_NO;
+import static com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDayApiRequestValue.*;
 
 @Slf4j
 @Component
@@ -51,8 +49,7 @@ public class SevenDaysApiCaller {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        SevenDayTemperatureForecastResponseDto dto = new ObjectMapper().readValue(response.body(), SevenDayTemperatureForecastResponseDto.class);
-        return dto;
+        return new ObjectMapper().readValue(response.body(), SevenDayTemperatureForecastResponseDto.class);
     }
 
     public String buildMidRangeWeatherUriString(String baseDate, String regId, boolean isMidLandFcst) {
@@ -67,8 +64,7 @@ public class SevenDaysApiCaller {
                 .queryParam("tmFc", baseDate + "0600")
                 .queryParam("regId", regId)
                 .build();
-        String uriString =  uri.toUriString();
-        return uriString;
+        return uri.toUriString();
     }
 
 }
