@@ -40,7 +40,7 @@ public class UVProcessor implements ItemProcessor<UVReaderResponseDtoWithNxNy, U
             }
         }
         if(startTime == null || endTime == null){
-            throw new UVProcessorException("자외선의 최대값을 걔산할 수 없습니다.");
+            throw new UVProcessorException("자외선의 최대값을 계산할 수 없습니다.");
         }
 
         return new UVProcessorResponseDto(nx, ny, maxValue, startTime, endTime);

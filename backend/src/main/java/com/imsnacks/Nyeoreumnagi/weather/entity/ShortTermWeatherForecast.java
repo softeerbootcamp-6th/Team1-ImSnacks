@@ -2,8 +2,7 @@ package com.imsnacks.Nyeoreumnagi.weather.entity;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
-import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus;
-import com.imsnacks.Nyeoreumnagi.weather.service.SunriseSunSetTime;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -12,7 +11,6 @@ import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.Builder;
 
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.CANNOT_CALCULATE_WEATHER_CONDITION;

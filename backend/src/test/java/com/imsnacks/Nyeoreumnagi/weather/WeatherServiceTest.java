@@ -7,13 +7,17 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetSunRiseSetTimeResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
-import com.imsnacks.Nyeoreumnagi.weather.service.SunriseSunSetTime;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +39,7 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
@@ -84,7 +90,7 @@ class WeatherServiceTest {
         given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
 
         // when
-        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph response = weatherService.getWeatherGraph(memberId, metric);
+        GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
 
         // then
         assertThat(response.weatherMetric()).isEqualTo(metric);
@@ -137,8 +143,8 @@ class WeatherServiceTest {
                 .thenReturn(Arrays.asList(riskA, riskB, riskC));
 
         //when
-        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk response = weatherService.getWeatherRisk(memberId);
-        List<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk.WeatherRiskDto> risks = response.items();
+        GetFcstRiskResponse response = weatherService.getWeatherRisk(memberId);
+        List<GetFcstRiskResponse.WeatherRiskDto> risks = response.items();
 
         //then
         assertThat(risks.size()).isEqualTo(4);
@@ -172,15 +178,38 @@ class WeatherServiceTest {
         when(forecast.getTemperature()).thenReturn(23);
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).thenReturn(java.util.List.of(forecast));
-        when(dashboardTodayWeatherRepository.findByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
+        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(Optional.ofNullable(sunriseSunSetTime));
 
         // when
-        com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherCondition response = weatherService.getWeatherCondition(memberId);
+        GetWeatherConditionResponse response = weatherService.getWeatherCondition(memberId);
 
         // then
         assertThat(response.weatherCondition()).isEqualTo(WeatherCondition.SUNNY.toString());
         assertThat(response.weatherKeyword()).isEqualTo(WeatherCondition.SUNNY.getKeyword());
         assertThat(response.temperature()).isEqualTo(23);
+    }
+
+    @Test
+    void 일출몰_시각_조회_성공() {
+        Long memberId = 1L;
+
+        // given: member, farm, sunrise/sunset mock
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Member member = new Member(1L, "", "", "", "", null, farm);
+
+        SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
+        when(sunriseSunSetTime.getSunriseTime()).thenReturn(LocalTime.of(5, 40));
+        when(sunriseSunSetTime.getSunSetTime()).thenReturn(LocalTime.of(19, 22));
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(Optional.of(sunriseSunSetTime));
+
+        // when
+        GetSunRiseSetTimeResponse response = weatherService.getSunRiseSetTime(memberId);
+
+        // then
+        assertThat(response.startTime()).isEqualTo("05:40");
+        assertThat(response.endTime()).isEqualTo("19:22");
     }
 
     @Test

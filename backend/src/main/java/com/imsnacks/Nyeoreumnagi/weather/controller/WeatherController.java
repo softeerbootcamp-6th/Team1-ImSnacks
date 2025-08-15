@@ -4,6 +4,7 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +30,7 @@ public class WeatherController {
     @ApiResponse(responseCode = "200", description = "날씨 그래프 조회 성공")
     @ApiResponse(responseCode = "400", description = "날씨 그래프 조회 실패")
     @GetMapping()
-    public ResponseEntity<CustomResponseBody<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraph>> getWeatherGraph(@PreAuthorize Long memberId, @RequestParam WeatherMetric weatherMetric){
+    public ResponseEntity<CustomResponseBody<GetWeatherGraphResponse>> getWeatherGraph(@PreAuthorize Long memberId, @RequestParam WeatherMetric weatherMetric){
         return ResponseUtil.success(weatherService.getWeatherGraph(memberId, weatherMetric));
     }
 
@@ -38,7 +39,7 @@ public class WeatherController {
     @ApiResponse(responseCode = "200", description = "날씨 리스크 조회 성공")
     @ApiResponse(responseCode = "400", description = "날씨 리스크 조회 실패")
     @GetMapping("/fcstRisk")
-    public ResponseEntity<CustomResponseBody<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRisk>> getFcstRiskResponse(@PreAuthorize Long memberId){
+    public ResponseEntity<CustomResponseBody<GetFcstRiskResponse>> getFcstRiskResponse(@PreAuthorize Long memberId){
         return ResponseUtil.success(weatherService.getWeatherRisk(memberId));
     }
 
@@ -47,7 +48,7 @@ public class WeatherController {
     @ApiResponse(responseCode = "200", description = "날씨 브리핑 조회 성공")
     @ApiResponse(responseCode = "400", description = "날씨 브리핑 조회 실패")
     @GetMapping("/briefing")
-    public ResponseEntity<CustomResponseBody<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefing>> getWeatherBriefingResponse(@PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<GetWeatherBriefingResponse>> getWeatherBriefingResponse(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getWeatherBriefing(memberId));
     }
   
@@ -56,7 +57,25 @@ public class WeatherController {
     @ApiResponse(responseCode = "200", description = "날씨 요약 조회 성공")
     @ApiResponse(responseCode = "400", description = "날씨 요약 조회 실패")
     @GetMapping("/now")
-    public ResponseEntity<CustomResponseBody<com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherCondition>> getWeatherCondition(@PreAuthorize Long memberId){
+    public ResponseEntity<CustomResponseBody<GetWeatherConditionResponse>> getWeatherCondition(@PreAuthorize Long memberId){
         return ResponseUtil.success(weatherService.getWeatherCondition(memberId));
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "일출몰 시각 조회")
+    @ApiResponse(responseCode = "200", description = "일출몰 시각 조회 성공")
+    @ApiResponse(responseCode = "400", description = "일출몰 시각 조회 실패")
+    @GetMapping("/sunriseSet")
+    public ResponseEntity<CustomResponseBody<GetSunRiseSetTimeResponse>> getSunRiseSetTime(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getSunRiseSetTime(memberId));
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "일일 최고 자외선 지수 및 시각 조회")
+    @ApiResponse(responseCode = "200", description = "일일 최고 자외선 지수 및 시각 조회 성공")
+    @ApiResponse(responseCode = "400", description = "일일 최고 자외선 지수 및 시각 조회 실패")
+    @GetMapping("/uv")
+    public ResponseEntity<CustomResponseBody<GetUVInfoResponse>> getUVInfo(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getUVInfo(memberId));
     }
 }

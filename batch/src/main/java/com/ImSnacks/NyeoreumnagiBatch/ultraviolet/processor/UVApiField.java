@@ -28,10 +28,6 @@ public enum UVApiField {
         this.endTime = endTime;
     }
 
-    public String getKey() {
-        return key;
-    }
-
     public String getValue(UVReaderResponseDto.Item item){
         return gettingValueMethod.apply(item);
     }

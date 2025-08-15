@@ -1,4 +1,4 @@
-package com.imsnacks.Nyeoreumnagi.weather.service;
+package com.imsnacks.Nyeoreumnagi.weather.service.projection_entity;
 
 import java.time.LocalTime;
 
