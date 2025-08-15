@@ -41,6 +41,89 @@ const findFuturePosition = (
   return collisionFreePosition;
 };
 
+const handleCollisionRevert = (
+  draggingId: number,
+  draggingBlock: WorkBlockType,
+  futurePosition: Position | null,
+  initialPosition: Position | null,
+  revertAnimationRef: React.RefObject<number | null>,
+  setIsRevertingItemId: React.Dispatch<React.SetStateAction<number | null>>,
+  latestBlocksRef: React.RefObject<WorkBlockType[]>,
+  updateWorkBlocks: (blocks: WorkBlockType[]) => void
+) => {
+  if (futurePosition) {
+    animateBlock(
+      revertAnimationRef,
+      setIsRevertingItemId,
+      latestBlocksRef,
+      updateWorkBlocks,
+      draggingId,
+      draggingBlock.position,
+      futurePosition
+    );
+  } else {
+    // futurePosition이 없으면 원래 위치로 되돌리기
+    setIsRevertingItemId(draggingId);
+
+    if (initialPosition) {
+      animateBlock(
+        revertAnimationRef,
+        setIsRevertingItemId,
+        latestBlocksRef,
+        updateWorkBlocks,
+        draggingId,
+        draggingBlock.position,
+        initialPosition
+      );
+    }
+  }
+};
+
+const handleInvalidPositionRevert = (
+  draggingId: number,
+  draggingBlock: WorkBlockType,
+  revertAnimationRef: React.RefObject<number | null>,
+  setIsRevertingItemId: React.Dispatch<React.SetStateAction<number | null>>,
+  latestBlocksRef: React.RefObject<WorkBlockType[]>,
+  updateWorkBlocks: (blocks: WorkBlockType[]) => void
+) => {
+  if (
+    !Object.values(WORK_TIME_Y_COORDINATE).includes(draggingBlock.position.y)
+  ) {
+    const closestY = Object.values(WORK_TIME_Y_COORDINATE).reduce(
+      (closest, current) => {
+        return Math.abs(current - draggingBlock.position.y) <
+          Math.abs(closest - draggingBlock.position.y)
+          ? current
+          : closest;
+      },
+      WORK_TIME_Y_COORDINATE[1]
+    );
+
+    animateBlock(
+      revertAnimationRef,
+      setIsRevertingItemId,
+      latestBlocksRef,
+      updateWorkBlocks,
+      draggingId,
+      draggingBlock.position,
+      { x: draggingBlock.position.x, y: closestY }
+    );
+    return true;
+  }
+  return false;
+};
+
+const cleanupDragState = (
+  setDraggingBlockId: React.Dispatch<React.SetStateAction<number | null>>,
+  setFuturePosition: React.Dispatch<React.SetStateAction<Position | null>>,
+  endDrag: () => void
+) => {
+  setDraggingBlockId(null);
+  setFuturePosition(null);
+  endDrag();
+};
+
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
 
@@ -137,72 +220,38 @@ const WorkContainer = () => {
         );
 
         if (isCollision) {
-          if (futurePosition) {
-            animateBlock(
-              revertAnimationRef,
-              setIsRevertingItemId,
-              latestBlocksRef,
-              updateWorkBlocks,
-              draggingId,
-              draggingBlock.position,
-              futurePosition
-            );
-          } else {
-            // futurePosition이 없으면 원래 위치로 되돌리기
-            setIsRevertingItemId(draggingId);
-
-            if (initialPosition) {
-              animateBlock(
-                revertAnimationRef,
-                setIsRevertingItemId,
-                latestBlocksRef,
-                updateWorkBlocks,
-                draggingId,
-                draggingBlock.position,
-                initialPosition
-              );
-            }
-          }
-
-          setDraggingBlockId(null);
-          setFuturePosition(null);
-          endDrag();
-          return;
-        }
-        if (
-          !Object.values(WORK_TIME_Y_COORDINATE).includes(
-            draggingBlock.position.y
-          )
-        ) {
-          const closestY = Object.values(WORK_TIME_Y_COORDINATE).reduce(
-            (closest, current) => {
-              return Math.abs(current - draggingBlock.position.y) <
-                Math.abs(closest - draggingBlock.position.y)
-                ? current
-                : closest;
-            },
-            WORK_TIME_Y_COORDINATE[1]
-          );
-          animateBlock(
+          handleCollisionRevert(
+            draggingId,
+            draggingBlock,
+            futurePosition,
+            initialPosition,
             revertAnimationRef,
             setIsRevertingItemId,
             latestBlocksRef,
-            updateWorkBlocks,
-            draggingId,
-            draggingBlock.position,
-            { x: draggingBlock.position.x, y: closestY }
+            updateWorkBlocks
           );
-          setDraggingBlockId(null);
-          setFuturePosition(null);
-          endDrag();
+          cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
+          return;
+        }
+
+        // 유효하지 않은 위치 검사 및 되돌리기
+        const isInvalidPosition = handleInvalidPositionRevert(
+          draggingId,
+          draggingBlock,
+          revertAnimationRef,
+          setIsRevertingItemId,
+          latestBlocksRef,
+          updateWorkBlocks
+        );
+
+        if (isInvalidPosition) {
+          cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
           return;
         }
       }
     }
 
-    setDraggingBlockId(null);
-    setFuturePosition(null);
-    endDrag();
+    cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
   };
 
   const handleResize = (blockId: number, newBlock: WorkBlockType) => {
