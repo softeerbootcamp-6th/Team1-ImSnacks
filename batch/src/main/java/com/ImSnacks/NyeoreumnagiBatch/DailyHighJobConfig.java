@@ -23,7 +23,7 @@ public class DailyHighJobConfig {
     private final DailyHighWriter dailyHighWriter;
 
     @Bean
-    public Job sunRiseSetJob(JobRepository jobRepository, Step dailyHighStep) {
+    public Job dailyHighJob(JobRepository jobRepository, Step dailyHighStep) {
         return new JobBuilder("dailyHighJob", jobRepository)
                 .start(dailyHighStep)
                 .build();
