@@ -11,8 +11,7 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.INVALID_MEMBER_ID;
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -56,7 +55,7 @@ class MemberServiceTest {
         // when & then
         MemberException ex = assertThrows(MemberException.class, () ->
                 memberService.getMemberAddress(memberId));
-        assertThat(ex.getStatus()).isEqualTo(INVALID_MEMBER_ID);
+        assertThat(ex.getStatus()).isEqualTo(MEMBER_NOT_FOUND);
     }
 
     @Test
@@ -69,6 +68,6 @@ class MemberServiceTest {
         // when & then
         MemberException ex = assertThrows(MemberException.class, () ->
                 memberService.getMemberAddress(memberId));
-        assertThat(ex.getStatus()).isEqualTo(INVALID_MEMBER_ID);
+        assertThat(ex.getStatus()).isEqualTo(MEMBER_NOT_FOUND);
     }
 }
