@@ -1,6 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.pest.entity;
 
 import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,12 +12,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -31,7 +34,8 @@ public class PestRisk {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "pestRisk")
+    @Builder.Default
+    @OneToMany(mappedBy = "pestRisk", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PestCondition> conditions = new ArrayList<>();
 
     @JoinColumn(name = "crop_id")
