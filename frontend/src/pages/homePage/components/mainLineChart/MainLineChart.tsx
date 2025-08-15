@@ -65,79 +65,79 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
       </div>
 
       {/* Line Chart */}
-      <div css={S.LineChartScrollWrapper}>
-        <div css={S.LineChartInnerWrapper(chartWidth)}>
-          <ComposedChart
-            width={chartWidth}
-            height={CHART_HEIGHT}
-            data={processedData}
-            margin={WRAPPER_MARGIN}
-          >
-            {GraphHighlight}
-            <CartesianGrid
-              horizontal={true}
-              vertical={false}
-              stroke={Opacity.White.W200}
-              strokeWidth={2}
-            />
-            <XAxis
-              dataKey="name"
-              tickLine={false}
-              tick={{ fill: Assets.Text.Global.Clear }}
-              axisLine={false}
-              tickMargin={60}
-            />
-            <YAxis
-              domain={[graphData.min, graphData.max]}
-              tickCount={6}
-              type="number"
-              axisLine={false}
-              orientation="right"
-              tickLine={false}
-              style={{
-                display: 'none',
-              }}
-            />
-            <Tooltip content={<CustomTooltip graphData={graphData} />} />
+      {/* <div css={S.LineChartScrollWrapper}> */}
+      <div css={S.LineChartInnerWrapper(chartWidth)}>
+        <ComposedChart
+          width={chartWidth}
+          height={CHART_HEIGHT}
+          data={processedData}
+          margin={WRAPPER_MARGIN}
+        >
+          {GraphHighlight}
+          <CartesianGrid
+            horizontal={true}
+            vertical={false}
+            stroke={Opacity.White.W200}
+            strokeWidth={2}
+          />
+          <XAxis
+            dataKey="name"
+            tickLine={false}
+            tick={{ fill: Assets.Text.Global.Clear }}
+            axisLine={false}
+            tickMargin={60}
+          />
+          <YAxis
+            domain={[graphData.min, graphData.max]}
+            tickCount={6}
+            type="number"
+            axisLine={false}
+            orientation="right"
+            tickLine={false}
+            style={{
+              display: 'none',
+            }}
+          />
+          <Tooltip content={<CustomTooltip graphData={graphData} />} />
 
-            {weatherRiskData.map((item, index) => (
-              <Area
-                key={item.category}
-                type="monotone"
-                dataKey={`areaValue_${index}`}
-                stroke="transparent"
-                fill="url(#customGradient)"
-              />
-            ))}
-            <Line
+          {weatherRiskData.map((item, index) => (
+            <Area
+              key={item.category}
               type="monotone"
-              dataKey="value"
-              stroke={GrayScale.White}
-              strokeWidth={4}
-              dot={
-                <CustomizedDot
-                  cx={0}
-                  cy={0}
-                  weatherRiskData={weatherRiskData}
-                  wrapperMargin={WRAPPER_MARGIN}
-                  chartHeight={CHART_HEIGHT}
-                />
-              }
-            />
-          </ComposedChart>
-
-          {weatherRiskData.map((riskData, index) => (
-            <WeatherRiskText
-              key={`weatherRisk_${index}`}
-              riskData={riskData}
-              graphData={graphData}
-              index={index}
-              pointSpacing={pointSpacing}
+              dataKey={`areaValue_${index}`}
+              stroke="transparent"
+              fill="url(#customGradient)"
             />
           ))}
-        </div>
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={GrayScale.White}
+            strokeWidth={4}
+            dot={
+              <CustomizedDot
+                cx={0}
+                cy={0}
+                weatherRiskData={weatherRiskData}
+                wrapperMargin={WRAPPER_MARGIN}
+                chartHeight={CHART_HEIGHT}
+              />
+            }
+          />
+        </ComposedChart>
+
+        {weatherRiskData.map((riskData, index) => (
+          <WeatherRiskText
+            key={`weatherRisk_${index}`}
+            riskData={riskData}
+            graphData={graphData}
+            index={index}
+            pointSpacing={pointSpacing}
+          />
+        ))}
       </div>
     </div>
+    // </div>
   );
 };
 

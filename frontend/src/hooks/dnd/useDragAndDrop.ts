@@ -106,7 +106,7 @@ export const useDragAndDrop = <T>({
     setIsDragging(false);
   }, []);
 
-  const isItemDragging = useCallback(
+  const isDraggingItem = useCallback(
     (id: number | string) => draggedItemIdRef.current === id,
     []
   );
@@ -117,7 +117,7 @@ export const useDragAndDrop = <T>({
     startDrag,
     updatePosition,
     endDrag,
-    isItemDragging,
+    isDraggingItem,
     draggedItemRef,
     latestMousePos,
     containerRect,

@@ -39,9 +39,28 @@ const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
 `;
 
 const WorkCardDeleteButton = css`
+  position: absolute;
+  top: 50%;
+  right: ${Spacing.Spacing200};
+  transform: translateY(-50%);
   color: ${ColorStatus.Global.Red};
   ${Typography.Caption_S}
   font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${GrayScale.G200};
+  }
 `;
 
 const WorkCardResizeHandle = css`
