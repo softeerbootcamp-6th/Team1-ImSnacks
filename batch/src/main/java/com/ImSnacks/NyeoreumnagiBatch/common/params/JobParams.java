@@ -7,6 +7,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +46,14 @@ public class JobParams {
         String baseDate = nowDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         return new JobParametersBuilder()
                 .addString(SunRiseSetApiRequestValue.LOCDATE.toString(), baseDate)
+                .toJobParameters();
+    }
+
+    public static JobParameters getDailyHighJobParam(){
+        LocalDateTime nowDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        String baseDate = nowDateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        return new JobParametersBuilder()
+                .addString("LocalDate", baseDate)
                 .toJobParameters();
     }
 
