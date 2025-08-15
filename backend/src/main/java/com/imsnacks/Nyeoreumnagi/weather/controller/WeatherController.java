@@ -69,4 +69,13 @@ public class WeatherController {
     public ResponseEntity<CustomResponseBody<GetSunRiseSetTimeResponse>> getSunRiseSetTime(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getSunRiseSetTime(memberId));
     }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "일일 최고 자외선 지수 및 시각 조회")
+    @ApiResponse(responseCode = "200", description = "일일 최고 자외선 지수 및 시각 조회 성공")
+    @ApiResponse(responseCode = "400", description = "일일 최고 자외선 지수 및 시각 조회 실패")
+    @GetMapping("/uv")
+    public ResponseEntity<CustomResponseBody<GetUVInfoResponse>> getUVInfo(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getUVInfo(memberId));
+    }
 }

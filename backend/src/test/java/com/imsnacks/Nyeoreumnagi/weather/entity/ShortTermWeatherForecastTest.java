@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalTime;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
-import com.imsnacks.Nyeoreumnagi.weather.service.SunriseSunSetTime;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import org.junit.jupiter.api.Test;
 
 class ShortTermWeatherForecastTest {

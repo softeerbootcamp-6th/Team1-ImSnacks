@@ -17,7 +17,7 @@ import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
-import com.imsnacks.Nyeoreumnagi.weather.service.SunriseSunSetTime;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -178,7 +178,7 @@ class WeatherServiceTest {
         when(forecast.getTemperature()).thenReturn(23);
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).thenReturn(java.util.List.of(forecast));
-        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
+        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(Optional.ofNullable(sunriseSunSetTime));
 
         // when
         GetWeatherConditionResponse response = weatherService.getWeatherCondition(memberId);
@@ -202,7 +202,7 @@ class WeatherServiceTest {
         when(sunriseSunSetTime.getSunSetTime()).thenReturn(LocalTime.of(19, 22));
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(sunriseSunSetTime);
+        when(dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(60, 120)).thenReturn(Optional.of(sunriseSunSetTime));
 
         // when
         GetSunRiseSetTimeResponse response = weatherService.getSunRiseSetTime(memberId);
