@@ -2,9 +2,10 @@ import { getSubjectParticle } from '@/utils/koreanParticleUtil';
 import S from './Headline.style';
 import { LessCloudy } from '@/assets/iconComponents';
 import { css } from '@emotion/react';
+import { useUserStore } from '@/store/useUserStore';
 
 const Headline = () => {
-  const nickName = '밤비';
+  const { nickName } = useUserStore();
   const data = {
     hasWeatherRisk: true,
     message: '오전 11시부터 오후 3시까지 우박',
