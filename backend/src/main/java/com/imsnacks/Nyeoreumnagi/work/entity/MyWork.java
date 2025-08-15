@@ -50,7 +50,7 @@ public class MyWork {
         myWork.recommendedWork = recommendedWork;
         myWork.startTime = startTime;
         myWork.endTime = endTime;
-        myWork.workStatus = WorkStatus.NOT_COMPLETED;
+        myWork.workStatus = WorkStatus.INCOMPLETED;
         myWork.cropName = cropName;
 
         return myWork;
