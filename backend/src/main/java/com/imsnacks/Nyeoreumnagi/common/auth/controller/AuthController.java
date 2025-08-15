@@ -27,7 +27,8 @@ public class AuthController {
     @Operation(summary = "로그인")
     @ApiResponse(responseCode = "200", description = "로그인 성공")
     @ApiResponse(responseCode = "400", description = "로그인 실패")
-    public ResponseEntity<CustomResponseBody<LoginResponse>> login(@RequestBody @Validated LoginRequest request){
+    public ResponseEntity<CustomResponseBody<LoginResponse>> login(@RequestBody LoginRequest request){
+        request.validate();
         LoginResponse response = authService.login(request);
         return ResponseUtil.success(response);
     }
