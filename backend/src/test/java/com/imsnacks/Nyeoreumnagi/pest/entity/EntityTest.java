@@ -45,4 +45,13 @@ public class EntityTest {
         assertThat(risk.getConditions().get(0)).isEqualTo(cond);
         assertThat(risk.getCrop()).isEqualTo(crop);
     }
+
+    @Test
+    void Crop_생성_성공() {
+        Crop crop = new Crop();
+        PestRisk risk = new PestRisk();
+        risk.assignCrop(crop);
+        assertThat(risk.getCrop()).isEqualTo(crop);
+    }
+
 }
