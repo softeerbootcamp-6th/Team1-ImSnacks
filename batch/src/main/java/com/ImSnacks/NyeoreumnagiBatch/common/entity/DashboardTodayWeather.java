@@ -23,13 +23,13 @@ public class DashboardTodayWeather {
     private Double maxPrecipitation;
 
     @Column(name = "max_humidity", nullable = true)
-    private Double maxHumidity;
+    private Integer maxHumidity;
 
     @Column(name = "max_windspeed", nullable = true)
     private Double maxWindSpeed;
 
     @Column(name = "wind_direction", nullable = true)
-    private Double windDirection;
+    private Integer windDirection;
 
     @Column(name = "max_temperature", nullable = true)
     private Integer maxTemperature;
