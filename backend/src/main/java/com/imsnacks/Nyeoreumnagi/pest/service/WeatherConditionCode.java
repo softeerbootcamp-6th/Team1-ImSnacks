@@ -1,10 +1,9 @@
 package com.imsnacks.Nyeoreumnagi.pest.service;
 
 public record WeatherConditionCode(
-    HumidityCode humidityCode,
-    TemperatureCode temperatureCode,
-    RainCode rainCode)
-{
+        HumidityCode humidityCode,
+        TemperatureCode temperatureCode,
+        RainCode rainCode) {
     public enum HumidityCode {
         LOW,
         MID,
