@@ -8,12 +8,6 @@ import { getWeatherUV } from '@/apis/weather.api';
 import { useEffect, useState } from 'react';
 import { GetUVInfoResponse } from '@/types/openapiGenerator';
 
-// interface WeatherBoardUVProps {
-//   value: number;
-//   startTime: string;
-//   endTime: string;
-// }
-
 const WeatherBoardUV = () => {
   const [uvData, setUVData] = useState<GetUVInfoResponse>();
   const { level, color } = getUVLevelAndColor(uvData?.value || 0);
