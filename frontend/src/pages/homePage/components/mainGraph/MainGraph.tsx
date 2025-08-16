@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import S from './MainGraph.style';
 import MainLineChart from '../mainLineChart/MainLineChart';
-import { type WeatherMetrics } from '@/types/weather.types';
 import { GetWeatherGraphResponse } from '@/types/openapiGenerator';
-import { getWeatherGraph } from '@/apis/weather.api';
 
 const weatherRiskData = [
   {
@@ -23,25 +20,7 @@ const weatherRiskData = [
   },
 ];
 
-const MainGraph = ({ currentTab }: { currentTab: WeatherMetrics }) => {
-  const [graphData, setGraphData] = useState<GetWeatherGraphResponse>();
-
-  useEffect(() => {
-    let ignore = false; // 빠른 탭 전환시 최신 응답만 반영
-    (async () => {
-      try {
-        const res = await getWeatherGraph(currentTab);
-        if (!ignore && res.data) setGraphData(res.data);
-        console.log('Graph data fetched:', res.data);
-      } catch (e) {
-        if (!ignore) console.error('Error fetching graph data:', e);
-      }
-    })();
-    return () => {
-      ignore = true;
-    };
-  }, [currentTab]);
-
+const MainGraph = ({ graphData }: { graphData?: GetWeatherGraphResponse }) => {
   return (
     <div css={S.MainGraph}>
       <MainLineChart
