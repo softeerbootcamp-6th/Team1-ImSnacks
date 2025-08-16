@@ -48,6 +48,14 @@ public class JobParams {
                 .toJobParameters();
     }
 
+    public static JobParameters getSevenDayParam() {
+        LocalDate nowDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        String baseDate = nowDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        return new JobParametersBuilder()
+                .addString(ApiRequestValues.BASE_DATE.toString(), baseDate)
+                .toJobParameters();
+    }
+
     private static int getBaseTime(int nowHour) {
         assert (nowHour >= 2);
         for (int i = BASE_TIMES.size() - 1; i >= 0; --i) {
