@@ -8,8 +8,7 @@ import {
   Area,
 } from 'recharts';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
-import { getUnit } from '@/utils/getUnit';
-import { generateYTicks, getProcessedData } from '../../utils/lineChartUtil';
+import { getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
 import CustomizedDot from '../customizedDot/CustomizedDot';
 import CustomTooltip from '../customizedTootip/CustomizedTooltip';
@@ -78,7 +77,10 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
             tickMargin={60}
           />
           <YAxis
-            domain={[graphData.min, graphData.max]}
+            domain={[
+              graphData.min !== undefined ? graphData.min : 0,
+              graphData.max !== undefined ? graphData.max : 100,
+            ]}
             tickCount={6}
             type="number"
             axisLine={false}
