@@ -38,11 +38,7 @@ const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
     setSelectedRecommendedWork,
   };
 
-  return (
-    <WorkBlocksContext.Provider value={value}>
-      {children}
-    </WorkBlocksContext.Provider>
-  );
+  return <WorkBlocksContext value={value}>{children}</WorkBlocksContext>;
 };
 
 export default WorkBlocksProvider;
