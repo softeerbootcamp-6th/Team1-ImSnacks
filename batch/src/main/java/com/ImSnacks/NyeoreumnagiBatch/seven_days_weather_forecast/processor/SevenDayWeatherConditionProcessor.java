@@ -2,7 +2,7 @@ package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor;
 
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherForecastResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherConditionDto;
-import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherCondition;
+import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
