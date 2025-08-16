@@ -1,11 +1,15 @@
-import { createContext } from 'react';
+import { createContext, type RefObject } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 
 export interface WorkBlocksContextType {
   workBlocks: WorkBlockType[];
   addWorkBlock: (newWorkBlock: WorkBlockType) => void;
   updateWorkBlocks: (updatedBlocks: WorkBlockType[]) => void;
   removeWorkBlock: (id: number | string) => void;
+  containerRef: RefObject<HTMLDivElement | null>;
+  selectedRecommendedWork: RecommendedWorksResponse | null;
+  setSelectedRecommendedWork: (work: RecommendedWorksResponse | null) => void;
 }
 
 const WorkBlocksContext = createContext<WorkBlocksContextType>({
@@ -13,6 +17,9 @@ const WorkBlocksContext = createContext<WorkBlocksContextType>({
   addWorkBlock: () => {},
   updateWorkBlocks: () => {},
   removeWorkBlock: () => {},
+  containerRef: { current: null },
+  selectedRecommendedWork: null,
+  setSelectedRecommendedWork: () => {},
 });
 
 export default WorkBlocksContext;
