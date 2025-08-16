@@ -16,7 +16,6 @@ export const useRevertPosition = <T extends { size?: Size }>({
 }: RevertPositionProps<T>) => {
   const checkAndRevert = useCallback(
     (containerRect: DOMRect, scrollOffset: number) => {
-      console.log('checkAndRevert', draggedItem, initialPosition);
       if (!draggedItem || !initialPosition) {
         return;
       }
