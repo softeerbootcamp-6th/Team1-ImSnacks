@@ -34,6 +34,9 @@ public class JobScheduler {
     @Qualifier("sevenDayWeatherConditionJob")
     private final Job sevenDayWeatherConditionJob;
 
+    @Qualifier("dailyTemperatureJob")
+    private final Job dailyTemperatureJob;
+
     //2시부터 3시간 간격으로 15분마다 매일
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
     public void runWeatherJob() throws Exception {
@@ -58,7 +61,7 @@ public class JobScheduler {
     //매일 새벽 0시 1분에 실행
     @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul")
     public void runDailyHighJob() throws Exception {
-        JobParameters params = JobParams.getDailyHighJobParam();
+        JobParameters params = JobParams.getDailyJobParam();
         jobLauncher.run(dailyHighJob, params);
     }
 
@@ -74,5 +77,12 @@ public class JobScheduler {
     public void runSevenDayWeatherConditionJob() throws Exception {
         JobParameters params = JobParams.getSevenDayParam();
         jobLauncher.run(sevenDayWeatherConditionJob, params);
+    }
+
+    //매일 새벽 0시 1분에 실행
+    @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul")
+    public void runDailyTemperatureJob() throws Exception {
+        JobParameters params = JobParams.getDailyJobParam();
+        jobLauncher.run(dailyTemperatureJob, params);
     }
 }
