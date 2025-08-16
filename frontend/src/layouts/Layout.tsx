@@ -2,8 +2,11 @@ import type { ReactNode } from 'react';
 import { gradientStyles } from '@/styles/gradientStyles';
 import { css } from '@emotion/react';
 import NavBar from './navBar/NavBar';
+import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';
+import { backgroundTheme } from '@/constants/backgroundTheme';
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const { weatherCondition } = useWeatherConditionStore();
   const isWeatherPage = window.location.pathname === '/weather-board';
 
   return (
@@ -15,7 +18,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         height: 100%;
         ${isWeatherPage
           ? gradientStyles.backgroundWeatherBoard
-          : gradientStyles.backgroundAfternoonClear}
+          : backgroundTheme[weatherCondition]}
       `}
     >
       <NavBar isWeatherPage={isWeatherPage} />

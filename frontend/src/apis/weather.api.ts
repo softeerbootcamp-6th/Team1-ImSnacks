@@ -1,5 +1,5 @@
 import HTTP from './http';
-import { GetWeatherCondition } from '@/types/openapiGenerator';
+import { GetWeatherConditionResponse } from '@/types/openapiGenerator';
 
 export const getWeatherNow = () =>
-  HTTP.get<GetWeatherCondition>('/weather/now');
+  HTTP.get<GetWeatherConditionResponse>('/weather/now');
