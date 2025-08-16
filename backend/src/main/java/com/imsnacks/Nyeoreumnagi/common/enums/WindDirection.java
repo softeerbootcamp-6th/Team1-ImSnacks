@@ -24,7 +24,8 @@ public enum WindDirection {
     }
 
     public static String getDirectionStringFromDegree(Integer degree){
-        if(degree < 22.5 || degree > 337.5) return N.getDirection();
+        if(degree < 0) throw new WeatherException(NO_WIND_INFO);
+        if(degree < 22.5 || (degree > 337.5 && degree <= 360)) return N.getDirection();
         if(degree < 67.5) return NE.getDirection();
         if(degree < 112.5) return E.getDirection();
         if(degree < 157.5) return SE.getDirection();
