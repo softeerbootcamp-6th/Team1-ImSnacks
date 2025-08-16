@@ -288,7 +288,7 @@ const WorkContainer = () => {
               position: relative;
             `}
           >
-            <WorkCellsContainer isDragging={isDragging} />
+            <WorkCellsContainer />
           </div>
         </div>
       </div>
