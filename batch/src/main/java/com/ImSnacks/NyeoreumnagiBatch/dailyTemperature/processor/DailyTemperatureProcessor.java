@@ -1,5 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.processor;
 
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.ShortTermWeatherForecast;
+import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
 import com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.processor.dto.DailyTemperatureProcessorResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.reader.dto.DailyTemperatureReaderResponseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +22,29 @@ public class DailyTemperatureProcessor implements ItemProcessor<DailyTemperature
         int ny = item.items().get(0).getNy();
 
         List<DailyTemperatureProcessorResponseDto.TemperaturePerTime> temperaturePerTimeList = new ArrayList<>();
-//        item.items().forEach(i -> {
-//            int temperature = i.getTemperature();
-//            int fcstTime = i.getFcstTime();
-//            WeatherCondition weatherCondition =
-//        })
+        item.items().forEach(i -> {
+            int temperature = i.getTemperature();
+            int fcstTime = i.getFcstTime();
+            WeatherCondition weatherCondition = getWeatherCondition(i);
+            temperaturePerTimeList.add(new DailyTemperatureProcessorResponseDto.TemperaturePerTime(fcstTime, temperature, weatherCondition));
+        });
 
-        return null;
+        return new DailyTemperatureProcessorResponseDto(nx, ny, temperaturePerTimeList);
+    }
+
+    private WeatherCondition getWeatherCondition(ShortTermWeatherForecast item) {
+        if(item.getSnow() > 1) return WeatherCondition.SNOW;
+        if(item.getPrecipitation() >= 30) return WeatherCondition.HEAVY_RAIN;
+        if(item.getPrecipitation() > 0) return WeatherCondition.RAIN;
+        if(item.getFcstTime() > 6){
+            if(item.getSkyStatus() == 1) return WeatherCondition.SUNNY;
+            if(item.getSkyStatus() == 3) return WeatherCondition.LESS_CLOUDY;
+            if(item.getSkyStatus() == 4) return WeatherCondition.CLOUDY;
+        }
+        else{
+            if(item.getSkyStatus() == 1) return WeatherCondition.NIGHT;
+            else return WeatherCondition.CLOUDY_NIGHT;
+        }
+        return WeatherCondition.SUNNY;
     }
 }
