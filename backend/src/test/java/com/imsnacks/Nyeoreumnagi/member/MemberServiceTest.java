@@ -31,7 +31,7 @@ class MemberServiceTest {
     void getMemberAddress_success() {
         // given
         Long memberId = 1L;
-        Farm farm = new Farm(1L, "경기도", "성남시", "분당구", "정자1동 123-45", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", 36.12, 127.12, 12, 60, "regionCode", null);
 
         Mockito.when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 

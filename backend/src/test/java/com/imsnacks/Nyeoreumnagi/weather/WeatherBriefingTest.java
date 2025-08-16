@@ -87,7 +87,7 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         // when
@@ -104,7 +104,7 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         final LocalDateTime from = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).minusHours(1);
@@ -139,7 +139,7 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         final long jobExecutionId = 1L;
