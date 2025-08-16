@@ -1,7 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.common.auth.controller;
 
 import com.imsnacks.Nyeoreumnagi.common.auth.dto.request.LoginRequest;
-import com.imsnacks.Nyeoreumnagi.common.auth.jwt.AuthTokens;
+import com.imsnacks.Nyeoreumnagi.common.auth.dto.response.LoginResponse;
 import com.imsnacks.Nyeoreumnagi.common.auth.service.AuthService;
 import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
@@ -27,8 +27,9 @@ public class AuthController {
     @Operation(summary = "로그인")
     @ApiResponse(responseCode = "200", description = "로그인 성공")
     @ApiResponse(responseCode = "400", description = "로그인 실패")
-    public ResponseEntity<CustomResponseBody<AuthTokens>> login(@RequestBody @Validated LoginRequest request){
-        AuthTokens authTokens = authService.login(request);
-        return ResponseUtil.success(authTokens);
+    public ResponseEntity<CustomResponseBody<LoginResponse>> login(@RequestBody LoginRequest request){
+        request.validate();
+        LoginResponse response = authService.login(request);
+        return ResponseUtil.success(response);
     }
 }
