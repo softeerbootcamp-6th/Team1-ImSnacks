@@ -1,5 +1,9 @@
 package com.imsnacks.Nyeoreumnagi.common.enums;
 
+import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
+
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_WIND_INFO;
+
 public enum WindDirection {
     N("북풍"),
     NE("북동풍"),
@@ -17,5 +21,17 @@ public enum WindDirection {
 
     public String getDirection() {
         return direction;
+    }
+
+    public static String getDirectionStringFromDegree(Integer degree){
+        if(degree < 22.5 || degree > 337.5) return N.getDirection();
+        if(degree < 67.5) return NE.getDirection();
+        if(degree < 112.5) return E.getDirection();
+        if(degree < 157.5) return SE.getDirection();
+        if(degree < 202.5) return S.getDirection();
+        if(degree < 247.5) return SW.getDirection();
+        if(degree < 292.5) return W.getDirection();
+        if(degree < 337.5) return NW.getDirection();
+        throw new WeatherException(NO_WIND_INFO);
     }
 }
