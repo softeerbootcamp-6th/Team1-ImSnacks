@@ -11,13 +11,11 @@
  */
 
 
-export class RecommendedWorksResponse {
-    'workName'?: string;
-    'workId'?: number;
-    'startTime'?: string;
-    'endTime'?: string;
-    'recommendation'?: string;
-    'neighborCount'?: number;
+export class GetMemberAddressResponse {
+    'state'?: string;
+    'city'?: string;
+    'town'?: string;
+    'address'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -25,44 +23,32 @@ export class RecommendedWorksResponse {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "workName",
-            "baseName": "workName",
+            "name": "state",
+            "baseName": "state",
             "type": "string",
             "format": ""
         },
         {
-            "name": "workId",
-            "baseName": "workId",
-            "type": "number",
-            "format": "int64"
-        },
-        {
-            "name": "startTime",
-            "baseName": "startTime",
+            "name": "city",
+            "baseName": "city",
             "type": "string",
             "format": ""
         },
         {
-            "name": "endTime",
-            "baseName": "endTime",
+            "name": "town",
+            "baseName": "town",
             "type": "string",
             "format": ""
         },
         {
-            "name": "recommendation",
-            "baseName": "recommendation",
+            "name": "address",
+            "baseName": "address",
             "type": "string",
             "format": ""
-        },
-        {
-            "name": "neighborCount",
-            "baseName": "neighborCount",
-            "type": "number",
-            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
-        return RecommendedWorksResponse.attributeTypeMap;
+        return GetMemberAddressResponse.attributeTypeMap;
     }
 
     public constructor() {

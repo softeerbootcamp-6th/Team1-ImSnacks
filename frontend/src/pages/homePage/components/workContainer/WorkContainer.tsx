@@ -22,7 +22,8 @@ import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 import MainGraph from '../mainGraph/MainGraph';
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock, containerRef } =
+    useWorkBlocks();
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
@@ -41,7 +42,6 @@ const WorkContainer = () => {
   }, [workBlocks]);
 
   const {
-    containerRef,
     isDragging,
     startDrag,
     updatePosition,
@@ -66,6 +66,7 @@ const WorkContainer = () => {
         setFuturePosition(futurePosition);
       }
     },
+    containerRef: containerRef as React.RefObject<HTMLDivElement>,
   });
 
   const { checkAndRevert } = useRevertPosition<WorkBlockType>({
@@ -286,7 +287,7 @@ const WorkContainer = () => {
               position: relative;
             `}
           >
-            <WorkCellsContainer isDragging={isDragging} />
+            <WorkCellsContainer />
           </div>
         </div>
       </div>

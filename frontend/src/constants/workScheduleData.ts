@@ -46,7 +46,7 @@ export const WORK_SCHEDULE_DATA = [
     date: now.format('YYYY-MM-DD'),
     workCardData: [
       {
-        id: 4,
+        id: 4 + dayjs().unix(),
         cropName: '배',
         workName: '관수',
         workTime:
@@ -64,7 +64,7 @@ export const WORK_SCHEDULE_DATA = [
         isCompleted: true,
       },
       {
-        id: 5,
+        id: 5 + dayjs().unix(),
         cropName: '복숭아',
         workName: '웃거름',
         workTime:
@@ -82,7 +82,7 @@ export const WORK_SCHEDULE_DATA = [
         isCompleted: true,
       },
       {
-        id: 6,
+        id: 6 + dayjs().unix(),
         cropName: '단감',
         workName: '병해충 방제',
         workTime:
@@ -100,7 +100,7 @@ export const WORK_SCHEDULE_DATA = [
         isCompleted: true,
       },
       {
-        id: 7,
+        id: 7 + dayjs().unix(),
         cropName: '배',
         workName: '병해충 방제',
         workTime:
@@ -118,7 +118,7 @@ export const WORK_SCHEDULE_DATA = [
         isCompleted: true,
       },
       {
-        id: 8,
+        id: 8 + dayjs().unix(),
         cropName: '배',
         workName: '병해충 방제',
         workTime:
@@ -136,7 +136,7 @@ export const WORK_SCHEDULE_DATA = [
         isCompleted: true,
       },
       {
-        id: 9,
+        id: 9 + dayjs().unix(),
         cropName: '배',
         workName: '23시 방제',
         workTime:

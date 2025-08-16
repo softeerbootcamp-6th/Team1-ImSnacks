@@ -14,14 +14,15 @@ interface UseDragAndDropProps<T> {
   getItemId: (item: T) => number | string;
   getItemPosition: (item: T) => Position;
   onPositionChange: (items: T[]) => void;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const useDragAndDrop = <T>({
   getItemId,
   getItemPosition,
   onPositionChange,
+  containerRef,
 }: UseDragAndDropProps<T>) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const draggedItemIdRef = useRef<number | string | null>(null);
   const draggedItemRef = useRef<T | null>(null);
   const dragOffsetRef = useRef<DragOffset>({ x: 0, y: 0 });
@@ -53,7 +54,7 @@ export const useDragAndDrop = <T>({
       draggedItemRef.current = item;
       setIsDragging(true);
     },
-    [getItemId, getItemPosition]
+    [getItemId, getItemPosition, containerRef]
   );
 
   const updatePosition = useCallback(
@@ -92,7 +93,7 @@ export const useDragAndDrop = <T>({
         itemsRef.current = updatedItems;
       });
     },
-    [getItemId, onPositionChange]
+    [getItemId, onPositionChange, containerRef]
   );
 
   const endDrag = useCallback(() => {
