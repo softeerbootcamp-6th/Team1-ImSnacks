@@ -1,7 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.writer.repository;
 
-import com.ImSnacks.NyeoreumnagiBatch.writer.entity.SevenDayWeatherForecast;
-import com.ImSnacks.NyeoreumnagiBatch.writer.entity.WeatherCondition;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.SevenDayWeatherForecast;
+import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -49,7 +49,7 @@ public class JobParams {
                 .toJobParameters();
     }
 
-    public static JobParameters getDailyHighJobParam(){
+    public static JobParameters getDailyJobParam(){
         LocalDateTime nowDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         String baseDate = nowDateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
         return new JobParametersBuilder()
