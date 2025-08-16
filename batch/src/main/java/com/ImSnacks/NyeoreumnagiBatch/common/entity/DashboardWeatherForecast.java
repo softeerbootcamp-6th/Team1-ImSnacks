@@ -1,10 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +21,7 @@ public class DashboardWeatherForecast {
     @Column(name = "temperature", nullable = false)
     Integer temperature;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "sky_status", nullable = false)
     WeatherCondition weatherCondition;
 }
