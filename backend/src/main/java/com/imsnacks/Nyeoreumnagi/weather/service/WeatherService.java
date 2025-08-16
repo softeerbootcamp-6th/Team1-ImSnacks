@@ -203,7 +203,7 @@ public class WeatherService {
         return new GetHumidityResponse(humidityInfo.getMaxHumidity());
     }
 
-    public GetPrecipitationResponse getPrecipitation(final Long memberId) {
+    public GetDailyMaxPrecipitationResponse getDailyMaxPrecipitation(final Long memberId) {
         assert(memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
@@ -213,7 +213,7 @@ public class WeatherService {
         PrecipitationInfo precipitationInfo = dashboardTodayWeatherRepository.findPrecipitationByNxAndNy(nx,ny).orElseThrow(()-> new WeatherException(NO_PRECIPITATION));
         validatePrecipitationInfo(precipitationInfo);
 
-        return new GetPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
+        return new GetDailyMaxPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
     }
 
     public GetTemperatureResponse getTemperature(final Long memberId) {

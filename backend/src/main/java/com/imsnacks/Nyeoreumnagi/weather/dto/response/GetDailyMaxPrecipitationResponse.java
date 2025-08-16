@@ -1,6 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.weather.dto.response;
 
-public record GetPrecipitationResponse(
+public record GetDailyMaxPrecipitationResponse(
         Integer value
 ) {
 }

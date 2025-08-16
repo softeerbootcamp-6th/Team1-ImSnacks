@@ -327,7 +327,7 @@ class WeatherServiceTest {
         when(dashboardTodayWeatherRepository.findPrecipitationByNxAndNy(nx, ny)).thenReturn(Optional.of(precipitationInfo));
 
         // when
-        GetPrecipitationResponse response = weatherService.getPrecipitation(memberId);
+        GetDailyMaxPrecipitationResponse response = weatherService.getDailyMaxPrecipitation(memberId);
 
         // then
         assertThat(response.value()).isEqualTo(12);
