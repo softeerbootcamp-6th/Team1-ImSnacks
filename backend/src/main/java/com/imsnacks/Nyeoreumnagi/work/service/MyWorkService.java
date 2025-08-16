@@ -7,6 +7,7 @@ import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfWeeklyResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
