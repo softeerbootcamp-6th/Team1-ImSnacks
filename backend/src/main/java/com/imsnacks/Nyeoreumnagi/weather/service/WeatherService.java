@@ -288,7 +288,7 @@ public class WeatherService {
 
     private double getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
         switch (metric) {
-            case PERCIPITATION:
+            case PRECIPITATION:
                 return forecast.getPrecipitation();
             case TEMPERATURE:
                 return forecast.getTemperature();
