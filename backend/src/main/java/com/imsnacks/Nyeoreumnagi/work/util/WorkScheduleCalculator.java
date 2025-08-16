@@ -69,6 +69,7 @@ public class WorkScheduleCalculator {
                         int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                         if (hours >= minHours) {
                             result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                                    work.getName(),
                                     work.getId(),
                                     winStart.toString(),
                                     prevOk.plusHours(1).toString(),
@@ -85,6 +86,7 @@ public class WorkScheduleCalculator {
                     int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                     if (hours >= minHours) {
                         result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                                work.getName(),
                                 work.getId(),
                                 winStart.toString(),
                                 prevOk.plusHours(1).toString(),
@@ -102,6 +104,7 @@ public class WorkScheduleCalculator {
             int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
             if (hours >= minHours) {
                 result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                        work.getName(),
                         work.getId(),
                         winStart.toString(),
                         prevOk.plusHours(1).toString(),
