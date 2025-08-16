@@ -84,7 +84,7 @@ public class MyWorkController {
     })
     @GetMapping("/weekly")
     public ResponseEntity<CustomResponseBody<List<GetMyWorksOfWeeklyResponse>>> getMyWorksOfWeek(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, @PreAuthorize Long memberId) {
-        List<GetMyWorksOfWeeklyResponse> myWorksOfToday = myWorkService.getMyWorksOfWeekly(startDate, memberId);
-        return ResponseUtil.success(myWorksOfToday);
+        List<GetMyWorksOfWeeklyResponse> myWorksOfWeekly = myWorkService.getMyWorksOfWeekly(startDate, memberId);
+        return ResponseUtil.success(myWorksOfWeekly);
     }
 }
