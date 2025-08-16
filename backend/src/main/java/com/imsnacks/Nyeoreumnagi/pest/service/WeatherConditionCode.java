@@ -51,7 +51,6 @@ public record WeatherConditionCode(
                 hcodes[HIGH_INDEX]++;
                 break;
             default:
-                assert (false); // 절대 실행될 일 없음.
                 break;
         }
     }
@@ -65,7 +64,6 @@ public record WeatherConditionCode(
                 tcodes[HIGH_INDEX]++;
                 break;
             default:
-                assert (false); // 절대 실행될 일 없음.
                 break;
         }
     }
