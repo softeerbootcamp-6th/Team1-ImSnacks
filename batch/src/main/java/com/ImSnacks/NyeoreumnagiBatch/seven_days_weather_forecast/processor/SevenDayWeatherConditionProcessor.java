@@ -28,6 +28,11 @@ public class SevenDayWeatherConditionProcessor implements ItemProcessor<SevenDay
     public SevenDayWeatherConditionDto process(SevenDayWeatherForecastResponseDto dto) {
         log.info("Processing SevenDay Weather Forecast Data");
         SevenDayWeatherForecastResponseDto.Item sevenDayWeatherInfo = dto.getSevenDayWeatherInfo();
+        List<SevenDayWeatherConditionDto.ByDayDto> byDayDtoList = getSevenDayWeatherConditionFromToday(sevenDayWeatherInfo);
+        return new SevenDayWeatherConditionDto(byDayDtoList);
+    }
+
+    private List<SevenDayWeatherConditionDto.ByDayDto> getSevenDayWeatherConditionFromToday(SevenDayWeatherForecastResponseDto.Item sevenDayWeatherInfo) {
         List<SevenDayWeatherConditionDto.ByDayDto> byDayDtoList = new ArrayList<>();
 
         for (int i = 4; i <= 10; i++) {
@@ -38,6 +43,6 @@ public class SevenDayWeatherConditionProcessor implements ItemProcessor<SevenDay
                     WeatherCondition.fromApiString(sevenDayWeatherInfo.getNextDayWeatherStatus(i))
             ));
         }
-        return new SevenDayWeatherConditionDto(byDayDtoList);
+        return byDayDtoList;
     }
 }
