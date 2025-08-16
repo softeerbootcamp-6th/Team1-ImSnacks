@@ -20,9 +20,14 @@ import {
 } from '../../utils/workContainerUtils';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 import MainGraph from '../mainGraph/MainGraph';
+import GraphMenu from '../graphMenu/GraphMenu';
+import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
+    WEATHER_METRICS.PERCIPITATION
+  );
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
@@ -181,8 +186,12 @@ const WorkContainer = () => {
         onMouseLeave={handleEndDrag}
         css={css`
           width: 100%;
+          position: relative;
         `}
       >
+        {/* GraphMenu를 스크롤 컨테이너 밖에 고정 */}
+        <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
+
         <div
           css={css`
             overflow-x: auto;
@@ -207,7 +216,7 @@ const WorkContainer = () => {
             setScrollOffset(e.currentTarget.scrollLeft);
           }}
         >
-          <MainGraph />
+          <MainGraph currentTab={currentTab} />
           {workBlocks.map(block => {
             const { id, position } = block;
             const isCurrentlyDragging =
