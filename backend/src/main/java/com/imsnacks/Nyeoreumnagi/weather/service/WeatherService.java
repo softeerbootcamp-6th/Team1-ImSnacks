@@ -192,9 +192,7 @@ public class WeatherService {
         List<SevenDayWeatherForecast> sevenDayWeatherForecasts = sevenDayWeatherForecastRepository.findByRegionCodeAndDateBetween(regionCode, LocalDate.now(), LocalDate.now().plusDays(6));
 
         return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
-                forecast.getDate().isEqual(LocalDate.now()) ? "오늘" :
-                        forecast.getDate().isEqual(LocalDate.now().plusDays(1)) ? "내일" :
-                                forecast.getDate().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREA),
+                forecast.getDayOfWeek(LocalDate.now()),
                 forecast.getWeatherCondition(),
                 forecast.getMaxTemperature(),
                 forecast.getMinTemperature()
