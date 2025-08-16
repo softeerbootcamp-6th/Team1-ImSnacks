@@ -1,5 +1,14 @@
 package com.imsnacks.Nyeoreumnagi.work.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
+import jakarta.validation.constraints.NotNull;
 
-public record DeleteMyWorkRequest (@NotBlank long myWorkId){}
+import static com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus.NULL_MY_WORK_ID;
+
+public record DeleteMyWorkRequest (@NotNull Long myWorkId){
+    public void validate(){
+        if(myWorkId == null){
+            throw new WorkException(NULL_MY_WORK_ID);
+        }
+    }
+}
