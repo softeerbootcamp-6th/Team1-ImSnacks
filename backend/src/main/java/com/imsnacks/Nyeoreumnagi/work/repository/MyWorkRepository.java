@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MyWorkRepository extends JpaRepository<MyWork, Long> {
     List<MyWork> findByMember_IdAndStartTimeAfter(Long memberId, LocalDateTime startTimeAfter);
+
+    List<MyWork> findByMember_IdAndStartTimeBetween(Long memberId, LocalDateTime startTimeAfter, LocalDateTime startTimeBefore);
 }
