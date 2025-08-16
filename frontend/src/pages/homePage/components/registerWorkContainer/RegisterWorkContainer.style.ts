@@ -47,6 +47,7 @@ const BtnBox = css`
 const BtnSelectChipContainer = css`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: ${Spacing.Spacing300};
 `;
 
