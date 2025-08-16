@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.writer.entity;
+package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
