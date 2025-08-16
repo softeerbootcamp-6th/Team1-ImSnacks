@@ -68,12 +68,8 @@ public class MyWorkService {
     @Transactional
     public void deleteMyWork(DeleteMyWorkRequest request, Long memberId) {
         MyWork myWork = myWorkRepository.findById(request.myWorkId()).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
-        if (myWork.getMember().getId() != memberId) {
+        if (!myWork.getMember().getId().equals(memberId)) {
             throw new WorkException(MY_WORK_NOT_FOUND);
-        }
-
-        if (!myWork.isDone()) {
-            throw new WorkException(MY_WORK_NOT_COMPLETED);
         }
 
         myWorkRepository.deleteById(request.myWorkId());
@@ -86,7 +82,7 @@ public class MyWorkService {
         }
 
         MyWork myWork = myWorkRepository.findById(request.myWorkId()).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
-        if (myWork.getMember().getId() != memberId) {
+        if (!myWork.getMember().getId().equals(memberId)) {
             throw new WorkException(MY_WORK_NOT_FOUND);
         }
 
