@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/weather")
@@ -80,6 +82,14 @@ public class WeatherController {
     }
 
     @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "7일 간의 날씨 예보 조회")
+    @ApiResponse(responseCode = "200", description = "7일 간의 날씨 예보 조회 성공")
+    @ApiResponse(responseCode = "400", description = "7일 간의 날씨 예보 조회 실패")
+    @GetMapping("/sevenDays")
+    public ResponseEntity<CustomResponseBody<List<GetSevenDaysForecastResponse>>> getSevenDaysForecast(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getSevenDaysForecast(memberId));
+    }
+
     @Operation(summary = "일일 최고 풍속 및 풍향 조회")
     @ApiResponse(responseCode = "200", description = "일일 최고 풍속 및 풍향 조회 성공")
     @ApiResponse(responseCode = "400", description = "일일 최고 풍속 및 풍향 조회 실패")

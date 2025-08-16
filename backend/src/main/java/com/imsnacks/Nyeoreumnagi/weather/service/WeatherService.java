@@ -5,12 +5,13 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
-import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.entity.SevenDayWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
@@ -18,8 +19,10 @@ import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -30,15 +33,16 @@ import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionS
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WeatherService {
 
-    private final MemberRepository memberRepository;
     private final FarmRepository farmRepository;
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final WeatherRiskRepository weatherRiskRepository;
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    private final SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric) {
         assert(memberId != null);
@@ -155,6 +159,22 @@ public class WeatherService {
         return new GetUVInfoResponse(startTime, endTime, uvInfo.getMaxUVIndex());
     }
 
+    public List<GetSevenDaysForecastResponse> getSevenDaysForecast(Long memberId) {
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+        String regionCode = farm.getMidTempRegionCode();
+        List<SevenDayWeatherForecast> sevenDayWeatherForecasts = sevenDayWeatherForecastRepository.findByRegionCodeAndDateBetween(regionCode, LocalDate.now(), LocalDate.now().plusDays(6));
+
+        if (sevenDayWeatherForecasts.size() != 7) {
+            throw new WeatherException(INVALID_SEVEN_DAY_FORECAST_COUNT);
+        }
+        return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
+                forecast.getDayOfWeek(LocalDate.now()),
+                forecast.getWeatherCondition(),
+                forecast.getMaxTemperature(),
+                forecast.getMinTemperature()
+        )).toList();
+    }
+
     public GetWindInfoResponse getWindInfo(final Long memberId) {
         assert(memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
@@ -179,7 +199,7 @@ public class WeatherService {
     }
 
     private void validateUVInfo(UVInfo uvInfo) {
-        if(uvInfo.getMaxUVStart() == null || uvInfo.getMaxUVEnd() == null) {
+        if (uvInfo.getMaxUVStart() == null || uvInfo.getMaxUVEnd() == null) {
             throw new WeatherException(NO_UV_INFO);
         }
     }

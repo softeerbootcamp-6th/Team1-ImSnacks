@@ -13,6 +13,7 @@ import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
@@ -25,30 +26,27 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class WeatherServiceTest {
-    private static final Logger log = LoggerFactory.getLogger(WeatherServiceTest.class);
-
     private static final LocalDateTime BASE = LocalDateTime.of(2025, 8, 5, 0, 0);
 
     @InjectMocks
@@ -70,7 +68,7 @@ class WeatherServiceTest {
         Long memberId = 1L;
         WeatherMetric metric = WeatherMetric.TEMPERATURE;
 
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
 
         List<ShortTermWeatherForecast> forecasts = IntStream.range(0, 24)
                 .mapToObj(i -> ShortTermWeatherForecast.builder()
@@ -166,7 +164,8 @@ class WeatherServiceTest {
     void 정상_날씨_조회_성공() {
         // given
         long memberId = 1L;
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
 
@@ -191,7 +190,7 @@ class WeatherServiceTest {
         Long memberId = 1L;
 
         // given: member, farm, sunrise/sunset mock
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
 
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
         when(sunriseSunSetTime.getSunriseTime()).thenReturn(LocalTime.of(5, 40));
@@ -232,7 +231,8 @@ class WeatherServiceTest {
     @Test
     void 날씨정보_없음_예외() {
         // given
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+
         when(farmRepository.findByMember_Id(any())).thenReturn(Optional.of(farm));
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(anyInt(), anyInt()))
                 .thenReturn(List.of());
@@ -242,7 +242,6 @@ class WeatherServiceTest {
                 .isInstanceOf(WeatherException.class);
     }
 
-    @Test
     void 일일_최대_풍속_풍향_정상응답_성공() {
         // given
         Long memberId = 1L;
