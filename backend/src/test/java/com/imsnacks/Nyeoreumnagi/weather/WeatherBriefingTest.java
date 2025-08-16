@@ -13,17 +13,21 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.Briefing;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +35,7 @@ import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.after;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -77,21 +82,87 @@ class WeatherBriefingTest {
     }
 
     @Test
-    void 날씨_상황_정보가_없을때() {
+    void 날씨_상황_정보가_없을때_오전시간이면_아침_인사말을_반환한다() {
         // given
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
         final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
+
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        final LocalDateTime morning = LocalDateTime.of(2025,8,16,9,0);
 
-        // when
-        final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
+        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
+                    .thenReturn(morning);
+            final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_MORNING);
+            final var actual =  service.getWeatherBriefing(memberId);
+            assertThat(actual).isEqualTo(expected);
+        }
+    }
 
-        // then
-        final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(false, "");
-        assertThat(actual).isEqualTo(expected);
+    @Test
+    void 날씨_상황_정보가_없을때_정오_이후면_점심_인사말을_반환한다() {
+        // given
+        final long memberId = 42L;
+        final int nx = 60;
+        final int ny = 120;
+        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Member member = new Member(memberId, "", "", "", "", null, farm);
+
+        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        final LocalDateTime afternoon = LocalDateTime.of(2025,8,16,14,0);
+
+        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
+                    .thenReturn(afternoon);
+            final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_AFTERNOON);
+            final var actual =  service.getWeatherBriefing(memberId);
+            assertThat(actual).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void 날씨_상황_정보가_없을때_저녁_시간이면_저녁_인사말을_반환한다() {
+        // given
+        final long memberId = 42L;
+        final int nx = 60;
+        final int ny = 120;
+        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Member member = new Member(memberId, "", "", "", "", null, farm);
+
+        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        final LocalDateTime evening = LocalDateTime.of(2025,8,16,19,0);
+
+        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
+                    .thenReturn(evening);
+            final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_EVENING);
+            final var actual =  service.getWeatherBriefing(memberId);
+            assertThat(actual).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void 날씨_상황_정보가_없을때_밤이면_밤_인사말을_반환한다() {
+        // given
+        final long memberId = 42L;
+        final int nx = 60;
+        final int ny = 120;
+        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
+        final Member member = new Member(memberId, "", "", "", "", null, farm);
+
+        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        final LocalDateTime night = LocalDateTime.of(2025,8,16,2,0);
+
+        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
+                    .thenReturn(night);
+            final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_NIGHT);
+            final var actual =  service.getWeatherBriefing(memberId);
+            assertThat(actual).isEqualTo(expected);
+        }
     }
 
     @Test
@@ -126,7 +197,7 @@ class WeatherBriefingTest {
         final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
 
         // then
-        final String msg = Briefing.buildMsg(r);
+        final String msg = Briefing.buildWeatherRiskMsg(r);
         final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(true, msg);
         assertThat(actual).isEqualTo(expected);
     }
@@ -166,7 +237,7 @@ class WeatherBriefingTest {
 
         // then
         final WeatherRisk 폭우 = risks.get(risks.size() - 1);
-        final String msg = Briefing.buildMsg(폭우);
+        final String msg = Briefing.buildWeatherRiskMsg(폭우);
         final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(true, msg);
         assertThat(actual).isEqualTo(expected);
     }
