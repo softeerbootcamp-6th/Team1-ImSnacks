@@ -1,20 +1,45 @@
 import type { ButtonHTMLAttributes } from 'react';
 import S from './BtnCreateWork.style';
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
+import useVisibility from '@/hooks/useVisibility';
+import ToolTip from '@/components/toolTip/ToolTip';
+import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
+import { css } from '@emotion/react';
 
 interface BtnCreateWorkProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
+  work: RecommendedWorksResponse;
   isDragging?: boolean;
 }
 
 const BtnCreateWork = ({
-  text,
+  work,
   isDragging = false,
   ...props
 }: BtnCreateWorkProps) => {
+  const { isVisible, show, hide } = useVisibility();
+
   return (
-    <button css={S.BtnCreateWork(isDragging)} {...props}>
-      {text}
-    </button>
+    <div
+      css={css`
+        position: relative;
+      `}
+    >
+      <button
+        css={S.BtnCreateWork(isDragging)}
+        {...props}
+        onMouseEnter={show}
+        onMouseLeave={hide}
+      >
+        {work.workName}
+      </button>
+      {isVisible && (
+        <ToolTip
+          content={<div>이웃 농장 작업 수: {work.neighborCount || 0}</div>}
+          direction={TOOLTIP_DIRECTIONS.TOP}
+          type={TOOLTIP_TYPES.NEIGHBOR}
+        />
+      )}
+    </div>
   );
 };
 
