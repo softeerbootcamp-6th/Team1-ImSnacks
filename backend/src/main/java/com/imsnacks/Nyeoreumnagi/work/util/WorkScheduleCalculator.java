@@ -36,9 +36,7 @@ public class WorkScheduleCalculator {
         if (w.isLowTemperature() && lowT) return false;
         if (w.isHighHumidity() && highH) return false;
         if (w.isLowHumidity() && lowH) return false;
-        if (w.isStrongWind() && wind) return false;
-
-        return true;
+        return !w.isStrongWind() || !wind;
     }
 
     private List<RecommendWorksResponse.RecommendedWorksResponse> windowsForWork(RecommendedWork work,
@@ -131,8 +129,8 @@ public class WorkScheduleCalculator {
 
         LocalDateTime dt = LocalDateTime.of(from.toLocalDate(), LocalTime.of(hour, minute));
 
-        // 날짜 보정: 예측 시간이 요청 시각보다 작으면 다음날로 이동
-        if (dt.isBefore(from) && hour < from.getHour()) {
+
+        if (dt.isBefore(from)) {
             dt = dt.plusDays(1);
         }
 
