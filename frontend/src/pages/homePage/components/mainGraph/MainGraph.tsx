@@ -10,7 +10,7 @@ const now = dayjs();
 const graphData = {
   min: 0,
   max: 30,
-  weatherMetric: WEATHER_METRICS.PRECIPITATION,
+  weatherMetric: WEATHER_METRICS.PERCIPITATION,
   valuePerTime: [
     {
       name: now.hour().toString(),
@@ -131,7 +131,7 @@ const weatherRiskData = [
 
 const MainGraph = () => {
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
-    WEATHER_METRICS.PRECIPITATION
+    WEATHER_METRICS.PERCIPITATION
   );
 
   return (
