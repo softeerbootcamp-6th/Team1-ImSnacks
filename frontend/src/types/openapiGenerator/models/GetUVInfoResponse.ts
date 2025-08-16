@@ -10,12 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { GetWeatherCondition } from '../models/GetWeatherCondition';
 
-export class CustomResponseBodyGetWeatherCondition {
-    'code'?: number;
-    'msg'?: string;
-    'data'?: GetWeatherCondition;
+export class GetUVInfoResponse {
+    'startTime'?: string;
+    'endTime'?: string;
+    'value'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -23,26 +22,26 @@ export class CustomResponseBodyGetWeatherCondition {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "code",
-            "baseName": "code",
-            "type": "number",
-            "format": "int32"
-        },
-        {
-            "name": "msg",
-            "baseName": "msg",
+            "name": "startTime",
+            "baseName": "startTime",
             "type": "string",
             "format": ""
         },
         {
-            "name": "data",
-            "baseName": "data",
-            "type": "GetWeatherCondition",
+            "name": "endTime",
+            "baseName": "endTime",
+            "type": "string",
             "format": ""
+        },
+        {
+            "name": "value",
+            "baseName": "value",
+            "type": "number",
+            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
-        return CustomResponseBodyGetWeatherCondition.attributeTypeMap;
+        return GetUVInfoResponse.attributeTypeMap;
     }
 
     public constructor() {

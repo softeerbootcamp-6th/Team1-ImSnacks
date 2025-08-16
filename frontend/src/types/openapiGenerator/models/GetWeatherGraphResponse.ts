@@ -12,10 +12,10 @@
 
 import { ValuePerTime } from '../models/ValuePerTime';
 
-export class GetWeatherGraph {
+export class GetWeatherGraphResponse {
     'max'?: number;
     'min'?: number;
-    'weatherMetric'?: GetWeatherGraphWeatherMetricEnum;
+    'weatherMetric'?: GetWeatherGraphResponseWeatherMetricEnum;
     'valuePerTime'?: Array<ValuePerTime>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -38,7 +38,7 @@ export class GetWeatherGraph {
         {
             "name": "weatherMetric",
             "baseName": "weatherMetric",
-            "type": "GetWeatherGraphWeatherMetricEnum",
+            "type": "GetWeatherGraphResponseWeatherMetricEnum",
             "format": ""
         },
         {
@@ -49,18 +49,18 @@ export class GetWeatherGraph {
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherGraph.attributeTypeMap;
+        return GetWeatherGraphResponse.attributeTypeMap;
     }
 
     public constructor() {
     }
 }
 
-export const GetWeatherGraphWeatherMetricEnum = {
-  Precipitation: 'PRECIPITATION',
+export const GetWeatherGraphResponseWeatherMetricEnum = {
+  Percipitation: 'PERCIPITATION',
   Temperature: 'TEMPERATURE',
   Humidity: 'HUMIDITY',
   WindSpeed: 'WIND_SPEED'
 } as const;
-export type GetWeatherGraphWeatherMetricEnum = typeof GetWeatherGraphWeatherMetricEnum[keyof typeof GetWeatherGraphWeatherMetricEnum];
+export type GetWeatherGraphResponseWeatherMetricEnum = typeof GetWeatherGraphResponseWeatherMetricEnum[keyof typeof GetWeatherGraphResponseWeatherMetricEnum];
 

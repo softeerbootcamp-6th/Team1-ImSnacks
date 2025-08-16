@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { GetWeatherGraph } from '../models/GetWeatherGraph';
+import { GetWeatherGraphResponse } from '../models/GetWeatherGraphResponse';
 
-export class CustomResponseBodyGetWeatherGraph {
+export class CustomResponseBodyGetWeatherGraphResponse {
     'code'?: number;
     'msg'?: string;
-    'data'?: GetWeatherGraph;
+    'data'?: GetWeatherGraphResponse;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -37,12 +37,12 @@ export class CustomResponseBodyGetWeatherGraph {
         {
             "name": "data",
             "baseName": "data",
-            "type": "GetWeatherGraph",
+            "type": "GetWeatherGraphResponse",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return CustomResponseBodyGetWeatherGraph.attributeTypeMap;
+        return CustomResponseBodyGetWeatherGraphResponse.attributeTypeMap;
     }
 
     public constructor() {

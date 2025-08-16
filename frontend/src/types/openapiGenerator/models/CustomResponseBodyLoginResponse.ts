@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { LoginResponse } from '../models/LoginResponse';
 
-export class AuthTokens {
-    'accessToken'?: string;
-    'refreshToken'?: string;
+export class CustomResponseBodyLoginResponse {
+    'code'?: number;
+    'msg'?: string;
+    'data'?: LoginResponse;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -21,20 +23,26 @@ export class AuthTokens {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "accessToken",
-            "baseName": "accessToken",
+            "name": "code",
+            "baseName": "code",
+            "type": "number",
+            "format": "int32"
+        },
+        {
+            "name": "msg",
+            "baseName": "msg",
             "type": "string",
             "format": ""
         },
         {
-            "name": "refreshToken",
-            "baseName": "refreshToken",
-            "type": "string",
-            "format": "uuid"
+            "name": "data",
+            "baseName": "data",
+            "type": "LoginResponse",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return AuthTokens.attributeTypeMap;
+        return CustomResponseBodyLoginResponse.attributeTypeMap;
     }
 
     public constructor() {

@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { GetFcstRisk } from '../models/GetFcstRisk';
+import { GetSunRiseSetTimeResponse } from '../models/GetSunRiseSetTimeResponse';
 
-export class CustomResponseBodyGetFcstRisk {
+export class CustomResponseBodyGetSunRiseSetTimeResponse {
     'code'?: number;
     'msg'?: string;
-    'data'?: GetFcstRisk;
+    'data'?: GetSunRiseSetTimeResponse;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -37,12 +37,12 @@ export class CustomResponseBodyGetFcstRisk {
         {
             "name": "data",
             "baseName": "data",
-            "type": "GetFcstRisk",
+            "type": "GetSunRiseSetTimeResponse",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return CustomResponseBodyGetFcstRisk.attributeTypeMap;
+        return CustomResponseBodyGetSunRiseSetTimeResponse.attributeTypeMap;
     }
 
     public constructor() {

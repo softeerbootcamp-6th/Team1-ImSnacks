@@ -11,9 +11,9 @@
  */
 
 
-export class GetWeatherBriefing {
-    'hasWeatherRisk'?: boolean;
-    'weatherMsg'?: string;
+export class GetSunRiseSetTimeResponse {
+    'startTime'?: string;
+    'endTime'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -21,20 +21,20 @@ export class GetWeatherBriefing {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "hasWeatherRisk",
-            "baseName": "hasWeatherRisk",
-            "type": "boolean",
+            "name": "startTime",
+            "baseName": "startTime",
+            "type": "string",
             "format": ""
         },
         {
-            "name": "weatherMsg",
-            "baseName": "weatherMsg",
+            "name": "endTime",
+            "baseName": "endTime",
             "type": "string",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherBriefing.attributeTypeMap;
+        return GetSunRiseSetTimeResponse.attributeTypeMap;
     }
 
     public constructor() {

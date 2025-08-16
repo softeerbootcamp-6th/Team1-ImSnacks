@@ -11,10 +11,9 @@
  */
 
 
-export class GetWeatherCondition {
-    'weatherCondition'?: string;
-    'weatherKeyword'?: string;
-    'temperature'?: number;
+export class GetWeatherBriefingResponse {
+    'hasWeatherRisk'?: boolean;
+    'weatherMsg'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -22,26 +21,20 @@ export class GetWeatherCondition {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "weatherCondition",
-            "baseName": "weatherCondition",
-            "type": "string",
+            "name": "hasWeatherRisk",
+            "baseName": "hasWeatherRisk",
+            "type": "boolean",
             "format": ""
         },
         {
-            "name": "weatherKeyword",
-            "baseName": "weatherKeyword",
+            "name": "weatherMsg",
+            "baseName": "weatherMsg",
             "type": "string",
             "format": ""
-        },
-        {
-            "name": "temperature",
-            "baseName": "temperature",
-            "type": "number",
-            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherCondition.attributeTypeMap;
+        return GetWeatherBriefingResponse.attributeTypeMap;
     }
 
     public constructor() {

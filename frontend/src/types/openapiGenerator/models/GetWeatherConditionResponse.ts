@@ -10,12 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { AuthTokens } from '../models/AuthTokens';
 
-export class CustomResponseBodyAuthTokens {
-    'code'?: number;
-    'msg'?: string;
-    'data'?: AuthTokens;
+export class GetWeatherConditionResponse {
+    'weatherCondition'?: string;
+    'weatherKeyword'?: string;
+    'temperature'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -23,26 +22,26 @@ export class CustomResponseBodyAuthTokens {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "code",
-            "baseName": "code",
-            "type": "number",
-            "format": "int32"
-        },
-        {
-            "name": "msg",
-            "baseName": "msg",
+            "name": "weatherCondition",
+            "baseName": "weatherCondition",
             "type": "string",
             "format": ""
         },
         {
-            "name": "data",
-            "baseName": "data",
-            "type": "AuthTokens",
+            "name": "weatherKeyword",
+            "baseName": "weatherKeyword",
+            "type": "string",
             "format": ""
+        },
+        {
+            "name": "temperature",
+            "baseName": "temperature",
+            "type": "number",
+            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
-        return CustomResponseBodyAuthTokens.attributeTypeMap;
+        return GetWeatherConditionResponse.attributeTypeMap;
     }
 
     public constructor() {

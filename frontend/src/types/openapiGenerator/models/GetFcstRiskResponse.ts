@@ -12,7 +12,7 @@
 
 import { WeatherRiskDto } from '../models/WeatherRiskDto';
 
-export class GetFcstRisk {
+export class GetFcstRiskResponse {
     'items'?: Array<WeatherRiskDto>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -28,7 +28,7 @@ export class GetFcstRisk {
         }    ];
 
     static getAttributeTypeMap() {
-        return GetFcstRisk.attributeTypeMap;
+        return GetFcstRiskResponse.attributeTypeMap;
     }
 
     public constructor() {
