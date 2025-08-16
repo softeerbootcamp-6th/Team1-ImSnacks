@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { postLogin } from '@/apis/auth.api';
 import { token } from '@/store/token';
 import { useUserStore } from '@/store/useUserStore';
+import { ApiError } from '@/apis/ApiError';
 
 interface UseLoginReturn {
   identifier: string;
@@ -57,8 +58,12 @@ export const useLogin = (): UseLoginReturn => {
       } else {
         setError('아이디 또는 비밀번호가 올바르지 않습니다.');
       }
-    } catch {
-      setError('로그인 중 오류가 발생했습니다.');
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setError(error.msg || '로그인 중 오류가 발생했습니다.');
+      } else {
+        setError('로그인 중 오류가 발생했습니다.');
+      }
     } finally {
       setIsLoading(false);
     }
