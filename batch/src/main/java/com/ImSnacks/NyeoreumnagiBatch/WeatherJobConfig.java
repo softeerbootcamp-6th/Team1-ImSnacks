@@ -46,7 +46,6 @@ public class WeatherJobConfig {
 
     @Bean
     public Job sevenDayWeatherConditionJob(JobRepository jobRepository, Step sevenDayWeatherConditionStep) {
-        log.info("sevenDayWeatherConditionStep Start");
         return new JobBuilder("sevenDayWeatherConditionJob", jobRepository)
                 .start(sevenDayWeatherConditionStep)
                 .build();
