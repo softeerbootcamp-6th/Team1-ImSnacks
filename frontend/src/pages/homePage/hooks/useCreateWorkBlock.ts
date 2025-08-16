@@ -19,7 +19,8 @@ interface UseCreateWorkBlockReturn {
 }
 
 export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
-  const { addWorkBlock, workBlocks, containerRef } = useWorkBlocks();
+  const { addWorkBlock, workBlocks, containerRef, scrollOffset } =
+    useWorkBlocks();
 
   const handleCreateWork = useCallback(
     (work: RecommendedWorksResponse, selectedCrop: MyCropResponse) => {
@@ -54,8 +55,6 @@ export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
         return;
       }
 
-      const scrollOffset = 0; // 스크롤 오프셋은 0으로 설정
-
       // 충돌하지 않는 위치 찾기
       const collisionFreePosition = findCollisionFreePosition(
         tempBlock,
@@ -74,7 +73,7 @@ export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
       // 작업 블록 추가
       addWorkBlock(newWorkBlock);
     },
-    [addWorkBlock, workBlocks, containerRef]
+    [addWorkBlock, workBlocks, containerRef, scrollOffset]
   );
 
   return {

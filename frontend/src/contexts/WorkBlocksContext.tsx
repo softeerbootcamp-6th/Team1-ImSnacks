@@ -8,6 +8,8 @@ export interface WorkBlocksContextType {
   updateWorkBlocks: (updatedBlocks: WorkBlockType[]) => void;
   removeWorkBlock: (id: number | string) => void;
   containerRef: RefObject<HTMLDivElement | null>;
+  scrollOffset: number;
+  setScrollOffset: (offset: number) => void;
   selectedRecommendedWork: RecommendedWorksResponse | null;
   setSelectedRecommendedWork: (work: RecommendedWorksResponse | null) => void;
 }
@@ -18,6 +20,8 @@ const WorkBlocksContext = createContext<WorkBlocksContextType>({
   updateWorkBlocks: () => {},
   removeWorkBlock: () => {},
   containerRef: { current: null },
+  scrollOffset: 0,
+  setScrollOffset: () => {},
   selectedRecommendedWork: null,
   setSelectedRecommendedWork: () => {},
 });

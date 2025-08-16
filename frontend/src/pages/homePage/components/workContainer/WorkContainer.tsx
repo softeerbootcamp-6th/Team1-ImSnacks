@@ -22,10 +22,15 @@ import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 import MainGraph from '../mainGraph/MainGraph';
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks, removeWorkBlock, containerRef } =
-    useWorkBlocks();
+  const {
+    workBlocks,
+    updateWorkBlocks,
+    removeWorkBlock,
+    containerRef,
+    scrollOffset,
+    setScrollOffset,
+  } = useWorkBlocks();
 
-  const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
   const [futurePosition, setFuturePosition] = useState<Position | null>(null);
   const latestBlocksRef = useRef<WorkBlockType[]>(workBlocks);
