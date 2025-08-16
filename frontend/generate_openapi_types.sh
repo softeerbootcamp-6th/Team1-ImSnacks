@@ -142,9 +142,23 @@ NODE
 find "$OUT_DIR" -mindepth 1 -maxdepth 1 -type d ! -name "models" -exec rm -rf {} +
 find "$OUT_DIR" -mindepth 1 -maxdepth 1 -type f ! -name "index.ts" -exec rm -f {} + || true
 
-# 11) 배럴 파일(index.ts) 생성(편의)
+# 10-1) models/index.ts 파일 삭제 (생성되지 않도록)
+rm -f "$OUT_DIR/models/index.ts" || true
+
+# 10-2) models/all.ts 파일 생성 (모든 모델을 export)
+cat > "$OUT_DIR/models/all.ts" <<'EOF'
+// Auto-generated file - do not edit
+EOF
+
+# models 폴더의 모든 .ts 파일을 all.ts에 export 추가 (index.ts와 all.ts 제외)
+find "$OUT_DIR/models" -name "*.ts" ! -name "index.ts" ! -name "all.ts" | sort | while read -r file; do
+  basename_no_ext=$(basename "$file" .ts)
+  echo "export * from './$basename_no_ext';" >> "$OUT_DIR/models/all.ts"
+done
+
+# 11) 배럴 파일(index.ts) 생성 - models/all로 변경
 cat > "$OUT_DIR/index.ts" <<'EOF'
-export * from './models';
+export * from './models/all';
 EOF
 
 echo "✅ OpenAPI 타입만 생성 + ObjectSerializer 제거 + enum 변환 완료: $OUT_DIR"
