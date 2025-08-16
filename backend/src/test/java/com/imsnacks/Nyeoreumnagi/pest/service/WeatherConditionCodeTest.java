@@ -1,8 +1,8 @@
 package com.imsnacks.Nyeoreumnagi.pest.service;
 
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityCode;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainCode;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureCode;
+import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityLevel;
+import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainLevel;
+import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureLevel;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import org.junit.jupiter.api.Test;
 
@@ -15,16 +15,16 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class WeatherConditionCodeTest {
 
-    private final int 저온 = TemperatureCode.LevelBoundary.LOW_TO_MID.getThresholdValue() - 1;
-    private final int 보통기온 = TemperatureCode.LevelBoundary.LOW_TO_MID.getThresholdValue();
-    private final int 고온 = TemperatureCode.LevelBoundary.MID_TO_HIGH.getThresholdValue();
+    private final int 저온 = TemperatureLevel.LevelBoundary.LOW_TO_MID.getThresholdValue() - 1;
+    private final int 보통기온 = TemperatureLevel.LevelBoundary.LOW_TO_MID.getThresholdValue();
+    private final int 고온 = TemperatureLevel.LevelBoundary.MID_TO_HIGH.getThresholdValue();
 
-    private final int 건조 = HumidityCode.LevelBoundary.LOW_TO_MID.getThresholdValue() - 1;
-    private final int 보통습도 = HumidityCode.LevelBoundary.LOW_TO_MID.getThresholdValue();
-    private final int 다습 = HumidityCode.LevelBoundary.MID_TO_HIGH.getThresholdValue();
+    private final int 건조 = HumidityLevel.LevelBoundary.LOW_TO_MID.getThresholdValue() - 1;
+    private final int 보통습도 = HumidityLevel.LevelBoundary.LOW_TO_MID.getThresholdValue();
+    private final int 다습 = HumidityLevel.LevelBoundary.MID_TO_HIGH.getThresholdValue();
 
-    private final double 비없음 = RainCode.LevelBoundary.RAIN.getThresholdValue() - 0.42;
-    private final double 비있음 = RainCode.LevelBoundary.RAIN.getThresholdValue() + 0.42;
+    private final double 비없음 = RainLevel.LevelBoundary.RAIN.getThresholdValue() - 0.42;
+    private final double 비있음 = RainLevel.LevelBoundary.RAIN.getThresholdValue() + 0.42;
 
 
     ShortTermWeatherForecast makeForecast(int temperature, int humidity, double precipitation) {
@@ -56,9 +56,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -70,9 +70,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -84,9 +84,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -98,9 +98,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -112,9 +112,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -126,9 +126,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -140,9 +140,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -154,9 +154,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -168,9 +168,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -182,9 +182,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -196,9 +196,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -210,9 +210,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
 // === 고온 ===
@@ -226,9 +226,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -240,9 +240,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -254,9 +254,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -268,9 +268,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -282,9 +282,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(code.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -296,9 +296,9 @@ public class WeatherConditionCodeTest {
                 .build();
         WeatherConditionCode code = WeatherConditionCode.of(List.of(fcst));
 
-        assertThat(code.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(code.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(code.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(code.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(code.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(code.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -307,9 +307,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(고온, 다습, 비없음, 3));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -318,9 +318,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(고온, 다습, 비있음, 3));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -331,9 +331,9 @@ public class WeatherConditionCodeTest {
         // 여기선 LOW가 하나도 없으니 보통 그대로 테스트
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -341,9 +341,9 @@ public class WeatherConditionCodeTest {
         var fcstList = getFcstList(저온, 보통습도, 비있음, 10);
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -352,9 +352,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(저온, 다습, 비없음, 5));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH); // HIGH 우선
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH); // HIGH 우선
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -363,9 +363,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(저온, 다습, 비있음, 5));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.LOW);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.LOW);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -373,9 +373,9 @@ public class WeatherConditionCodeTest {
         var fcstList = getFcstList(보통기온, 건조, 비없음, 10);
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -383,9 +383,9 @@ public class WeatherConditionCodeTest {
         var fcstList = getFcstList(보통기온, 건조, 비있음, 10);
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.LOW);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.LOW);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -393,9 +393,9 @@ public class WeatherConditionCodeTest {
         var fcstList = getFcstList(보통기온, 보통습도, 비없음, 10);
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -403,9 +403,9 @@ public class WeatherConditionCodeTest {
         var fcstList = getFcstList(보통기온, 보통습도, 비있음, 10);
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.MID);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.MID);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -414,9 +414,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(보통기온, 다습, 비없음, 2));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -425,9 +425,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(보통기온, 다습, 비있음, 2));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.MID);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.MID);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -436,9 +436,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(고온, 다습, 비없음, 5)); // LOW + HIGH 섞임 → HIGH 우선
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -447,9 +447,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(고온, 다습, 비있음, 5));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -458,9 +458,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(고온, 다습, 비없음, 2)); // MID + HIGH 혼합 → HIGH 우선
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -469,9 +469,9 @@ public class WeatherConditionCodeTest {
         fcstList.addAll(getFcstList(고온, 다습, 비있음, 2));
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
     @Test
@@ -479,9 +479,9 @@ public class WeatherConditionCodeTest {
         var fcstList = getFcstList(고온, 다습, 비없음, 10);
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.NONE);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.NONE);
     }
 
     @Test
@@ -489,9 +489,9 @@ public class WeatherConditionCodeTest {
         var fcstList = getFcstList(고온, 다습, 비있음, 10);
         var expected = WeatherConditionCode.of(fcstList);
 
-        assertThat(expected.temperatureCode()).isEqualTo(TemperatureCode.HIGH);
-        assertThat(expected.humidityCode()).isEqualTo(HumidityCode.HIGH);
-        assertThat(expected.rainCode()).isEqualTo(RainCode.RAIN);
+        assertThat(expected.temperatureLevel()).isEqualTo(TemperatureLevel.HIGH);
+        assertThat(expected.humidityLevel()).isEqualTo(HumidityLevel.HIGH);
+        assertThat(expected.rainLevel()).isEqualTo(RainLevel.RAIN);
     }
 
 }
