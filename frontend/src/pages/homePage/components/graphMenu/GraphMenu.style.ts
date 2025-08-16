@@ -20,7 +20,7 @@ const GraphMenu = css`
   position: absolute;
   top: 0;
   left: 12px;
-  z-index: 1;
+  z-index: 999;
 `;
 
 export default {
