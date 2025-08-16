@@ -9,6 +9,7 @@ public enum WeatherResponseStatus {
     NO_SUNRISE_SET(3006, "해당 지역 일출몰 정보가 없습니다."),
     NO_WIND_INFO(3007, "해당 지역 풍속/풍향 정보가 없습니다."),
     NO_HUMIDITY_INFO(3008, "해당 지역 습도 정보가 없습니다."),
+    NO_PRECIPITATION(3009, "해당 지역 강수량 정보가 없습니다."),
     ;
 
     private final int code;
