@@ -15,6 +15,7 @@ import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
@@ -292,5 +293,27 @@ class WeatherServiceTest {
         // when & then
         assertThatThrownBy(() -> weatherService.getWindInfo(memberId))
                 .isInstanceOf(WeatherException.class);
+    }
+
+    @Test
+    void 일일_최고_습도_조회_성공() {
+        // given
+        Long memberId = 123L;
+        int nx = 55, ny = 99;
+        Farm farm = mock(Farm.class);
+        when(farm.getNx()).thenReturn(nx);
+        when(farm.getNy()).thenReturn(ny);
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+
+        HumidityInfo humidityInfo = mock(HumidityInfo.class);
+        when(humidityInfo.getMaxHumidity()).thenReturn(84);
+
+        when(dashboardTodayWeatherRepository.findHumidityByNxAndNy(nx, ny)).thenReturn(Optional.of(humidityInfo));
+
+        // when
+        GetHumidityResponse response = weatherService.getHumidity(memberId);
+
+        // then
+        assertThat(response.value()).isEqualTo(84);
     }
 }
