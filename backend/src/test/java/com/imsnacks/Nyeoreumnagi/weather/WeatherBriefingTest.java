@@ -5,6 +5,7 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
+import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefingResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
@@ -31,6 +32,7 @@ import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +44,8 @@ class WeatherBriefingTest {
     @Mock
     private MemberRepository memberRepo;
     @Mock
+    private FarmRepository farmRepository;
+    @Mock
     private ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     @Mock
     private WeatherRiskRepository riskRepo;
@@ -51,13 +55,14 @@ class WeatherBriefingTest {
     @Test
     void 멤버가_없는_경우_예외_발생() {
         final long memberId = 42L;
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.empty());
         Assertions.assertThrows(MemberException.class, () -> {
             service.getWeatherBriefing(memberId);
         });
         try {
             service.getWeatherBriefing(memberId);
         } catch (MemberException e) {
-            assertThat(e.getStatus()).isEqualTo(MemberResponseStatus.MEMBER_NOT_FOUND);
+            assertThat(e.getStatus()).isEqualTo(MemberResponseStatus.NO_FARM_INFO);
         }
     }
 
@@ -65,7 +70,7 @@ class WeatherBriefingTest {
     void 농장이_없는_경우_예외_발생() {
         final long memberId = 42L;
         final Member member = new Member(memberId, "", "", "", "", null, null);
-        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.empty());
         Assertions.assertThrows(MemberException.class, () -> {
             service.getWeatherBriefing(memberId);
         });
@@ -83,8 +88,7 @@ class WeatherBriefingTest {
         final int nx = 60;
         final int ny = 120;
         final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
-        final Member member = new Member(memberId, "", "", "", "", null, farm);
-        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         // when
         final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
@@ -101,8 +105,7 @@ class WeatherBriefingTest {
         final int nx = 60;
         final int ny = 120;
         final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
-        final Member member = new Member(memberId, "", "", "", "", null, farm);
-        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         final LocalDateTime from = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).minusHours(1);
         final LocalDateTime to = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).plusHours(2);
@@ -137,8 +140,7 @@ class WeatherBriefingTest {
         final int nx = 60;
         final int ny = 120;
         final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, null);
-        final Member member = new Member(memberId, "", "", "", "", null, farm);
-        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         final long jobExecutionId = 1L;
         final LocalDate fcstDate = LocalDate.now();

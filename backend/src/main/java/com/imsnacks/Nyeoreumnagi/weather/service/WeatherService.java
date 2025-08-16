@@ -3,8 +3,8 @@ package com.imsnacks.Nyeoreumnagi.weather.service;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
-import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
+import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
@@ -15,6 +15,7 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
+import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionStringFromDegree;
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
 
 @Service
@@ -33,17 +35,14 @@ import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.
 public class WeatherService {
 
     private final MemberRepository memberRepository;
+    private final FarmRepository farmRepository;
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final WeatherRiskRepository weatherRiskRepository;
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        Farm farm = member.getFarm();
-
-        if (farm == null) {
-            throw new MemberException(NO_FARM_INFO);
-        }
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         int nx = farm.getNx();
         int ny = farm.getNy();
@@ -64,12 +63,8 @@ public class WeatherService {
     }
 
     public GetFcstRiskResponse getWeatherRisk(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        Farm farm = member.getFarm();
-
-        if (farm == null) {
-            throw new MemberException(NO_FARM_INFO);
-        }
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         int nx = farm.getNx();
         int ny = farm.getNy();
@@ -81,12 +76,8 @@ public class WeatherService {
     }
 
     public GetWeatherConditionResponse getWeatherCondition(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
-        Farm farm = member.getFarm();
-
-        if (farm == null) {
-            throw new MemberException(NO_FARM_INFO);
-        }
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         int nx = farm.getNx();
         int ny = farm.getNy();
@@ -107,11 +98,7 @@ public class WeatherService {
 
     public GetWeatherBriefingResponse getWeatherBriefing(final Long memberId) {
         assert(memberId != null);
-        final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        final Farm farm = member.getFarm();
-        if (farm == null) {
-            throw new MemberException(NO_FARM_INFO);
-        }
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
         final int ny = farm.getNy();
@@ -136,11 +123,7 @@ public class WeatherService {
 
     public GetSunRiseSetTimeResponse getSunRiseSetTime(final Long memberId) {
         assert(memberId != null);
-        final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        final Farm farm = member.getFarm();
-        if (farm == null) {
-            throw new MemberException(NO_FARM_INFO);
-        }
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
         final int ny = farm.getNy();
@@ -157,11 +140,7 @@ public class WeatherService {
 
     public GetUVInfoResponse getUVInfo(final Long memberId) {
         assert(memberId != null);
-        final Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        final Farm farm = member.getFarm();
-        if (farm == null) {
-            throw new MemberException(NO_FARM_INFO);
-        }
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
         final int ny = farm.getNy();
@@ -174,6 +153,29 @@ public class WeatherService {
         String endTime = uvInfo.getMaxUVEnd().format(formatter);
 
         return new GetUVInfoResponse(startTime, endTime, uvInfo.getMaxUVIndex());
+    }
+
+    public GetWindInfoResponse getWindInfo(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        WindInfo windInfo = dashboardTodayWeatherRepository.findWindByNxAndNy(nx, ny).orElseThrow(()-> new WeatherException(NO_WIND_INFO));
+        validateWindInfo(windInfo);
+
+        Integer windSpeed = windInfo.getMaxWindSpeed();
+        Integer degree = windInfo.getWindDirection();
+        String windDirection = getDirectionStringFromDegree(degree);
+
+        return new GetWindInfoResponse(windDirection, degree, windSpeed);
+    }
+
+    private void validateWindInfo(WindInfo windInfo) {
+        if(windInfo.getWindDirection() == null || windInfo.getMaxWindSpeed() == null) {
+            throw new WeatherException(NO_WIND_INFO);
+        }
     }
 
     private void validateUVInfo(UVInfo uvInfo) {
