@@ -3,7 +3,7 @@ import { WEATHER_METRICS } from '@/types/weather.types';
 export const GRAPH_MENU_LIST = [
   {
     title: '강수량',
-    weatherMetric: WEATHER_METRICS.PRECIPITATION,
+    weatherMetric: WEATHER_METRICS.PERCIPITATION,
   },
   {
     title: '기온',
