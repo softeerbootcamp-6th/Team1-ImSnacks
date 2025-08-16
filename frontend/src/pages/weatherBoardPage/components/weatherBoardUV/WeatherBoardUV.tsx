@@ -4,15 +4,34 @@ import S from './WeatherBoardUV.style';
 import { FlexStyles } from '@/styles/commonStyles';
 import { Typography } from '@/styles/typography';
 import { GrayScale } from '@/styles/colors';
+import { getWeatherUV } from '@/apis/weather.api';
+import { useEffect, useState } from 'react';
+import { GetUVInfoResponse } from '@/types/openapiGenerator';
 
-interface WeatherBoardUVProps {
-  value: number;
-  startTime: string;
-  endTime: string;
-}
+// interface WeatherBoardUVProps {
+//   value: number;
+//   startTime: string;
+//   endTime: string;
+// }
 
-const WeatherBoardUV = ({ value, startTime, endTime }: WeatherBoardUVProps) => {
-  const { level, color } = getUVLevelAndColor(value);
+const WeatherBoardUV = () => {
+  const [uvData, setUVData] = useState<GetUVInfoResponse>();
+  const { level, color } = getUVLevelAndColor(uvData?.value || 0);
+
+  const fetchUVData = async () => {
+    try {
+      const res = await getWeatherUV();
+      if (res.data) {
+        setUVData(res.data);
+      }
+    } catch (error) {
+      console.error('Error fetching UV data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUVData();
+  }, []);
 
   return (
     <div css={S.WeatherBoardUV}>
@@ -24,7 +43,7 @@ const WeatherBoardUV = ({ value, startTime, endTime }: WeatherBoardUVProps) => {
             margin-bottom: 18px;
           `}
         >
-          <p>{value}</p>
+          <p>{uvData?.value}</p>
           <span css={Typography.Caption_S}>{level}</span>
         </div>
         <svg
@@ -64,8 +83,8 @@ const WeatherBoardUV = ({ value, startTime, endTime }: WeatherBoardUVProps) => {
         </svg>
 
         <div css={S.WeatherBoardUVTimeWrapper}>
-          <span css={S.WeatherBoardUVTime}>{startTime}</span>
-          <span css={S.WeatherBoardUVTime}>{endTime}</span>
+          <span css={S.WeatherBoardUVTime}>{uvData?.startTime}</span>
+          <span css={S.WeatherBoardUVTime}>{uvData?.endTime}</span>
         </div>
       </div>
     </div>
