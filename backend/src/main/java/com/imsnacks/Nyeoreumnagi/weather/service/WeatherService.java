@@ -196,6 +196,18 @@ public class WeatherService {
         return new GetPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
     }
 
+    public GetTemperatureResponse getTemperature(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+
+
+        return null;
+    }
+
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
         if(precipitationInfo.getMaxPrecipitation() == null){
             throw new WeatherException(NO_PRECIPITATION);
