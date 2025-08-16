@@ -1,4 +1,5 @@
-import type { MainGraphData, WeatherRiskData } from '@/types/mainGraph.type';
+import type { WeatherRiskData } from '@/types/mainGraph.type';
+import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
 
 export const generateYTicks = ({ min, max }: { min: number; max: number }) => {
   const ticks = [];
@@ -10,15 +11,19 @@ export const generateYTicks = ({ min, max }: { min: number; max: number }) => {
 };
 
 export const getProcessedData = (
-  graphData: MainGraphData,
+  graphData: GetWeatherGraphResponse,
   weatherRiskData: WeatherRiskData[]
 ) => {
+  if (!graphData?.valuePerTime) {
+    return [];
+  }
+
   return graphData.valuePerTime.map(item => {
     const result: Record<string, string | number | null> = { ...item };
 
     weatherRiskData.forEach((riskData, index) => {
       const { startTime, endTime } = riskData;
-      const itemTime = Number(item.name);
+      const itemTime = Number(item.name ?? 0);
       const startTimeNum = Number(startTime);
       const endTimeNum = Number(endTime);
 
@@ -32,7 +37,7 @@ export const getProcessedData = (
         isInRange = itemTime >= startTimeNum && itemTime <= endTimeNum;
       }
 
-      result[`areaValue_${index}`] = isInRange ? item.value : null;
+      result[`areaValue_${index}`] = isInRange ? item.value ?? 0 : null;
     });
     return result;
   });

@@ -1,4 +1,5 @@
-import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
+import type { GetWeatherGraphResponseWeatherMetricEnum } from '@/types/openapiGenerator';
+import { WEATHER_METRICS } from '@/types/weather.types';
 
 const WEATHER_UNIT = {
   [WEATHER_METRICS.PERCIPITATION]: 'mm',
@@ -7,6 +8,6 @@ const WEATHER_UNIT = {
   [WEATHER_METRICS.WIND_SPEED]: 'm/s',
 };
 
-export const getUnit = (metric: WeatherMetrics) => {
+export const getUnit = (metric: GetWeatherGraphResponseWeatherMetricEnum) => {
   return WEATHER_UNIT[metric] || '';
 };

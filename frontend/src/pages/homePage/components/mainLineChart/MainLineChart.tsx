@@ -13,22 +13,34 @@ import { generateYTicks, getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
 import CustomizedDot from '../customizedDot/CustomizedDot';
 import CustomTooltip from '../customizedTootip/CustomizedTooltip';
-import type { MainGraphData, WeatherRiskData } from '@/types/mainGraph.type';
+import type { WeatherRiskData } from '@/types/mainGraph.type';
 import WeatherRiskText from '../weatherRiskText/WeatherRiskText';
+import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
 
 interface MainLineChartProps {
-  graphData: MainGraphData;
+  graphData: GetWeatherGraphResponse;
   weatherRiskData: WeatherRiskData[];
 }
 
 const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
+  if (
+    !graphData ||
+    !graphData.valuePerTime ||
+    graphData.valuePerTime.length === 0
+  ) {
+    return <div>로딩 중...</div>;
+  }
+
   const pointSpacing = 100;
   const chartWidth = Math.max(
     300,
-    (graphData.valuePerTime.length - 1) * pointSpacing + 100
+    graphData.valuePerTime.length * pointSpacing + 100
   );
 
-  const yTicks = generateYTicks({ min: graphData.min, max: graphData.max });
+  const yTicks = generateYTicks({
+    min: graphData.min ?? 0,
+    max: graphData.max ?? 100,
+  });
 
   const GraphHighlight = (
     <defs>
@@ -54,7 +66,7 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
     <div css={S.MainLineChart}>
       {/* Fixed Y축 */}
       <div css={S.FixedYAxisWrapper}>
-        {getUnit(graphData.weatherMetric)}
+        {getUnit(graphData.weatherMetric ?? 'PERCIPITATION')}
         <div css={S.YAxis}>
           {yTicks.map(tick => (
             <div key={tick} css={S.YAxisTick}>
@@ -88,7 +100,7 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
             tickMargin={60}
           />
           <YAxis
-            domain={[graphData.min, graphData.max]}
+            domain={[graphData.min ?? 0, graphData.max ?? 100]}
             tickCount={6}
             type="number"
             axisLine={false}
