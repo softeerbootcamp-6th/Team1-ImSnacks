@@ -23,24 +23,15 @@ interface MainLineChartProps {
 }
 
 const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
-  if (
-    !graphData ||
-    !graphData.valuePerTime ||
-    graphData.valuePerTime.length === 0
-  ) {
+  if (!graphData || !graphData.valuePerTime) {
     return <div>로딩 중...</div>;
   }
 
   const pointSpacing = 100;
   const chartWidth = Math.max(
     300,
-    graphData.valuePerTime.length * pointSpacing + 100
+    (graphData.valuePerTime?.length - 1) * pointSpacing + 100
   );
-
-  const yTicks = generateYTicks({
-    min: graphData.min ?? 0,
-    max: graphData.max ?? 100,
-  });
 
   const GraphHighlight = (
     <defs>
@@ -64,19 +55,6 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
 
   return (
     <div css={S.MainLineChart}>
-      {/* Fixed Y축 */}
-      <div css={S.FixedYAxisWrapper}>
-        {getUnit(graphData.weatherMetric ?? 'PERCIPITATION')}
-        <div css={S.YAxis}>
-          {yTicks.map(tick => (
-            <div key={tick} css={S.YAxisTick}>
-              {tick}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Line Chart */}
       {/* <div css={S.LineChartScrollWrapper}> */}
       <div css={S.LineChartInnerWrapper(chartWidth)}>
         <ComposedChart
@@ -100,7 +78,7 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
             tickMargin={60}
           />
           <YAxis
-            domain={[graphData.min ?? 0, graphData.max ?? 100]}
+            domain={[graphData.min, graphData.max]}
             tickCount={6}
             type="number"
             axisLine={false}
