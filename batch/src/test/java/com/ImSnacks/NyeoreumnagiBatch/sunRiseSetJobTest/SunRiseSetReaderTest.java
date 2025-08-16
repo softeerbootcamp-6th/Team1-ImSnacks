@@ -3,6 +3,7 @@ package com.ImSnacks.NyeoreumnagiBatch.sunRiseSetJobTest;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNyId;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.UniqueNxNyRepository;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.entity.MidTempRegionCode;
 import com.ImSnacks.NyeoreumnagiBatch.sunRiseSet.reader.SunRiseSetApiCaller;
 import com.ImSnacks.NyeoreumnagiBatch.sunRiseSet.reader.SunRiseSetReader;
 import com.ImSnacks.NyeoreumnagiBatch.sunRiseSet.reader.dto.SunRiseSetReaderResponseDto;
@@ -32,7 +33,8 @@ class SunRiseSetReaderTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), "1100000000", 35.1, 127.1));
+        List<UniqueNxNy> areaCodes = List.of(new UniqueNxNy(new NxNyId(60,120), new MidTempRegionCode("11B10101","서울"), "1100000000", 34.1, 127.1));
+
         when(uniqueNxNyRepository.findAll()).thenReturn(areaCodes);
         reader = new SunRiseSetReader("20250813", apiCaller, uniqueNxNyRepository);
         // Static 변수 초기화 강제
