@@ -35,6 +35,7 @@ import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -85,28 +86,6 @@ class WeatherBriefingTest {
     }
 
     @Test
-    void 날씨_상황_정보가_없을때() {
-        // given
-        final long memberId = 42L;
-        final int nx = 60;
-        final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
-        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
-        final Member member = new Member(memberId, "", "", "", "", null, farm);
-
-        given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
-        final LocalDateTime morning = LocalDateTime.of(2025, 8, 16, 9, 0);
-
-        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
-            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
-                    .thenReturn(morning);
-            final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_MORNING);
-            final var actual = service.getWeatherBriefing(memberId);
-            assertThat(actual).isEqualTo(expected);
-        }
-    }
-
-    @Test
     void 날씨_상황_정보가_없을때_아침이면_아침_인사말을_반환한다() {
         // given
         final long memberId = 42L;
@@ -117,11 +96,10 @@ class WeatherBriefingTest {
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
-        final LocalDateTime afternoon = LocalDateTime.of(2025, 8, 16, 9, 0);
+        final LocalDateTime morning = LocalDateTime.of(2025, 8, 16, 9, 0);
 
-        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
-            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
-                    .thenReturn(afternoon);
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateTimeMock.when(LocalDateTime::now).thenReturn(morning);
             final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_MORNING);
             final var actual = service.getWeatherBriefing(memberId);
             assertThat(actual).isEqualTo(expected);
@@ -141,9 +119,8 @@ class WeatherBriefingTest {
         given(memberRepo.findById(memberId)).willReturn(Optional.of(member));
         final LocalDateTime afternoon = LocalDateTime.of(2025, 8, 16, 14, 0);
 
-        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
-            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
-                    .thenReturn(afternoon);
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateTimeMock.when(LocalDateTime::now).thenReturn(afternoon);
             final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_AFTERNOON);
             final var actual = service.getWeatherBriefing(memberId);
             assertThat(actual).isEqualTo(expected);
@@ -161,9 +138,8 @@ class WeatherBriefingTest {
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
         final LocalDateTime evening = LocalDateTime.of(2025, 8, 16, 19, 0);
 
-        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
-            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
-                    .thenReturn(evening);
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateTimeMock.when(LocalDateTime::now).thenReturn(evening);
             final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_EVENING);
             final var actual = service.getWeatherBriefing(memberId);
             assertThat(actual).isEqualTo(expected);
@@ -182,9 +158,8 @@ class WeatherBriefingTest {
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
         final LocalDateTime night = LocalDateTime.of(2025, 8, 16, 2, 0);
 
-        try (MockedStatic<LocalDateTime> localDateMock = Mockito.mockStatic(LocalDateTime.class)) {
-            localDateMock.when(() -> LocalDateTime.now(ZoneId.of(Briefing.KST)))
-                    .thenReturn(night);
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateTimeMock.when(LocalDateTime::now).thenReturn(night);
             final var expected = new GetWeatherBriefingResponse(false, Briefing.GOOD_NIGHT);
             final var actual = service.getWeatherBriefing(memberId);
             assertThat(actual).isEqualTo(expected);

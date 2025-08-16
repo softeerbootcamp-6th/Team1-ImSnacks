@@ -109,7 +109,7 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        final LocalDateTime now = LocalDateTime.now(ZoneId.of(Briefing.KST));
+        final LocalDateTime now = LocalDateTime.now();
 
         final List<WeatherRisk> allRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
         if (allRisks.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
