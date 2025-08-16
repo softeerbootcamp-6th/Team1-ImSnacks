@@ -22,12 +22,34 @@ import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 import MainGraph from '../mainGraph/MainGraph';
 import GraphMenu from '../graphMenu/GraphMenu';
 import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
+import { getWeatherGraph } from '@/apis/weather.api';
+import { GetWeatherGraphResponse } from '@/types/openapiGenerator';
+import { generateYTicks } from '../../utils/lineChartUtil';
+import { getUnit } from '@/utils/getUnit';
+import S from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.PERCIPITATION
   );
+  const [graphData, setGraphData] = useState<GetWeatherGraphResponse>();
+
+  // API 데이터 가져오기
+  useEffect(() => {
+    let ignore = false;
+    (async () => {
+      try {
+        const res = await getWeatherGraph(currentTab);
+        if (!ignore && res.data) setGraphData(res.data);
+      } catch (e) {
+        if (!ignore) console.error('Error fetching graph data:', e);
+      }
+    })();
+    return () => {
+      ignore = true;
+    };
+  }, [currentTab]);
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
@@ -174,106 +196,89 @@ const WorkContainer = () => {
   };
 
   return (
-    <>
+    <div
+      ref={containerRef}
+      onMouseMove={e => {
+        updatePosition(e, (block, pos) => updateBlockWorkTime(block, pos, 100));
+      }}
+      onMouseUp={handleEndDrag}
+      onMouseLeave={handleEndDrag}
+      css={css`
+        width: 100%;
+        position: relative;
+      `}
+    >
+      <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
+      {graphData && (
+        <div css={S.FixedYAxisWrapper}>
+          {getUnit(graphData.weatherMetric ?? 'PERCIPITATION')}
+          <div css={S.YAxis}>
+            {generateYTicks({
+              min: graphData.min ?? 0,
+              max: graphData.max ?? 100,
+            }).map(tick => (
+              <div key={tick} css={S.YAxisTick}>
+                {tick}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div
-        ref={containerRef}
-        onMouseMove={e => {
-          updatePosition(e, (block, pos) =>
-            updateBlockWorkTime(block, pos, 100)
-          );
-        }}
-        onMouseUp={handleEndDrag}
-        onMouseLeave={handleEndDrag}
         css={css`
-          width: 100%;
+          overflow-x: auto;
+          overflow-y: hidden;
           position: relative;
+
+          &::-webkit-scrollbar {
+            height: 8px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 4px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: ${GrayScale.G50};
+            border-radius: 4px;
+          }
         `}
+        onScroll={e => {
+          setScrollOffset(e.currentTarget.scrollLeft);
+        }}
       >
-        {/* GraphMenu를 스크롤 컨테이너 밖에 고정 */}
-        <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
+        <MainGraph graphData={graphData} />
 
-        <div
-          css={css`
-            overflow-x: auto;
-            overflow-y: hidden;
-            position: relative;
+        {workBlocks.map(block => {
+          const { id, position } = block;
+          const isCurrentlyDragging =
+            isDraggingItem(id) || isRevertingItemId === id;
 
-            &::-webkit-scrollbar {
-              height: 8px;
-            }
+          // 드래그 중인 블록은 DragOverlay만 렌더링
+          if (isCurrentlyDragging) {
+            const overlayPosition = {
+              x:
+                draggingBlockId === id
+                  ? workBlocks.find(b => b.id === id)?.position.x || position.x
+                  : position.x,
+              y:
+                draggingBlockId === id
+                  ? workBlocks.find(b => b.id === id)?.position.y || position.y
+                  : position.y,
+            };
 
-            &::-webkit-scrollbar-track {
-              background: transparent;
-              border-radius: 4px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-              background: ${GrayScale.G50};
-              border-radius: 4px;
-            }
-          `}
-          onScroll={e => {
-            setScrollOffset(e.currentTarget.scrollLeft);
-          }}
-        >
-          <MainGraph currentTab={currentTab} />
-          {workBlocks.map(block => {
-            const { id, position } = block;
-            const isCurrentlyDragging =
-              isDraggingItem(id) || isRevertingItemId === id;
-
-            // 드래그 중인 블록은 DragOverlay만 렌더링
-            if (isCurrentlyDragging) {
-              const overlayPosition = {
-                x:
-                  draggingBlockId === id
-                    ? workBlocks.find(b => b.id === id)?.position.x ||
-                      position.x
-                    : position.x,
-                y:
-                  draggingBlockId === id
-                    ? workBlocks.find(b => b.id === id)?.position.y ||
-                      position.y
-                    : position.y,
-              };
-
-              return (
-                <DragOverlay
-                  key={`overlay-${id}`}
-                  position={overlayPosition}
-                  containerRef={containerRef}
-                  scrollOffset={scrollOffset}
-                >
-                  <WorkCardRegister
-                    block={workBlocks.find(b => b.id === id) || block}
-                    isDragging={isDragging}
-                    onDelete={() => removeWorkBlock(id)}
-                    onResize={newBlock => handleResize(id, newBlock)}
-                    containerRef={containerRef}
-                    scrollOffset={scrollOffset}
-                    allBlocks={workBlocks}
-                    updateWorkBlocks={updateWorkBlocks}
-                  />
-                </DragOverlay>
-              );
-            }
             return (
-              <div
-                key={id}
-                css={[
-                  DragOverlayStyle.DragOverlay({
-                    x: position.x,
-                    y: position.y,
-                  }),
-                  css`
-                    position: absolute;
-                  `,
-                ]}
-                onMouseDown={e => handleStartDrag(e, block)}
+              <DragOverlay
+                key={`overlay-${id}`}
+                position={overlayPosition}
+                containerRef={containerRef}
+                scrollOffset={scrollOffset}
               >
                 <WorkCardRegister
-                  block={block}
-                  isDragging={false}
+                  block={workBlocks.find(b => b.id === id) || block}
+                  isDragging={isDragging}
                   onDelete={() => removeWorkBlock(id)}
                   onResize={newBlock => handleResize(id, newBlock)}
                   containerRef={containerRef}
@@ -281,25 +286,51 @@ const WorkContainer = () => {
                   allBlocks={workBlocks}
                   updateWorkBlocks={updateWorkBlocks}
                 />
-              </div>
+              </DragOverlay>
             );
-          })}
-          <div
-            css={css`
-              display: flex;
-              flex-direction: row;
-              gap: 8px;
-              align-items: center;
-              min-width: max-content;
-              padding: 16px 0;
-              position: relative;
-            `}
-          >
-            <WorkCellsContainer isDragging={isDragging} />
-          </div>
+          }
+          return (
+            <div
+              key={id}
+              css={[
+                DragOverlayStyle.DragOverlay({
+                  x: position.x,
+                  y: position.y,
+                }),
+                css`
+                  position: absolute;
+                `,
+              ]}
+              onMouseDown={e => handleStartDrag(e, block)}
+            >
+              <WorkCardRegister
+                block={block}
+                isDragging={false}
+                onDelete={() => removeWorkBlock(id)}
+                onResize={newBlock => handleResize(id, newBlock)}
+                containerRef={containerRef}
+                scrollOffset={scrollOffset}
+                allBlocks={workBlocks}
+                updateWorkBlocks={updateWorkBlocks}
+              />
+            </div>
+          );
+        })}
+        <div
+          css={css`
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            align-items: center;
+            min-width: max-content;
+            padding: 16px 0;
+            position: relative;
+          `}
+        >
+          <WorkCellsContainer isDragging={isDragging} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
