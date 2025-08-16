@@ -10,12 +10,12 @@ const WorkActiveToolTip = () => {
     selectedRecommendedWork?.endTime || ''
   );
 
-  if (!selectedRecommendedWork) return null;
+  if (!selectedRecommendedWork) return;
 
   return (
     <div css={S.WorkActiveToolTipContainer(x, width)}>
       <div css={S.WorkActiveToolTipText}>
-        {selectedRecommendedWork?.recommendation}
+        {selectedRecommendedWork.recommendation}
       </div>
     </div>
   );

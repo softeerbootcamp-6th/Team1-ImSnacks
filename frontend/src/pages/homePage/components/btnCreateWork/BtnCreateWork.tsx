@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, MouseEvent } from 'react';
 import S from './BtnCreateWork.style';
 import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 import useVisibility from '@/hooks/useVisibility';
@@ -20,6 +20,14 @@ const BtnCreateWork = ({
   const { isVisible, show, hide } = useVisibility();
   const { setSelectedRecommendedWork } = useWorkBlocks();
 
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    setSelectedRecommendedWork(null);
+
+    if (props.onClick) {
+      props.onClick(e);
+    }
+  };
+
   return (
     <div
       css={css`
@@ -29,6 +37,7 @@ const BtnCreateWork = ({
       <button
         css={S.BtnCreateWork(isDragging)}
         {...props}
+        onClick={handleClick}
         onMouseEnter={() => {
           show();
           setSelectedRecommendedWork(work);
