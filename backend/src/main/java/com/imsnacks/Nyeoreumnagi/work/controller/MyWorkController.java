@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +32,8 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "농작업 등록 성공")
     @ApiResponse(responseCode = "400", description = "농작업 등록 실패")
     @PostMapping("")
-    public ResponseEntity<CustomResponseBody<RegisterMyWorkResponse>> registerMyWork(@Validated @RequestBody RegisterMyWorkRequest request, @PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<RegisterMyWorkResponse>> registerMyWork(@RequestBody RegisterMyWorkRequest request, @PreAuthorize Long memberId) {
+        request.validate();
         RegisterMyWorkResponse dto = myWorkService.registerMyWork(request, memberId);
         return ResponseUtil.success(dto);
     }
@@ -43,7 +43,8 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "농작업 삭제 성공")
     @ApiResponse(responseCode = "400", description = "농작업 삭제 실패")
     @DeleteMapping("")
-    public ResponseEntity<CustomResponseBody<Void>> deleteMyWork(@Validated @RequestBody DeleteMyWorkRequest request, @PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<Void>> deleteMyWork(@RequestBody DeleteMyWorkRequest request, @PreAuthorize Long memberId) {
+        request.validate();
         myWorkService.deleteMyWork(request, memberId);
         return ResponseUtil.success();
     }
@@ -53,7 +54,8 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "농작업 수정 성공")
     @ApiResponse(responseCode = "400", description = "농작업 수정 실패")
     @PatchMapping("")
-    public ResponseEntity<CustomResponseBody<ModifyMyWorkResponse>> modifyMyWork(@Validated @RequestBody ModifyMyWorkRequest request, @PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<ModifyMyWorkResponse>> modifyMyWork(@RequestBody ModifyMyWorkRequest request, @PreAuthorize Long memberId) {
+        request.validate();
         ModifyMyWorkResponse modifyMyWorkResponse = myWorkService.modifyMyWork(request, memberId);
         return ResponseUtil.success(modifyMyWorkResponse);
     }
@@ -63,8 +65,8 @@ public class MyWorkController {
     @ApiResponse(responseCode = "200", description = "오늘의 내 농작업 목록 조회 성공")
     @ApiResponse(responseCode = "400", description = "오늘의 내 농작업 목록 조회 실패")
     @GetMapping("/today")
-    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfTodayResponse>>> getMyWorksOfToday(@PreAuthorize Long memberId) {
-        List<GetMyWorksOfTodayResponse> myWorksOfToday = myWorkService.getMyWorksOfToday(memberId);
+    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfTodayResponse>>> getMyWorksOfToday(@RequestParam(defaultValue = "false") boolean isMobile, @PreAuthorize Long memberId) {
+        List<GetMyWorksOfTodayResponse> myWorksOfToday = myWorkService.getMyWorksOfToday(isMobile, memberId);
         return ResponseUtil.success(myWorksOfToday);
     }
 }

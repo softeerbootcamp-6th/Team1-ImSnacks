@@ -88,5 +88,12 @@ public class WeatherController {
     @GetMapping("/sevenDays")
     public ResponseEntity<CustomResponseBody<List<GetSevenDaysForecastResponse>>> getSevenDaysForecast(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getSevenDaysForecast(memberId));
+
+    @Operation(summary = "일일 최고 풍속 및 풍향 조회")
+    @ApiResponse(responseCode = "200", description = "일일 최고 풍속 및 풍향 조회 성공")
+    @ApiResponse(responseCode = "400", description = "일일 최고 풍속 및 풍향 조회 실패")
+    @GetMapping("/windInfo")
+    public ResponseEntity<CustomResponseBody<GetWindInfoResponse>> getWindInfo(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getWindInfo(memberId));
     }
 }

@@ -36,9 +36,7 @@ public class WorkScheduleCalculator {
         if (w.isLowTemperature() && lowT) return false;
         if (w.isHighHumidity() && highH) return false;
         if (w.isLowHumidity() && lowH) return false;
-        if (w.isStrongWind() && wind) return false;
-
-        return true;
+        return !w.isStrongWind() || !wind;
     }
 
     private List<RecommendWorksResponse.RecommendedWorksResponse> windowsForWork(RecommendedWork work,
@@ -69,6 +67,7 @@ public class WorkScheduleCalculator {
                         int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                         if (hours >= minHours) {
                             result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                                    work.getName(),
                                     work.getId(),
                                     winStart.toString(),
                                     prevOk.plusHours(1).toString(),
@@ -85,6 +84,7 @@ public class WorkScheduleCalculator {
                     int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                     if (hours >= minHours) {
                         result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                                work.getName(),
                                 work.getId(),
                                 winStart.toString(),
                                 prevOk.plusHours(1).toString(),
@@ -102,6 +102,7 @@ public class WorkScheduleCalculator {
             int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
             if (hours >= minHours) {
                 result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                        work.getName(),
                         work.getId(),
                         winStart.toString(),
                         prevOk.plusHours(1).toString(),
@@ -115,21 +116,11 @@ public class WorkScheduleCalculator {
     }
 
     private LocalDateTime toDateTimeWithRoll(LocalDateTime from, ShortTermWeatherForecast f) {
-        int t = f.getFcstTime(); // 예: 0~23 또는 HHmm
+        int t = f.getFcstTime(); // 예: 0~23
+        LocalDateTime dt = LocalDateTime.of(from.toLocalDate(), LocalTime.of(t, 0));
 
-        int hour, minute;
-        if (t < 24) { // 0~23
-            hour = t;
-            minute = 0;
-        } else { // HHmm
-            hour = t / 100;
-            minute = t % 100;
-        }
 
-        LocalDateTime dt = LocalDateTime.of(from.toLocalDate(), LocalTime.of(hour, minute));
-
-        // 날짜 보정: 예측 시간이 요청 시각보다 작으면 다음날로 이동
-        if (dt.isBefore(from) && hour < from.getHour()) {
+        if (dt.isBefore(from)) {
             dt = dt.plusDays(1);
         }
 
