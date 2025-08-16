@@ -45,4 +45,7 @@ public class ShortTermWeatherForecast {
 
     @Column(name = "sky_status", nullable = false)
     private int skyStatus;
+
+    @Column(name = "wind_direction", nullable = false)
+    private int wind_direction;
 }

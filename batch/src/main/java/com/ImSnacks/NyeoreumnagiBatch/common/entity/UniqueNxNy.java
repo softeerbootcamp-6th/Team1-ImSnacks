@@ -1,5 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.entity.MidTempRegionCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,9 @@ public class UniqueNxNy {
 
     @EmbeddedId
     private NxNyId id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MidTempRegionCode regionCode;
 
     private String areaCode;
     private Double latitude;
