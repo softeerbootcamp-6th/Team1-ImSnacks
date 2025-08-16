@@ -2,8 +2,8 @@ import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
 import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
 import S from './RegisterWorkContainer.style';
 import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
-import { useRecommendedWorks } from './hooks/useRecommendedWorks';
-import { useCreateWorkBlock } from './hooks/useCreateWorkBlock';
+import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
+import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
 
 const RegisterWorkContainer = () => {
   const { recommendedWorks, myCrops, selectedCrop, handleCropClick } =

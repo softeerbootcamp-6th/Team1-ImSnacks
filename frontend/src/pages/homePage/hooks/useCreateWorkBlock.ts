@@ -6,7 +6,7 @@ import type {
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
-import calculateTimeToPosition from '../../../utils/calculateTimeToPosition';
+import calculateTimeToPosition from '../utils/calculateTimeToPosition';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/utils/collisionUtils';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
