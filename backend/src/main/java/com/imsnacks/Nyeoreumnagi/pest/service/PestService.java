@@ -1,8 +1,5 @@
 package com.imsnacks.Nyeoreumnagi.pest.service;
 
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityCode;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureCode;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainCode;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus;
