@@ -55,7 +55,7 @@ public class WeatherService {
 
         int maxValue = getMaxValue(weatherInfos, weatherMetric);
         int minValue = getMinValue(weatherInfos, weatherMetric);
-        List<GetWeatherGraphResponse.ValuePerTime> valuePerTimes = extractWeatherGraphInfos(weatherInfos, weatherMetric, LocalDateTime.now().getHour() + 1);
+        List<GetWeatherGraphResponse.ValuePerTime> valuePerTimes = extractWeatherGraphInfos(weatherInfos, weatherMetric, LocalDateTime.now().getHour());
 
         int maxLimit = getUpperLimit(maxValue);
         int minLimit = getLowerLimit(minValue, weatherMetric);

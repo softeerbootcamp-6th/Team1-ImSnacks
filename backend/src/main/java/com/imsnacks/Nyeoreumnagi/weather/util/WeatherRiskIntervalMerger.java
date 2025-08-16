@@ -4,6 +4,8 @@ import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.service.LinePoint;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class WeatherRiskIntervalMerger {
@@ -15,11 +17,11 @@ public class WeatherRiskIntervalMerger {
         TreeSet<WeatherRisk> actives = new TreeSet<>(getRiskComparator());
         List<GetFcstRiskResponse.WeatherRiskDto> merged = new ArrayList<>();
 
-        int lastTime = -1;
+        LocalDateTime lastTime = null;
         WeatherRisk showing = null;
 
         for (LinePoint p : points) {
-            if (lastTime != -1 && lastTime < p.time() && showing != null) {
+            if (lastTime != null && lastTime.isBefore(p.time()) && showing != null) {
                 addOrMergeInterval(merged, showing, lastTime, p.time());
             }
             if (p.isStart()) actives.add(p.risk());
@@ -33,22 +35,27 @@ public class WeatherRiskIntervalMerger {
     private static List<LinePoint> getLinePoints(List<WeatherRisk> risks) {
         List<LinePoint> points = new ArrayList<>();
         for (WeatherRisk r : risks) {
-            points.add(new LinePoint(r.getStartTime().getHour(), true, r));
-            points.add(new LinePoint(r.getEndTime().getHour(), false, r));
+            points.add(new LinePoint(r.getStartTime(), true, r));
+            points.add(new LinePoint(r.getEndTime(), false, r));
         }
         return points;
     }
 
     private static Comparator<WeatherRisk> getRiskComparator() {
-        return Comparator.comparingInt((WeatherRisk r) -> r.getType().ordinal())
+        return Comparator.comparingInt((WeatherRisk r) -> r.getName().ordinal())
                 .reversed()
                 .thenComparingLong(WeatherRisk::getWeatherRiskId);
     }
 
-    private static void addOrMergeInterval(List<GetFcstRiskResponse.WeatherRiskDto> merged, WeatherRisk risk, int start, int end) {
-        String riskType = risk.getType().getDescription();
-        String s = String.valueOf(start);
-        String e = String.valueOf(end);
+    private static void addOrMergeInterval(List<GetFcstRiskResponse.WeatherRiskDto> merged, WeatherRisk risk, LocalDateTime start, LocalDateTime end) {
+        String riskType = risk.getName().getDescription();
+
+        LocalDateTime now = LocalDateTime.now();
+        if(end.isBefore(now)) return;
+        if(start.isBefore(now)) start = now;
+
+        String s = String.valueOf(start.getHour());
+        String e = String.valueOf(end.getHour());
         if (!merged.isEmpty()) {
             GetFcstRiskResponse.WeatherRiskDto last = merged.get(merged.size() - 1);
             if (last.category().equals(riskType) && last.endTime().equals(s)) {
