@@ -7,7 +7,6 @@ import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
 import type { Position, WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
-import { useContainerRef } from '@/contexts/useContainerRefContext';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
@@ -23,8 +22,8 @@ import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 import MainGraph from '../mainGraph/MainGraph';
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
-  const { containerRef } = useContainerRef();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock, containerRef } =
+    useWorkBlocks();
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);

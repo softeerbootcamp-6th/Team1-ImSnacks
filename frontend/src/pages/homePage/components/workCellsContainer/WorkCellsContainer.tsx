@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
 import WorkCell from '../workCell/WorkCell';
 import { WORK_CELL_TYPES, WORK_CELL_STATUSES } from '@/types/workCell.type';
+import WorkActiveToolTip from '../workActiveToolTip/WorkActiveToolTip';
 
 const WorkCellsContainer = () => {
   return (
     <>
+      <WorkActiveToolTip />
       <div
         css={css`
           display: flex;

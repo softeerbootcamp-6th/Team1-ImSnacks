@@ -6,7 +6,6 @@ import type {
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
-import { useContainerRef } from '@/contexts/useContainerRefContext';
 import calculateTimeToPosition from '../../../utils/calculateTimeToPosition';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/utils/collisionUtils';
@@ -20,8 +19,7 @@ interface UseCreateWorkBlockReturn {
 }
 
 export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
-  const { addWorkBlock, workBlocks } = useWorkBlocks();
-  const { containerRef } = useContainerRef();
+  const { addWorkBlock, workBlocks, containerRef } = useWorkBlocks();
 
   const handleCreateWork = useCallback(
     (work: RecommendedWorksResponse, selectedCrop: MyCropResponse) => {

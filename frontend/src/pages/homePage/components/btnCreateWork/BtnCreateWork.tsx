@@ -5,6 +5,7 @@ import useVisibility from '@/hooks/useVisibility';
 import ToolTip from '@/components/toolTip/ToolTip';
 import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
 import { css } from '@emotion/react';
+import useWorkBlocks from '@/contexts/useWorkBlocks';
 
 interface BtnCreateWorkProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   work: RecommendedWorksResponse;
@@ -17,6 +18,7 @@ const BtnCreateWork = ({
   ...props
 }: BtnCreateWorkProps) => {
   const { isVisible, show, hide } = useVisibility();
+  const { setSelectedRecommendedWork } = useWorkBlocks();
 
   return (
     <div
@@ -27,8 +29,14 @@ const BtnCreateWork = ({
       <button
         css={S.BtnCreateWork(isDragging)}
         {...props}
-        onMouseEnter={show}
-        onMouseLeave={hide}
+        onMouseEnter={() => {
+          show();
+          setSelectedRecommendedWork(work);
+        }}
+        onMouseLeave={() => {
+          hide();
+          setSelectedRecommendedWork(null);
+        }}
       >
         {work.workName}
       </button>
