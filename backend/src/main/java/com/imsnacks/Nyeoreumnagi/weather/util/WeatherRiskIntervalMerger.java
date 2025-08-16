@@ -50,8 +50,9 @@ public class WeatherRiskIntervalMerger {
     private static void addOrMergeInterval(List<GetFcstRiskResponse.WeatherRiskDto> merged, WeatherRisk risk, LocalDateTime start, LocalDateTime end) {
         String riskType = risk.getName().getDescription();
 
-        if(end.isBefore(LocalDateTime.now())) return;
-        if(start.isBefore(LocalDateTime.now())) start = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        if(end.isBefore(now)) return;
+        if(start.isBefore(now)) start = now;
 
         String s = String.valueOf(start.getHour());
         String e = String.valueOf(end.getHour());

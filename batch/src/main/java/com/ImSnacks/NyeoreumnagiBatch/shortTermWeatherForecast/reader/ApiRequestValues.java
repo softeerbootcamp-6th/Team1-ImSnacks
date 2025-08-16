@@ -11,6 +11,7 @@ public enum ApiRequestValues {
     NX("nx"),
     NY("ny");
 
+
     private final String value;
 
     ApiRequestValues(String value) {

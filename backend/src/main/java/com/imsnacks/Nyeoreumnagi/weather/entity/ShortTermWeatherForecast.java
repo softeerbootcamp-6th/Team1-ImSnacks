@@ -51,6 +51,9 @@ public class ShortTermWeatherForecast {
     @Column(name = "sky_status", nullable = false)
     private int skyStatus;
 
+    @Column(name = "wind_direction", nullable = false)
+    private int wind_direction;
+
     public WeatherCondition getWeatherCondition(SunriseSunSetTime times){
         if(snow > 1) return WeatherCondition.SNOW;
         if(precipitation >= 30) return WeatherCondition.HEAVY_RAIN;
