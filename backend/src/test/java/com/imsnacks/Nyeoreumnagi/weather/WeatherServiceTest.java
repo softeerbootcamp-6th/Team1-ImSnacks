@@ -16,6 +16,7 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherReposit
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.PrecipitationInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
@@ -315,5 +316,27 @@ class WeatherServiceTest {
 
         // then
         assertThat(response.value()).isEqualTo(84);
+    }
+
+    @Test
+    void 일일_최고_강수량_조회_성공() {
+        // given
+        Long memberId = 123L;
+        int nx = 55, ny = 99;
+        Farm farm = mock(Farm.class);
+        when(farm.getNx()).thenReturn(nx);
+        when(farm.getNy()).thenReturn(ny);
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+
+        PrecipitationInfo precipitationInfo = mock(PrecipitationInfo.class);
+        when(precipitationInfo.getMaxPrecipitation()).thenReturn(12);
+
+        when(dashboardTodayWeatherRepository.findPrecipitationByNxAndNy(nx, ny)).thenReturn(Optional.of(precipitationInfo));
+
+        // when
+        GetPrecipitationResponse response = weatherService.getPrecipitation(memberId);
+
+        // then
+        assertThat(response.value()).isEqualTo(12);
     }
 }
