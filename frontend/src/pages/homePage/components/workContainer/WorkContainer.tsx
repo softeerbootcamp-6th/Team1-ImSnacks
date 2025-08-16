@@ -7,6 +7,7 @@ import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
 import type { Position, WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
+import { useContainerRef } from '@/contexts/useContainerRefContext';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
@@ -23,6 +24,7 @@ import MainGraph from '../mainGraph/MainGraph';
 
 const WorkContainer = () => {
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const { containerRef } = useContainerRef();
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
@@ -41,7 +43,6 @@ const WorkContainer = () => {
   }, [workBlocks]);
 
   const {
-    containerRef,
     isDragging,
     startDrag,
     updatePosition,
@@ -66,6 +67,7 @@ const WorkContainer = () => {
         setFuturePosition(futurePosition);
       }
     },
+    containerRef: containerRef as React.RefObject<HTMLDivElement>,
   });
 
   const { checkAndRevert } = useRevertPosition<WorkBlockType>({

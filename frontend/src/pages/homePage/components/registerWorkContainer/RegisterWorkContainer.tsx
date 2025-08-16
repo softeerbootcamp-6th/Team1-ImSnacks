@@ -6,6 +6,7 @@ import S from './RegisterWorkContainer.style';
 import { CROPS } from '@/constants/crops';
 import type { WorkBlockType } from '@/types/workCard.type';
 import useWorkBlocks from '@/contexts/useWorkBlocks';
+import { useContainerRef } from '@/contexts/useContainerRefContext';
 import calculateTimeToPosition from '../../utils/calculateTimeToPosition';
 import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
@@ -13,6 +14,7 @@ import { findCollisionFreePosition } from '@/utils/collisionUtils';
 
 const RegisterWorkContainer = () => {
   const crops = CROPS;
+  const { containerRef } = useContainerRef();
 
   const [selectedCrop, setSelectedCrop] = useState<{
     id: number;
@@ -48,18 +50,12 @@ const RegisterWorkContainer = () => {
       endTime: newEndTime.toISOString(),
     };
 
-    // 기존 블록들과 겹치지 않는 새로운 포지션 찾기
-    const containerRect = {
-      x: 0,
-      y: 0,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      top: 0,
-      right: window.innerWidth,
-      bottom: window.innerHeight,
-      left: 0,
-      toJSON: () => ({}),
-    } as DOMRect;
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    if (!containerRect) {
+      console.warn('Container rect not available');
+      return;
+    }
+
     const scrollOffset = 0; // 스크롤 오프셋은 0으로 설정
 
     const collisionFreePosition = findCollisionFreePosition(

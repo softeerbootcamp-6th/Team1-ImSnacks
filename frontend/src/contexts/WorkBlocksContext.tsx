@@ -8,9 +8,11 @@ export interface WorkBlocksContextType {
   removeWorkBlock: (id: number | string) => void;
 }
 
-export const WorkBlocksContext = createContext<WorkBlocksContextType>({
+const WorkBlocksContext = createContext<WorkBlocksContextType>({
   workBlocks: [],
   addWorkBlock: () => {},
   updateWorkBlocks: () => {},
   removeWorkBlock: () => {},
 });
+
+export default WorkBlocksContext;

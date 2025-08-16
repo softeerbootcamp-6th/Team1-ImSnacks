@@ -1,8 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
-import {
-  WorkBlocksContext,
+import WorkBlocksContext, {
   type WorkBlocksContextType,
 } from './WorkBlocksContext';
 
