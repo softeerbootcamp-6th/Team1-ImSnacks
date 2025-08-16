@@ -2,6 +2,7 @@ package com.imsnacks.Nyeoreumnagi.weather.repository;
 
 import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardTodayWeather;
 import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardTodayWeatherId;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
@@ -13,4 +14,5 @@ public interface DashboardTodayWeatherRepository extends JpaRepository<Dashboard
     Optional<SunriseSunSetTime> findSunRiseSetByNxAndNy(int nx, int ny);
     Optional<UVInfo> findUVByNxAndNy(int nx, int ny);
     Optional<WindInfo> findWindByNxAndNy(int nx, int ny);
+    Optional<HumidityInfo> findHumidityByNxAndNy(int nx, int ny);
 }

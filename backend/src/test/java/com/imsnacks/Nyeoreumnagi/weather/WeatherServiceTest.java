@@ -2,22 +2,19 @@ package com.imsnacks.Nyeoreumnagi.weather;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
-import com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
-import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
-import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
-import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,22 +24,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -242,6 +236,7 @@ class WeatherServiceTest {
                 .isInstanceOf(WeatherException.class);
     }
 
+    @Test
     void 일일_최대_풍속_풍향_정상응답_성공() {
         // given
         Long memberId = 1L;
@@ -291,5 +286,27 @@ class WeatherServiceTest {
         // when & then
         assertThatThrownBy(() -> weatherService.getWindInfo(memberId))
                 .isInstanceOf(WeatherException.class);
+    }
+
+    @Test
+    void 일일_최고_습도_조회_성공() {
+        // given
+        Long memberId = 123L;
+        int nx = 55, ny = 99;
+        Farm farm = mock(Farm.class);
+        when(farm.getNx()).thenReturn(nx);
+        when(farm.getNy()).thenReturn(ny);
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+
+        HumidityInfo humidityInfo = mock(HumidityInfo.class);
+        when(humidityInfo.getMaxHumidity()).thenReturn(84);
+
+        when(dashboardTodayWeatherRepository.findHumidityByNxAndNy(nx, ny)).thenReturn(Optional.of(humidityInfo));
+
+        // when
+        GetHumidityResponse response = weatherService.getHumidity(memberId);
+
+        // then
+        assertThat(response.value()).isEqualTo(84);
     }
 }

@@ -14,6 +14,7 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherReposit
 import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
@@ -190,6 +191,25 @@ public class WeatherService {
         String windDirection = getDirectionStringFromDegree(degree);
 
         return new GetWindInfoResponse(windDirection, degree, windSpeed);
+    }
+
+    public GetHumidityResponse getHumidity(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        HumidityInfo humidityInfo = dashboardTodayWeatherRepository.findHumidityByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_HUMIDITY_INFO));
+        validateHumidityInfo(humidityInfo);
+
+        return new GetHumidityResponse(humidityInfo.getMaxHumidity());
+    }
+
+    private void validateHumidityInfo(HumidityInfo humidityInfo) {
+        if(humidityInfo.getMaxHumidity() == null){
+            throw new WeatherException(NO_HUMIDITY_INFO);
+        }
     }
 
     private void validateWindInfo(WindInfo windInfo) {
