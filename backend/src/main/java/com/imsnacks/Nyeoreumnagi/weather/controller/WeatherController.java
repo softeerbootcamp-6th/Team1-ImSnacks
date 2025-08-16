@@ -83,7 +83,7 @@ public class WeatherController {
     @Operation(summary = "일일 최고 풍속 및 풍향 조회")
     @ApiResponse(responseCode = "200", description = "일일 최고 풍속 및 풍향 조회 성공")
     @ApiResponse(responseCode = "400", description = "일일 최고 풍속 및 풍향 조회 실패")
-    @GetMapping("/uv")
+    @GetMapping("/windSpeed")
     public ResponseEntity<CustomResponseBody<GetWindInfoResponse>> getWindInfo(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getWindInfo(memberId));
     }
