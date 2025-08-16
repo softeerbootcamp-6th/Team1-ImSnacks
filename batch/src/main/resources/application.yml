@@ -31,10 +31,11 @@ logging:
 api:
   service:
     key: ${OPEN_API_KEY}
-  seven-days-weather-service:
-    key: ${MID_RANGE_WEATHER_API_KEY}
     uv-key: ${UV_OPEN_API_KEY}
     sunriseset-key: ${SUNRISESET_API_KEY}
+  seven-days-weather-service:
+    key: ${MID_RANGE_WEATHER_API_KEY}
+
 
 ---
 
