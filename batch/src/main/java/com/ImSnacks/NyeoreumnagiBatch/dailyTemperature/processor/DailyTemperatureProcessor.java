@@ -1,8 +1,7 @@
-package com.ImSnacks.NyeoreumnagiBatch.DailyTemperature.processor;
+package com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.processor;
 
-import com.ImSnacks.NyeoreumnagiBatch.DailyTemperature.processor.dto.DailyTemperatureProcessorResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.DailyTemperature.reader.dto.DailyTemperatureReaderResponseDto;
-import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
+import com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.processor.dto.DailyTemperatureProcessorResponseDto;
+import com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.reader.dto.DailyTemperatureReaderResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;

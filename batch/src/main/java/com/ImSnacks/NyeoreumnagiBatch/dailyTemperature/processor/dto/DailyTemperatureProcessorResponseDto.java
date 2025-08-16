@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.DailyTemperature.processor.dto;
+package com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.processor.dto;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
 

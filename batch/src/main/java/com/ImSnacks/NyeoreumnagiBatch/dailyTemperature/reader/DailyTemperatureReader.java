@@ -1,6 +1,6 @@
-package com.ImSnacks.NyeoreumnagiBatch.DailyTemperature.reader;
+package com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.reader;
 
-import com.ImSnacks.NyeoreumnagiBatch.DailyTemperature.reader.dto.DailyTemperatureReaderResponseDto;
+import com.ImSnacks.NyeoreumnagiBatch.dailyTemperature.reader.dto.DailyTemperatureReaderResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.NxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.ShortTermWeatherForecastRepository;
