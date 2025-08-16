@@ -3,7 +3,6 @@ package com.imsnacks.Nyeoreumnagi.weather.service;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
-import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
@@ -16,6 +15,7 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
+import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionStringFromDegree;
+import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
 
 @Service
@@ -161,9 +162,20 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
+        WindInfo windInfo = dashboardTodayWeatherRepository.findWindByNxAndNy(nx, ny).orElseThrow(()-> new WeatherException(NO_WIND_INFO));
+        validateWindInfo(windInfo);
 
+        Integer windSpeed = windInfo.getMaxWindSpeed();
+        Integer degree = windInfo.getWindDirection();
+        String windDirection = getDirectionStringFromDegree(degree);
 
-        return null;
+        return new GetWindInfoResponse(windDirection, degree, windSpeed);
+    }
+
+    private void validateWindInfo(WindInfo windInfo) {
+        if(windInfo.getWindDirection() == null || windInfo.getMaxWindSpeed() == null) {
+            throw new WeatherException(NO_WIND_INFO);
+        }
     }
 
     private void validateUVInfo(UVInfo uvInfo) {
