@@ -68,7 +68,7 @@ class WeatherServiceTest {
         Long memberId = 1L;
         WeatherMetric metric = WeatherMetric.TEMPERATURE;
 
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
 
         List<ShortTermWeatherForecast> forecasts = IntStream.range(0, 24)
                 .mapToObj(i -> ShortTermWeatherForecast.builder()
@@ -164,7 +164,8 @@ class WeatherServiceTest {
     void 정상_날씨_조회_성공() {
         // given
         long memberId = 1L;
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
 
@@ -189,7 +190,7 @@ class WeatherServiceTest {
         Long memberId = 1L;
 
         // given: member, farm, sunrise/sunset mock
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
 
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
         when(sunriseSunSetTime.getSunriseTime()).thenReturn(LocalTime.of(5, 40));
@@ -230,7 +231,8 @@ class WeatherServiceTest {
     @Test
     void 날씨정보_없음_예외() {
         // given
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, null);
+        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+
         when(farmRepository.findByMember_Id(any())).thenReturn(Optional.of(farm));
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(anyInt(), anyInt()))
                 .thenReturn(List.of());

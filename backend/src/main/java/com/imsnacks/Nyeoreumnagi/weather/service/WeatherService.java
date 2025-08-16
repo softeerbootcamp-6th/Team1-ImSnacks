@@ -5,7 +5,6 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
-import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
 import com.imsnacks.Nyeoreumnagi.weather.entity.SevenDayWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
@@ -27,10 +26,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionStringFromDegree;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
@@ -41,12 +38,10 @@ import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.
 @RequiredArgsConstructor
 public class WeatherService {
 
-    private final MemberRepository memberRepository;
     private final FarmRepository farmRepository;
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final WeatherRiskRepository weatherRiskRepository;
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
-    private final FarmRepository farmRepository;
     private final SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric) {
@@ -108,7 +103,7 @@ public class WeatherService {
     public GetWeatherBriefingResponse getWeatherBriefing(final Long memberId) {
         assert(memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
-      
+
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
@@ -169,7 +164,7 @@ public class WeatherService {
         String regionCode = farm.getMidTempRegionCode();
         List<SevenDayWeatherForecast> sevenDayWeatherForecasts = sevenDayWeatherForecastRepository.findByRegionCodeAndDateBetween(regionCode, LocalDate.now(), LocalDate.now().plusDays(6));
 
-        if(sevenDayWeatherForecasts.size() != 7){
+        if (sevenDayWeatherForecasts.size() != 7) {
             throw new WeatherException(INVALID_SEVEN_DAY_FORECAST_COUNT);
         }
         return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
@@ -178,6 +173,7 @@ public class WeatherService {
                 forecast.getMaxTemperature(),
                 forecast.getMinTemperature()
         )).toList();
+    }
 
     public GetWindInfoResponse getWindInfo(final Long memberId) {
         assert(memberId != null);
