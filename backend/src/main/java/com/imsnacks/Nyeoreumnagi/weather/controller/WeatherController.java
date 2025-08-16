@@ -78,4 +78,13 @@ public class WeatherController {
     public ResponseEntity<CustomResponseBody<GetUVInfoResponse>> getUVInfo(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getUVInfo(memberId));
     }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "일일 최고 풍속 및 풍향 조회")
+    @ApiResponse(responseCode = "200", description = "일일 최고 풍속 및 풍향 조회 성공")
+    @ApiResponse(responseCode = "400", description = "일일 최고 풍속 및 풍향 조회 실패")
+    @GetMapping("/uv")
+    public ResponseEntity<CustomResponseBody<GetWindInfoResponse>> getWindInfo(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getWindInfo(memberId));
+    }
 }
