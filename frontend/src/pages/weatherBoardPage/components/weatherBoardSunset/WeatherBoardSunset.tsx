@@ -2,14 +2,13 @@ import { GrayScale } from '@/styles/colors';
 import S from './WeatherBoardSunset.style';
 import { SunEffect } from '@/assets/icons/flat';
 import { useSunsetAnimation } from '@/pages/weatherBoardPage/hooks/useSunsetAnimation';
+import { useEffect, useState } from 'react';
+import { getWeatherSunset } from '@/apis/weather.api';
+import { GetSunRiseSetTimeResponse } from '@/types/openapiGenerator';
 
-const WeatherBoardSunset = ({
-  startTime,
-  endTime,
-}: {
-  startTime: string;
-  endTime: string;
-}) => {
+const WeatherBoardSunset = () => {
+  const [sunsetData, setSunsetData] = useState<GetSunRiseSetTimeResponse>();
+
   const {
     progress,
     sunX,
@@ -20,7 +19,25 @@ const WeatherBoardSunset = ({
     clipId,
     viewBox,
     semicircleStrokePath,
-  } = useSunsetAnimation({ startTime, endTime });
+  } = useSunsetAnimation({
+    startTime: sunsetData?.startTime || '00:00',
+    endTime: sunsetData?.endTime || '00:00',
+  });
+
+  const fetchSunsetData = async () => {
+    try {
+      const res = await getWeatherSunset();
+      if (res.data) {
+        setSunsetData(res.data);
+      }
+    } catch (error) {
+      console.error('Error fetching sunset data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSunsetData();
+  }, []);
 
   return (
     <div css={S.WeatherBoardSunset}>
@@ -72,8 +89,8 @@ const WeatherBoardSunset = ({
       </div>
 
       <div css={S.WeatherBoardSunsetTimeWrapper}>
-        <span css={S.WeatherBoardSunsetTime}>{startTime}</span>
-        <span css={S.WeatherBoardSunsetTime}>{endTime}</span>
+        <span css={S.WeatherBoardSunsetTime}>{sunsetData?.startTime}</span>
+        <span css={S.WeatherBoardSunsetTime}>{sunsetData?.endTime}</span>
       </div>
     </div>
   );
