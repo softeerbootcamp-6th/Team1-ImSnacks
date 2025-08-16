@@ -3,12 +3,10 @@ import HTTP from './http';
 import type {
   RegisterMyWorkRequest,
   RegisterMyWorkResponse,
+  GetMyWorksOfTodayResponse,
 } from '@/types/openapiGenerator';
 
-export const getMyWork = async (): Promise<ApiRes> => {
-  const res = await HTTP.get('/myWork');
-  return res;
-};
+export const getMyWork = () => HTTP.get<GetMyWorksOfTodayResponse>('/myWork');
 
 export const postMyWork = (body: RegisterMyWorkRequest) =>
   HTTP.post<RegisterMyWorkRequest, RegisterMyWorkResponse>('/myWork', body);
