@@ -4,7 +4,6 @@ import useVisibility from '@/hooks/useVisibility';
 import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useChangeTimeByResize } from '@/pages/homePage/hooks/useChangeTimeByResize';
-import { css } from '@emotion/react';
 import { useResizeCollision } from '@/hooks/useResizeCollision';
 
 interface WorkCardRegisterProps {
@@ -53,6 +52,8 @@ const WorkCardRegister = ({
   const handleResizeEnd = () => {
     setIsResizing(false);
     handleResizeCollision(block, newWidth);
+    //TODO: 리사이징 후에 30분 미만이 되어 더이상 resize가 안되면 handleResizeEnd에서 setIsResizing(false)이 안되어 버튼이 안보이는 문제 해결
+    //TODO: 앞에 있는 블록(z-index가 낮은 블록)을 뒤로 늘려서 뒤에 있는 블록과 충돌할 경우 충돌 감지 안됨 해결
   };
 
   return (
@@ -86,29 +87,22 @@ const WorkCardRegister = ({
         />
       )}
 
-      <div
-        css={css`
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        `}
-      >
-        <WorkCardRegisterContent
-          width={newWidth}
-          cropName={block.cropName}
-          workName={block.workName}
-          workTime={block.workTime}
-        />
-        {isVisible && !isResizing && !isDragging && (
-          <button
-            onClick={onDelete}
-            onMouseDown={e => e.stopPropagation()}
-            css={S.WorkCardDeleteButton}
-          >
-            ×
-          </button>
-        )}
-      </div>
+      <WorkCardRegisterContent
+        width={newWidth}
+        cropName={block.cropName}
+        workName={block.workName}
+        workTime={block.workTime}
+      />
+
+      {isVisible && !isResizing && !isDragging && (
+        <button
+          onClick={onDelete}
+          onMouseDown={e => e.stopPropagation()}
+          css={S.WorkCardDeleteButton}
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 };

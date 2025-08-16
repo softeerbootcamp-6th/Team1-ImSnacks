@@ -71,6 +71,25 @@ export const BtnCreateWork = (isDragging: boolean = false) => css`
   }
 `;
 
+const BtnCreateWorkTooltip = css`
+  ${Typography.Body_S_400}
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+`;
+
+const BtnCreateWorkTooltipCount = css`
+  ${Typography.Body_S_700}
+  background-color: ${ColorPrimary.B400};
+  border-radius: ${BorderRadius.Base.Round};
+  box-sizing: border-box;
+  padding: 4px 8px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
 export default {
   BtnCreateWork,
+  BtnCreateWorkTooltip,
+  BtnCreateWorkTooltipCount,
 };

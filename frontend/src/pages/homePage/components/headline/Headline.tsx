@@ -1,20 +1,29 @@
 import { getSubjectParticle } from '@/utils/koreanParticleUtil';
 import S from './Headline.style';
-import { LessCloudy } from '@/assets/iconComponents';
+import { GLASS_ICON } from '@/constants/glassIcon';
 import { css } from '@emotion/react';
+import { useUserStore } from '@/store/useUserStore';
+import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';
+import { useTimeStore } from '@/store/useTimeStore';
+import type dayjs from 'dayjs';
 
 const Headline = () => {
-  const nickName = '밤비';
+  const { nickName } = useUserStore();
+  const { weatherCondition } = useWeatherConditionStore();
+  const { currentTime } = useTimeStore();
+
+  const GlassIconComponent = GLASS_ICON[weatherCondition];
+
   const data = {
     hasWeatherRisk: true,
     message: '오전 11시부터 오후 3시까지 우박',
   };
 
-  const currentTime = {
-    // m월 d일
-    date: '8월 21일',
-    // h:m am/pm
-    time: '8:07 AM',
+  const formatCurrentTime = (currentTime: dayjs.Dayjs) => {
+    return {
+      date: currentTime.format('M월 D일'),
+      time: currentTime.format('h:mm A'),
+    };
   };
 
   return (
@@ -39,10 +48,14 @@ const Headline = () => {
       </div>
       <div css={S.HeadlineWeather}>
         <div css={S.HeadlineDate}>
-          <span>{currentTime.date}</span>
-          <span>{currentTime.time}</span>
+          <span>{formatCurrentTime(currentTime).date}</span>
+          <span>{formatCurrentTime(currentTime).time}</span>
         </div>
-        <LessCloudy width={200} height={150} css={S.HeadlineWeatherIcon} />
+        <GlassIconComponent
+          width={200}
+          height={150}
+          css={S.HeadlineWeatherIcon}
+        />
       </div>
     </div>
   );

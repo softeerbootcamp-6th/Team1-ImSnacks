@@ -11,13 +11,19 @@ import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
 import animateBlock from '@/utils/animateBlock';
+import { hasCollisionWithOthers } from '@/utils/collisionUtils';
 import {
-  findCollisionFreePosition,
-  hasCollision,
-} from '@/utils/collisionUtils';
+  findFuturePosition,
+  handleCollisionRevert,
+  moveToValidPosition,
+  cleanupDragState,
+} from '../../utils/workContainerUtils';
+import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
+import MainGraph from '../mainGraph/MainGraph';
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock, containerRef } =
+    useWorkBlocks();
 
   const [scrollOffset, setScrollOffset] = useState(0);
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
@@ -36,12 +42,11 @@ const WorkContainer = () => {
   }, [workBlocks]);
 
   const {
-    containerRef,
     isDragging,
     startDrag,
     updatePosition,
     endDrag,
-    isItemDragging,
+    isDraggingItem,
     draggedItemRef,
   } = useDragAndDrop<WorkBlockType>({
     getItemId: block => block.id,
@@ -51,25 +56,17 @@ const WorkContainer = () => {
       updateWorkBlocks(updated);
 
       // futurePosition 업데이트 - 충돌하지 않는 위치 계산
-      if (draggingBlockId !== null) {
-        const draggedBlock = updated.find(
-          block => block.id === draggingBlockId
-        );
-        if (draggedBlock) {
-          const container = containerRef.current;
-          if (container) {
-            const containerRect = container.getBoundingClientRect();
-            const collisionFreePosition = findCollisionFreePosition(
-              draggedBlock,
-              updated.filter(block => block.id !== draggingBlockId),
-              containerRect,
-              scrollOffset
-            );
-            setFuturePosition(collisionFreePosition);
-          }
-        }
+      const futurePosition = findFuturePosition(
+        updated,
+        draggingBlockId,
+        containerRef,
+        scrollOffset
+      );
+      if (futurePosition) {
+        setFuturePosition(futurePosition);
       }
     },
+    containerRef: containerRef as React.RefObject<HTMLDivElement>,
   });
 
   const { checkAndRevert } = useRevertPosition<WorkBlockType>({
@@ -114,50 +111,46 @@ const WorkContainer = () => {
       const draggingBlock = workBlocks.find(block => block.id === draggingId);
       if (draggingBlock) {
         // 다른 블록과의 충돌 검사
-        const hasCollisionWithOthers = workBlocks.some(block => {
-          if (block.id === draggingId) return false;
-          return hasCollision(draggingBlock, block);
-        });
+        const isCollision = hasCollisionWithOthers(
+          draggingBlock,
+          workBlocks,
+          draggingId
+        );
 
-        if (hasCollisionWithOthers) {
-          if (futurePosition) {
-            animateBlock(
-              revertAnimationRef,
-              setIsRevertingItemId,
-              latestBlocksRef,
-              updateWorkBlocks,
-              draggingId,
-              draggingBlock.position,
-              futurePosition
-            );
-          } else {
-            // futurePosition이 없으면 원래 위치로 되돌리기
-            setIsRevertingItemId(draggingId);
+        if (isCollision) {
+          handleCollisionRevert(
+            draggingId,
+            draggingBlock,
+            futurePosition,
+            initialPosition,
+            revertAnimationRef,
+            setIsRevertingItemId,
+            latestBlocksRef,
+            updateWorkBlocks
+          );
+          cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
+          return;
+        }
 
-            if (initialPosition) {
-              animateBlock(
-                revertAnimationRef,
-                setIsRevertingItemId,
-                latestBlocksRef,
-                updateWorkBlocks,
-                draggingId,
-                draggingBlock.position,
-                initialPosition
-              );
-            }
-          }
+        // 유효하지 않은 위치 검사 및 되돌리기
+        const isInvalidPosition = moveToValidPosition(
+          Object.values(WORK_TIME_Y_COORDINATE),
+          draggingId,
+          draggingBlock,
+          revertAnimationRef,
+          setIsRevertingItemId,
+          latestBlocksRef,
+          updateWorkBlocks
+        );
 
-          setDraggingBlockId(null);
-          setFuturePosition(null);
-          endDrag();
+        if (isInvalidPosition) {
+          cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
           return;
         }
       }
     }
 
-    setDraggingBlockId(null);
-    setFuturePosition(null);
-    endDrag();
+    cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
   };
 
   const handleResize = (blockId: number, newBlock: WorkBlockType) => {
@@ -215,10 +208,11 @@ const WorkContainer = () => {
             setScrollOffset(e.currentTarget.scrollLeft);
           }}
         >
+          <MainGraph />
           {workBlocks.map(block => {
             const { id, position } = block;
             const isCurrentlyDragging =
-              isItemDragging(id) || isRevertingItemId === id;
+              isDraggingItem(id) || isRevertingItemId === id;
 
             // 드래그 중인 블록은 DragOverlay만 렌더링
             if (isCurrentlyDragging) {
@@ -293,7 +287,7 @@ const WorkContainer = () => {
               position: relative;
             `}
           >
-            <WorkCellsContainer isDragging={isDragging} />
+            <WorkCellsContainer />
           </div>
         </div>
       </div>

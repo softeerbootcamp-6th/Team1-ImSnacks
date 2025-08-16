@@ -6,21 +6,29 @@ const updateBlockWorkTime = (
   position: { x: number; y: number },
   px: number
 ) => {
-  const newStartHour = position.x / px;
-  const newStartMinutes = Math.round((position.x % px) * 0.6);
+  const baseDateTime = dayjs()
+    .set('minute', 0)
+    .set('second', 0)
+    .set('millisecond', 0);
 
-  const originalStartTime = dayjs(block.startTime);
-  const originalEndTime = dayjs(block.endTime);
-  const durationMinutes = originalEndTime.diff(originalStartTime, 'minute');
+  // 현재 시간을 기준으로 x 좌표를 시간으로 변환
+  const timeByPosition = position.x / px;
 
-  const newStartTime = dayjs().hour(newStartHour).minute(newStartMinutes);
+  // 현재 시간에 상대적 시간을 더해서 새로운 시작 시간 계산
+  const newStartTime = baseDateTime.add(timeByPosition, 'hour');
+
+  const durationMinutes = dayjs(block.endTime).diff(
+    dayjs(block.startTime),
+    'minute'
+  );
+
   const newEndTime = newStartTime.add(durationMinutes, 'minute');
 
   return {
     ...block,
     position,
-    startTime: newStartTime.toISOString(),
-    endTime: newEndTime.toISOString(),
+    startTime: newStartTime.format('YYYY-MM-DDTHH:mm'),
+    endTime: newEndTime.format('YYYY-MM-DDTHH:mm'),
     workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format('HH:mm')}`,
   };
 };
