@@ -13,10 +13,7 @@ import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -184,6 +181,25 @@ public class WeatherService {
         validateHumidityInfo(humidityInfo);
 
         return new GetHumidityResponse(humidityInfo.getMaxHumidity());
+    }
+
+    public GetPrecipitationResponse getPrecipitation(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        PrecipitationInfo precipitationInfo = dashboardTodayWeatherRepository.findPrecipitationByNxAndNy(nx,ny).orElseThrow(()-> new WeatherException(NO_PRECIPITATION));
+        validatePrecipitationInfo(precipitationInfo);
+
+        return new GetPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
+    }
+
+    private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
+        if(precipitationInfo.getMaxPrecipitation() == null){
+            throw new WeatherException(NO_PRECIPITATION);
+        }
     }
 
     private void validateHumidityInfo(HumidityInfo humidityInfo) {
