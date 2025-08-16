@@ -11,6 +11,7 @@ public enum WeatherCondition {
     SNOW("눈"),
     NIGHT("맑음"),
     CLOUDY_NIGHT("흐림"),
+    HEAT_WAVE("폭염"),
     ;
 
     private final String keyword;

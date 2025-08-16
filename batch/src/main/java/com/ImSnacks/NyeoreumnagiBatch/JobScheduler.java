@@ -25,14 +25,14 @@ public class JobScheduler {
     @Qualifier("sunRiseSetJob")
     private final Job sunRiseSetJob;
 
+    @Qualifier("dailyHighJob")
+    private final Job dailyHighJob;
+
     @Qualifier("sevenDayTemperatureJob")
     private final Job sevenDayTemperatureJob;
 
     @Qualifier("sevenDayWeatherConditionJob")
     private final Job sevenDayWeatherConditionJob;
-
-    @Qualifier("dailyHighJob")
-    private final Job dailyHighJob;
 
     //2시부터 3시간 간격으로 15분마다 매일
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")

@@ -9,7 +9,7 @@ public enum WorkResponseStatus {
     LIFE_CYCLE_NOT_FOUND(7006, "일치하는 생육 단계가 존재하지 않습니다."),
     NULL_MY_CROP_ID(7007, "myCropId가 null입니다."),
     NULL_START_TIME(7008, "startTime이 null입니다."),
-    NULL_END_TIME(7009, "end이 null입니다."),
+    NULL_END_TIME(7009, "endTime이 null입니다."),
     NULL_MY_WORK_ID(7010, "myWorkId가 null입니다."),
     START_TIME_IS_FUTURE(7011, "요청 시작 시간이 미래입니다."),
     NULL_RECOMMENDED_WORK_ID(7012, "recommendedWorkId가 null입니다."),

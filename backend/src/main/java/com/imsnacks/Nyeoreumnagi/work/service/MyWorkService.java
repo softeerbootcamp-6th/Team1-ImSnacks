@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,12 +77,8 @@ public class MyWorkService {
     @Transactional
     public void deleteMyWork(DeleteMyWorkRequest request, Long memberId) {
         MyWork myWork = myWorkRepository.findById(request.myWorkId()).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
-        if (myWork.getMember().getId() != memberId) {
+        if (!myWork.getMember().getId().equals(memberId)) {
             throw new WorkException(MY_WORK_NOT_FOUND);
-        }
-
-        if (!myWork.isDone()) {
-            throw new WorkException(MY_WORK_NOT_COMPLETED);
         }
 
         myWorkRepository.deleteById(request.myWorkId());
