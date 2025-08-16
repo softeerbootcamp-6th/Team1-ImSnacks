@@ -102,7 +102,7 @@ public class WeatherController {
     @ApiResponse(responseCode = "200", description = "일일 최고 강수량 조회 성공")
     @ApiResponse(responseCode = "400", description = "일일 최고 강수량 조회 실패")
     @GetMapping("/precipitation")
-    public ResponseEntity<CustomResponseBody<GetPrecipitationResponse>> getPrecipitation(@PreAuthorize Long memberId) {
-        return ResponseUtil.success(weatherService.getPrecipitation(memberId));
+    public ResponseEntity<CustomResponseBody<GetDailyMaxPrecipitationResponse>> getDailyMaxPrecipitation(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getDailyMaxPrecipitation(memberId));
     }
 }

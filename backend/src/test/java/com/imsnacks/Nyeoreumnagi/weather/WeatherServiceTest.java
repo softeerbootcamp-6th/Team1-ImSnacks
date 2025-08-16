@@ -2,15 +2,12 @@ package com.imsnacks.Nyeoreumnagi.weather;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
-import com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
-import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
-import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
@@ -30,10 +27,8 @@ import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -334,7 +329,7 @@ class WeatherServiceTest {
         when(dashboardTodayWeatherRepository.findPrecipitationByNxAndNy(nx, ny)).thenReturn(Optional.of(precipitationInfo));
 
         // when
-        GetPrecipitationResponse response = weatherService.getPrecipitation(memberId);
+        GetDailyMaxPrecipitationResponse response = weatherService.getDailyMaxPrecipitation(memberId);
 
         // then
         assertThat(response.value()).isEqualTo(12);
