@@ -17,17 +17,17 @@ public class EntityTest {
                 .startMonthPhase(PestCondition.MonthPhase.EARLY)
                 .endMonth(Month.AUGUST)
                 .endMonthPhase(PestCondition.MonthPhase.LATE)
-                .humidityCode(WeatherConditionCode.HumidityCode.LOW)
-                .temperatureCode(WeatherConditionCode.TemperatureCode.LOW)
-                .rainCode(WeatherConditionCode.RainCode.NONE)
+                .humidityLevel(WeatherConditionCode.HumidityLevel.LOW)
+                .temperatureLevel(WeatherConditionCode.TemperatureLevel.LOW)
+                .rainLevel(WeatherConditionCode.RainLevel.NONE)
                 .build();
         assertThat(cond.getStartMonth()).isEqualTo(Month.APRIL);
         assertThat(cond.getStartMonthPhase()).isEqualTo(PestCondition.MonthPhase.EARLY);
         assertThat(cond.getEndMonth()).isEqualTo(Month.AUGUST);
         assertThat(cond.getEndMonthPhase()).isEqualTo(PestCondition.MonthPhase.LATE);
-        assertThat(cond.getHumidityCode()).isEqualTo(WeatherConditionCode.HumidityCode.LOW);
-        assertThat(cond.getTemperatureCode()).isEqualTo(WeatherConditionCode.TemperatureCode.LOW);
-        assertThat(cond.getRainCode()).isEqualTo(WeatherConditionCode.RainCode.NONE);
+        assertThat(cond.getHumidityLevel()).isEqualTo(WeatherConditionCode.HumidityLevel.LOW);
+        assertThat(cond.getTemperatureLevel()).isEqualTo(WeatherConditionCode.TemperatureLevel.LOW);
+        assertThat(cond.getRainLevel()).isEqualTo(WeatherConditionCode.RainLevel.NONE);
     }
 
     @Test
