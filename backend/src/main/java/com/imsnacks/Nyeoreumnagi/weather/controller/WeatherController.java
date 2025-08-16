@@ -102,8 +102,17 @@ public class WeatherController {
     @Operation(summary = "일일 최고 습도 조회")
     @ApiResponse(responseCode = "200", description = "일일 최고 습도 조회 성공")
     @ApiResponse(responseCode = "400", description = "일일 최고 습도 조회 실패")
-    @GetMapping("/humidity")
+    @GetMapping("/humidityInfo")
     public ResponseEntity<CustomResponseBody<GetHumidityResponse>> getHumidity(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getHumidity(memberId));
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "일일 최고 강수량 조회")
+    @ApiResponse(responseCode = "200", description = "일일 최고 강수량 조회 성공")
+    @ApiResponse(responseCode = "400", description = "일일 최고 강수량 조회 실패")
+    @GetMapping("/precipitationInfo")
+    public ResponseEntity<CustomResponseBody<GetDailyMaxPrecipitationResponse>> getDailyMaxPrecipitation(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getDailyMaxPrecipitation(memberId));
     }
 }
