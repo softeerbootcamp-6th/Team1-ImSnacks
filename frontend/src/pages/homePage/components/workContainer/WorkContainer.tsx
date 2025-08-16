@@ -20,16 +20,17 @@ import {
 } from '../../utils/workContainerUtils';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 import MainGraph from '../mainGraph/MainGraph';
-import GraphMenu from '../graphMenu/GraphMenu';
-import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
 import { getWeatherGraph } from '@/apis/weather.api';
 import { GetWeatherGraphResponse } from '@/types/openapiGenerator';
 import { generateYTicks } from '../../utils/lineChartUtil';
 import { getUnit } from '@/utils/getUnit';
 import S from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
+import GraphMenu from '../graphMenu/GraphMenu';
+import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
 
 const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock, containerRef } =
+    useWorkBlocks();
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.PERCIPITATION
   );
@@ -68,7 +69,6 @@ const WorkContainer = () => {
   }, [workBlocks]);
 
   const {
-    containerRef,
     isDragging,
     startDrag,
     updatePosition,
@@ -93,6 +93,7 @@ const WorkContainer = () => {
         setFuturePosition(futurePosition);
       }
     },
+    containerRef: containerRef as React.RefObject<HTMLDivElement>,
   });
 
   const { checkAndRevert } = useRevertPosition<WorkBlockType>({
@@ -327,7 +328,7 @@ const WorkContainer = () => {
             position: relative;
           `}
         >
-          <WorkCellsContainer isDragging={isDragging} />
+          <WorkCellsContainer />
         </div>
       </div>
     </div>

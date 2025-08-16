@@ -1,81 +1,15 @@
-import { useState } from 'react';
-import dayjs from 'dayjs';
 import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
 import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
 import S from './RegisterWorkContainer.style';
-import { CROPS } from '@/constants/crops';
-import type { WorkBlockType } from '@/types/workCard.type';
-import useWorkBlocks from '@/contexts/useWorkBlocks';
-import calculateTimeToPosition from '../../utils/calculateTimeToPosition';
 import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
-import { getYCoordinate } from '@/constants/workTimeCoordinate';
-import { findCollisionFreePosition } from '@/utils/collisionUtils';
+import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
+import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
 
 const RegisterWorkContainer = () => {
-  const crops = CROPS;
+  const { recommendedWorks, myCrops, selectedCrop, handleCropClick } =
+    useRecommendedWorks();
 
-  const [selectedCrop, setSelectedCrop] = useState<{
-    id: number;
-    name: string;
-  }>(crops[0]);
-
-  const { addWorkBlock, workBlocks } = useWorkBlocks();
-
-  const handleCropClick = (crop: { id: number; name: string }) => {
-    setSelectedCrop(crop);
-  };
-
-  const handleCreateWork = (workName: string) => {
-    const now = dayjs();
-    const newStartTime = now.add(3, 'hour').minute(0);
-    const newEndTime = now.add(5, 'hour').minute(0);
-    const { x, width } = calculateTimeToPosition(
-      newStartTime.toISOString(),
-      newEndTime.toISOString()
-    );
-
-    // 임시 블록 생성하여 겹침 검사용으로 사용
-    const tempBlock: WorkBlockType = {
-      id: Date.now(),
-      position: { x, y: getYCoordinate(1) },
-      size: { width, height: 50 },
-      cropName: selectedCrop?.name || '기본',
-      workName: workName,
-      workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
-        'HH:mm'
-      )}`,
-      startTime: newStartTime.toISOString(),
-      endTime: newEndTime.toISOString(),
-    };
-
-    // 기존 블록들과 겹치지 않는 새로운 포지션 찾기
-    const containerRect = {
-      x: 0,
-      y: 0,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      top: 0,
-      right: window.innerWidth,
-      bottom: window.innerHeight,
-      left: 0,
-      toJSON: () => ({}),
-    } as DOMRect;
-    const scrollOffset = 0; // 스크롤 오프셋은 0으로 설정
-
-    const collisionFreePosition = findCollisionFreePosition(
-      tempBlock,
-      workBlocks,
-      containerRect,
-      scrollOffset
-    );
-
-    const newWorkBlock: WorkBlockType = {
-      ...tempBlock,
-      position: collisionFreePosition,
-    };
-
-    addWorkBlock(newWorkBlock);
-  };
+  const { handleCreateWork } = useCreateWorkBlock();
 
   return (
     <div css={S.RegisterWorkContainer}>
@@ -87,13 +21,14 @@ const RegisterWorkContainer = () => {
       </div>
       <div css={S.BtnBox}>
         <div css={S.BtnSelectChipContainer}>
-          {crops.map(crop => (
+          {!myCrops.length && <div>작물을 추가해주세요.</div>}
+          {myCrops.map(crop => (
             <BtnSelectChip
-              key={crop.id}
+              key={crop.myCropId}
               size="Small"
-              text={crop.name}
+              text={crop.myCropName || ''}
               status={
-                selectedCrop.id === crop.id
+                selectedCrop?.myCropId === crop.myCropId
                   ? BTN_SELECT_CHIP_STATUSES.PRESSED
                   : BTN_SELECT_CHIP_STATUSES.DEFAULT
               }
@@ -102,10 +37,13 @@ const RegisterWorkContainer = () => {
           ))}
         </div>
         <div css={S.BtnCreateWorkContainer}>
-          <BtnCreateWork
-            text="농작업"
-            onClick={() => handleCreateWork('농작업')}
-          />
+          {recommendedWorks.map(work => (
+            <BtnCreateWork
+              key={work.workId}
+              work={work}
+              onClick={() => handleCreateWork(work, selectedCrop!)}
+            />
+          ))}
         </div>
       </div>
     </div>

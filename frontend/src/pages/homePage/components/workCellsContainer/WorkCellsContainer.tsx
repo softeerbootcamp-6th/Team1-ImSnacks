@@ -1,14 +1,12 @@
 import { css } from '@emotion/react';
 import WorkCell from '../workCell/WorkCell';
 import { WORK_CELL_TYPES, WORK_CELL_STATUSES } from '@/types/workCell.type';
+import WorkActiveToolTip from '../workActiveToolTip/WorkActiveToolTip';
 
-interface WorkCellsContainerProps {
-  isDragging: boolean;
-}
-
-const WorkCellsContainer = ({ isDragging }: WorkCellsContainerProps) => {
+const WorkCellsContainer = () => {
   return (
     <>
+      <WorkActiveToolTip />
       <div
         css={css`
           display: flex;
@@ -20,7 +18,6 @@ const WorkCellsContainer = ({ isDragging }: WorkCellsContainerProps) => {
         <WorkCell
           type={WORK_CELL_TYPES.START}
           status={WORK_CELL_STATUSES.DEFAULT}
-          isDragging={isDragging}
         />
       </div>
       {Array.from({ length: 22 }, (_, index) => {
@@ -37,7 +34,6 @@ const WorkCellsContainer = ({ isDragging }: WorkCellsContainerProps) => {
             <WorkCell
               type={WORK_CELL_TYPES.MIDDLE}
               status={WORK_CELL_STATUSES.DEFAULT}
-              isDragging={isDragging}
             />
           </div>
         );
@@ -53,7 +49,6 @@ const WorkCellsContainer = ({ isDragging }: WorkCellsContainerProps) => {
         <WorkCell
           type={WORK_CELL_TYPES.END}
           status={WORK_CELL_STATUSES.DEFAULT}
-          isDragging={isDragging}
         />
       </div>
     </>

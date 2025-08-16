@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
-import {
-  WorkBlocksContext,
+import WorkBlocksContext, {
   type WorkBlocksContextType,
 } from './WorkBlocksContext';
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 
 const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>(
@@ -23,11 +23,19 @@ const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
     setWorkBlocks(blocks => blocks.filter(b => b.id !== id));
   };
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [selectedRecommendedWork, setSelectedRecommendedWork] =
+    useState<RecommendedWorksResponse | null>(null);
+
   const value: WorkBlocksContextType = {
     workBlocks,
     addWorkBlock,
     updateWorkBlocks,
     removeWorkBlock,
+    containerRef,
+    selectedRecommendedWork,
+    setSelectedRecommendedWork,
   };
 
   return <WorkBlocksContext value={value}>{children}</WorkBlocksContext>;

@@ -1,5 +1,6 @@
 // Auto-generated file - do not edit
 export * from './CustomResponseBodyGetFcstRiskResponse';
+export * from './CustomResponseBodyGetMemberAddressResponse';
 export * from './CustomResponseBodyGetSunRiseSetTimeResponse';
 export * from './CustomResponseBodyGetUVInfoResponse';
 export * from './CustomResponseBodyGetWeatherBriefingResponse';
@@ -13,6 +14,7 @@ export * from './CustomResponseBodyRegisterMyWorkResponse';
 export * from './CustomResponseBodyVoid';
 export * from './DeleteMyWorkRequest';
 export * from './GetFcstRiskResponse';
+export * from './GetMemberAddressResponse';
 export * from './GetMyWorksOfTodayResponse';
 export * from './GetSunRiseSetTimeResponse';
 export * from './GetUVInfoResponse';
@@ -24,8 +26,8 @@ export * from './LoginResponse';
 export * from './ModifyMyWorkRequest';
 export * from './ModifyMyWorkResponse';
 export * from './MyCropResponse';
-export * from './RecommendWorksResponse';
 export * from './RecommendedWorksResponse';
+export * from './RecommendWorksResponse';
 export * from './RegisterMyWorkRequest';
 export * from './RegisterMyWorkResponse';
 export * from './ValuePerTime';
