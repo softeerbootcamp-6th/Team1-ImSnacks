@@ -24,10 +24,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.imsnacks.Nyeoreumnagi.common.util.TimeValidator.validateTime;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.MEMBER_NOT_FOUND;
+import static com.imsnacks.Nyeoreumnagi.work.entity.WorkStatus.*;
 import static com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus.*;
 
 @Service
@@ -90,17 +94,37 @@ public class MyWorkService {
         return new ModifyMyWorkResponse(myWork.getId());
     }
 
-    public List<GetMyWorksOfTodayResponse> getMyWorksOfToday(Long memberId) {
+    public List<GetMyWorksOfTodayResponse> getMyWorksOfToday(boolean isMobile, Long memberId) {
         List<MyWork> myWorks = myWorkRepository.findByMember_IdAndStartTimeAfter(memberId, LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0)));
-        return myWorks.stream().map(myWork ->
+        Stream<GetMyWorksOfTodayResponse> responseStream = myWorks.stream().map(myWork ->
                 new GetMyWorksOfTodayResponse(
                         myWork.getId(),
                         myWork.getCropName(),
                         myWork.getRecommendedWorkName(),
                         myWork.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + myWork.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                         myWork.getStartTime().toString(),
-                        myWork.getEndTime().toString()
+                        myWork.getEndTime().toString(),
+                        myWork.getWorkStatus()
                 )
-        ).toList();
+        );
+
+        if(isMobile){
+            return responseStream.sorted(Comparator
+                            .comparing(GetMyWorksOfTodayResponse::status, (s1, s2) -> {
+                                if (s1.equals(INCOMPLETED) && s2.equals(COMPLETED)) {
+                                    return -1;
+                                }
+                                if (s1.equals(COMPLETED) && s2.equals(INCOMPLETED)) {
+                                    return 1;
+                                }
+                                return 0;
+                            })
+                            .thenComparing(GetMyWorksOfTodayResponse::startTime)
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        return responseStream.sorted(Comparator.comparing(GetMyWorksOfTodayResponse::startTime))
+                .collect(Collectors.toList());
     }
 }
