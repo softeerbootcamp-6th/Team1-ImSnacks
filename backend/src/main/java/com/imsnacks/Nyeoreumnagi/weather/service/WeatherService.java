@@ -191,6 +191,9 @@ public class WeatherService {
         String regionCode = farm.getMidTempRegionCode();
         List<SevenDayWeatherForecast> sevenDayWeatherForecasts = sevenDayWeatherForecastRepository.findByRegionCodeAndDateBetween(regionCode, LocalDate.now(), LocalDate.now().plusDays(6));
 
+        if(sevenDayWeatherForecasts.size() != 7){
+            throw new WeatherException(INVALID_SEVEN_DAY_FORECAST_COUNT);
+        }
         return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
                 forecast.getDayOfWeek(LocalDate.now()),
                 forecast.getWeatherCondition(),
