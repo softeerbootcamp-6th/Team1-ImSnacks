@@ -3,6 +3,7 @@ import { IC24DragIcon } from '@/assets/icons/flat';
 import S from './WorkCell.style';
 import { ColorPrimary } from '@/styles/colors';
 import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
+import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
 
 interface WorkCellProps {
   type: WorkCellType;
@@ -11,6 +12,7 @@ interface WorkCellProps {
 
 const WorkCell = ({ type, status }: WorkCellProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { workBlocks } = useWorkBlocks();
 
   return (
     <div
@@ -18,7 +20,7 @@ const WorkCell = ({ type, status }: WorkCellProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isHovered && (
+      {isHovered && workBlocks.length === 0 && (
         <div css={S.HoverCell}>
           <div css={S.DragIcon}>
             <IC24DragIcon width={24} height={24} fill={ColorPrimary.B300} />

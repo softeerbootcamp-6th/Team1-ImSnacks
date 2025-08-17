@@ -10,14 +10,13 @@
  * Do not edit the class manually.
  */
 
+import { RecommendationDurations } from '../models/RecommendationDurations';
 
 export class RecommendedWorksResponse {
     'workName'?: string;
     'workId'?: number;
-    'startTime'?: string;
-    'endTime'?: string;
-    'recommendation'?: string;
     'neighborCount'?: number;
+    'recommendationDurations'?: Array<RecommendationDurations>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -37,28 +36,16 @@ export class RecommendedWorksResponse {
             "format": "int64"
         },
         {
-            "name": "startTime",
-            "baseName": "startTime",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "endTime",
-            "baseName": "endTime",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "recommendation",
-            "baseName": "recommendation",
-            "type": "string",
-            "format": ""
-        },
-        {
             "name": "neighborCount",
             "baseName": "neighborCount",
             "type": "number",
             "format": "int32"
+        },
+        {
+            "name": "recommendationDurations",
+            "baseName": "recommendationDurations",
+            "type": "Array<RecommendationDurations>",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
