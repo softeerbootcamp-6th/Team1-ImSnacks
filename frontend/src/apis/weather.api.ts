@@ -1,6 +1,7 @@
 import HTTP from './http';
 import {
   GetDailyMaxPrecipitationResponse,
+  GetFcstRiskResponse,
   GetHumidityResponse,
   GetSevenDaysForecastResponse,
   GetSunRiseSetTimeResponse,
@@ -10,7 +11,6 @@ import {
   GetWeatherGraphResponse,
   GetWeatherGraphResponseWeatherMetricEnum,
   GetWindInfoResponse,
-  WeatherRiskDto,
 } from '@/types/openapiGenerator';
 
 export const getWeatherNow = () =>
@@ -25,7 +25,7 @@ export const getWeatherBriefing = () =>
   HTTP.get<GetWeatherBriefingResponse>('/weather/briefing');
 
 export const getWeatherRisk = () =>
-  HTTP.get<WeatherRiskDto[]>('/weather/fcstRisk');
+  HTTP.get<GetFcstRiskResponse>('/weather/fcstRisk');
 
 export const getWeatherSevenDays = () =>
   HTTP.get<GetSevenDaysForecastResponse[]>('/weather/sevenDays');
