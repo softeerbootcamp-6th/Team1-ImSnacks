@@ -12,8 +12,8 @@ const WeatherBoardPrecipitation = css`
 
 const WeatherBoardPrecipitationTitle = css`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 17px;
   text-align: right;
   z-index: 1;
 `;

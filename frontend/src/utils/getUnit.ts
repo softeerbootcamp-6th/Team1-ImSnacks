@@ -2,7 +2,7 @@ import type { GetWeatherGraphResponseWeatherMetricEnum } from '@/types/openapiGe
 import { WEATHER_METRICS } from '@/types/weather.types';
 
 const WEATHER_UNIT = {
-  [WEATHER_METRICS.PERCIPITATION]: 'mm',
+  [WEATHER_METRICS.PRECIPITATION]: 'mm',
   [WEATHER_METRICS.TEMPERATURE]: '°',
   [WEATHER_METRICS.HUMIDITY]: '%',
   [WEATHER_METRICS.WIND_SPEED]: 'm/s',
