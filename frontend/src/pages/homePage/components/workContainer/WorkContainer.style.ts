@@ -1,9 +1,12 @@
 import { GrayScale } from '@/styles/colors';
+import { rightGradientMask } from '@/styles/gradientMask';
 import { css } from '@emotion/react';
 
 const ContainerWrapper = css`
   width: 100%;
   position: relative;
+
+  ${rightGradientMask(50)}
 `;
 
 const ScrollContainer = css`

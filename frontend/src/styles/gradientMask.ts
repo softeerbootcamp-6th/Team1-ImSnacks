@@ -6,11 +6,6 @@ interface GradientMaskOptions {
   fadeStart?: number;
 }
 
-/**
- * 그라데이션 마스크를 생성하는 유틸 함수
- * @param options - 그라데이션 마스크 옵션
- * @returns CSS 스타일
- */
 export const createGradientMask = (options: GradientMaskOptions = {}) => {
   const {
     direction = 'to bottom',
@@ -37,26 +32,14 @@ export const createGradientMask = (options: GradientMaskOptions = {}) => {
   `;
 };
 
-/**
- * 하단 그라데이션 마스크 (기본값)
- */
 export const bottomGradientMask = (fadeDistance = 200) =>
   createGradientMask({ direction: 'to bottom', fadeDistance });
 
-/**
- * 상단 그라데이션 마스크
- */
 export const topGradientMask = (fadeDistance = 200) =>
   createGradientMask({ direction: 'to top', fadeDistance });
 
-/**
- * 왼쪽 그라데이션 마스크
- */
 export const leftGradientMask = (fadeDistance = 200) =>
   createGradientMask({ direction: 'to left', fadeDistance });
 
-/**
- * 오른쪽 그라데이션 마스크
- */
 export const rightGradientMask = (fadeDistance = 200) =>
   createGradientMask({ direction: 'to right', fadeDistance });

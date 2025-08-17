@@ -26,10 +26,10 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
     return <div css={S.LoadingWrapper}>로딩 중...</div>;
   }
 
-  const pointSpacing = 100;
+  const pointSpacing = 97;
   const chartWidth = Math.max(
     300,
-    (graphData.valuePerTime?.length - 1) * pointSpacing + 100
+    graphData.valuePerTime?.length * pointSpacing
   );
 
   const GraphHighlight = (
