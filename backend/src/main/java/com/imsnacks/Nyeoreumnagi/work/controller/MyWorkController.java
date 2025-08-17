@@ -7,17 +7,22 @@ import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfWeeklyResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.service.MyWorkService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -68,5 +73,18 @@ public class MyWorkController {
     public ResponseEntity<CustomResponseBody<List<GetMyWorksOfTodayResponse>>> getMyWorksOfToday(@RequestParam(defaultValue = "false") boolean isMobile, @PreAuthorize Long memberId) {
         List<GetMyWorksOfTodayResponse> myWorksOfToday = myWorkService.getMyWorksOfToday(isMobile, memberId);
         return ResponseUtil.success(myWorksOfToday);
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "주간 내 농작업 목록 조회")
+    @ApiResponse(responseCode = "200", description = "주간 내 농작업 목록 조회 성공")
+    @ApiResponse(responseCode = "400", description = "주간 내 농작업 목록 조회 실패")
+    @Parameters({
+            @Parameter(name = "startDate", description = "조회 시작 기준이 되는 날짜 (yyyy-MM-dd)"),
+    })
+    @GetMapping("/weekly")
+    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfWeeklyResponse>>> getMyWorksOfWeek(@RequestParam String startDate, @PreAuthorize Long memberId) {
+        List<GetMyWorksOfWeeklyResponse> myWorksOfWeekly = myWorkService.getMyWorksOfWeekly(startDate, memberId);
+        return ResponseUtil.success(myWorksOfWeekly);
     }
 }

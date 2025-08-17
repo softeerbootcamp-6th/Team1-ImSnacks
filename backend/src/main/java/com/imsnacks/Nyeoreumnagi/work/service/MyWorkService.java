@@ -7,6 +7,7 @@ import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfWeeklyResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
@@ -24,8 +25,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -101,7 +105,7 @@ public class MyWorkService {
                         myWork.getId(),
                         myWork.getCropName(),
                         myWork.getRecommendedWorkName(),
-                        myWork.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + myWork.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                        myWork.getWorkHours(),
                         myWork.getStartTime().toString(),
                         myWork.getEndTime().toString(),
                         myWork.getWorkStatus()
@@ -127,4 +131,39 @@ public class MyWorkService {
         return responseStream.sorted(Comparator.comparing(GetMyWorksOfTodayResponse::startTime))
                 .collect(Collectors.toList());
     }
+
+    public List<GetMyWorksOfWeeklyResponse> getMyWorksOfWeekly(String startDateString, Long memberId) {
+        LocalDate startDate;
+        try {
+            startDate = LocalDate.parse(startDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        } catch (DateTimeParseException e) {
+            throw new WorkException(INVALID_START_TIME_FORMAT);
+        }
+        if (startDate.isAfter(LocalDate.now())){
+            throw new WorkException(START_TIME_IS_FUTURE);
+        }
+        List<GetMyWorksOfWeeklyResponse> responseList = new ArrayList<>();
+
+        TreeMap<LocalDate, List<MyWork>> workDataMap = myWorkRepository.findByMember_IdAndStartTimeBetween(memberId, startDate.atStartOfDay(), startDate.plusDays(7).atStartOfDay())
+                .stream().collect(Collectors.groupingBy(work -> work.getStartTime().toLocalDate(),
+                        TreeMap::new,
+                        Collectors.toList()
+                        ));
+
+        workDataMap.forEach((key, value) -> responseList.add(
+                new GetMyWorksOfWeeklyResponse(
+                        key,
+                        value.stream().map(w -> new GetMyWorksOfWeeklyResponse.WorkCardData(
+                                w.getId(),
+                                w.getCropName(),
+                                w.getRecommendedWorkName(),
+                                w.getWorkHours(),
+                                w.getWorkStatus()
+                        )).toList()
+                )
+        ));
+
+        return responseList;
+}
 }
