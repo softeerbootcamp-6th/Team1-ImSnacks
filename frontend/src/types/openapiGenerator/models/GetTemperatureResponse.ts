@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { TemperaturePerTime } from '../models/TemperaturePerTime';
 
-export class RegisterMyWorkRequest {
-    'recommendedWorkId'?: number;
-    'myCropId'?: number;
-    'startTime'?: Date;
-    'endTime'?: Date;
+export class GetTemperatureResponse {
+    'maxTemperature'?: number;
+    'minTemperature'?: number;
+    'temperaturePerTime'?: Array<TemperaturePerTime>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -23,32 +23,26 @@ export class RegisterMyWorkRequest {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "recommendedWorkId",
-            "baseName": "recommendedWorkId",
+            "name": "maxTemperature",
+            "baseName": "maxTemperature",
             "type": "number",
-            "format": "int64"
+            "format": "int32"
         },
         {
-            "name": "myCropId",
-            "baseName": "myCropId",
+            "name": "minTemperature",
+            "baseName": "minTemperature",
             "type": "number",
-            "format": "int64"
+            "format": "int32"
         },
         {
-            "name": "startTime",
-            "baseName": "startTime",
-            "type": "Date",
-            "format": "date-time"
-        },
-        {
-            "name": "endTime",
-            "baseName": "endTime",
-            "type": "Date",
-            "format": "date-time"
+            "name": "temperaturePerTime",
+            "baseName": "temperaturePerTime",
+            "type": "Array<TemperaturePerTime>",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return RegisterMyWorkRequest.attributeTypeMap;
+        return GetTemperatureResponse.attributeTypeMap;
     }
 
     public constructor() {
