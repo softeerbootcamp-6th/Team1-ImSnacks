@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
@@ -6,7 +6,7 @@ import 'dayjs/locale/ko';
 dayjs.locale('ko');
 
 export const useBaseWeeklyCalendar = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(dayjs().toDate());
 
   const getWeekDates = (date: Date) => {
     const startOfWeek = dayjs(date).startOf('week');
@@ -16,7 +16,7 @@ export const useBaseWeeklyCalendar = () => {
     );
   };
 
-  const weekDates = getWeekDates(currentDate);
+  const weekDates = useMemo(() => getWeekDates(currentDate), [currentDate]);
 
   const handlePreviousWeek = (offset: number) => {
     setCurrentDate(prev => dayjs(prev).subtract(offset, 'week').toDate());
