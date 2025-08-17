@@ -1,9 +1,11 @@
 package com.imsnacks.Nyeoreumnagi.member;
 
+import com.imsnacks.Nyeoreumnagi.farm.service.FarmService;
 import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMemberAddressResponse;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
+import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,12 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class MemberServiceTest {
 
     private FarmRepository farmRepository;
+    private MemberRepository memberRepository;
     private MemberService memberService;
+    private FarmService farmService;
 
     @BeforeEach
     void setUp() {
         farmRepository = Mockito.mock(FarmRepository.class);
-        memberService = new MemberService(farmRepository);
+        memberRepository = Mockito.mock(MemberRepository.class);
+        farmService = Mockito.mock(FarmService.class);
+
+        memberService = new MemberService(farmRepository, memberRepository, farmService);
     }
 
     @Test
