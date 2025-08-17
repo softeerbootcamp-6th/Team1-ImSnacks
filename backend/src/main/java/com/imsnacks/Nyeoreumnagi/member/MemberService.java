@@ -26,7 +26,12 @@ public class MemberService {
 
     public GetMemberAddressResponse getMemberAddress(Long memberId){
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        return new GetMemberAddressResponse(farm.getState(), farm.getCity(), farm.getTown(), farm.getAddress());
+        StringBuilder builder = new StringBuilder();
+        builder.append(farm.getState());
+        builder.append(farm.getCity());
+        builder.append(farm.getTown());
+        builder.append(farm.getAddress());
+        return new GetMemberAddressResponse(builder.toString());
     }
 
     @Transactional
