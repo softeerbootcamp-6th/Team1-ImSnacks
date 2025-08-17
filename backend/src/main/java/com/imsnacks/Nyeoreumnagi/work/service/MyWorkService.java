@@ -103,7 +103,7 @@ public class MyWorkService {
                         myWork.getId(),
                         myWork.getCropName(),
                         myWork.getRecommendedWorkName(),
-                        myWork.getWorkTimeZone(),
+                        myWork.getWorkHours(),
                         myWork.getStartTime().toString(),
                         myWork.getEndTime().toString(),
                         myWork.getWorkStatus()
@@ -149,7 +149,7 @@ public class MyWorkService {
                                 w.getId(),
                                 w.getCropName(),
                                 w.getRecommendedWorkName(),
-                                w.getWorkTimeZone(),
+                                w.getWorkHours(),
                                 w.getWorkStatus()
                         )).toList()
                 )

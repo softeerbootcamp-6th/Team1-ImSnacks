@@ -86,7 +86,7 @@ class MyWorkTest {
                 LocalDateTime.of(LocalDate.now(), LocalTime.of(endHour, endMin))
         );
 
-        String workTimeZone = myWork.getWorkTimeZone();
+        String workTimeZone = myWork.getWorkHours();
 
         assertThat(workTimeZone).isEqualTo(startHour + ":" + startMin + " - " + endHour + ":" + endMin + endMin);
     }

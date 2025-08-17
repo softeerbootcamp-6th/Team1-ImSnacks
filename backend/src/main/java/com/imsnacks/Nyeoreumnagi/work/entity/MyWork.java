@@ -69,7 +69,7 @@ public class MyWork {
         return this.getRecommendedWork().getName();
     }
 
-    public String getWorkTimeZone(){
+    public String getWorkHours(){
         return startTime.toLocalTime() + " - " + endTime.toLocalTime();
     }
 }
