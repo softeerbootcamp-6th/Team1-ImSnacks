@@ -8,14 +8,15 @@ const WeeklyContent = ({
   minTemperature,
   maxTemperature,
 }: GetSevenDaysForecastResponse) => {
-  const FlatIconComponent =
-    FLAT_ICON[weatherCondition as keyof typeof FLAT_ICON];
+  const FlatIconComponent = weatherCondition
+    ? FLAT_ICON[weatherCondition]
+    : null;
 
   return (
     <div css={S.WeeklyContent}>
       <div css={S.WeeklyTitle}>{dayOfWeek}</div>
       <div css={S.WeeklyWeatherIconWrapper}>
-        <FlatIconComponent width={32} height={32} />
+        {FlatIconComponent && <FlatIconComponent width={32} height={32} />}
       </div>
       <div css={S.WeeklyTemperature}>
         {maxTemperature}° / {minTemperature}°
