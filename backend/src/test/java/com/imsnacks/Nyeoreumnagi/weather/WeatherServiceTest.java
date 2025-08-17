@@ -7,9 +7,11 @@ import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
@@ -56,6 +58,8 @@ class WeatherServiceTest {
     private WeatherRiskRepository weatherRiskRepository;
     @Mock
     private DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    @Mock
+    private DashboardWeatherForecastRepository dashboardWeatherForecastRepository;
 
     @Test
     void getWeatherGraph_성공() {
@@ -331,5 +335,73 @@ class WeatherServiceTest {
 
         // then
         assertThat(response.value()).isEqualTo(12);
+    }
+
+    @Test
+    void 시간별_기온_조회_성공() {
+        //given
+        Long memberId = 1L;
+        Farm fakeFarm = mock(Farm.class);
+        when(fakeFarm.getNx()).thenReturn(60);
+        when(fakeFarm.getNy()).thenReturn(127);
+
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(fakeFarm));
+
+        List<DashboardWeatherForecast> forecasts = new ArrayList<>();
+        int[] times = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
+        int[] temps = {1,14,1,1,15,1,1,16,1,1,17,1,1,12,1,1,18,1,1,11,1,1,13};
+
+        for (int i=0; i<23; ++i) {
+            DashboardWeatherForecast f = mock(DashboardWeatherForecast.class);
+            when(f.getFcstTime()).thenReturn(times[i]);
+            when(f.getTemperature()).thenReturn(temps[i]);
+            when(f.getWeatherCondition()).thenReturn(WeatherCondition.SUNNY);
+            forecasts.add(f);
+        }
+
+        when(dashboardWeatherForecastRepository.findByNxAndNy(60,127))
+                .thenReturn(forecasts);
+
+        //when
+        GetTemperatureResponse response = weatherService.getTemperature(memberId);
+
+        //then
+        assertThat(response.maxTemperature()).isEqualTo(18);
+        assertThat(response.minTemperature()).isEqualTo(11);
+        assertThat(response.temperaturePerTime().stream().map(GetTemperatureResponse.TemperaturePerTime::time).toList())
+                .isEqualTo(List.of("02:00","05:00","08:00","11:00","14:00","17:00","20:00","23:00"));
+        assertThat(response.temperaturePerTime().stream().map(GetTemperatureResponse.TemperaturePerTime::value).toList())
+                .isEqualTo(List.of(14,15,16,17,12,18,11,13));
+    }
+
+    @Test
+    void 시간별_기온_조회시_3시간_간격에_해당하는_시간이_없을_때_예외처리() {
+        //given
+        Long memberId = 1L;
+        Farm fakeFarm = mock(Farm.class);
+        when(fakeFarm.getNx()).thenReturn(60);
+        when(fakeFarm.getNy()).thenReturn(127);
+
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(fakeFarm));
+
+        List<DashboardWeatherForecast> forecasts = new ArrayList<>();
+        int[] times = {1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
+        int[] temps = {1,1,1,15,1,1,16,1,1,17,1,1,12,1,1,18,1,1,11,1,1,13};
+
+        for (int i=0; i<22; ++i) {
+            DashboardWeatherForecast f = mock(DashboardWeatherForecast.class);
+            when(f.getFcstTime()).thenReturn(times[i]);
+            when(f.getTemperature()).thenReturn(temps[i]);
+            when(f.getWeatherCondition()).thenReturn(WeatherCondition.SUNNY);
+            forecasts.add(f);
+        }
+
+        when(dashboardWeatherForecastRepository.findByNxAndNy(60,127))
+                .thenReturn(forecasts);
+
+        //when
+        //then
+        assertThatThrownBy(() -> weatherService.getTemperature(memberId))
+                .isInstanceOf(WeatherException.class);
     }
 }
