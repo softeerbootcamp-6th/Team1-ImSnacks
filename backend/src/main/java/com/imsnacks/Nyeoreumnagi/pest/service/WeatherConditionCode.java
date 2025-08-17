@@ -14,7 +14,7 @@ public record WeatherConditionCode(
     private static final int LOW_INDEX = 0;
     private static final int HIGH_INDEX = 1;
 
-    public static WeatherConditionCode of(@NotNull List<ShortTermWeatherForecast> forecastList) {
+    public static WeatherConditionCode of(List<ShortTermWeatherForecast> forecastList) {
         // 습도와 기온은 (높음, 보통, 낮음) 중 앞선 24시간 동안의 예보 중 가장 빈도가 높은 것을 반환한다.
         // 다만, 보통의 경우가 가장 많더라도 (높음, 낮음)이 하나라도 있으면 이것으로 기상 코드를 반환한다.
         // 비 예보가 하나라도 있으면 비가 오는 것으로 코드를 반환한다.
@@ -25,9 +25,16 @@ public record WeatherConditionCode(
         RainLevel rcode = RainLevel.NONE;
 
         for (var forecast : forecastList) {
-            countHcode(HumidityLevel.of(forecast.getHumidity()), hcodes);
-            countTcode(TemperatureLevel.of(forecast.getTemperature()), tcodes);
-            if (RainLevel.RAIN == RainLevel.of(forecast.getPrecipitation())) {
+            int humidity = forecast.getHumidity();
+            int temperature = forecast.getTemperature();
+            double precipitation = forecast.getPrecipitation();
+
+            HumidityLevel humidityLevel = HumidityLevel.of(humidity);
+            TemperatureLevel temperatureLevel = TemperatureLevel.of(temperature);
+
+            countHcode(humidityLevel, hcodes);
+            countTcode(temperatureLevel, tcodes);
+            if (RainLevel.RAIN == RainLevel.of(precipitation)) {
                 rcode = RainLevel.RAIN;
             }
         }
@@ -42,7 +49,7 @@ public record WeatherConditionCode(
         return new WeatherConditionCode(hcode, tcode, rcode);
     }
 
-    private static void countHcode(final @NotNull WeatherConditionCode.HumidityLevel hcode, final @NotNull int[] hcodes) {
+    private static void countHcode(final WeatherConditionCode.HumidityLevel hcode, final int[] hcodes) {
         switch (hcode) {
             case LOW:
                 hcodes[LOW_INDEX]++;
@@ -55,7 +62,7 @@ public record WeatherConditionCode(
         }
     }
 
-    private static void countTcode(final @NotNull WeatherConditionCode.TemperatureLevel tcode, final @NotNull int[] tcodes) {
+    private static void countTcode(final WeatherConditionCode.TemperatureLevel tcode, final int[] tcodes) {
         switch (tcode) {
             case LOW:
                 tcodes[LOW_INDEX]++;

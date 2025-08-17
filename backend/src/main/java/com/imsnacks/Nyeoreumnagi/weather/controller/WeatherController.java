@@ -120,7 +120,7 @@ public class WeatherController {
     @Operation(summary = "일일 시간별 기온 조회")
     @ApiResponse(responseCode = "200", description = "일일 시간별 기온 조회 성공")
     @ApiResponse(responseCode = "400", description = "일일 시간별 기온 조회 실패")
-    @GetMapping("/temperature")
+    @GetMapping("/temperatureInfo")
     public ResponseEntity<CustomResponseBody<GetTemperatureResponse>> getTemperature(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getTemperature(memberId));
     }
