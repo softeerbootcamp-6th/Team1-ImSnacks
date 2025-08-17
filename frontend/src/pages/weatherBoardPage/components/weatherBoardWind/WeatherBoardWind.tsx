@@ -8,12 +8,15 @@ import { getWeatherWind } from '@/apis/weather.api';
 
 const WeatherBoardWind = () => {
   const [windData, setWindData] = useState<GetWindInfoResponse>();
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const fetchWindData = async () => {
     try {
       const res = await getWeatherWind();
       if (res.data) {
         setWindData(res.data);
+        // 데이터가 로드된 후 애니메이션 시작
+        setTimeout(() => setIsAnimating(true), 100);
       }
     } catch (error) {
       console.error('Error fetching wind data:', error);
@@ -43,7 +46,11 @@ const WeatherBoardWind = () => {
         <WindArrow
           width="48"
           height="54"
-          css={S.WindArrow(windData?.degree ?? 0)}
+          css={
+            isAnimating
+              ? S.WindArrow(windData?.degree ?? 0)
+              : S.WindArrowInitial
+          }
         />
       </div>
       <h3>최고 풍속</h3>
