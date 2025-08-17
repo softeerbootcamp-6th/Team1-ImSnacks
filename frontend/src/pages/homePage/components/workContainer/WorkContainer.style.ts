@@ -5,8 +5,10 @@ import { css } from '@emotion/react';
 const ContainerWrapper = css`
   width: 100%;
   position: relative;
+`;
 
-  ${rightGradientMask(50)}
+const MaskGradientWrapper = css`
+  ${rightGradientMask(30)}
 `;
 
 const ScrollContainer = css`
@@ -29,4 +31,4 @@ const ScrollContainer = css`
   }
 `;
 
-export default { ContainerWrapper, ScrollContainer };
+export default { ContainerWrapper, ScrollContainer, MaskGradientWrapper };
