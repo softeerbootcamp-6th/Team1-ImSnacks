@@ -142,7 +142,7 @@ public record WeatherConditionCode(
         }
 
         public enum LevelBoundary {
-            RAIN(1.0);
+            RAIN(0.0);
 
             @Getter
             private final double thresholdValue;
