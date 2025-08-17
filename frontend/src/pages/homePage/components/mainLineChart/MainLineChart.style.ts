@@ -12,7 +12,6 @@ const MainLineChart = css`
     right: 44px;
     width: 25px;
     height: 90%;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.1), transparent);
     pointer-events: none;
     z-index: 5;
   }
