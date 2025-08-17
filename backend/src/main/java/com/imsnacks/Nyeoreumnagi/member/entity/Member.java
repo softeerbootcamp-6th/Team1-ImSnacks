@@ -2,7 +2,10 @@ package com.imsnacks.Nyeoreumnagi.member.entity;
 
 import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
