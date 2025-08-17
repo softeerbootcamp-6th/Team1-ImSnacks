@@ -5,7 +5,7 @@ import com.imsnacks.Nyeoreumnagi.common.auth.dto.response.LoginResponse;
 import com.imsnacks.Nyeoreumnagi.common.auth.jwt.AuthTokens;
 import com.imsnacks.Nyeoreumnagi.common.auth.jwt.JwtProvider;
 import com.imsnacks.Nyeoreumnagi.common.auth.service.AuthService;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;

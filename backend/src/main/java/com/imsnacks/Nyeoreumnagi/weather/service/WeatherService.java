@@ -2,7 +2,7 @@ package com.imsnacks.Nyeoreumnagi.weather.service;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
@@ -16,14 +16,12 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
