@@ -42,10 +42,22 @@ public class PestService {
     public GetPestCardListResponse getPestCardList(final Long memberId, @Nullable final Long myCropId) {
         final Farm farm = farmRepo.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MemberResponseStatus.NO_FARM_INFO));
         final Crop target = (myCropId == null) ? findDefaultCrop(memberId) : findCropBy(myCropId);
-        final List<PestCard> pestCards = getPestCardsFor(target, farm.getNx(), farm.getNy());
+        final List<PestCard> pestCards = getPestCards(target, farm.getNx(), farm.getNy());
         final List<MyCropCard> myCropCards = (myCropId == null) ? getMyCropCards(memberId) : new ArrayList<>();
 
-        return new GetPestCardListResponse(pestCards, myCropCards);
+        if (pestCards.isEmpty()) {
+            final List<PestCard> defaultPestCards = getDefaultPestCards(target);
+            return (new GetPestCardListResponse(defaultPestCards, myCropCards));
+        }
+        return (new GetPestCardListResponse(pestCards, myCropCards));
+    }
+
+    private List<PestCard> getDefaultPestCards(final Crop target) {
+        List<PestRisk> relatedRisks = target.getPestRisks();
+        return relatedRisks.stream()
+                .map(x -> x.toCard())
+                .limit(MAX_PEST_CARD_LIST_SIZE)
+                .toList();
     }
 
     private List<MyCropCard> getMyCropCards(long memberId) {
@@ -58,7 +70,6 @@ public class PestService {
     private Crop findDefaultCrop(long memberId) {
         List<MyCrop> myCrops = myCropRepo.findAllByMember_IdOrderByCrop_Id(memberId);
         if (myCrops.isEmpty()) {
-            //TODO 빈 리스트를 보내야 할까, 아니면 예외를 던져야 할까?
             throw new CropException(CropResponseStatus.MY_CROP_NOT_FOUND);
         }
         Crop crop = myCrops.get(0).getCrop();
@@ -77,7 +88,7 @@ public class PestService {
         return crop;
     }
 
-    private List<PestCard> getPestCardsFor(Crop target, int nx, int ny) {
+    private List<PestCard> getPestCards(Crop target, int nx, int ny) {
         List<ShortTermWeatherForecast> forecastList = fcstRepo.findAllByNxAndNy(nx, ny);
         if (forecastList.isEmpty()) {
             throw new WeatherException(WeatherResponseStatus.NO_WEATHER_LOCATION);
@@ -92,9 +103,9 @@ public class PestService {
                 .toList();
     }
 
-    private boolean meetsCondition(final List<PestCondition> pestConditions, final WeatherConditionCode weatherConditionCode, final LocalDateTime now) {
-        for (var condition : pestConditions) {
-            if (meetsTimeCondition(condition, now) && meetsWeatherCondition(condition, weatherConditionCode))
+    private boolean meetsCondition(final List<PestCondition> conditions, final WeatherConditionCode forecast, final LocalDateTime now) {
+        for (var condition : conditions) {
+            if (meetsTimeCondition(condition, now) && meetsWeatherCondition(condition, forecast))
                 return true;
         }
         return false;
@@ -110,15 +121,15 @@ public class PestService {
         int endDayOfMonth = getDayOfMonthFromEndPhase(condition.getEndMonthPhase());
 
         boolean meetsStart = (startMonth == nowMonth && startDayOfMonth <= nowDayOfMonth) || (startMonth < nowMonth);
-        boolean meetsEnd = (endMonth == nowMonth && nowDayOfMonth <= endDayOfMonth) || (endMonth > nowMonth);
+        boolean meetsEnd = (endMonth == nowMonth && nowDayOfMonth <= endDayOfMonth) || (nowMonth <  endMonth);
 
-        return meetsStart && meetsEnd;
+        return (meetsStart && meetsEnd);
     }
 
-    private boolean meetsWeatherCondition(PestCondition condition, WeatherConditionCode currentWeather) {
-        return meetsHumidityCondition(condition.getHumidityLevel(), currentWeather.humidityLevel())
-                && meetsTemperatureCondition(condition.getTemperatureLevel(), currentWeather.temperatureLevel())
-                && meetsRainCondition(condition.getRainLevel(), currentWeather.rainLevel());
+    private boolean meetsWeatherCondition(PestCondition condition, WeatherConditionCode forecast) {
+        return meetsHumidityCondition(condition.getHumidityLevel(), forecast.humidityLevel())
+                && meetsTemperatureCondition(condition.getTemperatureLevel(), forecast.temperatureLevel())
+                && meetsRainCondition(condition.getRainLevel(), forecast.rainLevel());
     }
 
     private boolean meetsHumidityCondition(HumidityLevel condition, HumidityLevel current) {
