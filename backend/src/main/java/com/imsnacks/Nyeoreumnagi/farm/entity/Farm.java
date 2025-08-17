@@ -70,4 +70,16 @@ public class Farm {
                 member
         );
     }
+
+    public String engraftAddress(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(state);
+        builder.append(" ");
+        builder.append(city);
+        builder.append(" ");
+        builder.append(town);
+        builder.append(" ");
+        builder.append(address);
+        return builder.toString();
+    }
 }
