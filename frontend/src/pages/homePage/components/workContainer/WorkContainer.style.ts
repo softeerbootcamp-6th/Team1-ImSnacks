@@ -1,5 +1,5 @@
 import { GrayScale } from '@/styles/colors';
-import { rightGradientMask } from '@/styles/gradientMask';
+import { gradientMask } from '@/styles/gradientMask';
 import { css } from '@emotion/react';
 
 const ContainerWrapper = css`
@@ -8,7 +8,7 @@ const ContainerWrapper = css`
 `;
 
 const MaskGradientWrapper = css`
-  ${rightGradientMask(30)}
+  ${gradientMask('Right', 30)}
 `;
 
 const ScrollContainer = css`

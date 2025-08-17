@@ -5,7 +5,7 @@ import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { FlexStyles } from '@/styles/commonStyles';
-import { bottomGradientMask } from '@/styles/gradientMask';
+import { gradientMask } from '@/styles/gradientMask';
 
 const getDayColor = (dayName: string, isToday = false) => {
   if (isToday) return GrayScale.White;
@@ -24,7 +24,7 @@ const WeeklyCalendar = (hasMoreWorks: boolean, isExpanded: boolean) => css`
   ${hasMoreWorks ? 'min-height: 714px;' : 'height: 714px;'}
   position: relative;
 
-  ${hasMoreWorks && !isExpanded && bottomGradientMask(200)}
+  ${hasMoreWorks && !isExpanded && gradientMask('Bottom', 200)}
 `;
 
 const DayContainer = css`
