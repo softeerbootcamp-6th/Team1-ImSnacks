@@ -6,6 +6,7 @@ import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.request.UpdateMyWorkStatusRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfWeeklyResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
@@ -58,7 +59,7 @@ public class MyWorkController {
     @Operation(summary = "농작업 수정")
     @ApiResponse(responseCode = "200", description = "농작업 수정 성공")
     @ApiResponse(responseCode = "400", description = "농작업 수정 실패")
-    @PatchMapping("")
+    @PatchMapping("/time")
     public ResponseEntity<CustomResponseBody<ModifyMyWorkResponse>> modifyMyWork(@RequestBody ModifyMyWorkRequest request, @PreAuthorize Long memberId) {
         request.validate();
         ModifyMyWorkResponse modifyMyWorkResponse = myWorkService.modifyMyWork(request, memberId);
@@ -86,5 +87,16 @@ public class MyWorkController {
     public ResponseEntity<CustomResponseBody<List<GetMyWorksOfWeeklyResponse>>> getMyWorksOfWeek(@RequestParam String startDate, @PreAuthorize Long memberId) {
         List<GetMyWorksOfWeeklyResponse> myWorksOfWeekly = myWorkService.getMyWorksOfWeekly(startDate, memberId);
         return ResponseUtil.success(myWorksOfWeekly);
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "내 농작업 상태 변경")
+    @ApiResponse(responseCode = "200", description = "내 농작업 상태 변경 성공")
+    @ApiResponse(responseCode = "400", description = "내 농작업 상태 변경 실패")
+    @PatchMapping("/status")
+    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfTodayResponse>>> updateMyWorkStatus(@RequestBody UpdateMyWorkStatusRequest request, @PreAuthorize Long memberId) {
+        request.validate();
+        myWorkService.updateMyWorkStatus(request, memberId);
+        return ResponseUtil.success();
     }
 }
