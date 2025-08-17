@@ -35,8 +35,7 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -348,10 +347,10 @@ class WeatherServiceTest {
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(fakeFarm));
 
         List<DashboardWeatherForecast> forecasts = new ArrayList<>();
-        int[] times = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
-        int[] temps = {1,14,1,1,15,1,1,16,1,1,17,1,1,12,1,1,18,1,1,11,1,1,13};
+        int[] times = {2,5,8,11,14,17,20,23};
+        int[] temps = {14,15,16,17,12,18,11,13};
 
-        for (int i=0; i<23; ++i) {
+        for (int i=0; i<8; ++i) {
             DashboardWeatherForecast f = mock(DashboardWeatherForecast.class);
             when(f.getFcstTime()).thenReturn(times[i]);
             when(f.getTemperature()).thenReturn(temps[i]);
@@ -359,7 +358,7 @@ class WeatherServiceTest {
             forecasts.add(f);
         }
 
-        when(dashboardWeatherForecastRepository.findByNxAndNy(60,127))
+        when(dashboardWeatherForecastRepository.findByNxAndNyAndFcstTimeInOrderByFcstTime(anyInt(), anyInt(), anyList()))
                 .thenReturn(forecasts);
 
         //when
@@ -396,7 +395,7 @@ class WeatherServiceTest {
             forecasts.add(f);
         }
 
-        when(dashboardWeatherForecastRepository.findByNxAndNy(60,127))
+        when(dashboardWeatherForecastRepository.findByNxAndNyAndFcstTimeInOrderByFcstTime(anyInt(), anyInt(), anyList()))
                 .thenReturn(forecasts);
 
         //when
