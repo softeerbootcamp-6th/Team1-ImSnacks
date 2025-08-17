@@ -53,18 +53,12 @@ const WorkCardRegister = ({
   const handleResizeEnd = async () => {
     setIsResizing(false);
     handleResizeCollision(block, newWidth);
-    console.log(block);
     try {
-      const res = await patchMyWork({
+      await patchMyWork({
         myWorkId: block.id,
         startTime: block.startTime,
         endTime: block.endTime,
       });
-      console.log(
-        '시간 수정 후 작업 시간이 성공적으로 업데이트되었습니다:',
-        block,
-        res.data
-      );
     } catch (error) {
       console.error('작업 시간 업데이트 실패:', error);
     }
