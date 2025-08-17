@@ -5,6 +5,7 @@ import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
 import com.imsnacks.Nyeoreumnagi.member.MemberService;
 import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMemberAddressResponse;
+import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMyCropsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -30,5 +31,14 @@ public class MemberController {
     @GetMapping("/address")
     public ResponseEntity<CustomResponseBody<GetMemberAddressResponse>> getMemberAddress(@PreAuthorize Long memberId){
         return ResponseUtil.success(memberService.getMemberAddress(memberId));
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "내 작물 조회")
+    @ApiResponse(responseCode = "200", description = "내 작물 조회 성공")
+    @ApiResponse(responseCode = "400", description = "내 작물 조회 실패")
+    @GetMapping("/myCrops")
+    public ResponseEntity<CustomResponseBody<GetMyCropsResponse>> getMyCrops(@PreAuthorize Long memberId){
+        return ResponseUtil.success(memberService.getMyCrops(memberId));
     }
 }
