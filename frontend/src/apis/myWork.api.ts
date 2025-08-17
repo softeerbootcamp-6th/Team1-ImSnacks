@@ -6,6 +6,8 @@ import type {
   GetMyWorksOfWeeklyResponse,
   DeleteMyWorkRequest,
   CustomResponseBodyVoid,
+  ModifyMyWorkRequest,
+  CustomResponseBodyModifyMyWorkResponse,
 } from '@/types/openapiGenerator';
 
 export const getMyWorkOfToday = (isMobile: boolean) =>
@@ -31,3 +33,18 @@ export const postMyWork = (body: PostMyWorkBodyRequest) =>
 
 export const deleteMyWork = (body: DeleteMyWorkRequest) =>
   HTTP.delete<DeleteMyWorkRequest, CustomResponseBodyVoid>('/myWork', body);
+
+type PatchMyWorkBodyRequest = Omit<
+  ModifyMyWorkRequest,
+  'startTime' | 'endTime'
+> & {
+  startTime: string;
+  endTime: string;
+  myWorkId: number;
+};
+
+export const patchMyWork = (body: PatchMyWorkBodyRequest) =>
+  HTTP.patch<PatchMyWorkBodyRequest, CustomResponseBodyModifyMyWorkResponse>(
+    '/myWork',
+    body
+  );

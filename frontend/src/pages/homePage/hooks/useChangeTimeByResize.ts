@@ -71,8 +71,8 @@ export const useChangeTimeByResize = ({ onResize }: UseResizeProps) => {
             x: newX,
             y: block.position.y,
           },
-          startTime: newStartTime.toISOString(),
-          endTime: newEndTime.toISOString(),
+          startTime: newStartTime.format('YYYY-MM-DDTHH:mm'),
+          endTime: newEndTime.format('YYYY-MM-DDTHH:mm'),
           workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
             'HH:mm'
           )}`,

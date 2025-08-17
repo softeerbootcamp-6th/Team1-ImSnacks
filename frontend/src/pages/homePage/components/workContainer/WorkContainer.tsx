@@ -31,6 +31,7 @@ import { getUnit } from '@/utils/getUnit';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/contexts/useContainer';
 import WorkContainerS from './WorkContainer.style';
+import { patchMyWork } from '@/apis/myWork.api';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -134,7 +135,7 @@ const WorkContainer = ({
     startDrag(e, block.id, workBlocks);
   };
 
-  const handleEndDrag = () => {
+  const handleEndDrag = async () => {
     const draggingId = draggingBlockId;
     if (draggingId !== null) {
       const rect = containerRef.current?.getBoundingClientRect();
@@ -167,7 +168,7 @@ const WorkContainer = ({
         }
 
         // 유효하지 않은 위치 검사 및 되돌리기
-        const isInvalidPosition = moveToValidPosition(
+        moveToValidPosition(
           Object.values(WORK_TIME_Y_COORDINATE),
           draggingId,
           draggingBlock,
@@ -177,10 +178,37 @@ const WorkContainer = ({
           updateWorkBlocks
         );
 
-        if (isInvalidPosition) {
-          cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
-          return;
+        // 모든 valid 로직이 통과한 후 최종 시간으로 API 호출
+        try {
+          const finalBlock = workBlocks.find(block => block.id === draggingId);
+          if (finalBlock) {
+            await patchMyWork({
+              myWorkId: draggingId,
+              startTime: finalBlock.startTime,
+              endTime: finalBlock.endTime,
+            });
+            console.log(
+              '작업 시간이 성공적으로 업데이트되었습니다:',
+              finalBlock
+            );
+          }
+        } catch (error) {
+          console.error('작업 시간 업데이트 실패:', error);
+          // 에러 발생 시 원래 위치로 되돌리기
+          if (initialPosition) {
+            animateBlock(
+              revertAnimationRef,
+              setIsRevertingItemId,
+              latestBlocksRef,
+              updateWorkBlocks,
+              draggingId,
+              draggingBlock.position,
+              initialPosition
+            );
+          }
         }
+
+        cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
       }
     }
 
