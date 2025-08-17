@@ -11,13 +11,11 @@ const CustomTooltip = ({
   payload,
   label,
   graphData,
-  coordinate,
 }: {
   active?: boolean;
   payload?: Array<{ value: number; name: string }>;
   label?: string;
   graphData: GetWeatherGraphResponse;
-  coordinate: { x: number; y: number };
 }) => {
   if (
     !active ||
@@ -28,14 +26,12 @@ const CustomTooltip = ({
     return null;
   }
 
-  const { x, y } = coordinate;
-
   return (
     <div
       css={css`
         position: absolute;
-        left: ${x}px;
-        top: ${y}px;
+        left: 0px;
+        top: 0px;
         transform: translate(-50%, -50%);
         pointer-events: none;
         z-index: 9999;

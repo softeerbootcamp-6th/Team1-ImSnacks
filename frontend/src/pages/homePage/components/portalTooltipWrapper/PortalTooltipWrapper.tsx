@@ -52,7 +52,6 @@ const PortalTooltipWrapper = memo(
           payload={payload}
           label={String(label)}
           graphData={graphData}
-          coordinate={{ x: 0, y: 0 }}
         />
       </div>,
       document.body
