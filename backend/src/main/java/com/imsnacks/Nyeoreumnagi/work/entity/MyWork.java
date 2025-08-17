@@ -68,4 +68,8 @@ public class MyWork {
     public String getRecommendedWorkName(){
         return this.getRecommendedWork().getName();
     }
+
+    public String getWorkHours(){
+        return startTime.toLocalTime() + " - " + endTime.toLocalTime();
+    }
 }
