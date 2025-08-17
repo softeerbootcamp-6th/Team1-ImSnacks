@@ -1,11 +1,13 @@
 package com.imsnacks.Nyeoreumnagi.member;
 
 import com.imsnacks.Nyeoreumnagi.farm.service.FarmService;
+import com.imsnacks.Nyeoreumnagi.lifecycle.repository.LifeCycleRepository;
 import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMemberAddressResponse;
 import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
+import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,7 @@ class MemberServiceTest {
         farmService = Mockito.mock(FarmService.class);
 
         memberService = new MemberService(farmRepository, memberRepository, farmService);
+        memberService = new MemberService(farmRepository, myCropRepository, lifeCycleRepository);
     }
 
     @Test
@@ -46,7 +49,10 @@ class MemberServiceTest {
         GetMemberAddressResponse response = memberService.getMemberAddress(memberId);
 
         // then
-        assertThat(response.address()).isEqualTo("경기도 성남시 분당구 정자1동 123-45");
+        assertThat(response.state()).isEqualTo("경기도");
+        assertThat(response.city()).isEqualTo("성남시");
+        assertThat(response.town()).isEqualTo("분당구");
+        assertThat(response.address()).isEqualTo("정자1동 123-45");
     }
 
     @Test
