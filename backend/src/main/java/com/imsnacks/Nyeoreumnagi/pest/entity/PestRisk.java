@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.pest.entity;
 
+import com.imsnacks.Nyeoreumnagi.pest.dto.response.GetPestCardListResponse.PestCard;
 import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,6 +35,9 @@ public class PestRisk {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name="description", nullable = false)
+    private String description;
+
     @Builder.Default
     @OneToMany(mappedBy = "pestRisk", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PestCondition> conditions = new ArrayList<>();
@@ -49,5 +53,9 @@ public class PestRisk {
 
     public void assignCrop(Crop crop) {
         this.crop = crop;
+    }
+
+    public PestCard toCard() {
+        return new PestCard(pestRiskId, name, description);
     }
 }
