@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
+import { useTimeStore } from '@/store/useTimeStore';
 
 // 한국어 locale 설정
 dayjs.locale('ko');
 
 export const useBaseWeeklyCalendar = () => {
-  const [currentDate, setCurrentDate] = useState(dayjs().toDate());
+  const { currentTime } = useTimeStore();
+  const [currentDate, setCurrentDate] = useState(currentTime.toDate());
 
   const getWeekDates = (date: Date) => {
     const startOfWeek = dayjs(date).startOf('week');
