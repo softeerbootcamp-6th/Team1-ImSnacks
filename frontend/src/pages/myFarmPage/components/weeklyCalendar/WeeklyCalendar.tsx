@@ -2,13 +2,14 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import S from './WeeklyCalendar.style';
 import WorkCardWeb from '../workCardWeb/WorkCardWeb';
-import { type WorkCardType } from '@/types/workCard.type';
+import type { WorkCardData } from '@/types/openapiGenerator';
+import { WORK_CHIP_TYPES } from '@/types/workChip.type';
 
 dayjs.locale('ko');
 
 interface WeeklyCalendarProps {
   weekDates: Date[];
-  workScheduleDataByDate: Record<string, WorkCardType[]>;
+  workScheduleDataByDate: Record<string, WorkCardData[]>;
 }
 
 const WeeklyCalendar = ({
@@ -33,13 +34,13 @@ const WeeklyCalendar = ({
                 </div>
               </div>
               <div css={S.DateWorkContainer}>
-                {dayData.map((work: WorkCardType) => (
+                {dayData.map((work: WorkCardData) => (
                   <WorkCardWeb
-                    key={work.id}
-                    cropName={work.cropName}
-                    workName={work.workName}
-                    workTime={work.workTime}
-                    isCompleted={work.isCompleted}
+                    key={work.myWorkId}
+                    cropName={work.myCropName ?? ''}
+                    workName={work.myWorkName ?? ''}
+                    workTime={work.myWorkTime ?? ''}
+                    status={work.status ?? WORK_CHIP_TYPES.INCOMPLETED}
                   />
                 ))}
               </div>
