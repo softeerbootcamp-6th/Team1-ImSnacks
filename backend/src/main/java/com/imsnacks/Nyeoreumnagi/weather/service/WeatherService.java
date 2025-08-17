@@ -6,24 +6,20 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.SevenDayWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
-import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
-import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
-import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
-import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.*;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
@@ -41,6 +37,7 @@ public class WeatherService {
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final WeatherRiskRepository weatherRiskRepository;
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    private final DashboardWeatherForecastRepository dashboardWeatherForecastRepository;
     private final SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric) {
@@ -225,9 +222,21 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
+        List<DashboardWeatherForecast> weathers = dashboardWeatherForecastRepository.findByNxAndNy(nx, ny);
+        Integer maxTemperature = weathers.stream()
+                .map(DashboardWeatherForecast::getTemperature)
+                .max(Comparator.comparingInt(Integer::intValue))
+                .orElseThrow(() -> new WeatherException(NO_TEMPERATURE_INFO));
+        Integer minTemperature = weathers.stream()
+                .map(DashboardWeatherForecast::getTemperature)
+                .min(Comparator.comparingInt(Integer::intValue))
+                .orElseThrow(() -> new WeatherException(NO_TEMPERATURE_INFO));
 
+        List<GetTemperatureResponse.TemperaturePerTime> temperaturePerTimes = weathers.stream()
+                .map(GetTemperatureResponse.TemperaturePerTime::from)
+                .toList();
 
-        return null;
+        return new GetTemperatureResponse(maxTemperature, minTemperature, temperaturePerTimes);
     }
 
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
