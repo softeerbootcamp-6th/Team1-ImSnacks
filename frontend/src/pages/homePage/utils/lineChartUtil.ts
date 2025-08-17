@@ -1,5 +1,7 @@
-import type { WeatherRiskData } from '@/types/mainGraph.type';
-import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
+import type {
+  GetWeatherGraphResponse,
+  WeatherRiskDto,
+} from '@/types/openapiGenerator';
 
 export const generateYTicks = ({ min, max }: { min: number; max: number }) => {
   const ticks = [];
@@ -12,7 +14,7 @@ export const generateYTicks = ({ min, max }: { min: number; max: number }) => {
 
 export const getProcessedData = (
   graphData: GetWeatherGraphResponse,
-  weatherRiskData: WeatherRiskData[]
+  weatherRiskData: WeatherRiskDto[]
 ) => {
   if (!graphData?.valuePerTime) {
     return [];
