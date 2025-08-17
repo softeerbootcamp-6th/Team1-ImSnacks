@@ -102,7 +102,7 @@ public class WeatherService {
         return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature);
     }
 
-    public GetWeatherBriefingResponse getWeatherBriefing(@NotNull final Long memberId) {
+    public GetWeatherBriefingResponse getWeatherBriefing(final Long memberId) {
         assert(memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
