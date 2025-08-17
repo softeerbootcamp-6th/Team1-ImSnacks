@@ -1,10 +1,8 @@
 package com.imsnacks.Nyeoreumnagi.member.entity;
 
+import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -36,6 +34,28 @@ public class Member {
     @Setter
     private UUID refreshToken;
 
+    @Setter
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     Farm farm;
+
+    public Member(String identifier, String password, String nickname, String phoneNumber) {
+        this.identifier = identifier;
+        this.password = password;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public static Member createMember(
+            String identifier,
+            String password,
+            String nickname,
+            String phoneNumber
+    ){
+        return new Member(
+                identifier,
+                password,
+                nickname,
+                phoneNumber
+        );
+    }
 }
