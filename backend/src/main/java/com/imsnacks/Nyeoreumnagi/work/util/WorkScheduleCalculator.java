@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class WorkScheduleCalculator {
@@ -50,8 +48,7 @@ public class WorkScheduleCalculator {
                 .sorted(Comparator.comparing(f -> toDateTimeWithRoll(from, f)))
                 .toList();
 
-        List<RecommendWorksResponse.RecommendedWorksResponse> result = new ArrayList<>();
-
+        Map<Long, List<RecommendWorksResponse.RecommendationDurations>> durationsByWorkId = new HashMap<>();
         LocalDateTime winStart = null;
         LocalDateTime prevOk = null;
         for (ShortTermWeatherForecast f : sorted) {
@@ -66,14 +63,13 @@ public class WorkScheduleCalculator {
                         // 연속이 끊김 → 이전 구간 종료 처리
                         int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                         if (hours >= minHours) {
-                            result.add(new RecommendWorksResponse.RecommendedWorksResponse(
-                                    work.getName(),
-                                    work.getId(),
-                                    winStart.toString(),
-                                    prevOk.plusHours(1).toString(),
-                                    work.getRecommendation(),
-                                    0
-                            ));
+                            // 기존 리스트에 추천 시간대 추가
+                            durationsByWorkId.computeIfAbsent(work.getId(), k -> new ArrayList<>())
+                                    .add(new RecommendWorksResponse.RecommendationDurations(
+                                            winStart.toString(),
+                                            prevOk.plusHours(1).toString(),
+                                            work.getRecommendation()
+                                    ));
                         }
                         winStart = curr;
                     }
@@ -83,14 +79,13 @@ public class WorkScheduleCalculator {
                 if (winStart != null) {
                     int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
                     if (hours >= minHours) {
-                        result.add(new RecommendWorksResponse.RecommendedWorksResponse(
-                                work.getName(),
-                                work.getId(),
-                                winStart.toString(),
-                                prevOk.plusHours(1).toString(),
-                                work.getRecommendation(),
-                                0
-                        ));
+                        // 기존 리스트에 추천 시간대 추가
+                        durationsByWorkId.computeIfAbsent(work.getId(), k -> new ArrayList<>())
+                                .add(new RecommendWorksResponse.RecommendationDurations(
+                                        winStart.toString(),
+                                        prevOk.plusHours(1).toString(),
+                                        work.getRecommendation()
+                                ));
                     }
                     winStart = null;
                     prevOk = null;
@@ -101,15 +96,23 @@ public class WorkScheduleCalculator {
         if (winStart != null) {
             int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
             if (hours >= minHours) {
-                result.add(new RecommendWorksResponse.RecommendedWorksResponse(
-                        work.getName(),
-                        work.getId(),
-                        winStart.toString(),
-                        prevOk.plusHours(1).toString(),
-                        work.getRecommendation(),
-                        0
-                ));
+                durationsByWorkId.computeIfAbsent(work.getId(), k -> new ArrayList<>())
+                        .add(new RecommendWorksResponse.RecommendationDurations(
+                                winStart.toString(),
+                                prevOk.plusHours(1).toString(),
+                                work.getRecommendation()
+                        ));
             }
+        }
+
+        List<RecommendWorksResponse.RecommendedWorksResponse> result = new ArrayList<>();
+        for (Map.Entry<Long, List<RecommendWorksResponse.RecommendationDurations>> entry : durationsByWorkId.entrySet()) {
+            result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                    work.getName(),
+                    entry.getKey(),
+                    0, // neighborCount 필드는 0으로 임시 설정
+                    entry.getValue()
+            ));
         }
 
         return result;
