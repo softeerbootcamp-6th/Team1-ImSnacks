@@ -25,9 +25,16 @@ public record WeatherConditionCode(
         RainLevel rcode = RainLevel.NONE;
 
         for (var forecast : forecastList) {
-            countHcode(HumidityLevel.of(forecast.getHumidity()), hcodes);
-            countTcode(TemperatureLevel.of(forecast.getTemperature()), tcodes);
-            if (RainLevel.RAIN == RainLevel.of(forecast.getPrecipitation())) {
+            int humidity = forecast.getHumidity();
+            int temperature = forecast.getTemperature();
+            double precipitation = forecast.getPrecipitation();
+
+            HumidityLevel humidityLevel = HumidityLevel.of(humidity);
+            TemperatureLevel temperatureLevel = TemperatureLevel.of(temperature);
+
+            countHcode(humidityLevel, hcodes);
+            countTcode(temperatureLevel, tcodes);
+            if (RainLevel.RAIN == RainLevel.of(precipitation)) {
                 rcode = RainLevel.RAIN;
             }
         }
