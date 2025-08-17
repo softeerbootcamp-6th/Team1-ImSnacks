@@ -1,5 +1,6 @@
 import HTTP from './http';
 import {
+  GetDailyMaxPrecipitationResponse,
   GetSevenDaysForecastResponse,
   GetSunRiseSetTimeResponse,
   GetUVInfoResponse,
@@ -18,6 +19,9 @@ export const getWeatherGraph = (
 
 export const getWeatherSevenDays = () =>
   HTTP.get<GetSevenDaysForecastResponse[]>('/weather/sevenDays');
+
+export const getWeatherPrecipitationInfo = () =>
+  HTTP.get<GetDailyMaxPrecipitationResponse>('/weather/precipitationInfo');
 
 export const getWeatherUV = () => HTTP.get<GetUVInfoResponse>('/weather/uv');
 
