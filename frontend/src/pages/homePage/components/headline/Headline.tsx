@@ -5,7 +5,10 @@ import { css } from '@emotion/react';
 import { useUserStore } from '@/store/useUserStore';
 import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';
 import { useTimeStore } from '@/store/useTimeStore';
-import type dayjs from 'dayjs';
+import { GetWeatherBriefingResponse } from '@/types/openapiGenerator';
+import { useEffect, useState } from 'react';
+import { getWeatherBriefing } from '@/apis/weather.api';
+import { formatCurrentTime } from '@/utils/formatTimeUtil';
 
 const Headline = () => {
   const { nickName } = useUserStore();
@@ -14,36 +17,40 @@ const Headline = () => {
 
   const GlassIconComponent = GLASS_ICON[weatherCondition];
 
-  const data = {
-    hasWeatherRisk: true,
-    message: '오전 11시부터 오후 3시까지 우박',
+  const [briefingData, setBriefingData] =
+    useState<GetWeatherBriefingResponse>();
+
+  const fetchWeatherBriefingData = async () => {
+    try {
+      const res = await getWeatherBriefing();
+      if (res.data) setBriefingData(res.data);
+    } catch (error) {
+      console.error('Error fetching weather briefing data:', error);
+    }
   };
 
-  const formatCurrentTime = (currentTime: dayjs.Dayjs) => {
-    return {
-      date: currentTime.format('M월 D일'),
-      time: currentTime.format('h:mm A'),
-    };
-  };
+  useEffect(() => {
+    fetchWeatherBriefingData();
+  }, []);
 
   return (
     <div css={S.Headline}>
       <div css={S.GreetingMessage}>
         <div>좋은 아침이에요, {nickName}님!</div>
 
-        {data.hasWeatherRisk ? (
+        {briefingData?.hasWeatherRisk ? (
           <div css={S.WeatherRisk}>
-            <span css={S.WeatherRiskText}>{data.message}</span>
+            <span css={S.WeatherRiskText}>{briefingData.weatherMsg}</span>
             <span
               css={css`
                 margin-left: 8px;
               `}
             >
-              {getSubjectParticle(data.message)} 예상돼요.
+              {getSubjectParticle(briefingData.weatherMsg ?? '')} 예상돼요.
             </span>
           </div>
         ) : (
-          <span>{data.message}</span>
+          <span>{briefingData?.weatherMsg}</span>
         )}
       </div>
       <div css={S.HeadlineWeather}>
