@@ -92,16 +92,11 @@ const useDragWorkBlock = () => {
     try {
       const finalBlock = workBlocks.find(block => block.id === draggingId);
       if (finalBlock) {
-        const res = await patchMyWork({
+        await patchMyWork({
           myWorkId: draggingId,
           startTime: finalBlock.startTime,
           endTime: finalBlock.endTime,
         });
-        console.log(
-          '시간 수정 후 작업 시간이 성공적으로 업데이트되었습니다:',
-          finalBlock,
-          res.data
-        );
       }
     } catch (error) {
       console.error('작업 시간 업데이트 실패:', error);
