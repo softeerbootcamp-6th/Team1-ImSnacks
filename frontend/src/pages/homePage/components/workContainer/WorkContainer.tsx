@@ -31,7 +31,7 @@ import WorkContainerS from './WorkContainer.style';
 
 const WorkContainer = () => {
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
-    WEATHER_METRICS.PERCIPITATION
+    WEATHER_METRICS.PRECIPITATION
   );
   const [graphData, setGraphData] = useState<GetWeatherGraphResponse>();
 
@@ -209,7 +209,7 @@ const WorkContainer = () => {
       <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
       {graphData && (
         <div css={ChartS.FixedYAxisWrapper}>
-          {getUnit(graphData.weatherMetric ?? 'PERCIPITATION')}
+          {getUnit(graphData.weatherMetric ?? 'PRECIPITATION')}
           <div css={ChartS.YAxis}>
             {generateYTicks({
               min: graphData.min ?? 0,
