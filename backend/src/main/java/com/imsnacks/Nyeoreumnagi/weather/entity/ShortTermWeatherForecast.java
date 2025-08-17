@@ -76,4 +76,8 @@ public class ShortTermWeatherForecast {
         }
         throw new WeatherException(CANNOT_CALCULATE_WEATHER_CONDITION);
     }
+
+    public boolean isUpdated(){
+        return LocalDateTime.now().getHour() - updateAt.getHour() < 3;
+    }
 }
