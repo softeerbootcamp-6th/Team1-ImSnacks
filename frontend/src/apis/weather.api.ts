@@ -5,10 +5,12 @@ import {
   GetSevenDaysForecastResponse,
   GetSunRiseSetTimeResponse,
   GetUVInfoResponse,
+  GetWeatherBriefingResponse,
   GetWeatherConditionResponse,
   GetWeatherGraphResponse,
   GetWeatherGraphResponseWeatherMetricEnum,
   GetWindInfoResponse,
+  WeatherRiskDto,
 } from '@/types/openapiGenerator';
 
 export const getWeatherNow = () =>
@@ -18,6 +20,12 @@ export const getWeatherGraph = (
   weatherMetric: GetWeatherGraphResponseWeatherMetricEnum
 ) =>
   HTTP.get<GetWeatherGraphResponse>(`/weather?weatherMetric=${weatherMetric}`);
+
+export const getWeatherBriefing = () =>
+  HTTP.get<GetWeatherBriefingResponse>('/weather/briefing');
+
+export const getWeatherRisk = () =>
+  HTTP.get<WeatherRiskDto[]>('/weather/fcstRisk');
 
 export const getWeatherSevenDays = () =>
   HTTP.get<GetSevenDaysForecastResponse[]>('/weather/sevenDays');
