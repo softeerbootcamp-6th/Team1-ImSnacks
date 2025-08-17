@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionStringFromDegree;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
@@ -222,7 +223,14 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        List<DashboardWeatherForecast> weathers = dashboardWeatherForecastRepository.findByNxAndNy(nx, ny);
+        List<DashboardWeatherForecast> weathers = dashboardWeatherForecastRepository.findByNxAndNy(nx, ny)
+                .stream()
+                .filter(info -> is3HourIntervals(info.getFcstTime()))
+                .sorted(Comparator.comparing(DashboardWeatherForecast::getFcstTime))
+                .toList();
+
+        validateWeatherInfos(weathers);
+
         Integer maxTemperature = weathers.stream()
                 .map(DashboardWeatherForecast::getTemperature)
                 .max(Comparator.comparingInt(Integer::intValue))
@@ -237,6 +245,22 @@ public class WeatherService {
                 .toList();
 
         return new GetTemperatureResponse(maxTemperature, minTemperature, temperaturePerTimes);
+    }
+
+    private void validateWeatherInfos(List<DashboardWeatherForecast> weathers) {
+        if(weathers.size() != 8) {
+            throw new WeatherException(NO_TEMPERATURE_INFO);
+        }
+        for(DashboardWeatherForecast dashboardWeatherForecast : weathers) {
+            if(dashboardWeatherForecast.getTemperature() == null){
+                throw new WeatherException(NO_TEMPERATURE_INFO);
+            }
+        }
+    }
+
+    private boolean is3HourIntervals(int fcstTime){
+        Set<Integer> valid3HourIntervals = Set.of(2,5,8,11,14,17,20,23);
+        return valid3HourIntervals.contains(fcstTime);
     }
 
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
