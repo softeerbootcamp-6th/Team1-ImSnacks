@@ -17,19 +17,6 @@ public class MemberService {
 
     public GetMemberAddressResponse getMemberAddress(Long memberId){
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-        String responseAddress = engraftAddress(farm);
-        return new GetMemberAddressResponse(responseAddress);
-    }
-
-    private String engraftAddress(Farm farm){
-        StringBuilder builder = new StringBuilder();
-        builder.append(farm.getState());
-        builder.append(" ");
-        builder.append(farm.getCity());
-        builder.append(" ");
-        builder.append(farm.getTown());
-        builder.append(" ");
-        builder.append(farm.getAddress());
-        return builder.toString();
+        return new GetMemberAddressResponse(farm.engraftAddress());
     }
 }
