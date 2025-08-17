@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
-import { GrayScale } from '@/styles/colors';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
 import type { Position, WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
@@ -26,8 +25,9 @@ import { getWeatherGraph } from '@/apis/weather.api';
 import { GetWeatherGraphResponse } from '@/types/openapiGenerator';
 import { generateYTicks } from '../../utils/lineChartUtil';
 import { getUnit } from '@/utils/getUnit';
-import S from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
+import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/contexts/useContainer';
+import WorkContainerS from './WorkContainer.style';
 
 const WorkContainer = () => {
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
@@ -50,6 +50,7 @@ const WorkContainer = () => {
       ignore = true;
     };
   }, [currentTab]);
+
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
   const { containerRef, scrollOffset, setScrollOffset } = useContainer();
 
@@ -203,21 +204,18 @@ const WorkContainer = () => {
       }}
       onMouseUp={handleEndDrag}
       onMouseLeave={handleEndDrag}
-      css={css`
-        width: 100%;
-        position: relative;
-      `}
+      css={WorkContainerS.ContainerWrapper}
     >
       <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
       {graphData && (
-        <div css={S.FixedYAxisWrapper}>
+        <div css={ChartS.FixedYAxisWrapper}>
           {getUnit(graphData.weatherMetric ?? 'PERCIPITATION')}
-          <div css={S.YAxis}>
+          <div css={ChartS.YAxis}>
             {generateYTicks({
               min: graphData.min ?? 0,
               max: graphData.max ?? 100,
             }).map(tick => (
-              <div key={tick} css={S.YAxisTick}>
+              <div key={tick} css={ChartS.YAxisTick}>
                 {tick}
               </div>
             ))}
@@ -226,25 +224,7 @@ const WorkContainer = () => {
       )}
 
       <div
-        css={css`
-          overflow-x: auto;
-          overflow-y: hidden;
-          position: relative;
-
-          &::-webkit-scrollbar {
-            height: 8px;
-          }
-
-          &::-webkit-scrollbar-track {
-            background: transparent;
-            border-radius: 4px;
-          }
-
-          &::-webkit-scrollbar-thumb {
-            background: ${GrayScale.G50};
-            border-radius: 4px;
-          }
-        `}
+        css={WorkContainerS.ScrollContainer}
         onScroll={e => {
           setScrollOffset(e.currentTarget.scrollLeft);
         }}
@@ -316,19 +296,8 @@ const WorkContainer = () => {
             </div>
           );
         })}
-        <div
-          css={css`
-            display: flex;
-            flex-direction: row;
-            gap: 8px;
-            align-items: center;
-            min-width: max-content;
-            padding: 16px 0;
-            position: relative;
-          `}
-        >
-          <WorkCellsContainer />
-        </div>
+
+        <WorkCellsContainer />
       </div>
     </div>
   );

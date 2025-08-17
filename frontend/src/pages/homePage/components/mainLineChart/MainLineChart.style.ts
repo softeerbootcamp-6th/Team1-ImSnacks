@@ -64,6 +64,13 @@ const LineChartInnerWrapper = (chartWidth: number) => css`
   height: 373px;
 `;
 
+const LoadingWrapper = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 373px;
+`;
+
 export default {
   MainLineChart,
   FixedYAxisWrapper,
@@ -71,4 +78,5 @@ export default {
   YAxisTick,
   // LineChartScrollWrapper,
   LineChartInnerWrapper,
+  LoadingWrapper,
 };

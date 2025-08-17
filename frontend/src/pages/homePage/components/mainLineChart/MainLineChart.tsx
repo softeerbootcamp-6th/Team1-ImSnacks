@@ -23,7 +23,7 @@ interface MainLineChartProps {
 
 const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
   if (!graphData || !graphData.valuePerTime) {
-    return <div>로딩 중...</div>;
+    return <div css={S.LoadingWrapper}>로딩 중...</div>;
   }
 
   const pointSpacing = 100;
