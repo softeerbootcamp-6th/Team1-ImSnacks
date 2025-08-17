@@ -16,5 +16,13 @@ export const getMyWorkOfWeekly = (startDate: string) =>
     `/myWork/weekly?startDate=${startDate}`
   );
 
-export const postMyWork = (body: RegisterMyWorkRequest) =>
-  HTTP.post<RegisterMyWorkRequest, RegisterMyWorkResponse>('/myWork', body);
+type PostMyWorkBodyRequest = Omit<
+  RegisterMyWorkRequest,
+  'startTime' | 'endTime'
+> & {
+  startTime: string;
+  endTime: string;
+};
+
+export const postMyWork = (body: PostMyWorkBodyRequest) =>
+  HTTP.post<PostMyWorkBodyRequest, RegisterMyWorkResponse>('/myWork', body);
