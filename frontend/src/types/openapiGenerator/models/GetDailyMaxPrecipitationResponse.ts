@@ -11,9 +11,8 @@
  */
 
 
-export class LoginRequest {
-    'identifier'?: string;
-    'password'?: string;
+export class GetDailyMaxPrecipitationResponse {
+    'value'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -21,20 +20,14 @@ export class LoginRequest {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "identifier",
-            "baseName": "identifier",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "password",
-            "baseName": "password",
-            "type": "string",
-            "format": ""
+            "name": "value",
+            "baseName": "value",
+            "type": "number",
+            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
-        return LoginRequest.attributeTypeMap;
+        return GetDailyMaxPrecipitationResponse.attributeTypeMap;
     }
 
     public constructor() {

@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { WorkCardData } from '../models/WorkCardData';
 
-export class LoginRequest {
-    'identifier'?: string;
-    'password'?: string;
+export class GetMyWorksOfWeeklyResponse {
+    'date'?: string;
+    'workCardData'?: Array<WorkCardData>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -21,20 +22,20 @@ export class LoginRequest {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "identifier",
-            "baseName": "identifier",
+            "name": "date",
+            "baseName": "date",
             "type": "string",
-            "format": ""
+            "format": "date"
         },
         {
-            "name": "password",
-            "baseName": "password",
-            "type": "string",
+            "name": "workCardData",
+            "baseName": "workCardData",
+            "type": "Array<WorkCardData>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return LoginRequest.attributeTypeMap;
+        return GetMyWorksOfWeeklyResponse.attributeTypeMap;
     }
 
     public constructor() {

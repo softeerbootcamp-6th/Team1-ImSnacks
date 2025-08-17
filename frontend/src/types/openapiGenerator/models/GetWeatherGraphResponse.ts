@@ -57,7 +57,7 @@ export class GetWeatherGraphResponse {
 }
 
 export const GetWeatherGraphResponseWeatherMetricEnum = {
-  Percipitation: 'PERCIPITATION',
+  Precipitation: 'PRECIPITATION',
   Temperature: 'TEMPERATURE',
   Humidity: 'HUMIDITY',
   WindSpeed: 'WIND_SPEED'

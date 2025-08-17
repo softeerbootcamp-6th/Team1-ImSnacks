@@ -2,10 +2,6 @@ import type { ReactElement } from 'react';
 import { ColorPrimary } from '@/styles/colors';
 import { calculateHeightRatio } from '../utils/precipitationUtil';
 
-interface UsePrecipitationSvgProps {
-  value: number;
-}
-
 interface PrecipitationSvgData {
   totalHeight: number;
   rectY: number;
@@ -18,7 +14,9 @@ interface PrecipitationSvgData {
 
 export const usePrecipitationSvg = ({
   value,
-}: UsePrecipitationSvgProps): PrecipitationSvgData => {
+}: {
+  value: number;
+}): PrecipitationSvgData => {
   const heightRatio = calculateHeightRatio(value);
 
   // SVG 레이어 높이 설정
@@ -42,6 +40,7 @@ export const usePrecipitationSvg = ({
         height={totalHeight}
         viewBox={`0 0 294 ${totalHeight}`}
         fill="none"
+        preserveAspectRatio="none"
       >
         <path
           d="M0 8.05806C0 8.05806 20.5936 0 36.75 0C52.9064 0 57.3436 8.05806 73.5 8.05806C89.6564 8.05806 94.0936 0 110.25 0C126.406 0 130.844 8.05806 147 8.05806C163.156 8.05806 167.594 0 183.75 0C199.906 0 204.344 8.05806 220.5 8.05806C236.656 8.05806 241.094 0 257.25 0C273.406 0 294 8.05806 294 8.05806H0Z"
@@ -50,7 +49,7 @@ export const usePrecipitationSvg = ({
         <rect
           x="0"
           y={rectY}
-          width="294"
+          width="100%"
           height={rectHeight + 1}
           fill={ColorPrimary.B400}
         />

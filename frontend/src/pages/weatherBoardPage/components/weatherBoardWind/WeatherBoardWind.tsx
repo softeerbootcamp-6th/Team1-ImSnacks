@@ -2,18 +2,28 @@ import S from './WeatherBoardWind.style';
 import { Typography } from '@/styles/typography';
 import { WindArrow } from '@/assets/icons/flat';
 import { GrayScale } from '@/styles/colors';
+import { GetWindInfoResponse } from '@/types/openapiGenerator';
+import { useEffect, useState } from 'react';
+import { getWeatherWind } from '@/apis/weather.api';
 
-interface WeatherBoardWindProps {
-  direction: string;
-  speed: number;
-  degree: number;
-}
+const WeatherBoardWind = () => {
+  const [windData, setWindData] = useState<GetWindInfoResponse>();
 
-const WeatherBoardWind = ({
-  direction,
-  speed,
-  degree,
-}: WeatherBoardWindProps) => {
+  const fetchWindData = async () => {
+    try {
+      const res = await getWeatherWind();
+      if (res.data) {
+        setWindData(res.data);
+      }
+    } catch (error) {
+      console.error('Error fetching wind data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWindData();
+  }, []);
+
   return (
     <div css={S.WeatherBoardWind}>
       <span css={Typography.Body_S_400}>N</span>
@@ -30,11 +40,15 @@ const WeatherBoardWind = ({
           />
         </svg>
 
-        <WindArrow width="48" height="54" css={S.WindArrow(degree)} />
+        <WindArrow
+          width="48"
+          height="54"
+          css={S.WindArrow(windData?.degree ?? 0)}
+        />
       </div>
       <h3>최고 풍속</h3>
       <p>
-        {direction} • {speed}m/s
+        {windData?.direction} • {windData?.speed}m/s
       </p>
     </div>
   );

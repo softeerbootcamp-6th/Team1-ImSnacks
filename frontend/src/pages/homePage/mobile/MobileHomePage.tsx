@@ -42,7 +42,7 @@ const MobileHomePage = () => {
           weatherData={[
             {
               metric: '강수량',
-              metricType: WEATHER_METRICS.PERCIPITATION,
+              metricType: WEATHER_METRICS.PRECIPITATION,
               value: 25,
             },
             { metric: '습도', metricType: WEATHER_METRICS.HUMIDITY, value: 60 },

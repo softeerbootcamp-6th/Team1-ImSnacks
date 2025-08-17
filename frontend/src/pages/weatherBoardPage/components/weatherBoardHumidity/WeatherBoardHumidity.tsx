@@ -1,10 +1,29 @@
 import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { getHumidityPath } from '../../utils/humidityUtil';
 import S from './WeatherBoardHumidity.style';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { GetHumidityResponse } from '@/types/openapiGenerator';
+import { getWeatherHumidity } from '@/apis/weather.api';
 
-const WeatherBoardHumidity = ({ humidityValue }: { humidityValue: number }) => {
-  const humidityPath = getHumidityPath(humidityValue);
+const WeatherBoardHumidity = () => {
+  const [humidityValue, setHumidityValue] = useState<GetHumidityResponse>();
+
+  const fetchHumidity = async () => {
+    try {
+      const res = await getWeatherHumidity();
+      if (res.data) {
+        setHumidityValue(res.data);
+      }
+    } catch (error) {
+      console.error('Error fetching humidity:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHumidity();
+  }, []);
+
+  const humidityPath = getHumidityPath(humidityValue?.value ?? 0);
   const pathRef = useRef<SVGPathElement | null>(null);
 
   useEffect(() => {
@@ -37,7 +56,7 @@ const WeatherBoardHumidity = ({ humidityValue }: { humidityValue: number }) => {
     <div css={S.WeatherBoardHumidity}>
       <div css={S.WeatherBoardTitleWrapper}>
         <h3>최고 습도</h3>
-        <p>{humidityValue}%</p>
+        <p>{humidityValue?.value}%</p>
       </div>
       <div
         style={{
