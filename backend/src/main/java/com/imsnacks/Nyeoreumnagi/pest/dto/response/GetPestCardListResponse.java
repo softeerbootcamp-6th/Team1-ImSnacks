@@ -10,7 +10,8 @@ public record GetPestCardListResponse(
             long pestRiskId,
             String name,
             String description
-    ) {}
+    ) {
+    }
     public record MyCropCard(
             long myCropId,
             String myCropName
