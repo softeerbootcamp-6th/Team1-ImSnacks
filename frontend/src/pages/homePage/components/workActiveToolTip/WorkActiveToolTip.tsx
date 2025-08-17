@@ -9,17 +9,19 @@ const WorkActiveToolTip = () => {
 
   return (
     <>
-      {selectedRecommendedWork?.recommendationDurations?.map(duration => {
-        const { x, width } = calculateTimeToPosition(
-          duration.startTime || '',
-          duration.endTime || ''
-        );
-        return (
-          <div css={S.WorkActiveToolTipContainer(x, width)}>
-            <div css={S.WorkActiveToolTipText}>{duration.recommendation}</div>
-          </div>
-        );
-      })}
+      {selectedRecommendedWork?.recommendationDurations?.map(
+        (duration, index) => {
+          const { x, width } = calculateTimeToPosition(
+            duration.startTime || '',
+            duration.endTime || ''
+          );
+          return (
+            <div key={index} css={S.WorkActiveToolTipContainer(x, width)}>
+              <div css={S.WorkActiveToolTipText}>{duration.recommendation}</div>
+            </div>
+          );
+        }
+      )}
     </>
   );
 };
