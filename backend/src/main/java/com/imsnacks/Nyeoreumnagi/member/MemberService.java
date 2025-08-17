@@ -34,28 +34,23 @@ public class MemberService {
     }
 
     public List<GetMyCropsResponse> getMyCrops(final Long memberId){
-        assert(memberId != null);
+        assert (memberId != null);
         List<MyCrop> myCrops = myCropRepository.findAllByMember_Id(memberId);
 
-        List<GetMyCropsResponse> resultDto = new ArrayList<>();
-        for(MyCrop myCrop : myCrops){
+        return myCrops.stream()
+                .map(myCrop -> {
+                    List<LifeCycle> lifeCycles = lifeCycleRepository
+                            .findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
+                    LifeCycle currentLifeCycle = myCrop.findCurrentLifeCycle(lifeCycles, LocalDateTime.now());
+                    long daysFromStartDate = myCrop.getDaysFromStartDate(LocalDateTime.now());
 
-            List<LifeCycle> lifeCycles = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
-            long daysFromStartDate = ChronoUnit.DAYS.between(myCrop.getGerminationTime(), LocalDateTime.now());
-
-            int duration =0;
-            LifeCycle currentLifeCycle = null;
-            for(LifeCycle lifeCycle : lifeCycles){
-                duration += lifeCycle.getDuration();
-                currentLifeCycle = lifeCycle;
-                if(duration >= daysFromStartDate){
-                    break;
-                }
-            }
-
-            resultDto.add(new GetMyCropsResponse(myCrop.getId(), myCrop.getCrop().getName(), (int)daysFromStartDate, currentLifeCycle.getName()));
-        }
-
-        return resultDto;
+                    return new GetMyCropsResponse(
+                            myCrop.getId(),
+                            myCrop.getCrop().getName(),
+                            (int) daysFromStartDate,
+                            currentLifeCycle != null ? currentLifeCycle.getName() : null
+                    );
+                })
+                .toList();
     }
 }
