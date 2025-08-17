@@ -15,7 +15,6 @@ import java.util.List;
 public class PestService {
     private final ShortTermWeatherForecastRepository fcstRepo;
 
-    @NotNull
     private List<ShortTermWeatherForecast> getForecastList(final int nx, final int ny) {
         List<ShortTermWeatherForecast> ret = fcstRepo.findAllByNxAndNy(nx, ny);
         if (ret.isEmpty()) {
