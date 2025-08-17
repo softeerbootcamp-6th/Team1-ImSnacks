@@ -5,6 +5,7 @@ import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.dto.Vil
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.utils.weatherRiskFilter.WeatherRiskFilter;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -23,7 +24,7 @@ import java.util.LinkedHashMap;
 @Component
 @RequiredArgsConstructor
 public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, ShortTermWeatherDto> {
-    private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD", "SNO", "SKY");
+    private static final Set<String> targetCategories = Set.of("PCP", "TMP", "REH", "WSD", "SNO", "SKY", "VEC");
 
     private final List<WeatherRiskFilter> weatherRiskFilters;
 
@@ -82,6 +83,7 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
         int humidity = 0;
         double snow = 0;
         int skyStatus = 0;
+        int windDirection = 0;
 
         for (VilageFcstItemsDto item : weatherInfos) {
             String category = item.getCategory();
@@ -106,10 +108,13 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
                 case "SKY":
                     skyStatus = parseSkyStatusOrDefault(value);
                     break;
+                case "VEC":
+                    windDirection = parseIntOrDefault(value);
+                    break;
             }
         }
 
-        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed, snow, skyStatus);
+        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed, snow, skyStatus, windDirection);
     }
 
     private double parseDoubleOrDefault(String value) {

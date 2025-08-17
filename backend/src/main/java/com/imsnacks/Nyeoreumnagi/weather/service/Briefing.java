@@ -1,6 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.weather.service;
 
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
@@ -18,7 +19,12 @@ public final class Briefing {
     public static final String KST = "Asia/Seoul";
     public static final Comparator<WeatherRisk> RISK_COMPARATOR = new RiskComparator();
 
-    public static String buildMsg(final WeatherRisk risk) {
+    public static final String GOOD_MORNING = "오늘도 힘찬 하루 보내세요.";
+    public static final String GOOD_AFTERNOON = "점심은 맛있게 드셨나요?";
+    public static final String GOOD_EVENING = "오늘 하루도 수고 많으셨어요.";
+    public static final String GOOD_NIGHT = "편안한 시간 보내고 계신가요?";
+
+    public static String buildWeatherRiskMsg(final WeatherRisk risk) {
         assert(risk != null);
         final String from = getClockHourAsString(risk.getStartTime()); // <오전/오후> <1-12>시
         final String to = getClockHourAsString(risk.getEndTime());
@@ -26,9 +32,22 @@ public final class Briefing {
         final StringBuilder sb = new StringBuilder();
         sb.append(from).append(FROM_KOR).append(SPACE);
         sb.append(to).append(TO_KOR).append(SPACE);
-        sb.append(risk.getType().getDescription());
+        sb.append(risk.getName().getDescription());
 
         return sb.toString();
+    }
+
+    public static @NotNull String buildGreetingMsg(final LocalDateTime time) {
+        final int hour = time.getHour();
+        if (hour < 6) {
+            return GOOD_NIGHT;
+        } else if (hour < 12) {
+            return GOOD_MORNING;
+        } else if (hour < 18) {
+            return GOOD_AFTERNOON;
+        } else {
+            return GOOD_EVENING;
+        }
     }
 
     private static String getClockHourAsString(final LocalDateTime time) {
@@ -55,8 +74,8 @@ public final class Briefing {
             }
 
             // 2. 특보 우선 순위
-            final long t1 = r1.getType().ordinal();
-            final long t2 = r2.getType().ordinal();
+            final long t1 = r1.getName().ordinal();
+            final long t2 = r2.getName().ordinal();
             if (t1 != t2) {
                 return (t1 > t2) ? -1 : 1;
             }
