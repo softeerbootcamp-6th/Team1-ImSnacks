@@ -3,15 +3,15 @@ package com.imsnacks.Nyeoreumnagi.weather.entity;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.CANNOT_CALCULATE_WEATHER_CONDITION;
 
@@ -22,6 +22,7 @@ import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class ShortTermWeatherForecast {
     @Id
     private int nx;
@@ -53,6 +54,10 @@ public class ShortTermWeatherForecast {
 
     @Column(name = "wind_direction", nullable = false)
     private int wind_direction;
+
+    @LastModifiedDate
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 
     public WeatherCondition getWeatherCondition(SunriseSunSetTime times){
         if(snow > 1) return WeatherCondition.SNOW;
