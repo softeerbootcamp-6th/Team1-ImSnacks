@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import MyFarmHeader from '../myFarmHeader/MyFarmHeader';
 import WeeklyCalendar from '../weeklyCalendar/WeeklyCalendar';
 import WeekNavigator from '../weekNavigator/WeekNavigator';
@@ -22,19 +21,8 @@ const WorkSchedule = () => {
     isCurrentWeek,
   } = useWeeklyWorkSchedule();
 
-  const { myWorkOfWeekly } = useMyWorkOfWeekly(weekDates);
-
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const MAX_VISIBLE_CARDS = 5;
-
-  const handleExpandClick = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const hasMoreWorks = Object.values(myWorkOfWeekly ?? {}).some(
-    dayData => dayData.length > MAX_VISIBLE_CARDS
-  );
+  const { myWorkOfWeekly, isExpanded, handleExpandClick, hasMoreWorks } =
+    useMyWorkOfWeekly(weekDates);
 
   return (
     <div css={S.WorkScheduleContainer}>

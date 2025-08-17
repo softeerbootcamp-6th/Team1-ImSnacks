@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 interface GradientMaskOptions {
-  direction?: 'Bottom' | 'Top' | 'Left' | 'Right';
+  direction?: 'to bottom' | 'to top' | 'to left' | 'to right';
   fadeDistance?: number;
   fadeStart?: number;
 }
@@ -12,7 +12,11 @@ interface GradientMaskOptions {
  * @returns CSS 스타일
  */
 export const createGradientMask = (options: GradientMaskOptions = {}) => {
-  const { direction = 'Bottom', fadeDistance = 200, fadeStart = 0 } = options;
+  const {
+    direction = 'to bottom',
+    fadeDistance = 200,
+    fadeStart = 0,
+  } = options;
 
   const startOpacity = 1;
   const endOpacity = 0;
@@ -37,22 +41,22 @@ export const createGradientMask = (options: GradientMaskOptions = {}) => {
  * 하단 그라데이션 마스크 (기본값)
  */
 export const bottomGradientMask = (fadeDistance = 200) =>
-  createGradientMask({ direction: 'Bottom', fadeDistance });
+  createGradientMask({ direction: 'to bottom', fadeDistance });
 
 /**
  * 상단 그라데이션 마스크
  */
 export const topGradientMask = (fadeDistance = 200) =>
-  createGradientMask({ direction: 'Top', fadeDistance });
+  createGradientMask({ direction: 'to top', fadeDistance });
 
 /**
  * 왼쪽 그라데이션 마스크
  */
 export const leftGradientMask = (fadeDistance = 200) =>
-  createGradientMask({ direction: 'Left', fadeDistance });
+  createGradientMask({ direction: 'to left', fadeDistance });
 
 /**
  * 오른쪽 그라데이션 마스크
  */
 export const rightGradientMask = (fadeDistance = 200) =>
-  createGradientMask({ direction: 'Right', fadeDistance });
+  createGradientMask({ direction: 'to right', fadeDistance });

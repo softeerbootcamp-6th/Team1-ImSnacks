@@ -25,5 +25,23 @@ export const useMyWorkOfWeekly = (weekDates: Date[]) => {
     fetchMyWorkOfWeekly();
   }, [weekDates]);
 
-  return { myWorkOfWeekly };
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const MAX_VISIBLE_CARDS = 5;
+
+  const handleExpandClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const hasMoreWorks = Object.values(myWorkOfWeekly ?? {}).some(
+    dayData => dayData.length > MAX_VISIBLE_CARDS
+  );
+
+  return {
+    myWorkOfWeekly,
+    isExpanded,
+    setIsExpanded,
+    hasMoreWorks,
+    handleExpandClick,
+  };
 };
