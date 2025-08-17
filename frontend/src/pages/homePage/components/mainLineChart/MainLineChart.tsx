@@ -7,12 +7,13 @@ import {
   Tooltip,
   Area,
 } from 'recharts';
+import { useRef } from 'react';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
 import { getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
 import CustomizedDot from '../customizedDot/CustomizedDot';
-import CustomTooltip from '../customizedTootip/CustomizedTooltip';
 import WeatherRiskText from '../weatherRiskText/WeatherRiskText';
+import PortalTooltipWrapper from '../portalTooltipWrapper/PortalTooltipWrapper';
 import type {
   GetWeatherGraphResponse,
   WeatherRiskDto,
@@ -25,6 +26,8 @@ const MainLineChart = ({
   graphData?: GetWeatherGraphResponse;
   weatherRiskData: WeatherRiskDto[];
 }) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+
   if (!graphData || !graphData.valuePerTime) {
     return <div css={S.LoadingWrapper}>로딩 중...</div>;
   }
@@ -58,7 +61,7 @@ const MainLineChart = ({
   return (
     <div css={S.MainLineChart}>
       {/* <div css={S.LineChartScrollWrapper}> */}
-      <div css={S.LineChartInnerWrapper(chartWidth)}>
+      <div css={S.LineChartInnerWrapper(chartWidth)} ref={chartRef}>
         <ComposedChart
           width={chartWidth}
           height={CHART_HEIGHT}
@@ -93,7 +96,17 @@ const MainLineChart = ({
               display: 'none',
             }}
           />
-          <Tooltip content={<CustomTooltip graphData={graphData} />} />
+          <Tooltip
+            content={props => (
+              <PortalTooltipWrapper
+                {...props}
+                graphData={graphData}
+                chartRef={chartRef}
+              />
+            )}
+            allowEscapeViewBox={{ x: true, y: true }}
+            wrapperStyle={{ visibility: 'hidden' }}
+          />
 
           {weatherRiskData.map((item, index) => (
             <Area
