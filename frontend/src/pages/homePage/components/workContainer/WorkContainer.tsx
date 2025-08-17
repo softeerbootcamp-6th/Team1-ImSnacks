@@ -6,7 +6,7 @@ import { GrayScale } from '@/styles/colors';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
 import type { Position, WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
-import useWorkBlocks from '@/contexts/useWorkBlocks';
+import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
@@ -20,16 +20,11 @@ import {
 } from '../../utils/workContainerUtils';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
 import MainGraph from '../mainGraph/MainGraph';
+import useContainer from '@/pages/homePage/contexts/useContainer';
 
 const WorkContainer = () => {
-  const {
-    workBlocks,
-    updateWorkBlocks,
-    removeWorkBlock,
-    containerRef,
-    scrollOffset,
-    setScrollOffset,
-  } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const { containerRef, scrollOffset, setScrollOffset } = useContainer();
 
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
   const [futurePosition, setFuturePosition] = useState<Position | null>(null);

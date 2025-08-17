@@ -5,7 +5,7 @@ import useVisibility from '@/hooks/useVisibility';
 import ToolTip from '@/components/toolTip/ToolTip';
 import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
 import { css } from '@emotion/react';
-import useWorkBlocks from '@/contexts/useWorkBlocks';
+import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
 
 interface BtnCreateWorkProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   work: RecommendedWorksResponse;

@@ -9,8 +9,9 @@ import type {
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
 import { getMyWorkOfToday } from '@/apis/myWork.api';
+import type { ContainerContextType } from './ContainerContext';
 
-const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
+const WorksProvider = ({ children }: { children: ReactNode }) => {
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
   const [selectedRecommendedWork, setSelectedRecommendedWork] =
     useState<RecommendedWorksResponse | null>(null);
 
-  const value: WorkBlocksContextType = {
+  const value: WorkBlocksContextType & ContainerContextType = {
     workBlocks,
     addWorkBlock,
     updateWorkBlocks,
@@ -60,4 +61,4 @@ const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
   return <WorkBlocksContext value={value}>{children}</WorkBlocksContext>;
 };
 
-export default WorkBlocksProvider;
+export default WorksProvider;
