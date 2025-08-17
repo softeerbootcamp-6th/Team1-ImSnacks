@@ -1,5 +1,5 @@
 import { GrayScale } from '@/styles/colors';
-import type { WeatherRiskData } from '@/types/mainGraph.type';
+import type { WeatherRiskDto } from '@/types/openapiGenerator';
 
 const DOT_SIZE = 18;
 const DOT_RADIUS = 7;
@@ -21,7 +21,7 @@ const CustomizedDot = ({
   cx: number;
   cy: number;
   payload?: { name: string; value: number };
-  weatherRiskData: WeatherRiskData[];
+  weatherRiskData: WeatherRiskDto[];
   wrapperMargin: { top: number; bottom: number; left: number; right: number };
   chartHeight: number;
 }) => {
