@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.writer.entity;
+package com.ImSnacks.NyeoreumnagiBatch.common.enums;
 
 public enum WeatherCondition {
     SUNNY("맑음"),

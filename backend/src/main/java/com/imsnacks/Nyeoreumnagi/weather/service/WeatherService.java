@@ -216,6 +216,18 @@ public class WeatherService {
         return new GetDailyMaxPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
     }
 
+    public GetTemperatureResponse getTemperature(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+
+
+        return null;
+    }
+
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
         if(precipitationInfo.getMaxPrecipitation() == null){
             throw new WeatherException(NO_PRECIPITATION);
@@ -276,7 +288,7 @@ public class WeatherService {
 
     private double getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
         switch (metric) {
-            case PERCIPITATION:
+            case PRECIPITATION:
                 return forecast.getPrecipitation();
             case TEMPERATURE:
                 return forecast.getTemperature();
