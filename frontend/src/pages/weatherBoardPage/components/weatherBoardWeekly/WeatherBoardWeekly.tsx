@@ -29,16 +29,15 @@ const WeatherBoardWeekly = () => {
         <h3 css={S.WeeklyTitle}>7일 간의 날씨 예보</h3>
       </div>
       <div css={S.WeeklyContentContainer}>
-        {weeklyWeatherData &&
-          weeklyWeatherData.map((data: GetSevenDaysForecastResponse, index) => (
-            <WeeklyContent
-              key={index}
-              dayOfWeek={data.dayOfWeek}
-              weatherCondition={data.weatherCondition}
-              minTemperature={data.minTemperature}
-              maxTemperature={data.maxTemperature}
-            />
-          ))}
+        {weeklyWeatherData?.map((data: GetSevenDaysForecastResponse, index) => (
+          <WeeklyContent
+            key={index}
+            dayOfWeek={data.dayOfWeek}
+            weatherCondition={data.weatherCondition}
+            minTemperature={data.minTemperature}
+            maxTemperature={data.maxTemperature}
+          />
+        ))}
       </div>
     </div>
   );
