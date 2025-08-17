@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -47,7 +49,7 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "내 작물 조회 성공")
     @ApiResponse(responseCode = "400", description = "내 작물 조회 실패")
     @GetMapping("/myCrops")
-    public ResponseEntity<CustomResponseBody<GetMyCropsResponse>> getMyCrops(@PreAuthorize Long memberId){
+    public ResponseEntity<CustomResponseBody<List<GetMyCropsResponse>>> getMyCrops(@PreAuthorize Long memberId){
         return ResponseUtil.success(memberService.getMyCrops(memberId));
     }
 }
