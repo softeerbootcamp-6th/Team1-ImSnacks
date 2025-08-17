@@ -1,5 +1,6 @@
 import HTTP from './http';
 import {
+  GetSevenDaysForecastResponse,
   GetSunRiseSetTimeResponse,
   GetUVInfoResponse,
   GetWeatherConditionResponse,
@@ -14,6 +15,9 @@ export const getWeatherGraph = (
   weatherMetric: GetWeatherGraphResponseWeatherMetricEnum
 ) =>
   HTTP.get<GetWeatherGraphResponse>(`/weather?weatherMetric=${weatherMetric}`);
+
+export const getWeatherSevenDays = () =>
+  HTTP.get<GetSevenDaysForecastResponse[]>('/weather/sevenDays');
 
 export const getWeatherUV = () => HTTP.get<GetUVInfoResponse>('/weather/uv');
 
