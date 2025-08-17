@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.member;
 
+import com.imsnacks.Nyeoreumnagi.lifecycle.LifeCycleResolver;
 import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.lifecycle.repository.LifeCycleRepository;
 import com.imsnacks.Nyeoreumnagi.farm.service.FarmService;
@@ -16,7 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.imsnacks.Nyeoreumnagi.member.dto.SignupRequest.*;
