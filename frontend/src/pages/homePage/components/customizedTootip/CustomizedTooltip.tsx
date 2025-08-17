@@ -27,23 +27,34 @@ const CustomTooltip = ({
   }
 
   return (
-    <ToolTip
-      direction={TOOLTIP_DIRECTIONS.TOP}
-      content={
-        <div
-          css={css`
-            ${Typography.Caption};
-            color: ${Assets.Text.ToolTip.Default};
-          `}
-        >
-          {`${label ?? ''}:00 | ${payload[0]?.value ?? 0}${getUnit(
-            graphData.weatherMetric
-          )}`}
-        </div>
-      }
-      type={TOOLTIP_TYPES.DEFAULT}
-      isAbsolute={false}
-    />
+    <div
+      css={css`
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 9999;
+      `}
+    >
+      <ToolTip
+        direction={TOOLTIP_DIRECTIONS.TOP}
+        content={
+          <div
+            css={css`
+              ${Typography.Caption};
+              color: ${Assets.Text.ToolTip.Default};
+            `}
+          >
+            {`${label ?? ''}:00 | ${payload[0]?.value ?? 0}${getUnit(
+              graphData.weatherMetric
+            )}`}
+          </div>
+        }
+        type={TOOLTIP_TYPES.DEFAULT}
+        isAbsolute={false}
+      />
+    </div>
   );
 };
 
