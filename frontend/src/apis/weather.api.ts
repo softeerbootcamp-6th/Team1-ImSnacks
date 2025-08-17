@@ -1,6 +1,7 @@
 import HTTP from './http';
 import {
   GetDailyMaxPrecipitationResponse,
+  GetHumidityResponse,
   GetSevenDaysForecastResponse,
   GetSunRiseSetTimeResponse,
   GetUVInfoResponse,
@@ -22,6 +23,9 @@ export const getWeatherSevenDays = () =>
 
 export const getWeatherPrecipitation = () =>
   HTTP.get<GetDailyMaxPrecipitationResponse>('/weather/precipitationInfo');
+
+export const getWeatherHumidity = () =>
+  HTTP.get<GetHumidityResponse>('/weather/humidityInfo');
 
 export const getWeatherUV = () => HTTP.get<GetUVInfoResponse>('/weather/uv');
 
