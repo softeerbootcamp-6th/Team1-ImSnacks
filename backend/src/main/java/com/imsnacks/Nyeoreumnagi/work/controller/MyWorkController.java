@@ -83,7 +83,7 @@ public class MyWorkController {
             @Parameter(name = "startDate", description = "조회 시작 기준이 되는 날짜 (yyyy-MM-dd)"),
     })
     @GetMapping("/weekly")
-    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfWeeklyResponse>>> getMyWorksOfWeek(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, @PreAuthorize Long memberId) {
+    public ResponseEntity<CustomResponseBody<List<GetMyWorksOfWeeklyResponse>>> getMyWorksOfWeek(@RequestParam String startDate, @PreAuthorize Long memberId) {
         List<GetMyWorksOfWeeklyResponse> myWorksOfWeekly = myWorkService.getMyWorksOfWeekly(startDate, memberId);
         return ResponseUtil.success(myWorksOfWeekly);
     }

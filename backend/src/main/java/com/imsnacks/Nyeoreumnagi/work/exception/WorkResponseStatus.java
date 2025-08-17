@@ -13,6 +13,7 @@ public enum WorkResponseStatus {
     NULL_MY_WORK_ID(7010, "myWorkId가 null입니다."),
     START_TIME_IS_FUTURE(7011, "요청 시작 시간이 미래입니다."),
     NULL_RECOMMENDED_WORK_ID(7012, "recommendedWorkId가 null입니다."),
+    INVALID_START_TIME_FORMAT(7013, "요청 startTime 형식은 'yyyy-MM-dd'이어야 합니다.")
     ;
 
     private int code;

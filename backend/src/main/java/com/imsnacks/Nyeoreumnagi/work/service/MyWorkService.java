@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -130,7 +132,14 @@ public class MyWorkService {
                 .collect(Collectors.toList());
     }
 
-    public List<GetMyWorksOfWeeklyResponse> getMyWorksOfWeekly(LocalDate startDate, Long memberId) {
+    public List<GetMyWorksOfWeeklyResponse> getMyWorksOfWeekly(String startDateString, Long memberId) {
+        LocalDate startDate;
+        try {
+            startDate = LocalDate.parse(startDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        } catch (DateTimeParseException e) {
+            throw new WorkException(INVALID_START_TIME_FORMAT);
+        }
         if (startDate.isAfter(LocalDate.now())){
             throw new WorkException(START_TIME_IS_FUTURE);
         }
