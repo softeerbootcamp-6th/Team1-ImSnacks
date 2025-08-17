@@ -41,10 +41,10 @@ const WorksProvider = ({ children }: { children: ReactNode }) => {
       await deleteMyWork({
         myWorkId: Number(id),
       });
+      setWorkBlocks(prev => prev.filter(block => block.id !== Number(id)));
     } catch (error) {
       console.error('작업 삭제 실패', error);
     }
-    setWorkBlocks(blocks => blocks.filter(b => b.id !== id));
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
