@@ -1,30 +1,24 @@
 import { FLAT_ICON } from '@/constants/flatIcons';
-import type { WeatherConditionsType } from '@/types/weather.types';
 import S from './WeeklyContent.style';
-
-interface WeeklyContentProps {
-  title: string;
-  weather: WeatherConditionsType;
-  highestTemperature: number;
-  lowestTemperature: number;
-}
+import type { GetSevenDaysForecastResponse } from '@/types/openapiGenerator';
 
 const WeeklyContent = ({
-  title,
-  weather,
-  highestTemperature,
-  lowestTemperature,
-}: WeeklyContentProps) => {
-  const FlatIconComponent = FLAT_ICON[weather as keyof typeof FLAT_ICON];
+  dayOfWeek,
+  weatherCondition,
+  minTemperature,
+  maxTemperature,
+}: GetSevenDaysForecastResponse) => {
+  const FlatIconComponent =
+    FLAT_ICON[weatherCondition as keyof typeof FLAT_ICON];
 
   return (
     <div css={S.WeeklyContent}>
-      <div css={S.WeeklyTitle}>{title}</div>
+      <div css={S.WeeklyTitle}>{dayOfWeek}</div>
       <div css={S.WeeklyWeatherIconWrapper}>
         <FlatIconComponent width={32} height={32} />
       </div>
       <div css={S.WeeklyTemperature}>
-        {highestTemperature}° / {lowestTemperature}°
+        {maxTemperature}° / {minTemperature}°
       </div>
     </div>
   );
