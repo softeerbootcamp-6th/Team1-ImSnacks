@@ -8,6 +8,7 @@ import {
   GetWeatherConditionResponse,
   GetWeatherGraphResponse,
   GetWeatherGraphResponseWeatherMetricEnum,
+  GetWindInfoResponse,
 } from '@/types/openapiGenerator';
 
 export const getWeatherNow = () =>
@@ -26,6 +27,9 @@ export const getWeatherPrecipitation = () =>
 
 export const getWeatherHumidity = () =>
   HTTP.get<GetHumidityResponse>('/weather/humidityInfo');
+
+export const getWeatherWind = () =>
+  HTTP.get<GetWindInfoResponse>('/weather/windInfo');
 
 export const getWeatherUV = () => HTTP.get<GetUVInfoResponse>('/weather/uv');
 
