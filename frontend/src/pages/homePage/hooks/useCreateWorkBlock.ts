@@ -11,7 +11,7 @@ import { findCollisionFreePosition } from '@/utils/collisionUtils';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useContainer from '@/pages/homePage/contexts/useContainer';
 import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
-import { postMyWork } from '@/apis/myWork.api';
+import { postMyWork, deleteMyWork } from '@/apis/myWork.api';
 
 interface UseCreateWorkBlockReturn {
   handleCreateWork: (

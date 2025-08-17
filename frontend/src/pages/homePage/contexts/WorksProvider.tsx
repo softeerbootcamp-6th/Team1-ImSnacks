@@ -8,7 +8,7 @@ import type {
   GetMyWorksOfTodayResponse,
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
-import { getMyWorkOfToday } from '@/apis/myWork.api';
+import { deleteMyWork, getMyWorkOfToday } from '@/apis/myWork.api';
 import type { ContainerContextType } from './ContainerContext';
 
 const WorksProvider = ({ children }: { children: ReactNode }) => {
@@ -36,7 +36,14 @@ const WorksProvider = ({ children }: { children: ReactNode }) => {
     setWorkBlocks(updatedBlocks);
   };
 
-  const removeWorkBlock = (id: number | string) => {
+  const removeWorkBlock = async (id: number | string) => {
+    try {
+      await deleteMyWork({
+        myWorkId: Number(id),
+      });
+    } catch (error) {
+      console.error('작업 삭제 실패', error);
+    }
     setWorkBlocks(blocks => blocks.filter(b => b.id !== id));
   };
 

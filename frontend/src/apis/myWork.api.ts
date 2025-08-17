@@ -4,6 +4,8 @@ import type {
   RegisterMyWorkResponse,
   GetMyWorksOfTodayResponse,
   GetMyWorksOfWeeklyResponse,
+  DeleteMyWorkRequest,
+  CustomResponseBodyVoid,
 } from '@/types/openapiGenerator';
 
 export const getMyWorkOfToday = (isMobile: boolean) =>
@@ -26,3 +28,6 @@ type PostMyWorkBodyRequest = Omit<
 
 export const postMyWork = (body: PostMyWorkBodyRequest) =>
   HTTP.post<PostMyWorkBodyRequest, RegisterMyWorkResponse>('/myWork', body);
+
+export const deleteMyWork = (body: DeleteMyWorkRequest) =>
+  HTTP.delete<DeleteMyWorkRequest, CustomResponseBodyVoid>('/myWork', body);
