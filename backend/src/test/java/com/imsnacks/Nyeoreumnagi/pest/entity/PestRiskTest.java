@@ -8,7 +8,7 @@ import java.time.Month;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class EntityTest {
+public class PestRiskTest {
 
     @Test
     void PestCondition_생성_성공() {
