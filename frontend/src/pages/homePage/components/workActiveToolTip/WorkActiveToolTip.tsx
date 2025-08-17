@@ -1,4 +1,4 @@
-import useWorkBlocks from '@/contexts/useWorkBlocks';
+import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
 import calculateTimeToPosition from '../../utils/calculateTimeToPosition';
 import * as S from './WorkActiveToolTip.style';
 

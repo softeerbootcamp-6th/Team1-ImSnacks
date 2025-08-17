@@ -1,56 +1,57 @@
-import { WORK_SCHEDULE_DATA } from '@/constants/workScheduleData';
-import { groupDataRecordStructure } from '@/utils/groupDataRecord';
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
 import type { CropNameType } from '@/types/crop.type';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import calculateTimeToPosition from './calculateTimeToPosition';
+import type { GetMyWorksOfTodayResponse } from '@/types/openapiGenerator';
 
-const getTodayWorkBlocks = (newWorkBlocks?: WorkBlockType[]) => {
-  const todayKey = dayjs().format('YYYY-MM-DD');
-  const todayWorkScheduleData =
-    newWorkBlocks ??
-    groupDataRecordStructure(WORK_SCHEDULE_DATA, 'date', 'workCardData')[
-      todayKey
-    ] ??
-    [];
-  return todayWorkScheduleData;
-};
-
-export const getInitialWorkBlocks = (newWorkBlocks?: WorkBlockType[]) => {
-  // 1. 오늘 작업 데이터 가져오기
-  const todayWorkScheduleData = getTodayWorkBlocks(newWorkBlocks);
-
-  // 2. 시작 시간 기준 정렬
+export const getInitialWorkBlocks = (
+  todayWorkScheduleData: GetMyWorksOfTodayResponse[]
+) => {
+  // 1. 시작 시간 기준 정렬
   const sortedWorks = [...todayWorkScheduleData].sort(
     (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf()
   );
 
-  // 3. 레이어별 작업 저장
+  // 2. 레이어별 작업 저장
   const layers: { [layer: number]: WorkBlockType[] } = { 1: [], 2: [], 3: [] };
   const blocks: WorkBlockType[] = [];
 
   for (const work of sortedWorks) {
-    const { x, width } = calculateTimeToPosition(work.startTime, work.endTime);
+    const { x, width } = calculateTimeToPosition(
+      work.startTime ?? '',
+      work.endTime ?? ''
+    );
 
-    // 4. 배정할 레이어 찾기
+    // 3. 배정할 레이어 찾기
     const targetLayer =
       [1, 2, 3].find(layer => {
         const layerWorks = layers[layer];
-        return !layerWorks.some(w => isTimeOverlapping(work, w));
+        return !layerWorks.some(w =>
+          isTimeOverlapping(
+            {
+              startTime: work.startTime ?? '',
+              endTime: work.endTime ?? '',
+            },
+            {
+              startTime: w.startTime ?? '',
+              endTime: w.endTime ?? '',
+            }
+          )
+        );
       }) ?? 1; // 모든 레이어가 겹치면 1층에 배정
 
-    // 5. 레이어에 작업 추가
+    // 4. 레이어에 작업 추가
     layers[targetLayer].push(work as WorkBlockType);
 
-    // 6. 블록 생성
+    // 5. 블록 생성
     blocks.push({
-      id: work.id,
-      cropName: work.cropName as CropNameType,
-      workName: work.workName,
-      workTime: work.workTime,
-      startTime: work.startTime,
-      endTime: work.endTime,
+      id: work.myWorkId ?? 0,
+      cropName: work.myCropName as CropNameType,
+      workName: work.myWorkName ?? '',
+      workTime: work.workTime ?? '',
+      startTime: work.startTime ?? '',
+      endTime: work.endTime ?? '',
       position: { x, y: getYCoordinate(targetLayer) },
       size: { width, height: 52 },
     });

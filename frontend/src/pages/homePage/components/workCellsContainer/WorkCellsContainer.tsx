@@ -1,51 +1,26 @@
-import { css } from '@emotion/react';
 import WorkCell from '../workCell/WorkCell';
 import { WORK_CELL_TYPES, WORK_CELL_STATUSES } from '@/types/workCell.type';
 import WorkActiveToolTip from '../workActiveToolTip/WorkActiveToolTip';
+import S from './WorkCellsContainer.style';
 
 const WorkCellsContainer = () => {
   return (
     <>
-      <WorkActiveToolTip />
-      <div
-        css={css`
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-        `}
-      >
+      <div css={S.WorkCellsContainerWrapper}>
+        <WorkActiveToolTip />
         <WorkCell
           type={WORK_CELL_TYPES.START}
           status={WORK_CELL_STATUSES.DEFAULT}
         />
-      </div>
-      {Array.from({ length: 22 }, (_, index) => {
-        return (
-          <div
-            key={index}
-            css={css`
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              gap: 4px;
-            `}
-          >
+        {Array.from({ length: 22 }, (_, index) => {
+          return (
             <WorkCell
+              key={index}
               type={WORK_CELL_TYPES.MIDDLE}
               status={WORK_CELL_STATUSES.DEFAULT}
             />
-          </div>
-        );
-      })}
-      <div
-        css={css`
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-        `}
-      >
+          );
+        })}
         <WorkCell
           type={WORK_CELL_TYPES.END}
           status={WORK_CELL_STATUSES.DEFAULT}

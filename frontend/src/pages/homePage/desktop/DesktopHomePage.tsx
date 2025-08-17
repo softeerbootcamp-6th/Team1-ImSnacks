@@ -1,4 +1,4 @@
-import WorkBlocksProvider from '@/contexts/WorkBlocksProvider';
+import WorkBlocksProvider from '@/pages/homePage/contexts/WorksProvider';
 import Headline from '../components/headline/Headline';
 import S from './DesktopHomePage.style';
 import WorkContainer from '../components/workContainer/WorkContainer';
