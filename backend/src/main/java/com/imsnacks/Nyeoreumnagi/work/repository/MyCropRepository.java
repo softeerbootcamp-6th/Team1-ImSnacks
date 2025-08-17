@@ -8,5 +8,5 @@ import java.util.List;
 public interface MyCropRepository extends JpaRepository<MyCrop, Long> {
     List<MyCrop> findAllByOrderByCrop_Id();
     List<MyCrop> findAllByMember_IdOrderByCrop_Id(long memberId);
-    List<MyCrop> findAllByMember_IdOrderByIdAsc(long memberId);
+    List<MyCrop> findAllByMember_IdOrderById(long memberId);
 }
