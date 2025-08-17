@@ -60,3 +60,4 @@ secret:
   jwt-secret-key: ${JWT_SECRET_KEY}
   jwt-expired-in:
     access-token: ${ACCESS_TOKEN_EXPIRED_IN}
+  geo-api-service-key: ${GEO_API_SERVICE_KEY}
