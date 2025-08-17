@@ -57,7 +57,6 @@ const WorkContainer = () => {
     getItemId: block => block.id,
     getItemPosition: block => block.position,
     onPositionChange: updated => {
-      // workBlocks를 직접 업데이트하여 즉시 반영
       updateWorkBlocks(updated);
 
       // futurePosition 업데이트 - 충돌하지 않는 위치 계산

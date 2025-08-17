@@ -20,7 +20,11 @@ const WorkBlocksProvider = ({ children }: { children: ReactNode }) => {
         getInitialWorkBlocks(res.data as GetMyWorksOfTodayResponse[])
       );
     };
-    fetchMyWorkOfToday();
+    try {
+      fetchMyWorkOfToday();
+    } catch (error) {
+      console.error('오늘 내 농작업 일정 조회 실패', error);
+    }
   }, []);
 
   const addWorkBlock = (newWorkBlock: WorkBlockType) => {
