@@ -1,23 +1,32 @@
 package com.imsnacks.Nyeoreumnagi.member;
 
 import com.imsnacks.Nyeoreumnagi.farm.service.FarmService;
-import com.imsnacks.Nyeoreumnagi.lifecycle.repository.LifeCycleRepository;
+import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMemberAddressResponse;
 import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMyCropsResponse;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
+import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
+import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class MemberServiceTest {
 
@@ -60,7 +69,7 @@ class MemberServiceTest {
     void getMemberAddress_invalidMemberId() {
         // given
         Long memberId = 100L;
-        Mockito.when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.empty());
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.empty());
 
         // when & then
         MemberException ex = assertThrows(MemberException.class, () ->
@@ -79,5 +88,81 @@ class MemberServiceTest {
         MemberException ex = assertThrows(MemberException.class, () ->
                 memberService.getMemberAddress(memberId));
         assertThat(ex.getStatus()).isEqualTo(MEMBER_NOT_FOUND);
+    }
+
+    @Test
+    void 내_작물_리스트와_현재_LifeCycle_정상_조회() {
+        // Given
+        Long memberId = 1L;
+
+        Crop crop = mock(Crop.class);
+        when(crop.getId()).thenReturn(10L);
+        when(crop.getName()).thenReturn("포도");
+
+        LocalDateTime germinationTime = LocalDateTime.now().minusDays(80);
+
+        MyCrop myCrop = mock(MyCrop.class);
+        when(myCrop.getId()).thenReturn(100L);
+        when(myCrop.getCrop()).thenReturn(crop);
+        when(myCrop.getGerminationTime()).thenReturn(germinationTime);
+
+        List<MyCrop> myCrops = List.of(myCrop);
+
+        when(myCropRepository.findAllByMember_Id(memberId)).thenReturn(myCrops);
+
+        LifeCycle lc1 = mock(LifeCycle.class);
+        when(lc1.getDuration()).thenReturn(30);
+        when(lc1.getName()).thenReturn("발아");
+
+        LifeCycle lc2 = mock(LifeCycle.class);
+        when(lc2.getDuration()).thenReturn(40);
+        when(lc2.getName()).thenReturn("성장");
+
+        LifeCycle lc3 = mock(LifeCycle.class);
+        when(lc3.getDuration()).thenReturn(50);
+        when(lc3.getName()).thenReturn("수확");
+
+        List<LifeCycle> lifeCycles = List.of(lc1, lc2, lc3);
+
+        when(lifeCycleRepository.findAllByCrop_IdOrderByStep(crop.getId()))
+                .thenReturn(lifeCycles);
+        when(myCrop.getDaysFromStartDate(any())).thenCallRealMethod();
+        when(myCrop.findCurrentLifeCycle(anyList(), any())).thenCallRealMethod();
+
+        // When
+        List<GetMyCropsResponse> result = memberService.getMyCrops(memberId);
+
+        // Then
+        assertThat(result).hasSize(1);
+        GetMyCropsResponse dto = result.get(0);
+        assertThat(dto.myCropId()).isEqualTo(100L);
+        assertThat(dto.myCropName()).isEqualTo("포도");
+        assertThat(dto.daysFromStartDate()).isEqualTo(80);
+        assertThat(dto.lifeCycle()).isEqualTo("수확");
+    }
+
+    @Test
+    void 라이프사이클_없으면_null_정상처리() {
+        Long memberId = 2L;
+        MyCrop myCrop = mock(MyCrop.class);
+        Crop crop = mock(Crop.class);
+        when(myCrop.getId()).thenReturn(101L);
+        when(myCrop.getCrop()).thenReturn(crop);
+        when(myCrop.getGerminationTime()).thenReturn(LocalDateTime.now());
+
+        when(myCropRepository.findAllByMember_Id(memberId))
+                .thenReturn(List.of(myCrop));
+        when(lifeCycleRepository.findAllByCrop_IdOrderByStep(any()))
+                .thenReturn(Collections.emptyList());
+
+        when(myCrop.getDaysFromStartDate(any())).thenCallRealMethod();
+        when(myCrop.findCurrentLifeCycle(anyList(), any())).thenCallRealMethod();
+
+        // When
+        List<GetMyCropsResponse> response = memberService.getMyCrops(memberId);
+
+        // Then
+        assertThat(response).hasSize(1);
+        assertThat(response.get(0).lifeCycle()).isNull();
     }
 }
