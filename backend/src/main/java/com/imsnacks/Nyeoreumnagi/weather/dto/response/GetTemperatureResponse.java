@@ -1,5 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.weather.dto.response;
 
+import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardWeatherForecast;
+
 import java.util.List;
 
 public record GetTemperatureResponse(
@@ -12,5 +14,9 @@ public record GetTemperatureResponse(
             String weatherType,
             Integer value
     ){
+        public static TemperaturePerTime from(DashboardWeatherForecast dashboardWeatherForecast) {
+            String time = String.format("%02d:00", dashboardWeatherForecast.getFcstTime());
+            return new TemperaturePerTime(time, dashboardWeatherForecast.getWeatherCondition().toString(), dashboardWeatherForecast.getTemperature());
+        }
     }
 }
