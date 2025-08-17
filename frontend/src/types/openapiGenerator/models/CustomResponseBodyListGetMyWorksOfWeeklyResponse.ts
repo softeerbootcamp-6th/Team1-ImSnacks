@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { GetMyWorksOfWeeklyResponse } from '../models/GetMyWorksOfWeeklyResponse';
 
-export class LoginRequest {
-    'identifier'?: string;
-    'password'?: string;
+export class CustomResponseBodyListGetMyWorksOfWeeklyResponse {
+    'code'?: number;
+    'msg'?: string;
+    'data'?: Array<GetMyWorksOfWeeklyResponse>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -21,20 +23,26 @@ export class LoginRequest {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "identifier",
-            "baseName": "identifier",
+            "name": "code",
+            "baseName": "code",
+            "type": "number",
+            "format": "int32"
+        },
+        {
+            "name": "msg",
+            "baseName": "msg",
             "type": "string",
             "format": ""
         },
         {
-            "name": "password",
-            "baseName": "password",
-            "type": "string",
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<GetMyWorksOfWeeklyResponse>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return LoginRequest.attributeTypeMap;
+        return CustomResponseBodyListGetMyWorksOfWeeklyResponse.attributeTypeMap;
     }
 
     public constructor() {

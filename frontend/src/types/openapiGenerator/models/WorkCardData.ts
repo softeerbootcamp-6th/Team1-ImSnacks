@@ -11,14 +11,12 @@
  */
 
 
-export class GetMyWorksOfTodayResponse {
+export class WorkCardData {
     'myWorkId'?: number;
     'myCropName'?: string;
     'myWorkName'?: string;
-    'workTime'?: string;
-    'startTime'?: string;
-    'endTime'?: string;
-    'status'?: GetMyWorksOfTodayResponseStatusEnum;
+    'myWorkTime'?: string;
+    'status'?: WorkCardDataStatusEnum;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -44,41 +42,29 @@ export class GetMyWorksOfTodayResponse {
             "format": ""
         },
         {
-            "name": "workTime",
-            "baseName": "workTime",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "startTime",
-            "baseName": "startTime",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "endTime",
-            "baseName": "endTime",
+            "name": "myWorkTime",
+            "baseName": "myWorkTime",
             "type": "string",
             "format": ""
         },
         {
             "name": "status",
             "baseName": "status",
-            "type": "GetMyWorksOfTodayResponseStatusEnum",
+            "type": "WorkCardDataStatusEnum",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return GetMyWorksOfTodayResponse.attributeTypeMap;
+        return WorkCardData.attributeTypeMap;
     }
 
     public constructor() {
     }
 }
 
-export const GetMyWorksOfTodayResponseStatusEnum = {
+export const WorkCardDataStatusEnum = {
   Completed: 'COMPLETED',
   Incompleted: 'INCOMPLETED'
 } as const;
-export type GetMyWorksOfTodayResponseStatusEnum = typeof GetMyWorksOfTodayResponseStatusEnum[keyof typeof GetMyWorksOfTodayResponseStatusEnum];
+export type WorkCardDataStatusEnum = typeof WorkCardDataStatusEnum[keyof typeof WorkCardDataStatusEnum];
 

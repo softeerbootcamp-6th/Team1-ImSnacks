@@ -11,9 +11,10 @@
  */
 
 
-export class LoginRequest {
-    'identifier'?: string;
-    'password'?: string;
+export class GetWindInfoResponse {
+    'direction'?: string;
+    'degree'?: number;
+    'speed'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -21,20 +22,26 @@ export class LoginRequest {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "identifier",
-            "baseName": "identifier",
+            "name": "direction",
+            "baseName": "direction",
             "type": "string",
             "format": ""
         },
         {
-            "name": "password",
-            "baseName": "password",
-            "type": "string",
-            "format": ""
+            "name": "degree",
+            "baseName": "degree",
+            "type": "number",
+            "format": "int32"
+        },
+        {
+            "name": "speed",
+            "baseName": "speed",
+            "type": "number",
+            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
-        return LoginRequest.attributeTypeMap;
+        return GetWindInfoResponse.attributeTypeMap;
     }
 
     public constructor() {
