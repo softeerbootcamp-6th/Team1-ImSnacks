@@ -46,10 +46,7 @@ class MemberServiceTest {
         GetMemberAddressResponse response = memberService.getMemberAddress(memberId);
 
         // then
-        assertThat(response.state()).isEqualTo("경기도");
-        assertThat(response.city()).isEqualTo("성남시");
-        assertThat(response.town()).isEqualTo("분당구");
-        assertThat(response.address()).isEqualTo("정자1동 123-45");
+        assertThat(response.address()).isEqualTo("경기도 성남시 분당구 정자1동 123-45");
     }
 
     @Test
