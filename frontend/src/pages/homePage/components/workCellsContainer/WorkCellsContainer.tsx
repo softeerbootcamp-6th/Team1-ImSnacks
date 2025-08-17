@@ -12,7 +12,7 @@ const WorkCellsContainer = () => {
           type={WORK_CELL_TYPES.START}
           status={WORK_CELL_STATUSES.DEFAULT}
         />
-        {Array.from({ length: 22 }, (_, index) => {
+        {Array.from({ length: 21 }, (_, index) => {
           return (
             <WorkCell
               key={index}

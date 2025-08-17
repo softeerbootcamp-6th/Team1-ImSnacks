@@ -207,6 +207,7 @@ const WorkContainer = () => {
       css={WorkContainerS.ContainerWrapper}
     >
       <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
+
       {graphData && (
         <div css={ChartS.FixedYAxisWrapper}>
           {getUnit(graphData.weatherMetric ?? 'PRECIPITATION')}
@@ -222,43 +223,72 @@ const WorkContainer = () => {
           </div>
         </div>
       )}
+      <div css={WorkContainerS.MaskGradientWrapper}>
+        <div
+          css={WorkContainerS.ScrollContainer}
+          onScroll={e => {
+            setScrollOffset(e.currentTarget.scrollLeft);
+          }}
+        >
+          <MainGraph graphData={graphData} />
 
-      <div
-        css={WorkContainerS.ScrollContainer}
-        onScroll={e => {
-          setScrollOffset(e.currentTarget.scrollLeft);
-        }}
-      >
-        <MainGraph graphData={graphData} />
+          {workBlocks.map(block => {
+            const { id, position } = block;
+            const isCurrentlyDragging =
+              isDraggingItem(id) || isRevertingItemId === id;
 
-        {workBlocks.map(block => {
-          const { id, position } = block;
-          const isCurrentlyDragging =
-            isDraggingItem(id) || isRevertingItemId === id;
+            // 드래그 중인 블록은 DragOverlay만 렌더링
+            if (isCurrentlyDragging) {
+              const overlayPosition = {
+                x:
+                  draggingBlockId === id
+                    ? workBlocks.find(b => b.id === id)?.position.x ||
+                      position.x
+                    : position.x,
+                y:
+                  draggingBlockId === id
+                    ? workBlocks.find(b => b.id === id)?.position.y ||
+                      position.y
+                    : position.y,
+              };
 
-          // 드래그 중인 블록은 DragOverlay만 렌더링
-          if (isCurrentlyDragging) {
-            const overlayPosition = {
-              x:
-                draggingBlockId === id
-                  ? workBlocks.find(b => b.id === id)?.position.x || position.x
-                  : position.x,
-              y:
-                draggingBlockId === id
-                  ? workBlocks.find(b => b.id === id)?.position.y || position.y
-                  : position.y,
-            };
-
+              return (
+                <DragOverlay
+                  key={`overlay-${id}`}
+                  position={overlayPosition}
+                  containerRef={containerRef}
+                  scrollOffset={scrollOffset}
+                >
+                  <WorkCardRegister
+                    block={workBlocks.find(b => b.id === id) || block}
+                    isDragging={isDragging}
+                    onDelete={() => removeWorkBlock(id)}
+                    onResize={newBlock => handleResize(id, newBlock)}
+                    containerRef={containerRef}
+                    scrollOffset={scrollOffset}
+                    allBlocks={workBlocks}
+                    updateWorkBlocks={updateWorkBlocks}
+                  />
+                </DragOverlay>
+              );
+            }
             return (
-              <DragOverlay
-                key={`overlay-${id}`}
-                position={overlayPosition}
-                containerRef={containerRef}
-                scrollOffset={scrollOffset}
+              <div
+                key={id}
+                css={[
+                  DragOverlayStyle.DragOverlay({
+                    x: position.x,
+                    y: position.y,
+                  }),
+                  css`
+                    position: absolute;
+                  `,
+                ]}
+                onMouseDown={e => handleStartDrag(e, block)}
               >
                 <WorkCardRegister
-                  block={workBlocks.find(b => b.id === id) || block}
-                  isDragging={isDragging}
+                  block={block}
+                  isDragging={false}
                   onDelete={() => removeWorkBlock(id)}
                   onResize={newBlock => handleResize(id, newBlock)}
                   containerRef={containerRef}
@@ -266,38 +296,12 @@ const WorkContainer = () => {
                   allBlocks={workBlocks}
                   updateWorkBlocks={updateWorkBlocks}
                 />
-              </DragOverlay>
+              </div>
             );
-          }
-          return (
-            <div
-              key={id}
-              css={[
-                DragOverlayStyle.DragOverlay({
-                  x: position.x,
-                  y: position.y,
-                }),
-                css`
-                  position: absolute;
-                `,
-              ]}
-              onMouseDown={e => handleStartDrag(e, block)}
-            >
-              <WorkCardRegister
-                block={block}
-                isDragging={false}
-                onDelete={() => removeWorkBlock(id)}
-                onResize={newBlock => handleResize(id, newBlock)}
-                containerRef={containerRef}
-                scrollOffset={scrollOffset}
-                allBlocks={workBlocks}
-                updateWorkBlocks={updateWorkBlocks}
-              />
-            </div>
-          );
-        })}
+          })}
 
-        <WorkCellsContainer />
+          <WorkCellsContainer />
+        </div>
       </div>
     </div>
   );
