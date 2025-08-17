@@ -85,6 +85,41 @@ const useDragWorkBlock = () => {
     },
   });
 
+  const updateWorkTimeOnServer = async (
+    draggingId: number,
+    draggingBlock: WorkBlockType
+  ) => {
+    try {
+      const finalBlock = workBlocks.find(block => block.id === draggingId);
+      if (finalBlock) {
+        const res = await patchMyWork({
+          myWorkId: draggingId,
+          startTime: finalBlock.startTime,
+          endTime: finalBlock.endTime,
+        });
+        console.log(
+          '시간 수정 후 작업 시간이 성공적으로 업데이트되었습니다:',
+          finalBlock,
+          res.data
+        );
+      }
+    } catch (error) {
+      console.error('작업 시간 업데이트 실패:', error);
+      // 에러 발생 시 원래 위치로 되돌리기
+      if (initialPosition) {
+        animateBlock(
+          revertAnimationRef,
+          setIsRevertingItemId,
+          latestBlocksRef,
+          updateWorkBlocks,
+          draggingId,
+          draggingBlock.position,
+          initialPosition
+        );
+      }
+    }
+  };
+
   const handleStartDrag = (e: React.MouseEvent, block: WorkBlockType) => {
     setInitialPosition(block.position);
     setDraggingBlockId(block.id);
@@ -121,6 +156,8 @@ const useDragWorkBlock = () => {
             latestBlocksRef,
             updateWorkBlocks
           );
+          await updateWorkTimeOnServer(draggingId, draggingBlock);
+
           cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
           return;
         }
@@ -137,30 +174,7 @@ const useDragWorkBlock = () => {
         );
 
         // 모든 valid 로직이 통과한 후 최종 시간으로 API 호출
-        try {
-          const finalBlock = workBlocks.find(block => block.id === draggingId);
-          if (finalBlock) {
-            await patchMyWork({
-              myWorkId: draggingId,
-              startTime: finalBlock.startTime,
-              endTime: finalBlock.endTime,
-            });
-          }
-        } catch (error) {
-          console.error('작업 시간 업데이트 실패:', error);
-          // 에러 발생 시 원래 위치로 되돌리기
-          if (initialPosition) {
-            animateBlock(
-              revertAnimationRef,
-              setIsRevertingItemId,
-              latestBlocksRef,
-              updateWorkBlocks,
-              draggingId,
-              draggingBlock.position,
-              initialPosition
-            );
-          }
-        }
+        await updateWorkTimeOnServer(draggingId, draggingBlock);
 
         cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
       }
