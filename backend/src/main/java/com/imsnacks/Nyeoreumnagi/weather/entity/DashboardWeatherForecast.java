@@ -3,11 +3,13 @@ package com.imsnacks.Nyeoreumnagi.weather.entity;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @IdClass(DashboardWeatherForecastId.class)
 public class DashboardWeatherForecast {
     @Id
