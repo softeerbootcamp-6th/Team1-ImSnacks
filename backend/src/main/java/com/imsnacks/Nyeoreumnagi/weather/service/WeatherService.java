@@ -16,6 +16,7 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -105,22 +106,23 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
+        final LocalDateTime now = LocalDateTime.now();
+
         final List<WeatherRisk> allRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
         if (allRisks.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
-            return new GetWeatherBriefingResponse(false, "");
+            return new GetWeatherBriefingResponse(false, Briefing.buildGreetingMsg(now));
         }
 
-        final LocalDateTime now = LocalDateTime.now(ZoneId.of(Briefing.KST));
         final List<WeatherRisk> filteredRisk = allRisks.stream()
                 .filter(r -> r.getEndTime().isAfter(now))
                 .sorted(Briefing.RISK_COMPARATOR) // 우선 순위가 가장 앞서는 것이 맨 앞에 오도록 정렬한다.
                 .toList();
         if (filteredRisk.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
-            return new GetWeatherBriefingResponse(false, "");
+            return new GetWeatherBriefingResponse(false, Briefing.buildGreetingMsg(now));
         }
-        final String msg = Briefing.buildMsg(filteredRisk.get(0));
+        final String weatherRiskmsg = Briefing.buildWeatherRiskMsg(filteredRisk.get(0));
 
-        return new GetWeatherBriefingResponse(true, msg);
+        return new GetWeatherBriefingResponse(true, weatherRiskmsg);
     }
 
     public GetSunRiseSetTimeResponse getSunRiseSetTime(final Long memberId) {
