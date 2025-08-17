@@ -28,8 +28,16 @@ export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
     async (work: RecommendedWorksResponse, selectedCrop: MyCropResponse) => {
       try {
         // 시작 시간과 종료 시간 계산
-        const newStartTime = dayjs(work.startTime);
-        const newEndTime = dayjs(work.startTime).add(2, 'hour');
+
+        //TODO: scrollOffset에 따라 몇번째 recommendationDurations를 사용할지 결정
+        const newStartTime = dayjs(
+          work.recommendationDurations?.[0]?.startTime ||
+            dayjs().set('minute', 0) //추천 시간 없을 시 현재 시간에 생성
+        );
+        const newEndTime = dayjs(
+          work.recommendationDurations?.[0]?.endTime ||
+            dayjs().add(2, 'hour').set('minute', 0)
+        );
 
         // 위치와 크기 계산
         const { x, width } = calculateTimeToPosition(

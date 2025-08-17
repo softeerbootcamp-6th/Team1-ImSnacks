@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
+import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimePx';
 
 const updateBlockWorkTime = (
   block: WorkBlockType,
@@ -12,7 +13,7 @@ const updateBlockWorkTime = (
     .set('millisecond', 0);
 
   // 현재 시간을 기준으로 x 좌표를 시간으로 변환
-  const timeByPosition = position.x / px;
+  const timeByPosition = (position.x - WORK_TIME_DEFAULT_X_COORDINATE) / px;
 
   // 현재 시간에 상대적 시간을 더해서 새로운 시작 시간 계산
   const newStartTime = baseDateTime.add(timeByPosition, 'hour');

@@ -51,4 +51,8 @@ export const WorkActiveToolTipContainer = (x: number, width: number) => css`
 export const WorkActiveToolTipText = css`
   ${Typography.Body_S_700}
   color: ${ColorPrimary.B700};
+  padding: 12px 16px;
+  text-align: center;
+  white-space: pre-wrap;
+  word-break: keep-all;
 `;
