@@ -21,8 +21,4 @@ public class MidTempRegionCode {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private MidLandForecastRegionCode landRegionCode;
 
-    public MidTempRegionCode(String regionCode, String regionName) {
-        this.regionCode = regionCode;
-        this.regionName = regionName;
-    }
 }
