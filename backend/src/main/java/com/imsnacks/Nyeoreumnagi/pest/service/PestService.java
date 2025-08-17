@@ -61,7 +61,7 @@ public class PestService {
     }
 
     private List<MyCropCard> getMyCropCards(long memberId) {
-        List<MyCrop> myCrops = this.myCropRepo.findAllByMember_IdOrderById(memberId);
+        List<MyCrop> myCrops = myCropRepo.findAllByMember_IdOrderById(memberId);
         return myCrops.stream()
                 .map(x -> new MyCropCard(x.getId(), x.getCrop().getName()))
                 .toList();
