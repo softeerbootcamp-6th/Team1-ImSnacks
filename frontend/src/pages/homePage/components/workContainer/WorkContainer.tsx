@@ -22,14 +22,21 @@ import MainGraph from '../mainGraph/MainGraph';
 import GraphMenu from '../graphMenu/GraphMenu';
 import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
 import { getWeatherGraph } from '@/apis/weather.api';
-import { GetWeatherGraphResponse } from '@/types/openapiGenerator';
+import {
+  GetWeatherGraphResponse,
+  WeatherRiskDto,
+} from '@/types/openapiGenerator';
 import { generateYTicks } from '../../utils/lineChartUtil';
 import { getUnit } from '@/utils/getUnit';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/contexts/useContainer';
 import WorkContainerS from './WorkContainer.style';
 
-const WorkContainer = () => {
+const WorkContainer = ({
+  weatherRiskData,
+}: {
+  weatherRiskData: WeatherRiskDto[];
+}) => {
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.PRECIPITATION
   );
@@ -230,7 +237,7 @@ const WorkContainer = () => {
             setScrollOffset(e.currentTarget.scrollLeft);
           }}
         >
-          <MainGraph graphData={graphData} />
+          <MainGraph graphData={graphData} weatherRiskData={weatherRiskData} />
 
           {workBlocks.map(block => {
             const { id, position } = block;

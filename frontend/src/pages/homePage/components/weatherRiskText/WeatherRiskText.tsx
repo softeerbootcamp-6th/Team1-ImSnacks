@@ -1,9 +1,11 @@
-import type { WeatherRiskData } from '@/types/mainGraph.type';
 import S from './WeatherRiskText.style';
-import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
+import type {
+  GetWeatherGraphResponse,
+  WeatherRiskDto,
+} from '@/types/openapiGenerator';
 
 interface WeatherRiskTextProps {
-  riskData: WeatherRiskData;
+  riskData: WeatherRiskDto;
   graphData: GetWeatherGraphResponse;
   index: number;
   pointSpacing: number;
@@ -49,7 +51,10 @@ const WeatherRiskText = ({
   return (
     <div
       key={`category_${index}`}
-      css={S.WeatherRiskText(getCenterX(startTime, endTime), category)}
+      css={S.WeatherRiskText(
+        getCenterX(startTime ?? '', endTime ?? ''),
+        category ?? ''
+      )}
     >
       {category}
     </div>

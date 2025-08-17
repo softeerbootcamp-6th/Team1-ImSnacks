@@ -12,16 +12,19 @@ import { getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
 import CustomizedDot from '../customizedDot/CustomizedDot';
 import CustomTooltip from '../customizedTootip/CustomizedTooltip';
-import type { WeatherRiskData } from '@/types/mainGraph.type';
 import WeatherRiskText from '../weatherRiskText/WeatherRiskText';
-import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
+import type {
+  GetWeatherGraphResponse,
+  WeatherRiskDto,
+} from '@/types/openapiGenerator';
 
-interface MainLineChartProps {
-  graphData: GetWeatherGraphResponse;
-  weatherRiskData: WeatherRiskData[];
-}
-
-const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
+const MainLineChart = ({
+  graphData,
+  weatherRiskData,
+}: {
+  graphData?: GetWeatherGraphResponse;
+  weatherRiskData: WeatherRiskDto[];
+}) => {
   if (!graphData || !graphData.valuePerTime) {
     return <div css={S.LoadingWrapper}>로딩 중...</div>;
   }
@@ -42,7 +45,7 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
     </defs>
   );
 
-  const processedData = getProcessedData(graphData, weatherRiskData);
+  const processedData = getProcessedData(graphData, weatherRiskData ?? []);
 
   const WRAPPER_MARGIN = {
     top: 53,
