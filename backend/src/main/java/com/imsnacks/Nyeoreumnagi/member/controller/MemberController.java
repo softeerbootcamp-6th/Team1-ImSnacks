@@ -4,6 +4,7 @@ import com.imsnacks.Nyeoreumnagi.common.auth.annotation.PreAuthorize;
 import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
 import com.imsnacks.Nyeoreumnagi.member.MemberService;
+import com.imsnacks.Nyeoreumnagi.member.dto.SignupRequest;
 import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMemberAddressResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,9 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +29,15 @@ public class MemberController {
     @GetMapping("/address")
     public ResponseEntity<CustomResponseBody<GetMemberAddressResponse>> getMemberAddress(@PreAuthorize Long memberId){
         return ResponseUtil.success(memberService.getMemberAddress(memberId));
+    }
+
+    @Operation(summary = "회원 가입")
+    @ApiResponse(responseCode = "200", description = "회원 가입 성공")
+    @ApiResponse(responseCode = "400", description = "회원 가입 실패")
+    @PostMapping("/registration")
+    public ResponseEntity<CustomResponseBody<Void>> registerMember(@RequestBody SignupRequest request){
+        request.validate();
+        memberService.registerMember(request);
+        return ResponseUtil.success();
     }
 }
