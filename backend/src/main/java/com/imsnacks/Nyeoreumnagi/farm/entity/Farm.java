@@ -44,18 +44,6 @@ public class Farm {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Member member;
 
-//    public Farm(String state, String city, String town, String address, Double latitude, Double longitude, Integer nx, Integer ny, String midTempRegionCode) {
-//        this.state = state;
-//        this.city = city;
-//        this.town = town;
-//        this.address = address;
-//        this.latitude = latitude;
-//        this.longitude = longitude;
-//        this.nx = nx;
-//        this.ny = ny;
-//        this.midTempRegionCode = midTempRegionCode;
-//    }
-
     public static Farm createFarm(
         String state,
         String city,
