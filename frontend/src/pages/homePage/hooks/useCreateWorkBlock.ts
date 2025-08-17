@@ -11,7 +11,7 @@ import { findCollisionFreePosition } from '@/utils/collisionUtils';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useContainer from '@/pages/homePage/contexts/useContainer';
 import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
-import { postMyWork, deleteMyWork } from '@/apis/myWork.api';
+import { postMyWork } from '@/apis/myWork.api';
 
 interface UseCreateWorkBlockReturn {
   handleCreateWork: (
@@ -37,16 +37,6 @@ export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
           newEndTime.format('YYYY-MM-DD HH:mm:ss')
         );
 
-        // API 호출하여 새로운 작업 생성
-        const newWorkIdRes = await postMyWork({
-          startTime: newStartTime.format('YYYY-MM-DDTHH:mm'),
-          endTime: newEndTime.format('YYYY-MM-DDTHH:mm'),
-          myCropId: selectedCrop.myCropId,
-          recommendedWorkId: work.workId,
-        });
-
-        const newWorkId = newWorkIdRes.data.workId as number;
-
         // 컨테이너 정보 가져오기
         const containerRect = containerRef.current?.getBoundingClientRect();
         if (!containerRect) {
@@ -56,7 +46,7 @@ export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
 
         // 임시 블록 생성하여 겹침 검사용으로 사용
         const tempBlock: WorkBlockType = {
-          id: newWorkId,
+          id: dayjs().unix(),
           position: { x, y: getYCoordinate(1) },
           size: { width, height: 50 },
           cropName: selectedCrop.myCropName || '기본',
@@ -83,7 +73,17 @@ export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
           100
         );
 
-        addWorkBlock(newWorkBlock);
+        // API 호출하여 새로운 작업 생성
+        const newWorkIdRes = await postMyWork({
+          startTime: newWorkBlock.startTime,
+          endTime: newWorkBlock.endTime,
+          myCropId: selectedCrop.myCropId,
+          recommendedWorkId: work.workId,
+        });
+
+        const newWorkId = newWorkIdRes.data.workId as number;
+
+        addWorkBlock({ ...newWorkBlock, id: newWorkId });
       } catch (error) {
         console.error('작업 블록 생성 실패:', error);
       }
