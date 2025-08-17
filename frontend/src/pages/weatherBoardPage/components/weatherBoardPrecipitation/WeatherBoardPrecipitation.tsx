@@ -2,7 +2,7 @@ import type { GetDailyMaxPrecipitationResponse } from '@/types/openapiGenerator'
 import { usePrecipitationSvg } from '../../hooks/usePrecipitationSvg';
 import S from './WeatherBoardPrecipitation.style';
 import { useEffect, useState } from 'react';
-import { getWeatherPrecipitationInfo } from '@/apis/weather.api';
+import { getWeatherPrecipitation } from '@/apis/weather.api';
 
 const WeatherBoardPrecipitation = () => {
   const [maxPrecipitation, setMaxPrecipitation] =
@@ -10,7 +10,7 @@ const WeatherBoardPrecipitation = () => {
 
   const fetchMaxPrecipitation = async () => {
     try {
-      const res = await getWeatherPrecipitationInfo();
+      const res = await getWeatherPrecipitation();
       if (res.data) {
         setMaxPrecipitation(res.data);
       }

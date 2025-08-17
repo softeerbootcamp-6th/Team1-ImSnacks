@@ -20,7 +20,7 @@ export const getWeatherGraph = (
 export const getWeatherSevenDays = () =>
   HTTP.get<GetSevenDaysForecastResponse[]>('/weather/sevenDays');
 
-export const getWeatherPrecipitationInfo = () =>
+export const getWeatherPrecipitation = () =>
   HTTP.get<GetDailyMaxPrecipitationResponse>('/weather/precipitationInfo');
 
 export const getWeatherUV = () => HTTP.get<GetUVInfoResponse>('/weather/uv');
