@@ -27,20 +27,6 @@ const WeeklyCalendar = (hasMoreWorks: boolean, isExpanded: boolean) => css`
   ${hasMoreWorks && !isExpanded && bottomGradientMask(200)}
 `;
 
-const GradientOverlay = css`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    ${Opacity.White.W800} 100%
-  );
-  pointer-events: none;
-`;
-
 const DayContainer = css`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -99,5 +85,4 @@ export default {
   DateNumberContainer,
   DayNameContainer,
   DateWorkContainer,
-  GradientOverlay,
 };
