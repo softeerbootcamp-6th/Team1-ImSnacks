@@ -14,7 +14,7 @@ export const FLAT_ICON: Record<
   string,
   React.FC<React.SVGProps<SVGSVGElement>>
 > = {
-  PRECIPITATION: RainFlatIcon,
+  PERCIPITATION: RainFlatIcon,
   TEMPERATURE: TemperatureFlatIcon,
   HUMIDITY: HumidityFlatIcon,
   WIND_SPEED: WindFlatIcon,
