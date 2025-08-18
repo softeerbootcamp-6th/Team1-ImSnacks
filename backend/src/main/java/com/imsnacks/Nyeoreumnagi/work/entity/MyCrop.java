@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.work.entity;
 
+import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -24,4 +27,21 @@ public class MyCrop {
     private Member member;
 
     private LocalDateTime germinationTime;
+
+    public LifeCycle findCurrentLifeCycle(List<LifeCycle> lifeCycles, LocalDateTime now) {
+        long daysFromStartDate = ChronoUnit.DAYS.between(this.getGerminationTime(), now);
+
+        int duration = 0;
+        for (LifeCycle lifeCycle : lifeCycles) {
+            duration += lifeCycle.getDuration();
+            if (duration >= daysFromStartDate) {
+                return lifeCycle;
+            }
+        }
+        return lifeCycles.isEmpty() ? null : lifeCycles.get(lifeCycles.size() - 1);
+    }
+
+    public long getDaysFromStartDate(LocalDateTime now) {
+        return ChronoUnit.DAYS.between(this.getGerminationTime(), now);
+    }
 }
