@@ -13,6 +13,7 @@ import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType.*;
@@ -33,11 +34,9 @@ public class WeatherRiskService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        WeatherRisk targetWeatherRisk = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx ,ny)
+        WeatherRisk targetWeatherRisk = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny)
                 .stream()
-                .filter(this::isRainOrHeat)
-                .sorted()
-                .findFirst()
+                .filter(this::isRainOrHeat).min(Comparator.comparing(WeatherRisk::getStartTime))
                 .orElse(null);
 
         if(targetWeatherRisk == null){
