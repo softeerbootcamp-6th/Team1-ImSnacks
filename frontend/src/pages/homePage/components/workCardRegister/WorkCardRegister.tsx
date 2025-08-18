@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useChangeTimeByResize } from '@/pages/homePage/hooks/useChangeTimeByResize';
 import { useResizeCollision } from '@/hooks/useResizeCollision';
-import { patchMyWork } from '@/apis/myWork.api';
+import { patchMyWorkTime } from '@/apis/myWork.api';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -54,7 +54,7 @@ const WorkCardRegister = ({
     setIsResizing(false);
     handleResizeCollision(block, newWidth);
     try {
-      await patchMyWork({
+      await patchMyWorkTime({
         myWorkId: block.id,
         startTime: block.startTime,
         endTime: block.endTime,

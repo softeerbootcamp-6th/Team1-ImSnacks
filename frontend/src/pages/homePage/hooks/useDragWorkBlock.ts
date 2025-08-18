@@ -1,6 +1,6 @@
 import type { WorkBlockType, Position } from '@/types/workCard.type';
 import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
-import { patchMyWork } from '@/apis/myWork.api';
+import { patchMyWorkTime } from '@/apis/myWork.api';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
@@ -92,7 +92,7 @@ const useDragWorkBlock = (
     try {
       const finalBlock = workBlocks.find(block => block.id === draggingId);
       if (finalBlock) {
-        await patchMyWork({
+        await patchMyWorkTime({
           myWorkId: draggingId,
           startTime: finalBlock.startTime,
           endTime: finalBlock.endTime,

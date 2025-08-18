@@ -15,7 +15,7 @@ interface WorkCardRegisterProps {
 }
 
 const WorkCardRegisterContent = ({
-  width,
+  width = 150,
   cropName,
   workName,
   workTime,
