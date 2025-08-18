@@ -2,7 +2,7 @@ name: Deploy FE
 
 on:
   push:
-    branches: [fix/fe-357]
+    branches: [dev, fe]
 
 permissions:
   id-token: write
@@ -77,7 +77,7 @@ jobs:
       - name: Sync to S3
         if: success()
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             BUCKET=${{ secrets.S3_BUCKET_PROD }}
           else
             BUCKET=${{ secrets.S3_BUCKET_DEV }}
@@ -87,7 +87,7 @@ jobs:
       - name: Invalidate CloudFront
         if: success()
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }}
           else
             DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }}
