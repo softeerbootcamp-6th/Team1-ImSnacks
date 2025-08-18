@@ -8,11 +8,12 @@ import type {
   CustomResponseBodyVoid,
   ModifyMyWorkRequest,
   CustomResponseBodyModifyMyWorkResponse,
+  UpdateMyWorkStatusRequest,
 } from '@/types/openapiGenerator';
 import type { ReplaceTimesDateToString } from '@/types/replaceTimesDateToString.type';
 
 export const getMyWorkOfToday = (isMobile: boolean) =>
-  HTTP.get<GetMyWorksOfTodayResponse>(
+  HTTP.get<GetMyWorksOfTodayResponse[]>(
     `/myWork/today?isMobile=${isMobile ? 'true' : 'false'}`
   );
 
@@ -32,10 +33,16 @@ export const postMyWork = (
 export const deleteMyWork = (body: DeleteMyWorkRequest) =>
   HTTP.delete<DeleteMyWorkRequest, CustomResponseBodyVoid>('/myWork', body);
 
-export const patchMyWork = (
+export const patchMyWorkTime = (
   body: ReplaceTimesDateToString<ModifyMyWorkRequest> & { myWorkId: number }
 ) =>
   HTTP.patch<
     ReplaceTimesDateToString<ModifyMyWorkRequest>,
     CustomResponseBodyModifyMyWorkResponse
   >('/myWork/time', body);
+
+export const patchMyWorkStatus = (body: UpdateMyWorkStatusRequest) =>
+  HTTP.patch<
+    UpdateMyWorkStatusRequest,
+    CustomResponseBodyModifyMyWorkResponse[]
+  >('/myWork/status', body);

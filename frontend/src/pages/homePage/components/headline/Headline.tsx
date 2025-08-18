@@ -50,7 +50,7 @@ const Headline = () => {
             </span>
           </div>
         ) : (
-          <span>{briefingData?.weatherMsg}</span>
+          <span css={S.WeatherRiskText}>{briefingData?.weatherMsg}</span>
         )}
       </div>
       <div css={S.HeadlineWeather}>

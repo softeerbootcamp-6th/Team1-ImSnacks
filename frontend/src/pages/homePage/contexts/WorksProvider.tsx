@@ -4,10 +4,7 @@ import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
 import WorkBlocksContext, {
   type WorkBlocksContextType,
 } from './WorkBlocksContext';
-import type {
-  GetMyWorksOfTodayResponse,
-  RecommendedWorksResponse,
-} from '@/types/openapiGenerator';
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 import { deleteMyWork, getMyWorkOfToday } from '@/apis/myWork.api';
 import type { ContainerContextType } from './ContainerContext';
 
@@ -17,9 +14,7 @@ const WorksProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchMyWorkOfToday = async () => {
       const res = await getMyWorkOfToday(false);
-      setWorkBlocks(
-        getInitialWorkBlocks(res.data as GetMyWorksOfTodayResponse[])
-      );
+      setWorkBlocks(getInitialWorkBlocks(res.data));
     };
     try {
       fetchMyWorkOfToday();

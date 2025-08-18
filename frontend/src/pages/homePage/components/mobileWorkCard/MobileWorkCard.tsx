@@ -1,9 +1,9 @@
 import S from './MobileWorkCard.style';
 import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
 import { IC24CheckIcon } from '@/assets/icons/flat';
-import { WORK_CHIP_TYPES, type WorkChipType } from '@/types/workChip.type';
 import { ColorPrimary, GrayScale } from '@/styles/colors';
 import type { ButtonHTMLAttributes } from 'react';
+import { UpdateMyWorkStatusRequestStatusEnum } from '@/types/openapiGenerator/models/all';
 
 export interface WorkCardRegisterProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,7 +11,7 @@ export interface WorkCardRegisterProps
   cropName: string;
   workName: string;
   workTime: string;
-  status: WorkChipType;
+  status: UpdateMyWorkStatusRequestStatusEnum;
 }
 
 const MobileWorkCard = ({
@@ -22,7 +22,7 @@ const MobileWorkCard = ({
   status,
   ...props
 }: WorkCardRegisterProps) => {
-  const isCompleted = status === WORK_CHIP_TYPES.COMPLETED;
+  const isCompleted = status === UpdateMyWorkStatusRequestStatusEnum.Completed;
 
   return (
     <div css={S.MobileWorkCard(status)}>
