@@ -48,7 +48,7 @@ public class RecommendedWorkService {
 
         List<MyCrop> myCropList = new ArrayList<>();
         if (myCropId == null) {
-            myCropList = myCropRepository.findAllByOrderByCrop_Id();
+            myCropList = myCropRepository.findAllByMember_IdOrderById(memberId);
             myCropId = myCropList.get(0).getId();
         }
         MyCrop myCrop = myCropRepository.findById(myCropId).orElseThrow(() -> new CropException(MY_CROP_NOT_FOUND));
