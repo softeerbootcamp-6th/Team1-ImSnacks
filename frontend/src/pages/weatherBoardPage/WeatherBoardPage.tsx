@@ -9,9 +9,26 @@ import WeatherBoardUV from './components/weatherBoardUV/WeatherBoardUV';
 import WeatherBoardDust from './components/weatherBoardDust/WeatherBoardDust';
 import WeatherBoardSunset from './components/weatherBoardSunset/WeatherBoardSunset';
 import { FlexStyles } from '@/styles/commonStyles';
+import { useEffect, useState } from 'react';
+import { getMemberAddress } from '@/apis/member.api';
 
 const WeatherBoardPage = () => {
-  const address = '충북 영동군 황간면 우천1길 50-42';
+  const [address, setAddress] = useState<string>('');
+
+  const fetchAddress = async () => {
+    try {
+      const res = await getMemberAddress();
+      if (res.data) {
+        setAddress(res.data.address ?? '');
+      }
+    } catch (error) {
+      console.error('주소를 가져오는 데 실패했습니다:', error);
+    }
+  };
+  useEffect(() => {
+    fetchAddress();
+  }, []);
+
   return (
     <div css={S.WeatherBoardPage}>
       <div
