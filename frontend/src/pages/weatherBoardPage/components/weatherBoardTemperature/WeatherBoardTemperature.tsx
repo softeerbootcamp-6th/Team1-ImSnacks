@@ -74,7 +74,7 @@ const WeatherBoardTemperature = () => {
           />
           <YAxis
             domain={[
-              (temperatureData?.minTemperature ?? 0) - 20,
+              (temperatureData?.minTemperature ?? 0) - 3,
               temperatureData?.maxTemperature ?? 0,
             ]}
             hide
