@@ -86,6 +86,8 @@ public class WeatherService {
 
         int nx = farm.getNx();
         int ny = farm.getNy();
+        if(farm.getMember() == null) throw new MemberException(NO_FARM_INFO);
+        String memberName = farm.getMember().getNickname();
 
         int nowTime = LocalDateTime.now().getHour();
         ShortTermWeatherForecast weatherInfoNearest = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
@@ -98,7 +100,7 @@ public class WeatherService {
         WeatherCondition weatherCondition = weatherInfoNearest.getWeatherCondition(sunriseSunSetTime);
         int temperature = weatherInfoNearest.getTemperature();
 
-        return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature);
+        return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature, memberName);
     }
 
     public GetWeatherBriefingResponse getWeatherBriefing(final Long memberId) {
