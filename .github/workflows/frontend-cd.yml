@@ -2,7 +2,7 @@ name: Deploy FE
 
 on:
   push:
-    branches: [main, dev]
+    branches: [fix/fe-257]
 
 permissions:
   id-token: write
