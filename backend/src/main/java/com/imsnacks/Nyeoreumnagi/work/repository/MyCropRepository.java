@@ -10,4 +10,6 @@ public interface MyCropRepository extends JpaRepository<MyCrop, Long> {
     List<MyCrop> findAllByMember_IdOrderByCrop_Id(long memberId);
     List<MyCrop> findAllByMember_IdOrderById(long memberId);
     List<MyCrop> findAllByMember_Id(Long memberId);
+
+    List<MyCrop> findAllByMember_IdOrderById(Long memberId);
 }
