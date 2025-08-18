@@ -12,6 +12,7 @@ import {
   GetWeatherConditionResponse,
   GetWeatherGraphResponse,
   GetWeatherGraphResponseWeatherMetricEnum,
+  GetWeatherStatusResponse,
   GetWindInfoResponse,
 } from '@/types/openapiGenerator';
 
@@ -51,3 +52,6 @@ export const getWeatherAirQuality = () =>
 
 export const getWeatherSunset = () =>
   HTTP.get<GetSunRiseSetTimeResponse>('/weather/sunriseSet');
+
+export const getWeatherStatus = () =>
+  HTTP.get<GetWeatherStatusResponse>('/weather/status');
