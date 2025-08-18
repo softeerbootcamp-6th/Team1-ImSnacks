@@ -42,7 +42,7 @@ function IconCrossfade<T>({
       {CurrentIcon && (
         <CurrentIcon width={width} height={height} css={iconCss} />
       )}
-      {PrevIcon && (
+      {PrevIcon && PrevIcon !== CurrentIcon && (
         <PrevIcon
           width={width}
           height={height}

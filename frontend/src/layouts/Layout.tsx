@@ -11,11 +11,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const { weatherCondition } = useWeatherConditionStore();
   const isWeatherPage = window.location.pathname === '/weather-board';
 
-  const {
-    prev: prevCondition,
-    isFading,
-    durationMs,
-  } = useFadeTransition(weatherCondition, { durationMs: 1000 });
+  const { prev, isFading, durationMs } = useFadeTransition(weatherCondition, {
+    durationMs: 1000,
+  });
 
   return (
     <div
@@ -41,13 +39,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
           pointer-events: none;
         `}
       />
-      {!isWeatherPage && prevCondition !== weatherCondition && (
+      {!isWeatherPage && prev !== weatherCondition && (
         <div
           aria-hidden
           css={css`
             position: absolute;
             inset: 0;
-            ${backgroundTheme[prevCondition as WeatherConditionsType]}
+            ${backgroundTheme[prev as WeatherConditionsType]}
             opacity: ${isFading ? 0 : 1};
             transition: opacity ${durationMs}ms ease-in-out;
             will-change: opacity;
