@@ -12,7 +12,7 @@ import type {
 import type { ReplaceTimesDateToString } from '@/types/replaceTimesDateToString.type';
 
 export const getMyWorkOfToday = (isMobile: boolean) =>
-  HTTP.get<GetMyWorksOfTodayResponse>(
+  HTTP.get<GetMyWorksOfTodayResponse[]>(
     `/myWork/today?isMobile=${isMobile ? 'true' : 'false'}`
   );
 
