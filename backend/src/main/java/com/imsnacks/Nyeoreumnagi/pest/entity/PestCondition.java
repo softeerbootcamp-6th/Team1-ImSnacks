@@ -1,8 +1,8 @@
 package com.imsnacks.Nyeoreumnagi.pest.entity;
 
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityCode;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainCode;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureCode;
+import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityLevel;
+import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainLevel;
+import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureLevel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -54,15 +54,15 @@ public class PestCondition {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "humidity_code", nullable = false)
-    private HumidityCode humidityCode;
+    private HumidityLevel humidityLevel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "temperature_code", nullable = false)
-    private TemperatureCode temperatureCode;
+    private TemperatureLevel temperatureLevel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "weather_code", nullable = false)
-    private RainCode rainCode;
+    private RainLevel rainLevel;
 
     public void assignPest(PestRisk pestRisk) {
         this.pestRisk = pestRisk;

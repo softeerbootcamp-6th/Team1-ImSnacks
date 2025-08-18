@@ -226,11 +226,9 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        List<DashboardWeatherForecast> weathers = dashboardWeatherForecastRepository.findByNxAndNy(nx, ny)
-                .stream()
-                .filter(info -> is3HourIntervals(info.getFcstTime()))
-                .sorted(Comparator.comparing(DashboardWeatherForecast::getFcstTime))
-                .toList();
+        List<Integer> valid3HourIntervals = List.of(2,5,8,11,14,17,20,23);
+        List<DashboardWeatherForecast> weathers =
+                dashboardWeatherForecastRepository.findByNxAndNyAndFcstTimeInOrderByFcstTime(nx, ny, valid3HourIntervals);
 
         validateWeatherInfos(weathers);
 
@@ -259,11 +257,6 @@ public class WeatherService {
                 throw new WeatherException(NO_TEMPERATURE_INFO);
             }
         }
-    }
-
-    private boolean is3HourIntervals(int fcstTime){
-        Set<Integer> valid3HourIntervals = Set.of(2,5,8,11,14,17,20,23);
-        return valid3HourIntervals.contains(fcstTime);
     }
 
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
