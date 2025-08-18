@@ -1,4 +1,4 @@
-package com.imsnacks.Nyeoreumnagi.pest.dto.response;
+package com.imsnacks.Nyeoreumnagi.damage.pest.dto.response;
 
 import java.util.List;
 
@@ -12,8 +12,10 @@ public record GetPestCardListResponse(
             String description
     ) {
     }
+
     public record MyCropCard(
             long myCropId,
             String myCropName
-    ) {}
+    ) {
+    }
 }

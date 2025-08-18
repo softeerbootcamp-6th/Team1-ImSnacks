@@ -1,16 +1,18 @@
 package com.imsnacks.Nyeoreumnagi.pest.service;
 
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.PestService;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
-import com.imsnacks.Nyeoreumnagi.pest.dto.response.GetPestCardListResponse;
-import com.imsnacks.Nyeoreumnagi.pest.entity.PestCondition;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureLevel;
-import com.imsnacks.Nyeoreumnagi.pest.entity.PestRisk;
+import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestCondition;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
@@ -23,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.time.Month;
