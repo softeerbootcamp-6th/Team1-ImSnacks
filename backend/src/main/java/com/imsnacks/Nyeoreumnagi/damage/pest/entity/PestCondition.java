@@ -1,8 +1,8 @@
-package com.imsnacks.Nyeoreumnagi.pest.entity;
+package com.imsnacks.Nyeoreumnagi.damage.pest.entity;
 
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

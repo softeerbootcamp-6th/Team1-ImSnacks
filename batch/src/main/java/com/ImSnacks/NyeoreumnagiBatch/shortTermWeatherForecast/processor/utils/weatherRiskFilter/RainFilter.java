@@ -20,7 +20,7 @@ public class RainFilter extends WeatherRiskFilter{
 
     @Override
     public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<LocalDateTime, List<VilageFcstItemsDto>> metrics) {
-        Map<LocalDateTime, WeatherRiskType> riskPerTime = new HashMap<>();
+        Map<LocalDateTime, WeatherRiskType> riskPerTime = new LinkedHashMap<>();
         metrics.forEach((k, v) -> {
             VilageFcstItemsDto item = v.stream()
                     .filter(i -> i.getCategory().equals(metricCategory))

@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.writer.repository;
+package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.repository;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.SevenDayWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
