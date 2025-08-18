@@ -54,4 +54,4 @@ export const getWeatherSunset = () =>
   HTTP.get<GetSunRiseSetTimeResponse>('/weather/sunriseSet');
 
 export const getWeatherStatus = () =>
-  HTTP.get<GetWeatherStatusResponse>('/weather/status');
+  HTTP.get<GetWeatherStatusResponse[]>('/weather/status');
