@@ -20,12 +20,9 @@ export const useFadeTransition = <T>(
       setPrev(lastValueRef.current);
       setIsFading(false);
 
-      let raf1 = 0;
-      let raf2 = 0;
-
-      raf1 = requestAnimationFrame(() => {
-        raf2 = requestAnimationFrame(() => setIsFading(true));
-      });
+      const startFade = setTimeout(() => {
+        setIsFading(true);
+      }, 0);
 
       const timeout = setTimeout(() => {
         setPrev(null);
@@ -34,8 +31,7 @@ export const useFadeTransition = <T>(
       }, durationMs + delayMs);
 
       return () => {
-        cancelAnimationFrame(raf1);
-        cancelAnimationFrame(raf2);
+        clearTimeout(startFade);
         clearTimeout(timeout);
       };
     }
