@@ -55,6 +55,10 @@ spring:
 
 springdoc:
   override-with-generic-response: false
+  swagger-ui:
+    url: https://api.nyeoreumnagi.site/v3/api-docs
+    tryItOutEnabled: true
+    server-url: https://api.nyeoreumnagi.site
 
 secret:
   jwt-secret-key: ${JWT_SECRET_KEY}
