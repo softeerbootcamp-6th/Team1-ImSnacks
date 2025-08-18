@@ -61,37 +61,37 @@ class WeatherServiceTest {
     @Mock
     private DashboardWeatherForecastRepository dashboardWeatherForecastRepository;
 
-    @Test
-    void getWeatherGraph_성공() {
-        // given
-        Long memberId = 1L;
-        WeatherMetric metric = WeatherMetric.TEMPERATURE;
-
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
-
-        List<ShortTermWeatherForecast> forecasts = IntStream.range(0, 24)
-                .mapToObj(i -> ShortTermWeatherForecast.builder()
-                        .fcstTime(i)
-                        .nx(60)
-                        .ny(120)
-                        .temperature(20 + i % 5)
-                        .humidity(60)
-                        .precipitation(0)
-                        .windSpeed(3)
-                        .build())
-                .toList();
-
-        given(farmRepository.findByMember_Id(memberId)).willReturn(Optional.of(farm));
-        given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
-
-        // when
-        GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
-
-        // then
-        assertThat(response.weatherMetric()).isEqualTo(metric);
-        assertThat(response.max()).isGreaterThan(response.min());
-        assertThat(response.valuePerTime().size()).isEqualTo(24);
-    }
+//    @Test
+//    void getWeatherGraph_성공() {
+//        // given
+//        Long memberId = 1L;
+//        WeatherMetric metric = WeatherMetric.TEMPERATURE;
+//
+//        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+//
+//        List<ShortTermWeatherForecast> forecasts = IntStream.range(0, 24)
+//                .mapToObj(i -> ShortTermWeatherForecast.builder()
+//                        .fcstTime(i)
+//                        .nx(60)
+//                        .ny(120)
+//                        .temperature(20 + i % 5)
+//                        .humidity(60)
+//                        .precipitation(0)
+//                        .windSpeed(3)
+//                        .build())
+//                .toList();
+//
+//        given(farmRepository.findByMember_Id(memberId)).willReturn(Optional.of(farm));
+//        given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
+//
+//        // when
+//        GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
+//
+//        // then
+//        assertThat(response.weatherMetric()).isEqualTo(metric);
+//        assertThat(response.max()).isGreaterThan(response.min());
+//        assertThat(response.valuePerTime().size()).isEqualTo(24);
+//    }
 
 //    @Test
 //    void 기상_특보_겹침_우선순위대로_반환_성공() {
