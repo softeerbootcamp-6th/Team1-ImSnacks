@@ -5,6 +5,7 @@ import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useChangeTimeByResize } from '@/pages/homePage/hooks/useChangeTimeByResize';
 import { useResizeCollision } from '@/hooks/useResizeCollision';
+import { patchMyWork } from '@/apis/myWork.api';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -49,9 +50,18 @@ const WorkCardRegister = ({
   });
 
   // 리사이징 후 충돌 검사 및 위치 조정
-  const handleResizeEnd = () => {
+  const handleResizeEnd = async () => {
     setIsResizing(false);
     handleResizeCollision(block, newWidth);
+    try {
+      await patchMyWork({
+        myWorkId: block.id,
+        startTime: block.startTime,
+        endTime: block.endTime,
+      });
+    } catch (error) {
+      console.error('작업 시간 업데이트 실패:', error);
+    }
     //TODO: 리사이징 후에 30분 미만이 되어 더이상 resize가 안되면 handleResizeEnd에서 setIsResizing(false)이 안되어 버튼이 안보이는 문제 해결
     //TODO: 앞에 있는 블록(z-index가 낮은 블록)을 뒤로 늘려서 뒤에 있는 블록과 충돌할 경우 충돌 감지 안됨 해결
   };
