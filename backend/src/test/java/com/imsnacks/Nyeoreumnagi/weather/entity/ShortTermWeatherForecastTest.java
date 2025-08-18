@@ -11,6 +11,8 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 class ShortTermWeatherForecastTest {
 
@@ -206,28 +208,43 @@ class ShortTermWeatherForecastTest {
 
     @Test
     void isUpdated_within3Hours_returnsTrue() {
-        ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
-                .updateAt(LocalDateTime.now().minusHours(2))
-                .build();
+        LocalDateTime now = LocalDateTime.of(2025,1,1,1,1);
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateTimeMock.when(LocalDateTime::now).thenReturn(now);
 
-        assertThat(forecast.isUpdated()).isEqualTo(true);
+            ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
+                    .updateAt(now.minusHours(2))
+                    .build();
+
+            assertThat(forecast.isUpdated()).isEqualTo(true);
+        }
     }
 
     @Test
     void isUpdated_exactly3Hours_returnsFalse() {
-        ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
-                .updateAt(LocalDateTime.now().minusHours(3))
-                .build();
+        LocalDateTime now = LocalDateTime.of(2025,5,5,5,0);
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateTimeMock.when(LocalDateTime::now).thenReturn(now);
 
-        assertThat(forecast.isUpdated()).isEqualTo(false);
+            ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
+                    .updateAt(now.minusHours(3))
+                    .build();
+
+            assertThat(forecast.isUpdated()).isEqualTo(false);
+        }
     }
 
     @Test
     void isUpdated_over3Hours_returnsFalse() {
-        ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
-                .updateAt(LocalDateTime.now().minusHours(4))
-                .build();
+        LocalDateTime now = LocalDateTime.of(2025,5,5,5,0);
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class)) {
+            localDateTimeMock.when(LocalDateTime::now).thenReturn(now);
 
-        assertThat(forecast.isUpdated()).isEqualTo(false);
+            ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
+                    .updateAt(now.minusHours(4))
+                    .build();
+
+            assertThat(forecast.isUpdated()).isEqualTo(false);
+        }
     }
 }
