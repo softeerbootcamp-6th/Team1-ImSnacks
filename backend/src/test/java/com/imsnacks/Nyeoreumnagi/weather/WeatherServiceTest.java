@@ -3,6 +3,8 @@ package com.imsnacks.Nyeoreumnagi.weather;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
@@ -26,6 +28,7 @@ import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -226,9 +229,12 @@ class WeatherServiceTest {
     @Test
     void 날씨정보_없음_예외() {
         // given
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+        Farm farm = mock(Farm.class);
+        Member member = mock(Member.class);
 
         when(farmRepository.findByMember_Id(any())).thenReturn(Optional.of(farm));
+        when(farm.getMember()).thenReturn(member);
+        when(member.getNickname()).thenReturn("");
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(anyInt(), anyInt()))
                 .thenReturn(List.of());
 
