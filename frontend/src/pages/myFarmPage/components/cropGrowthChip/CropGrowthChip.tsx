@@ -2,13 +2,13 @@ import S from './CropGrowthChip.style';
 
 const CropGrowthChip = ({
   lifeCycle,
-  lifeCycleStep,
+  step,
 }: {
   lifeCycle: string;
-  lifeCycleStep: number;
+  step: number;
 }) => {
   return (
-    <div css={[S.CropGrowthChip, S.CropGrowthChipColorByStep(lifeCycleStep)]}>
+    <div css={[S.CropGrowthChip, S.CropGrowthChipColorByStep(step)]}>
       {lifeCycle}
     </div>
   );
