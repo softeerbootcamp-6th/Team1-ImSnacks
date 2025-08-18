@@ -16,6 +16,7 @@ export class GetMyCropsResponse {
     'myCropName'?: string;
     'daysFromStartDate'?: number;
     'lifeCycle'?: string;
+    'step'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -45,6 +46,12 @@ export class GetMyCropsResponse {
             "baseName": "lifeCycle",
             "type": "string",
             "format": ""
+        },
+        {
+            "name": "step",
+            "baseName": "step",
+            "type": "number",
+            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
