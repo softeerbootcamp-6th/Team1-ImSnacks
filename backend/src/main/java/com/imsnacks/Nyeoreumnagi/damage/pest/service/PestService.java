@@ -1,17 +1,17 @@
-package com.imsnacks.Nyeoreumnagi.pest.service;
+package com.imsnacks.Nyeoreumnagi.damage.pest.service;
 
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
-import com.imsnacks.Nyeoreumnagi.pest.dto.response.GetPestCardListResponse;
-import com.imsnacks.Nyeoreumnagi.pest.dto.response.GetPestCardListResponse.MyCropCard;
-import com.imsnacks.Nyeoreumnagi.pest.dto.response.GetPestCardListResponse.PestCard;
-import com.imsnacks.Nyeoreumnagi.pest.entity.PestCondition;
-import com.imsnacks.Nyeoreumnagi.pest.entity.PestRisk;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse;
+import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse.MyCropCard;
+import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse.PestCard;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestCondition;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus;

@@ -1,7 +1,6 @@
-package com.imsnacks.Nyeoreumnagi.pest.service;
+package com.imsnacks.Nyeoreumnagi.damage.pest.service;
 
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.util.List;
