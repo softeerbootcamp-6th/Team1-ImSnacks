@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.pest.service;
 
+import com.imsnacks.Nyeoreumnagi.damage.pest.enums.DamageType;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.PestService;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
@@ -120,6 +121,7 @@ public class PestServiceTest {
                 42L,
                 "귤응애",
                 "잎과 과실을 흡즙해 엽록소가 파괴되어 표면에 흰색 반점이 생깁니다.",
+                DamageType.BUGS,
                 new ArrayList<>(),
                 귤
         );
@@ -181,6 +183,7 @@ public class PestServiceTest {
                 42L,
                 "귤응애",
                 "잎과 과실을 흡즙해 엽록소가 파괴되어 표면에 흰색 반점이 생깁니다.",
+                DamageType.BUGS,
                 new ArrayList<>(),
                 귤
         );
@@ -200,7 +203,7 @@ public class PestServiceTest {
 
         // expected
         var pestCards = List.of(귤응애.toCard());
-        var cropCards = List.of(new GetPestCardListResponse.MyCropCard(마이귤.getId(), 마이귤.getCrop().getName()));
+        var cropCards = List.of(마이귤.toCard());
 //        var cropCards = new ArrayList<GetPestCardListResponse.MyCropCard>();
         var expected = new GetPestCardListResponse(pestCards, cropCards);
 
@@ -242,6 +245,7 @@ public class PestServiceTest {
                 42L,
                 "귤응애",
                 "잎과 과실을 흡즙해 엽록소가 파괴되어 표면에 흰색 반점이 생깁니다.",
+                DamageType.BUGS,
                 new ArrayList<>(),
                 귤
         );
@@ -304,6 +308,7 @@ public class PestServiceTest {
                 42L,
                 "귤응애",
                 "잎과 과실을 흡즙해 엽록소가 파괴되어 표면에 흰색 반점이 생깁니다.",
+                DamageType.BUGS,
                 new ArrayList<>(),
                 귤
         );
@@ -326,6 +331,7 @@ public class PestServiceTest {
                 43L,
                 "왕담배나방",
                 "어린 과실의 경우는 과실에 큰 구멍을 내고 파고 들어가면서 식해하고 착색기에는 작은 상처를 내듯이 가해하는 경우가 많습니다.",
+                DamageType.BUGS,
                 new ArrayList<>(),
                 귤
         );
