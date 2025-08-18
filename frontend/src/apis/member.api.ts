@@ -1,5 +1,11 @@
+import type {
+  GetMemberAddressResponse,
+  GetMyCropsResponse,
+} from '@/types/openapiGenerator';
 import HTTP from './http';
-import { GetMyCropsResponse } from '@/types/openapiGenerator';
+
+export const getMemberAddress = () =>
+  HTTP.get<GetMemberAddressResponse>('/member/address');
 
 export const getMyCrop = () =>
   HTTP.get<GetMyCropsResponse[]>('/member/myCrops');

@@ -2,6 +2,7 @@ import { FLAT_ICON } from '@/constants/flatIcons';
 import { Typography } from '@/styles/typography';
 import { getTemperatureColor } from '../../utils/temperatureUtil';
 import { FlexStyles } from '@/styles/commonStyles';
+import type { TemperaturePerTime } from '@/types/openapiGenerator/models/all';
 
 const TemperatureDot = ({
   cx,
@@ -10,15 +11,15 @@ const TemperatureDot = ({
 }: {
   cx: number;
   cy: number;
-  payload?: { time: string; temperature: number; weather: string };
+  payload?: TemperaturePerTime;
 }) => {
   const DOT_SIZE = 6;
 
   const dotColor = payload
-    ? getTemperatureColor(payload.temperature)
+    ? getTemperatureColor(payload?.value ?? 0)
     : '#F6695A';
-  const FlatIconComponent = payload?.weather
-    ? FLAT_ICON[payload.weather as keyof typeof FLAT_ICON]
+  const FlatIconComponent = payload?.weatherType
+    ? FLAT_ICON[payload.weatherType as keyof typeof FLAT_ICON]
     : null;
 
   return (
@@ -27,7 +28,7 @@ const TemperatureDot = ({
         <foreignObject x={cx - 17} y={cy - 50} width={40} height={66}>
           <div css={FlexStyles.flexColumn}>
             <FlatIconComponent width={20} height={20} />
-            <span css={Typography.Body_S_400}>{payload.temperature}°</span>
+            <span css={Typography.Body_S_400}>{payload?.value}°</span>
           </div>
         </foreignObject>
       )}
