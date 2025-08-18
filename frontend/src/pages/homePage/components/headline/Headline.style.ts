@@ -49,7 +49,6 @@ const HeadlineDate = css`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin-right: 200px;
 `;
 
 const HeadlineWeatherIcon = css`

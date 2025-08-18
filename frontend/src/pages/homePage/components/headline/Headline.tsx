@@ -9,13 +9,13 @@ import { GetWeatherBriefingResponse } from '@/types/openapiGenerator';
 import { useEffect, useState } from 'react';
 import { getWeatherBriefing } from '@/apis/weather.api';
 import { formatCurrentTime } from '@/utils/formatTimeUtil';
+import IconCrossfade from '@/components/transition/IconCrossfade';
+import type { WeatherConditionsType } from '@/types/weather.types';
 
 const Headline = () => {
   const { nickName } = useUserStore();
   const { weatherCondition } = useWeatherConditionStore();
   const { currentTime } = useTimeStore();
-
-  const GlassIconComponent = GLASS_ICON[weatherCondition];
 
   const [briefingData, setBriefingData] =
     useState<GetWeatherBriefingResponse>();
@@ -58,10 +58,16 @@ const Headline = () => {
           <span>{formatCurrentTime(currentTime).date}</span>
           <span>{formatCurrentTime(currentTime).time}</span>
         </div>
-        <GlassIconComponent
+        <IconCrossfade<WeatherConditionsType>
+          value={weatherCondition}
+          iconMap={GLASS_ICON}
           width={200}
           height={150}
-          css={S.HeadlineWeatherIcon}
+          containerCss={css`
+            width: 200px;
+            height: 150px;
+          `}
+          iconCss={S.HeadlineWeatherIcon}
         />
       </div>
     </div>

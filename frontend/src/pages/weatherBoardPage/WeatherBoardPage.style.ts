@@ -15,6 +15,7 @@ const WeatherBoardPage = css`
 const MyFarmAddress = css`
   ${Typography.Body_S_400};
   color: ${GrayScale.G50};
+  height: 24px;
 `;
 
 const WeatherBoardContent = css`
