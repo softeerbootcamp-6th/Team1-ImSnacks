@@ -13,4 +13,6 @@ public interface DashboardTodayWeatherRepository extends JpaRepository<Dashboard
     Optional<WindInfo> findWindByNxAndNy(int nx, int ny);
     Optional<HumidityInfo> findHumidityByNxAndNy(int nx, int ny);
     Optional<PrecipitationInfo> findPrecipitationByNxAndNy(int nx, int ny);
+    Optional<AirQualityInfo> findAirQualityByNxAndNy(int nx, int ny);
+
 }
