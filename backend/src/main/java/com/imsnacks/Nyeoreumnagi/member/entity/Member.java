@@ -36,6 +36,6 @@ public class Member {
     @Setter
     private UUID refreshToken;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Farm farm;
 }

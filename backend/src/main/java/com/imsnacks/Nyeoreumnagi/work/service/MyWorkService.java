@@ -6,6 +6,7 @@ import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.request.UpdateMyWorkStatusRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfWeeklyResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
@@ -112,7 +113,7 @@ public class MyWorkService {
                 )
         );
 
-        if(isMobile){
+        if (isMobile) {
             return responseStream.sorted(Comparator
                             .comparing(GetMyWorksOfTodayResponse::status, (s1, s2) -> {
                                 if (s1.equals(INCOMPLETED) && s2.equals(COMPLETED)) {
@@ -140,7 +141,7 @@ public class MyWorkService {
         } catch (DateTimeParseException e) {
             throw new WorkException(INVALID_START_TIME_FORMAT);
         }
-        if (startDate.isAfter(LocalDate.now())){
+        if (startDate.isAfter(LocalDate.now())) {
             throw new WorkException(START_TIME_IS_FUTURE);
         }
         List<GetMyWorksOfWeeklyResponse> responseList = new ArrayList<>();
@@ -149,7 +150,7 @@ public class MyWorkService {
                 .stream().collect(Collectors.groupingBy(work -> work.getStartTime().toLocalDate(),
                         TreeMap::new,
                         Collectors.toList()
-                        ));
+                ));
 
         workDataMap.forEach((key, value) -> responseList.add(
                 new GetMyWorksOfWeeklyResponse(
@@ -165,5 +166,11 @@ public class MyWorkService {
         ));
 
         return responseList;
-}
+    }
+
+    @Transactional
+    public void updateMyWorkStatus(UpdateMyWorkStatusRequest request, long memberId){
+        MyWork myWork = myWorkRepository.findByIdAndMember_Id(request.myWorkId(), memberId).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
+        myWork.setWorkStatus(request.status());
+    }
 }
