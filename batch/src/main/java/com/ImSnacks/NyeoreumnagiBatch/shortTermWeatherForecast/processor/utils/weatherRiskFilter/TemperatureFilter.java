@@ -6,10 +6,7 @@ import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRiskType;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiPredicate;
 
 @Component
@@ -22,7 +19,7 @@ public class TemperatureFilter extends WeatherRiskFilter {
 
     @Override
     public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<LocalDateTime, List<VilageFcstItemsDto>> metrics) {
-        Map<LocalDateTime, WeatherRiskType> riskPerTime = new HashMap<>();
+        Map<LocalDateTime, WeatherRiskType> riskPerTime = new LinkedHashMap<>();
 
         List<Map.Entry<LocalDateTime, List<VilageFcstItemsDto>>> entryList = new ArrayList<>(metrics.entrySet());
         for (int i = 0; i < entryList.size(); i++) {
