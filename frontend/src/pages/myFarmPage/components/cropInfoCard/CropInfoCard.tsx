@@ -1,11 +1,11 @@
 import S from './CropInfoCard.style';
 import { CROP_ICONS } from '@/constants/cropIcons';
 import type { CropNameType } from '@/types/crop.type';
-import type { CropInfoCardType } from '@/types/cropInfoCard.type';
 import CropGrowthChip from '../cropGrowthChip/CropGrowthChip';
+import { GetMyCropsResponse } from '@/types/openapiGenerator';
 
-const CropInfoCard = ({ crop }: { crop: CropInfoCardType }) => {
-  const CropIconComponent = CROP_ICONS[crop.name as CropNameType];
+const CropInfoCard = ({ crop }: { crop: GetMyCropsResponse }) => {
+  const CropIconComponent = CROP_ICONS[crop.myCropName as CropNameType];
 
   return (
     <div css={S.CropInfoCard}>
@@ -14,17 +14,14 @@ const CropInfoCard = ({ crop }: { crop: CropInfoCardType }) => {
           {CropIconComponent && <CropIconComponent width={54} height={54} />}
         </div>
         <div css={S.CropInfo}>
-          <div css={S.CropName}>{crop.name}</div>
-          <CropGrowthChip
-            lifeCycleName={crop.lifeCycleName}
-            lifeCycleStep={crop.lifeCycleStep}
-          />
+          <div css={S.CropName}>{crop.myCropName}</div>
+          <CropGrowthChip lifeCycle={crop.lifeCycle || ''} lifeCycleStep={1} />
         </div>
       </div>
 
       <div css={S.CropDateWrapper}>
         <div css={S.CropDateDescription}>발아일로부터</div>
-        <div css={S.CropDate}>+{crop.duration}일</div>
+        <div css={S.CropDate}>+{crop.daysFromStartDate}일</div>
       </div>
     </div>
   );
