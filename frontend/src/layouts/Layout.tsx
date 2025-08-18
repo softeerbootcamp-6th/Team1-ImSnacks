@@ -20,10 +20,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div
       css={css`
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: hidden;
       `}
     >
       <div
@@ -34,6 +37,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
           ${isWeatherPage
             ? gradientStyles.backgroundWeatherBoard
             : backgroundTheme[weatherCondition]}
+          height: 100%;
+          pointer-events: none;
         `}
       />
       {!isWeatherPage && prevCondition !== weatherCondition && (
@@ -46,6 +51,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
             opacity: ${isFading ? 0 : 1};
             transition: opacity ${durationMs}ms ease-in-out;
             will-change: opacity;
+            height: 100%;
+            pointer-events: none;
           `}
         />
       )}
@@ -54,6 +61,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         css={css`
           max-width: 1328px;
           position: relative;
+          z-index: 1;
         `}
         // css={css`
         //   width: 100%;
