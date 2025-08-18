@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionStringFromDegree;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
@@ -219,6 +218,20 @@ public class WeatherService {
         return new GetDailyMaxPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
     }
 
+    public GetAirQualityResponse getAirQuality(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        AirQualityInfo airQualityInfo = dashboardTodayWeatherRepository.findAirQualityByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_PRECIPITATION));
+        validateAirQualityInfo(airQualityInfo);
+
+        return new GetAirQualityResponse(airQualityInfo.getPm10Value(), airQualityInfo.getPm10Grade(), airQualityInfo.getPm25Value(), airQualityInfo.getPm25Grade());
+    }
+
+
     public GetTemperatureResponse getTemperature(final Long memberId) {
         assert(memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
@@ -262,6 +275,14 @@ public class WeatherService {
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
         if(precipitationInfo.getMaxPrecipitation() == null){
             throw new WeatherException(NO_PRECIPITATION);
+        }
+    }
+
+    private void validateAirQualityInfo(AirQualityInfo airQualityInfo) {
+        if(airQualityInfo.getPm10Grade() == null || airQualityInfo.getPm10Grade() == null
+                || airQualityInfo.getPm10Grade() == null  || airQualityInfo.getPm10Grade() == null
+        ){
+            throw new WeatherException(NO_AIR_QUALITY_INFO);
         }
     }
 
