@@ -44,7 +44,7 @@ function App() {
 
     fetchWeather();
     setCurrentTime(currentTime);
-  }, [currentTime, setCurrentTime, setWeatherCondition]);
+  }, [currentTime, setCurrentTime, setWeatherCondition, setNickName]);
 
   return (
     <>
