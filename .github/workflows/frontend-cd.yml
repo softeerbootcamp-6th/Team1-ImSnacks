@@ -30,6 +30,13 @@ jobs:
         working-directory: ./frontend
         run: pnpm install
 
+      - name: Create .env file
+        working-directory: ./frontend
+        run: |
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+          echo ".env file created:"
+          cat .env
+
       - name: Build FE
         working-directory: ./frontend
         run: pnpm run build
@@ -47,6 +54,11 @@ jobs:
             echo "AWS_REGION is set: ${{ secrets.AWS_FE_REGION }}"
           else
             echo "AWS_REGION is NOT set"
+          fi
+          if [ -n "${{ secrets.VITE_API_URL }}" ]; then
+            echo "VITE_API_URL is set"
+          else
+            echo "VITE_API_URL is NOT set"
           fi
 
       - name: AWS Credentials 설정
