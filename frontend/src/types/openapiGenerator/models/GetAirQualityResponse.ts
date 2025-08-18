@@ -11,11 +11,11 @@
  */
 
 
-export class GetWeatherConditionResponse {
-    'weatherCondition'?: string;
-    'weatherKeyword'?: string;
-    'temperature'?: number;
-    'memberName'?: string;
+export class GetAirQualityResponse {
+    'pm10Value'?: number;
+    'pm10Grade'?: number;
+    'pm25Value'?: number;
+    'pm25Grade'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -23,32 +23,32 @@ export class GetWeatherConditionResponse {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "weatherCondition",
-            "baseName": "weatherCondition",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "weatherKeyword",
-            "baseName": "weatherKeyword",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "temperature",
-            "baseName": "temperature",
+            "name": "pm10Value",
+            "baseName": "pm10Value",
             "type": "number",
             "format": "int32"
         },
         {
-            "name": "memberName",
-            "baseName": "memberName",
-            "type": "string",
-            "format": ""
+            "name": "pm10Grade",
+            "baseName": "pm10Grade",
+            "type": "number",
+            "format": "int32"
+        },
+        {
+            "name": "pm25Value",
+            "baseName": "pm25Value",
+            "type": "number",
+            "format": "int32"
+        },
+        {
+            "name": "pm25Grade",
+            "baseName": "pm25Grade",
+            "type": "number",
+            "format": "int32"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherConditionResponse.attributeTypeMap;
+        return GetAirQualityResponse.attributeTypeMap;
     }
 
     public constructor() {

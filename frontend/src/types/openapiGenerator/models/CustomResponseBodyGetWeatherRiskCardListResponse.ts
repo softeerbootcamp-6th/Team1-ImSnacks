@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { GetWeatherRiskCardListResponse } from '../models/GetWeatherRiskCardListResponse';
 
-export class GetWeatherConditionResponse {
-    'weatherCondition'?: string;
-    'weatherKeyword'?: string;
-    'temperature'?: number;
-    'memberName'?: string;
+export class CustomResponseBodyGetWeatherRiskCardListResponse {
+    'code'?: number;
+    'msg'?: string;
+    'data'?: GetWeatherRiskCardListResponse;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -23,32 +23,26 @@ export class GetWeatherConditionResponse {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "weatherCondition",
-            "baseName": "weatherCondition",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "weatherKeyword",
-            "baseName": "weatherKeyword",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "temperature",
-            "baseName": "temperature",
+            "name": "code",
+            "baseName": "code",
             "type": "number",
             "format": "int32"
         },
         {
-            "name": "memberName",
-            "baseName": "memberName",
+            "name": "msg",
+            "baseName": "msg",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "GetWeatherRiskCardListResponse",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherConditionResponse.attributeTypeMap;
+        return CustomResponseBodyGetWeatherRiskCardListResponse.attributeTypeMap;
     }
 
     public constructor() {
