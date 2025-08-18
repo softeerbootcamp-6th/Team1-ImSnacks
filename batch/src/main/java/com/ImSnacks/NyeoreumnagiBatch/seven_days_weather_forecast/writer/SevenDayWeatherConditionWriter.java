@@ -3,7 +3,7 @@ package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherConditionDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.entity.MidTempRegionCode;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.repository.MidTempRegionCodeRepository;
-import com.ImSnacks.NyeoreumnagiBatch.writer.repository.SevenDayWeatherForecastRepository;
+import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.repository.SevenDayWeatherForecastRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
