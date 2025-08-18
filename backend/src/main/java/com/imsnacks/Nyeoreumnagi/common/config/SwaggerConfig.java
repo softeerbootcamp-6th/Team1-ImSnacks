@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,8 @@ public class SwaggerConfig {
                 .components(new Components())
                 .info(apiInfo())
                 .addSecurityItem(securityRequirement)
-                .schemaRequirement("BearerAuth", securityScheme);
+                .schemaRequirement("BearerAuth", securityScheme)
+                .servers(List.of(new Server().url("https://api.nyeoreumnagi.site").description("Production server")));
     }
 
     private Info apiInfo() {
