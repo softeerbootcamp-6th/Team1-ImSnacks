@@ -17,7 +17,7 @@ const CropInfoCard = ({ crop }: { crop: GetMyCropsResponse }) => {
           <div css={S.CropName}>{crop.myCropName}</div>
           <CropGrowthChip
             lifeCycle={crop.lifeCycle || ''}
-            step={crop.step || 0}
+            step={crop.step || 1}
           />
         </div>
       </div>
