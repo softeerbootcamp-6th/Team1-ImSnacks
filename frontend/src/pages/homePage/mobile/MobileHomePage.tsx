@@ -86,7 +86,7 @@ const MobileHomePage = () => {
             },
           ]}
         />
-        <MobileTodo todoList={todoList} />
+        <MobileTodo />
       </div>
     </div>
   );
