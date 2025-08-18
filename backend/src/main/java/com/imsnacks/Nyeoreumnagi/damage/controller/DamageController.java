@@ -32,7 +32,7 @@ public class DamageController {
     @ApiResponse(responseCode = "200", description = "병해충 피해 목록 조회 성공")
     @ApiResponse(responseCode = "400", description = "병해충 피해 목록 조회 실패")
     @GetMapping("/pest")
-    public ResponseEntity<CustomResponseBody<GetPestCardListResponse>> getPestCardList(@PreAuthorize Long memberId, @RequestParam Long myCropId) {
+    public ResponseEntity<CustomResponseBody<GetPestCardListResponse>> getPestCardList(@PreAuthorize Long memberId, @RequestParam(required = false) Long myCropId) {
         return ResponseUtil.success(pestService.getPestCardList(memberId, myCropId));
     }
 
