@@ -4,6 +4,7 @@ public record GetMyCropsResponse(
         Long myCropId,
         String myCropName,
         Integer daysFromStartDate,
-        String lifeCycle
+        String lifeCycle,
+        Integer step
 ) {
 }
