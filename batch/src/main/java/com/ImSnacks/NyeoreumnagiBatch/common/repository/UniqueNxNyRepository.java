@@ -10,4 +10,10 @@ import java.util.List;
 
 @Repository
 public interface UniqueNxNyRepository extends JpaRepository<UniqueNxNy, NxNyId> {
+    List<UniqueNxNy> findByStationName(String stationName);
+
+    @Query("SELECT DISTINCT u.stationName FROM UniqueNxNy u" +
+            " where u.stationName is not null " +
+            " and trim(u.stationName) <> ''")
+    List<String> findDistinctStationName();
 }
