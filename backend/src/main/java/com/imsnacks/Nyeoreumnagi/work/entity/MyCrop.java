@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.work.entity;
 
+import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse;
 import com.imsnacks.Nyeoreumnagi.lifecycle.entity.LifeCycle;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import jakarta.persistence.*;
@@ -30,5 +31,9 @@ public class MyCrop {
 
     public long getDaysFromStartDate(LocalDateTime now) {
         return ChronoUnit.DAYS.between(this.getGerminationTime(), now);
+    }
+
+    public GetPestCardListResponse.MyCropCard toCard() {
+        return (new GetPestCardListResponse.MyCropCard(id, crop.getName()));
     }
 }
