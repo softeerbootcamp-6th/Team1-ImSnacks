@@ -1,14 +1,14 @@
 package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ShortTermWeatherForecast")
@@ -17,6 +17,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class ShortTermWeatherForecast {
     @Id
     private int nx;
@@ -48,4 +49,8 @@ public class ShortTermWeatherForecast {
 
     @Column(name = "wind_direction", nullable = false)
     private int wind_direction;
+
+    @LastModifiedDate
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 }

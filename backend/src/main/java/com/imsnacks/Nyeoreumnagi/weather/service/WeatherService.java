@@ -60,7 +60,10 @@ public class WeatherService {
         int maxLimit = getUpperLimit(maxValue);
         int minLimit = getLowerLimit(minValue, weatherMetric);
 
-        return new GetWeatherGraphResponse(maxLimit, minLimit, weatherMetric, valuePerTimes);
+        LocalDateTime lastUpdatedTime = weatherInfos.get(0).getUpdateAt();
+        boolean isUpdated = weatherInfos.get(0).isUpdated();
+
+        return new GetWeatherGraphResponse(maxLimit, minLimit, weatherMetric, isUpdated, lastUpdatedTime, valuePerTimes);
     }
 
     public GetFcstRiskResponse getWeatherRisk(Long memberId) {
