@@ -101,7 +101,7 @@ const WeatherBoardPage = () => {
           `}
         >
           <WeatherBoardUV />
-          <WeatherBoardDust fineDustValue={55} ultrafineDustValue={78} />
+          <WeatherBoardDust />
           <WeatherBoardSunset />
         </div>
       </div>
