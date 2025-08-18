@@ -163,7 +163,6 @@ class MemberServiceTest {
                 .thenReturn(Collections.emptyList());
 
         when(myCrop.getDaysFromStartDate(any())).thenCallRealMethod();
-        when(myCrop.findCurrentLifeCycle(anyList(), any())).thenCallRealMethod();
 
         // When
         List<GetMyCropsResponse> response = memberService.getMyCrops(memberId);
