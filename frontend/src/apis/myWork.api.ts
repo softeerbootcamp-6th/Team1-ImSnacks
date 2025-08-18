@@ -8,6 +8,7 @@ import type {
   CustomResponseBodyVoid,
   ModifyMyWorkRequest,
   CustomResponseBodyModifyMyWorkResponse,
+  UpdateMyWorkStatusRequest,
 } from '@/types/openapiGenerator';
 import type { ReplaceTimesDateToString } from '@/types/replaceTimesDateToString.type';
 
@@ -39,3 +40,9 @@ export const patchMyWorkTime = (
     ReplaceTimesDateToString<ModifyMyWorkRequest>,
     CustomResponseBodyModifyMyWorkResponse
   >('/myWork/time', body);
+
+export const patchMyWorkStatus = (body: UpdateMyWorkStatusRequest) =>
+  HTTP.patch<
+    UpdateMyWorkStatusRequest,
+    CustomResponseBodyModifyMyWorkResponse[]
+  >('/myWork/status', body);
