@@ -3,13 +3,18 @@ import 'dayjs/locale/ko';
 import S from './WeeklyCalendar.style';
 import WorkCardWeb from '../workCardWeb/WorkCardWeb';
 import type { WorkCardData } from '@/types/openapiGenerator';
-import { WORK_CHIP_TYPES } from '@/types/workChip.type';
+import { WORK_CHIP_TYPES, type WorkChipType } from '@/types/workChip.type';
 
 interface WeeklyCalendarProps {
   weekDates: Date[];
   workScheduleDataByDate: Record<string, WorkCardData[]>;
   isExpanded: boolean;
   hasMoreWorks: boolean;
+  handleCheckButton: (
+    id: number,
+    status: WorkChipType,
+    dateKey: string
+  ) => void;
 }
 
 const WeeklyCalendar = ({
@@ -17,6 +22,7 @@ const WeeklyCalendar = ({
   workScheduleDataByDate,
   isExpanded,
   hasMoreWorks,
+  handleCheckButton,
 }: WeeklyCalendarProps) => {
   return (
     <>
@@ -40,10 +46,13 @@ const WeeklyCalendar = ({
                   {dayData.map((work: WorkCardData) => (
                     <WorkCardWeb
                       key={work.myWorkId}
+                      id={work.myWorkId ?? 0}
                       cropName={work.myCropName ?? ''}
                       workName={work.myWorkName ?? ''}
                       workTime={work.myWorkTime ?? ''}
                       status={work.status ?? WORK_CHIP_TYPES.INCOMPLETED}
+                      dateKey={dateKey}
+                      handleCheckButton={handleCheckButton}
                     />
                   ))}
                 </div>

@@ -21,8 +21,13 @@ const WorkSchedule = () => {
     isCurrentWeek,
   } = useWeeklyWorkSchedule();
 
-  const { myWorkOfWeekly, isExpanded, handleExpandClick, hasMoreWorks } =
-    useMyWorkOfWeekly(weekDates);
+  const {
+    myWorkOfWeekly,
+    isExpanded,
+    handleExpandClick,
+    hasMoreWorks,
+    handleCheckButton,
+  } = useMyWorkOfWeekly(weekDates);
 
   return (
     <div css={S.WorkScheduleContainer}>
@@ -42,6 +47,7 @@ const WorkSchedule = () => {
           workScheduleDataByDate={myWorkOfWeekly ?? {}}
           isExpanded={isExpanded}
           hasMoreWorks={hasMoreWorks}
+          handleCheckButton={handleCheckButton}
         />
       </div>
       {hasMoreWorks && (
