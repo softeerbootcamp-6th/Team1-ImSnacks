@@ -28,19 +28,6 @@ public class MyCrop {
 
     private LocalDateTime germinationTime;
 
-    public LifeCycle findCurrentLifeCycle(List<LifeCycle> lifeCycles, LocalDateTime now) {
-        long daysFromStartDate = ChronoUnit.DAYS.between(this.getGerminationTime(), now);
-
-        int duration = 0;
-        for (LifeCycle lifeCycle : lifeCycles) {
-            duration += lifeCycle.getDuration();
-            if (duration >= daysFromStartDate) {
-                return lifeCycle;
-            }
-        }
-        return lifeCycles.isEmpty() ? null : lifeCycles.get(lifeCycles.size() - 1);
-    }
-
     public long getDaysFromStartDate(LocalDateTime now) {
         return ChronoUnit.DAYS.between(this.getGerminationTime(), now);
     }
