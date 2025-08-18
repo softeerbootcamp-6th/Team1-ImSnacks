@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.imsnacks.Nyeoreumnagi.member.dto.SignupRequest.*;
@@ -62,12 +60,13 @@ public class MemberService {
         assert (memberId != null);
         List<MyCrop> myCrops = myCropRepository.findAllByMember_Id(memberId);
 
+        LocalDateTime now = LocalDateTime.now(ZONE);
         return myCrops.stream()
                 .map(myCrop -> {
                     List<LifeCycle> lifeCycles = lifeCycleRepository
                             .findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
-                    LifeCycle currentLifeCycle = myCrop.findCurrentLifeCycle(lifeCycles, LocalDateTime.now());
-                    long daysFromStartDate = myCrop.getDaysFromStartDate(LocalDateTime.now());
+                    LifeCycle currentLifeCycle = lifeCycleResolver.calculateLifeCycle(myCrop, lifeCycles, now);
+                    long daysFromStartDate = myCrop.getDaysFromStartDate(now);
 
                     return new GetMyCropsResponse(
                             myCrop.getId(),

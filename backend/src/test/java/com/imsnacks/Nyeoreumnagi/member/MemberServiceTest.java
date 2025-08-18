@@ -31,12 +31,19 @@ import static org.mockito.Mockito.when;
 class MemberServiceTest {
 
     private FarmRepository farmRepository;
-    private MemberRepository memberRepository;
+    private LifeCycleRepository lifeCycleRepository;
+    private MyCropRepository myCropRepository;
     private MemberService memberService;
+    private LifeCycleResolver lifeCycleResolver;
     private FarmService farmService;
 
     @BeforeEach
     void setUp() {
+        farmRepository = mock(FarmRepository.class);
+        lifeCycleRepository  = mock(LifeCycleRepository.class);
+        myCropRepository = mock(MyCropRepository.class);
+        lifeCycleResolver = mock(LifeCycleResolver.class);
+        memberService = new MemberService(farmRepository, myCropRepository, lifeCycleRepository, lifeCycleResolver);
         farmRepository = Mockito.mock(FarmRepository.class);
         memberRepository = Mockito.mock(MemberRepository.class);
         farmService = Mockito.mock(FarmService.class);
@@ -52,7 +59,7 @@ class MemberServiceTest {
         Long memberId = 1L;
         Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", 36.12, 127.12, 12, 60, "regionCode", null);
 
-        Mockito.when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         // when
         GetMemberAddressResponse response = memberService.getMemberAddress(memberId);
@@ -82,7 +89,7 @@ class MemberServiceTest {
     void getMemberAddress_noFarmInfo() {
         // given
         Long memberId = 2L;
-        Mockito.when(farmRepository.findById(memberId)).thenReturn(Optional.empty());
+        when(farmRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // when & then
         MemberException ex = assertThrows(MemberException.class, () ->

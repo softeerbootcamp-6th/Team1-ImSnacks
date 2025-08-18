@@ -34,7 +34,7 @@ class LifeCycleResolverTest {
         when(lc3.getId()).thenReturn(3L);
         when(lc3.getDuration()).thenReturn(16);
 
-        long id = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2, lc3), 기준시각);
+        long id = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2, lc3), 기준시각).getId();
 
         assertThat(id).isEqualTo(2L);
     }
@@ -52,7 +52,7 @@ class LifeCycleResolverTest {
         when(lc2.getId()).thenReturn(2L);
         when(lc2.getDuration()).thenReturn(7);
 
-        long id = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2), 기준시각);
+        long id = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2), 기준시각).getId();
 
         assertThat(id).isEqualTo(1L);
     }
@@ -70,7 +70,7 @@ class LifeCycleResolverTest {
         when(lc2.getId()).thenReturn(2L);
         when(lc2.getDuration()).thenReturn(7);
 
-        long id = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2), 기준시각);
+        long id = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2), 기준시각).getId();
 
         assertThat(id).isEqualTo(1L);
     }
@@ -92,7 +92,7 @@ class LifeCycleResolverTest {
         when(lc3.getId()).thenReturn(3L);
         when(lc3.getDuration()).thenReturn(10);
 
-        long calculateLifeCycleId = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2, lc3), 기준시각);
+        long calculateLifeCycleId = resolver.calculateLifeCycle(myCrop, List.of(lc1, lc2, lc3), 기준시각).getId();
 
         assertThat(calculateLifeCycleId).isEqualTo(lc3.getId());
     }
