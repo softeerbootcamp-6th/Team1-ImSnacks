@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
+import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import org.junit.jupiter.api.Test;
 
@@ -200,5 +202,32 @@ class ShortTermWeatherForecastTest {
 
         //then
         assertThat(result).isEqualTo(WeatherCondition.CLOUDY_NIGHT);
+    }
+
+    @Test
+    void isUpdated_within3Hours_returnsTrue() {
+        ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
+                .updateAt(LocalDateTime.now().minusHours(2))
+                .build();
+
+        assertThat(forecast.isUpdated()).isEqualTo(true);
+    }
+
+    @Test
+    void isUpdated_exactly3Hours_returnsFalse() {
+        ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
+                .updateAt(LocalDateTime.now().minusHours(3))
+                .build();
+
+        assertThat(forecast.isUpdated()).isEqualTo(false);
+    }
+
+    @Test
+    void isUpdated_over3Hours_returnsFalse() {
+        ShortTermWeatherForecast forecast = ShortTermWeatherForecast.builder()
+                .updateAt(LocalDateTime.now().minusHours(4))
+                .build();
+
+        assertThat(forecast.isUpdated()).isEqualTo(false);
     }
 }
