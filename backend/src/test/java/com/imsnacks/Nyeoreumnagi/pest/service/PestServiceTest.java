@@ -275,7 +275,7 @@ public class PestServiceTest {
     }
 
     @Test
-    void 귤_병해충_2개_조건이_부합한다() {
+    void 귤_병해충_3개_조건이_부합한다() {
         // given
         long memberId = 42L;
         int nx = 60;
@@ -361,8 +361,31 @@ public class PestServiceTest {
         왕담배나방.addCondition(왕담배나방cond2);
         귤.addPestRisk(왕담배나방);
 
+        // 어떤 병
+        PestRisk 어떤병 = new PestRisk(
+                44L,
+                "어떤병",
+                "아주 무서운 병이다.",
+                DamageType.GERMS,
+                new ArrayList<>(),
+                귤
+        );
+        PestCondition 어떤병cond1 = PestCondition.builder()
+                .pestConditionId(42L)
+                .pestRisk(어떤병)
+                .startMonth(Month.JULY)
+                .startMonthPhase(PestCondition.MonthPhase.EARLY)
+                .endMonth(Month.AUGUST)
+                .endMonthPhase(PestCondition.MonthPhase.MID)
+                .humidityLevel(HumidityLevel.DONT_CARE)
+                .temperatureLevel(TemperatureLevel.DONT_CARE)
+                .rainLevel(RainLevel.DONT_CARE)
+                .build();
+        어떤병.addCondition(어떤병cond1);
+        귤.addPestRisk(어떤병);
+
         // expected
-        var pestCards = List.of(귤응애.toCard(), 왕담배나방.toCard());
+        var pestCards = List.of(귤응애.toCard(), 왕담배나방.toCard(), 어떤병.toCard());
         //var cropCards = List.of(new GetPestCardListResponse.MyCropCard(마이귤.getId(), 마이귤.getCrop().getName()));
         var cropCards = new ArrayList<GetPestCardListResponse.MyCropCard>();
         var expected = new GetPestCardListResponse(pestCards, cropCards);
