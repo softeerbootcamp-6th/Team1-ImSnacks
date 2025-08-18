@@ -5,6 +5,8 @@ import { Typography } from '@/styles/typography';
 import type { WeatherConditionsType } from '@/types/weather.types';
 import { css } from '@emotion/react';
 import S from './MobileHeader.styles';
+import { useTimeStore } from '@/store/useTimeStore';
+import { formatCurrentTime } from '@/utils/formatTimeUtil';
 
 interface MobileHeaderProps {
   weatherCondition: WeatherConditionsType;
@@ -19,6 +21,8 @@ const MobileHeader = ({
 }: MobileHeaderProps) => {
   const GlassIconComponent =
     GLASS_MOBILE_ICON[weatherCondition as keyof typeof GLASS_MOBILE_ICON];
+
+  const { currentTime } = useTimeStore();
 
   return (
     <div css={S.MobileHeader}>
@@ -38,7 +42,7 @@ const MobileHeader = ({
             padding-bottom: ${Spacing.Spacing300};
           `}
         >
-          7월 23일, {weatherKeyword}
+          {formatCurrentTime(currentTime).date}, {weatherKeyword}
         </div>
       </div>
       <GlassIconComponent width={110} height={88} css={S.MobileHeaderIcon} />
