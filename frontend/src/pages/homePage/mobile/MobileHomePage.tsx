@@ -1,6 +1,5 @@
 import {
   WEATHER_CONDITIONS,
-  WEATHER_METRICS,
   type WeatherConditionsType,
 } from '@/types/weather.types';
 import MobileHeader from '../components/mobileHeader/MobileHeader';
@@ -43,26 +42,7 @@ const MobileHomePage = () => {
       />
       <div css={S.MobileHomeContentWrapper}>
         <MobileHeadline />
-        <MobileCurrentWeather
-          weatherData={[
-            {
-              metric: '강수량',
-              metricType: WEATHER_METRICS.PRECIPITATION,
-              value: 25,
-            },
-            { metric: '습도', metricType: WEATHER_METRICS.HUMIDITY, value: 60 },
-            {
-              metric: '온도',
-              metricType: WEATHER_METRICS.TEMPERATURE,
-              value: 25,
-            },
-            {
-              metric: '바람',
-              metricType: WEATHER_METRICS.WIND_SPEED,
-              value: 10,
-            },
-          ]}
-        />
+        <MobileCurrentWeather />
         <MobileTodo />
       </div>
     </div>
