@@ -32,7 +32,7 @@ export const postMyWork = (
 export const deleteMyWork = (body: DeleteMyWorkRequest) =>
   HTTP.delete<DeleteMyWorkRequest, CustomResponseBodyVoid>('/myWork', body);
 
-export const patchMyWork = (
+export const patchMyWorkTime = (
   body: ReplaceTimesDateToString<ModifyMyWorkRequest> & { myWorkId: number }
 ) =>
   HTTP.patch<
