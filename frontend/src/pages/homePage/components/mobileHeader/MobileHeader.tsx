@@ -20,9 +20,6 @@ const MobileHeader = ({
   weatherKeyword,
   temperature,
 }: MobileHeaderProps) => {
-  const GlassIconComponent =
-    GLASS_MOBILE_ICON[weatherCondition as keyof typeof GLASS_MOBILE_ICON];
-
   const { currentTime } = useTimeStore();
 
   return (
