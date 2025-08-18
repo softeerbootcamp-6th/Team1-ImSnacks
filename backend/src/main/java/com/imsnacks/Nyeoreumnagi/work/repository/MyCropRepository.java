@@ -8,4 +8,6 @@ import java.util.List;
 public interface MyCropRepository extends JpaRepository<MyCrop, Long> {
     List<MyCrop> findAllByOrderByCrop_Id();
     List<MyCrop> findAllByMember_Id(Long memberId);
+
+    List<MyCrop> findAllByMember_IdOrderById(Long memberId);
 }
