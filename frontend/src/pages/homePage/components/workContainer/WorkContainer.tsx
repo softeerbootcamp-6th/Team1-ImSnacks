@@ -60,7 +60,12 @@ const WorkContainer = ({
     isDragging,
     updatePosition,
     isDraggingItem,
-  } = useDragWorkBlock();
+  } = useDragWorkBlock(
+    workBlocks,
+    updateWorkBlocks,
+    containerRef as React.RefObject<HTMLDivElement>,
+    scrollOffset
+  );
 
   return (
     <div

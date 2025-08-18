@@ -38,4 +38,4 @@ export const patchMyWork = (
   HTTP.patch<
     ReplaceTimesDateToString<ModifyMyWorkRequest>,
     CustomResponseBodyModifyMyWorkResponse
-  >('/myWork', body);
+  >('/myWork/time', body);

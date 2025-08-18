@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
 import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
-import useContainer from '../contexts/useContainer';
-import useWorkBlocks from '../contexts/useWorkBlocks';
 import {
   findFuturePosition,
   cleanupDragState,
@@ -16,10 +14,12 @@ import { handleCollisionRevert } from '../utils/workContainerUtils';
 import animateBlock from '@/utils/animateBlock';
 import { hasCollisionWithOthers } from '@/utils/collisionUtils';
 
-const useDragWorkBlock = () => {
-  const { workBlocks, updateWorkBlocks } = useWorkBlocks();
-  const { containerRef, scrollOffset } = useContainer();
-
+const useDragWorkBlock = (
+  workBlocks: WorkBlockType[],
+  updateWorkBlocks: (blocks: WorkBlockType[]) => void,
+  containerRef: React.RefObject<HTMLDivElement>,
+  scrollOffset: number
+) => {
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
   const [futurePosition, setFuturePosition] = useState<Position | null>(null);
   const latestBlocksRef = useRef<WorkBlockType[]>(workBlocks);
