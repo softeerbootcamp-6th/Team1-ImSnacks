@@ -1,5 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.damage.pest.dto.response;
 
+import com.imsnacks.Nyeoreumnagi.damage.pest.enums.DamageType;
+
 import java.util.List;
 
 public record GetPestCardListResponse(
@@ -8,6 +10,7 @@ public record GetPestCardListResponse(
 ) {
     public record PestCard(
             long pestRiskId,
+            DamageType damageType,
             String name,
             String description
     ) {

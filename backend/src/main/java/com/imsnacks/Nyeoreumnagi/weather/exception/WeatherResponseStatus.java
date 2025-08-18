@@ -13,6 +13,7 @@ public enum WeatherResponseStatus {
     INVALID_SEVEN_DAY_FORECAST_COUNT(3010, "7일 예보 결과는 7개여야 합니다."),
     NO_TEMPERATURE_INFO(3011, "해당 지역 기온 정보가 없습니다."),
     NO_MATCHING_WEATHER_RISK_CARD(3012, "기상 리스크와 매칭되는 기상 피해 카드가 없습니다."),
+    NO_AIR_QUALITY_INFO(3013, "해당 지역 미세먼지/초미세먼지 정보가 없습니다."),
     ;
 
     private final int code;

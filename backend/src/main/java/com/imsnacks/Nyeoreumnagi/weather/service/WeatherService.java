@@ -21,10 +21,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
+import static com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric.*;
 import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionStringFromDegree;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
@@ -219,6 +220,20 @@ public class WeatherService {
         return new GetDailyMaxPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
     }
 
+    public GetAirQualityResponse getAirQuality(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        AirQualityInfo airQualityInfo = dashboardTodayWeatherRepository.findAirQualityByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_PRECIPITATION));
+        validateAirQualityInfo(airQualityInfo);
+
+        return new GetAirQualityResponse(airQualityInfo.getPm10Value(), airQualityInfo.getPm10Grade(), airQualityInfo.getPm25Value(), airQualityInfo.getPm25Grade());
+    }
+
+
     public GetTemperatureResponse getTemperature(final Long memberId) {
         assert(memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
@@ -248,6 +263,25 @@ public class WeatherService {
         return new GetTemperatureResponse(maxTemperature, minTemperature, temperaturePerTimes);
     }
 
+    public List<GetWeatherStatusResponse> getWeatherStatus(final Long memberId) {
+        assert(memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        ShortTermWeatherForecast weatherInfo = shortTermWeatherForecastRepository.findTopByNxAndNyAndFcstTimeLessThanEqualOrderByFcstTimeDesc(nx, ny, LocalDateTime.now().getHour())
+                .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
+
+        List<GetWeatherStatusResponse> weatherStatus = new ArrayList<>();
+        weatherStatus.add(new GetWeatherStatusResponse(PRECIPITATION.getMetricName(), (int)weatherInfo.getPrecipitation(), PRECIPITATION.toString()));
+        weatherStatus.add(new GetWeatherStatusResponse(TEMPERATURE.getMetricName(), weatherInfo.getTemperature(), TEMPERATURE.toString()));
+        weatherStatus.add(new GetWeatherStatusResponse(HUMIDITY.getMetricName(), weatherInfo.getHumidity(), HUMIDITY.toString()));
+        weatherStatus.add(new GetWeatherStatusResponse(WIND_SPEED.getMetricName(), (int)weatherInfo.getWindSpeed(), WIND_SPEED.toString()));
+
+        return weatherStatus;
+    }
+
     private void validateWeatherInfos(List<DashboardWeatherForecast> weathers) {
         if(weathers.size() != 8) {
             throw new WeatherException(NO_TEMPERATURE_INFO);
@@ -262,6 +296,14 @@ public class WeatherService {
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
         if(precipitationInfo.getMaxPrecipitation() == null){
             throw new WeatherException(NO_PRECIPITATION);
+        }
+    }
+
+    private void validateAirQualityInfo(AirQualityInfo airQualityInfo) {
+        if(airQualityInfo.getPm10Grade() == null || airQualityInfo.getPm10Grade() == null
+                || airQualityInfo.getPm10Grade() == null  || airQualityInfo.getPm10Grade() == null
+        ){
+            throw new WeatherException(NO_AIR_QUALITY_INFO);
         }
     }
 

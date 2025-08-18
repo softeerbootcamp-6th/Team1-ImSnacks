@@ -124,4 +124,22 @@ public class WeatherController {
     public ResponseEntity<CustomResponseBody<GetTemperatureResponse>> getTemperature(@PreAuthorize Long memberId) {
         return ResponseUtil.success(weatherService.getTemperature(memberId));
     }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "모바일용 현시각 기상 상황 조회")
+    @ApiResponse(responseCode = "200", description = "모바일용 현시각 기상 상황 조회 성공")
+    @ApiResponse(responseCode = "400", description = "모바일용 현시각 기상 상황 조회 실패")
+    @GetMapping("/status")
+    public ResponseEntity<CustomResponseBody<List<GetWeatherStatusResponse>>> getWeatherStatus(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getWeatherStatus(memberId));
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "미세먼지/초미세먼지 정보 조회")
+    @ApiResponse(responseCode = "200", description = "미세먼지/초미세먼지 정보 조회 성공")
+    @ApiResponse(responseCode = "400", description = "미세먼지/초미세먼지 정보 조회 실패")
+    @GetMapping("/airQualityInfo")
+    public ResponseEntity<CustomResponseBody<GetAirQualityResponse>> getAirQuality(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherService.getAirQuality(memberId));
+    }
 }

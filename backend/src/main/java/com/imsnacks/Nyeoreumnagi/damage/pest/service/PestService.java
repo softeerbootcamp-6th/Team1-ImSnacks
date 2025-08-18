@@ -63,7 +63,7 @@ public class PestService {
     private List<MyCropCard> getMyCropCards(long memberId) {
         List<MyCrop> myCrops = myCropRepo.findAllByMember_IdOrderById(memberId);
         return myCrops.stream()
-                .map(x -> new MyCropCard(x.getId(), x.getCrop().getName()))
+                .map(x -> x.toCard())
                 .toList();
     }
 
@@ -121,7 +121,7 @@ public class PestService {
         int endDayOfMonth = getDayOfMonthFromEndPhase(condition.getEndMonthPhase());
 
         boolean meetsStart = (startMonth == nowMonth && startDayOfMonth <= nowDayOfMonth) || (startMonth < nowMonth);
-        boolean meetsEnd = (endMonth == nowMonth && nowDayOfMonth <= endDayOfMonth) || (nowMonth <  endMonth);
+        boolean meetsEnd = (endMonth == nowMonth && nowDayOfMonth <= endDayOfMonth) || (nowMonth < endMonth);
 
         return (meetsStart && meetsEnd);
     }
