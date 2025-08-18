@@ -46,6 +46,7 @@ const DateInfoContainer = css`
 const DateContainer = css`
   border-right: 1px solid ${GrayScale.G300};
   height: 100%;
+  width: 162px;
   ${FlexStyles.flexColumn}
 `;
 

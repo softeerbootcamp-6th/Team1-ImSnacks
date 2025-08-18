@@ -1,12 +1,23 @@
-import { CROPS } from '@/constants/crops';
 import CropInfoCard from '../cropInfoCard/CropInfoCard';
 import MyFarmHeader from '../myFarmHeader/MyFarmHeader';
 import S from './MyCropInfo.style';
 import { IC24InfoIcon } from '@/assets/icons/flat';
 import { TOOLTIP_DIRECTIONS } from '@/types/tooltip.type';
+import { useEffect, useState } from 'react';
+import { getMyCrop } from '@/apis/member.api';
+import { GetMyCropsResponse } from '@/types/openapiGenerator';
 
 const MyCropInfo = () => {
-  const crops = CROPS;
+  const [crops, setCrops] = useState<GetMyCropsResponse[]>([]);
+
+  useEffect(() => {
+    const fetchMyCrop = async () => {
+      const res = await getMyCrop();
+      setCrops(res.data);
+    };
+    fetchMyCrop();
+  }, []);
+
   return (
     <div css={S.MyCropInfoContainer}>
       <MyFarmHeader
@@ -18,8 +29,8 @@ const MyCropInfo = () => {
         toolTipDirection={TOOLTIP_DIRECTIONS.TOP}
       />
       <div css={S.CropInfoCardContainer}>
-        {crops.map(crop => (
-          <CropInfoCard key={crop.id} crop={crop} />
+        {crops?.map(crop => (
+          <CropInfoCard key={crop.myCropId} crop={crop} />
         ))}
       </div>
     </div>
