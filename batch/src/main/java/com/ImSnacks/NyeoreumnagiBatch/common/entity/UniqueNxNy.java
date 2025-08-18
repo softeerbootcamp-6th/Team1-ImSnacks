@@ -23,4 +23,6 @@ public class UniqueNxNy {
     private String areaCode;
     private Double latitude;
     private Double longitude;
+
+    private String stationName;
 }
