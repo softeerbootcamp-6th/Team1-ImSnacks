@@ -31,29 +31,6 @@ const MobileHomePage = () => {
     fetchWeather();
   }, []);
 
-  const todoList = [
-    {
-      id: 1,
-      cropName: '감귤',
-      workName: '수확하기',
-      workTime: '09:00 - 10:30',
-      status: 'INCOMPLETED',
-    },
-    {
-      id: 2,
-      cropName: '복숭아',
-      workName: '물주기',
-      workTime: '11:00 - 12:00',
-      status: 'INCOMPLETED',
-    },
-    {
-      id: 3,
-      cropName: '포도',
-      workName: '비료주기',
-      workTime: '13:00 - 14:00',
-      status: 'COMPLETED',
-    },
-  ];
   return (
     <div css={S.MobileHomePage}>
       <MobileHeader
