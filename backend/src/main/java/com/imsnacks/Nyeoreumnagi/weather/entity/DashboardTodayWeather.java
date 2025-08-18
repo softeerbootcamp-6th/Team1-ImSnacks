@@ -44,13 +44,13 @@ public class DashboardTodayWeather {
     private LocalTime maxUVEnd;
 
     @Column(name = "pm_10_value", nullable = true)
-    private Double pm10Value;
+    private Integer pm10Value;
 
     @Column(name = "pm_10_grade", nullable = true)
     private Integer pm10Grade;
 
     @Column(name = "pm_25_value", nullable = true)
-    private Double pm25Value;
+    private Integer pm25Value;
 
     @Column(name = "pm_25_grade", nullable = true)
     private Integer pm25Grade;
