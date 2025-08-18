@@ -22,7 +22,7 @@ import java.util.List;
 
 @Builder
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@NoArgsConstructor(access = lombok.AccessLevel.PUBLIC)
 @AllArgsConstructor
 @Table(name = "PestRisk")
 @Entity
