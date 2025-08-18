@@ -5,6 +5,7 @@ import {
   GetHumidityResponse,
   GetSevenDaysForecastResponse,
   GetSunRiseSetTimeResponse,
+  GetTemperatureResponse,
   GetUVInfoResponse,
   GetWeatherBriefingResponse,
   GetWeatherConditionResponse,
@@ -26,6 +27,9 @@ export const getWeatherBriefing = () =>
 
 export const getWeatherRisk = () =>
   HTTP.get<GetFcstRiskResponse>('/weather/fcstRisk');
+
+export const getWeatherTemperature = () =>
+  HTTP.get<GetTemperatureResponse>('/weather/temperatureInfo');
 
 export const getWeatherSevenDays = () =>
   HTTP.get<GetSevenDaysForecastResponse[]>('/weather/sevenDays');

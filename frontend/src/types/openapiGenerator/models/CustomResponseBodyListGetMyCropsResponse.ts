@@ -10,9 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { GetMyCropsResponse } from '../models/GetMyCropsResponse';
 
-export class GetMemberAddressResponse {
-    'address'?: string;
+export class CustomResponseBodyListGetMyCropsResponse {
+    'code'?: number;
+    'msg'?: string;
+    'data'?: Array<GetMyCropsResponse>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -20,14 +23,26 @@ export class GetMemberAddressResponse {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "address",
-            "baseName": "address",
+            "name": "code",
+            "baseName": "code",
+            "type": "number",
+            "format": "int32"
+        },
+        {
+            "name": "msg",
+            "baseName": "msg",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<GetMyCropsResponse>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return GetMemberAddressResponse.attributeTypeMap;
+        return CustomResponseBodyListGetMyCropsResponse.attributeTypeMap;
     }
 
     public constructor() {
