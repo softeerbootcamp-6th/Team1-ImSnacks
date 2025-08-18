@@ -38,7 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtAuthenticationInterceptor)
                 .order(1)
-                .addPathPatterns("/member/address", "/weather/**", "/myWork/**", "/work/**") //TODO: interceptor를 적용할 url pattern 지정
+                .addPathPatterns("/member/address", "/weather/**", "/myWork/**", "/work/**", "/damage/**") //TODO: interceptor를 적용할 url pattern 지정
                 .excludePathPatterns("/swagger-ui/*"); //TODO: interceptor를 적용하지 않을 url pattern 지정
     }
 
