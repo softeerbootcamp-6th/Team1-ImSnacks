@@ -72,7 +72,8 @@ public class MemberService {
                             myCrop.getId(),
                             myCrop.getCrop().getName(),
                             (int) daysFromStartDate,
-                            currentLifeCycle != null ? currentLifeCycle.getName() : null
+                            currentLifeCycle != null ? currentLifeCycle.getName() : null,
+                            currentLifeCycle != null ? currentLifeCycle.getStep() : null
                     );
                 })
                 .toList();
