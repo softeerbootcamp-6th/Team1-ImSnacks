@@ -54,7 +54,7 @@ public class RecommendedWorkService {
         MyCrop myCrop = myCropRepository.findById(myCropId).orElseThrow(() -> new CropException(MY_CROP_NOT_FOUND));
         List<LifeCycle> lifeCyclesOrderByStep = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
 
-        long nowLifeCycleId = lifeCycleResolver.calculateLifeCycle(myCrop, lifeCyclesOrderByStep, now);
+        long nowLifeCycleId = lifeCycleResolver.calculateLifeCycle(myCrop, lifeCyclesOrderByStep, now).getId();
 
 
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
