@@ -1,6 +1,6 @@
-package com.imsnacks.Nyeoreumnagi.pest.entity;
+package com.imsnacks.Nyeoreumnagi.damage.pest.entity;
 
-import com.imsnacks.Nyeoreumnagi.pest.dto.response.GetPestCardListResponse.PestCard;
+import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse.PestCard;
 import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @Builder
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@NoArgsConstructor(access = lombok.AccessLevel.PUBLIC)
 @AllArgsConstructor
 @Table(name = "PestRisk")
 @Entity

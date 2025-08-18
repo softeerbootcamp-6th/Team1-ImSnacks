@@ -1,8 +1,9 @@
 package com.imsnacks.Nyeoreumnagi.pest.service;
 
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.HumidityLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.RainLevel;
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode.TemperatureLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import org.junit.jupiter.api.Test;
 

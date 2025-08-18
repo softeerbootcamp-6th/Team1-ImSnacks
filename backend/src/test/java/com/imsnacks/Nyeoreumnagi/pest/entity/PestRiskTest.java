@@ -1,6 +1,8 @@
 package com.imsnacks.Nyeoreumnagi.pest.entity;
 
-import com.imsnacks.Nyeoreumnagi.pest.service.WeatherConditionCode;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestCondition;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode;
 import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
 import org.junit.jupiter.api.Test;
 
