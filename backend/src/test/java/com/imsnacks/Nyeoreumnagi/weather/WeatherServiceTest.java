@@ -15,10 +15,7 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.PrecipitationInfo;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -335,6 +332,51 @@ class WeatherServiceTest {
         // then
         assertThat(response.value()).isEqualTo(12);
     }
+
+    @Test
+    void 대기질_조회_성공() {
+        Long memberId = 123L;
+        int nx = 55, ny = 99;
+
+        Farm farm = org.mockito.Mockito.mock(Farm.class);
+        when(farm.getNx()).thenReturn(nx);
+        when(farm.getNy()).thenReturn(ny);
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+
+        AirQualityInfo airQualityInfo = org.mockito.Mockito.mock(AirQualityInfo.class);
+        when(airQualityInfo.getPm10Value()).thenReturn(45);
+        when(airQualityInfo.getPm10Grade()).thenReturn(2);
+        when(airQualityInfo.getPm25Value()).thenReturn(18);
+        when(airQualityInfo.getPm25Grade()).thenReturn(1);
+
+        when(dashboardTodayWeatherRepository.findAirQualityByNxAndNy(nx, ny))
+                .thenReturn(Optional.of(airQualityInfo));
+
+        GetAirQualityResponse response = weatherService.getAirQuality(memberId);
+
+        assertThat(response.pm10Value()).isEqualTo(45);
+        assertThat(response.pm10Grade()).isEqualTo(2);
+        assertThat(response.pm25Value()).isEqualTo(18);
+        assertThat(response.pm25Grade()).isEqualTo(1);
+    }
+
+    @Test
+    void 대기질_조회_실패_대기질정보없음() {
+        Long memberId = 123L;
+        int nx = 55, ny = 99;
+
+        Farm farm = org.mockito.Mockito.mock(Farm.class);
+        when(farm.getNx()).thenReturn(nx);
+        when(farm.getNy()).thenReturn(ny);
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+
+        when(dashboardTodayWeatherRepository.findAirQualityByNxAndNy(nx, ny))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> weatherService.getAirQuality(memberId))
+                .isInstanceOf(WeatherException.class);
+    }
+
 
     @Test
     void 시간별_기온_조회_성공() {
