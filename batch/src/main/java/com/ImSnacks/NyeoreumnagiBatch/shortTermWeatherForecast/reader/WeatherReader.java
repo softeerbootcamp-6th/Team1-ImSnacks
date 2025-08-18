@@ -1,5 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader;
 
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
+import com.ImSnacks.NyeoreumnagiBatch.common.repository.UniqueNxNyRepository;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +12,6 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,31 +31,28 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     // serviceKey는 고정된 값이니, application.yaml에 두고 읽어온다.
     private final String baseDate;
     private final String baseTime;
-    private final JdbcTemplate jdbcTemplate;
+    private final UniqueNxNyRepository uniqueNxNyRepository;
+
     @Autowired
     private ApiCaller apiCaller;
 
     WeatherReader(@Value("#{jobParameters['base_date']}") String baseDate,
                   @Value("#{jobParameters['base_time']}") String baseTime,
-                  JdbcTemplate jdbcTemplate)
+                  UniqueNxNyRepository uniqueNxNyRepository)
     {
         this.baseDate = baseDate;
         this.baseTime = baseTime;
-        this.jdbcTemplate = jdbcTemplate;
+        this.uniqueNxNyRepository = uniqueNxNyRepository;
     }
 
     @Nullable // 실패 시 null 반환
     @Override
-    public VilageFcstResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public VilageFcstResponseDto read() throws UnexpectedInputException, ParseException, NonTransientResourceException {
         log.info("Reading weather data...");
         if (locations == null){
-            locations = jdbcTemplate.query(
-                    "SELECT nx, ny FROM Unique_Nx_Ny",
-                    (rs, rowNum) -> new NxNy(rs.getInt("nx"), rs.getInt("ny"))
-            );
+            setNxNy();
         }
         if (index >= locations.size()) {
-            log.info("location size: " + locations.size());
             return null;
         }
 
@@ -72,4 +70,14 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     }
 
     public record NxNy(int nx, int ny) {}
+
+    private void setNxNy() {
+        List<UniqueNxNy> all = uniqueNxNyRepository.findAll();
+        locations = all.stream().map(a -> new NxNy(
+                a.getId().getNx(),
+                a.getId().getNy()
+        )).toList();
+
+    }
+
 }
