@@ -13,21 +13,20 @@ import static com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus.LIFE_C
 
 @Component
 public class LifeCycleResolver {
-    public long calculateLifeCycle(MyCrop myCrop, List<LifeCycle> lifeCyclesOrderByStep, LocalDateTime requestDateTime) {
-        long nowLifeCycleId = 0;
-
+    public LifeCycle calculateLifeCycle(MyCrop myCrop, List<LifeCycle> lifeCyclesOrderByStep, LocalDateTime requestDateTime) {
+        LifeCycle returnLifeCycle = null;
         long myCropAge = ChronoUnit.DAYS.between(myCrop.getGerminationTime(), requestDateTime);
         for (LifeCycle lifeCycle : lifeCyclesOrderByStep) {
             myCropAge -= lifeCycle.getDuration();
-            nowLifeCycleId = lifeCycle.getId();
+            returnLifeCycle = lifeCycle;
             if (myCropAge <= 0) {
-                return nowLifeCycleId;
+                return returnLifeCycle;
             }
         }
 
-        if (nowLifeCycleId == 0) {
+        if (returnLifeCycle == null) {
             throw new WorkException(LIFE_CYCLE_NOT_FOUND);
         }
-        return nowLifeCycleId;
+        return returnLifeCycle;
     }
 }
