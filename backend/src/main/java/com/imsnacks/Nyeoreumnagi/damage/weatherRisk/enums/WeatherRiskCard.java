@@ -9,12 +9,12 @@ import static com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType.*;
 import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_MATCHING_WEATHER_RISK_CARD;
 
 public enum WeatherRiskCard {
-    SUNBURN("햇볕 데임", ""),
-    WATER_DEFICIENCY("수분 부족", ""),
-    POOR_COLORING("착색 불량", ""),
-    FRUIT_CRAKING("열과", ""),
-    FRUIT_DROP("낙과", ""),
-    FLOWER_DROP("낙화", ""),
+    SUNBURN("햇볕 데임", "햇빛 가림망을 설치하고 작물에 물 주는 시기를 짧게 자주 하는 것이 좋아요."),
+    WATER_DEFICIENCY("수분 부족", "토양 수분 증발을 줄이기 위해 지면에 퇴비, 짚, 풀을 깔아보세요."),
+    POOR_COLORING("착색 불량", "가지 유인과 과실 돌리기를 통해 과실이 강한 햇빛에 노출되지 않도록 해주세요."),
+    FRUIT_CRAKING("열과", "토양수분의 급격한 변화가 발생하지 않도록 배수 관리를 철저히 해주세요."),
+    FRUIT_DROP("낙과", "비바람이나 급격한 온도변화 시 방풍망 설치와 잦은 관수를 해주세요."),
+    FLOWER_DROP("낙화", "강한 비가 올 때 배수관리를 철저히 해 꽃 떨어짐을 예방하세요."),
     ;
 
     private final String title;
