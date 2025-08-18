@@ -17,6 +17,7 @@ const RegisterWorkContainer = css`
   align-items: center;
   margin-top: ${Spacing.Spacing600};
   margin-bottom: ${Spacing.Spacing600};
+  box-sizing: border-box;
 `;
 
 const TextBoxTitle = css`
@@ -32,6 +33,7 @@ const TextBoxDescription = css`
 const TextBox = css`
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: ${Spacing.Spacing300};
 `;
 
@@ -41,7 +43,8 @@ const BtnBox = css`
   gap: ${Spacing.Spacing500};
   padding-right: ${Spacing.Spacing800};
   height: 88px;
-  width: 644px;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const BtnSelectChipContainer = css`
