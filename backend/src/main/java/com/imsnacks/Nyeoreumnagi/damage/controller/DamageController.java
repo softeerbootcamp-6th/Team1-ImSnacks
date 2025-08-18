@@ -5,6 +5,9 @@ import com.imsnacks.Nyeoreumnagi.common.response.CustomResponseBody;
 import com.imsnacks.Nyeoreumnagi.common.response.ResponseUtil;
 import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.PestService;
+import com.imsnacks.Nyeoreumnagi.damage.weatherRisk.WeatherRiskService;
+import com.imsnacks.Nyeoreumnagi.damage.weatherRisk.dto.response.GetWeatherRiskCardListResponse;
+import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DamageController {
     private final PestService pestService;
+    private final WeatherRiskService weatherRiskService;
 
     @SecurityRequirement(name = "BearerAuth")
     @Operation(summary = "병해충 피해 목록 조회")
@@ -30,5 +34,14 @@ public class DamageController {
     @GetMapping("/pest")
     public ResponseEntity<CustomResponseBody<GetPestCardListResponse>> getPestCardList(@PreAuthorize Long memberId, @RequestParam Long myCropId) {
         return ResponseUtil.success(pestService.getPestCardList(memberId, myCropId));
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(summary = "기상 리스크별 피해 목록 조회")
+    @ApiResponse(responseCode = "200", description = "기상 리스크별 피해 목록 조회 성공")
+    @ApiResponse(responseCode = "400", description = "기상 리스크별 피해 목록 조회 실패")
+    @GetMapping("/weather")
+    public ResponseEntity<CustomResponseBody<GetWeatherRiskCardListResponse>> getWeatherRiskCardList(@PreAuthorize Long memberId) {
+        return ResponseUtil.success(weatherRiskService.getWeatherRiskCardList(memberId));
     }
 }
