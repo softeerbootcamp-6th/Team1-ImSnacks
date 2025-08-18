@@ -3,7 +3,6 @@ package com.ImSnacks.NyeoreumnagiBatch.air_quality.reader;
 import com.ImSnacks.NyeoreumnagiBatch.air_quality.processor.dto.AirQualityResponse;
 import com.ImSnacks.NyeoreumnagiBatch.air_quality.reader.dto.AirQualityApiResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,7 +17,6 @@ import java.net.http.HttpResponse;
 
 import static com.ImSnacks.NyeoreumnagiBatch.air_quality.reader.AirQualityApiRequestValue.*;
 
-@Slf4j
 @Component
 public class AirQualityApiCaller {
     @Value("${api.air-quality-service.key}")
@@ -26,7 +24,6 @@ public class AirQualityApiCaller {
 
     public AirQualityResponse call(String stationName) throws IOException, InterruptedException {
         String uriString = buildAirQualityUriString(stationName);
-        log.info("Air Quality API Caller URI: {}", uriString);
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uriString))
