@@ -17,6 +17,7 @@ public class ResponseUtil {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken.toString())
                 .path("/")
                 .maxAge(86400 * 3)
+                .httpOnly(true)
                 .build();
 
         return ResponseEntity.ok()
