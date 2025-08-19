@@ -19,7 +19,9 @@ public class ResponseUtil {
                 .maxAge(86400 * 3)
                 .httpOnly(true)
                 .sameSite("none")
+                .secure(true)
                 .build();
+
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
