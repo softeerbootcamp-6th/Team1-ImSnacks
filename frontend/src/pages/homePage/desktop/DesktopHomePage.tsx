@@ -24,11 +24,7 @@ const DesktopHomePage = () => {
   return (
     <div css={S.DesktopHomePage}>
       <Headline />
-      {/* <ContainerProvider>
-        <WorkBlocksProvider> */}
       <WorkContainer weatherRiskData={weatherRiskData} />
-      {/* </WorkBlocksProvider>
-      </ContainerProvider> */}
       <DamagePests />
     </div>
   );
