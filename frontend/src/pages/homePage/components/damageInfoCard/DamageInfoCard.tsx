@@ -7,16 +7,12 @@ import S from './DamageInfoCard.style';
 import { css } from '@emotion/react';
 import { Typography } from '@/styles/typography';
 import { Assets, ColorStatus } from '@/styles/colors';
-
-interface cropData {
-  myCropName: string;
-  myCropId?: number;
-}
+import type { MyCropDto } from '@/types/openapiGenerator';
 
 interface DamageInfoCardProps {
   isWeatherVisible: boolean;
   content: string;
-  cropList: cropData[];
+  cropList: MyCropDto[];
 }
 
 const DamageInfoCard = ({
@@ -49,7 +45,7 @@ const DamageInfoCard = ({
         {cropList.map(crop => (
           <BtnSelectChip
             key={crop.myCropName}
-            text={crop.myCropName}
+            text={crop.myCropName ?? ''}
             size={BTN_SELECT_CHIP_SIZES.SMALL}
             status={
               isWeatherVisible

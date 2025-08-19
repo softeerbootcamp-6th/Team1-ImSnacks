@@ -3,19 +3,34 @@ import { useEffect, useState } from 'react';
 import DamageInfoCard from '../damageInfoCard/DamageInfoCard';
 import DamageCard from '../damageCard/DamageCard';
 import DamagePestArrowButton from '../damagePestArrowButton/DamagePestArrowButton';
-import { PEST_DAMAGES, WEATHER_DAMAGES } from '@/types/damage.type';
+import {
+  PEST_DAMAGES,
+  type PestDamagesType,
+  type WeatherDamagesType,
+} from '@/types/damage.type';
 import S from './DamagePests.style';
 import { css } from '@emotion/react';
 import { getLeft } from '../../utils/damagePestsUtil';
 import useVisibility from '@/hooks/useVisibility';
 import { useClickOutside } from '@/hooks/handleClickOutside';
+import { useUserStore } from '@/store/useUserStore';
+import { getWeatherDamage } from '@/apis/damage.api';
+import type { GetWeatherRiskCardListResponse } from '@/types/openapiGenerator';
 
 const DamagePests = () => {
-  const nickName = '밤비';
-  const { isVisible, toggle } = useVisibility(true);
+  const { nickName } = useUserStore();
+  const {
+    isVisible: isWeatherRiskVisible,
+    show: showWeatherRiskVisible,
+    hide: hideWeatherRiskVisible,
+  } = useVisibility(true);
+
   const [title, setTitle] = useState('');
   const [damageInfoCardContent, setDamageInfoCardContent] = useState('');
   const [selectedRiskName, setSelectedRiskName] = useState<string | null>(null);
+
+  const [weatherRisk, setWeatherRisk] =
+    useState<GetWeatherRiskCardListResponse | null>(null);
 
   const containerRef = useClickOutside<HTMLDivElement>(
     () => setSelectedRiskName(null),
@@ -23,25 +38,21 @@ const DamagePests = () => {
   );
 
   const parentWidth = 866;
+  const pestOnlyParentWidth = 966;
+
   const componentWidth = 342;
 
-  const risk = [
-    {
-      name: '낙과',
-      description: '낙과로 인해 작물에 피해가 발생할 수 있습니다.',
-      damageType: WEATHER_DAMAGES.FRUIT_DROP,
-    },
-    {
-      name: '열과',
-      description: '열과로 인해 작물의 생장이 저해될 수 있습니다.',
-      damageType: WEATHER_DAMAGES.FRUIT_CRAKING,
-    },
-    {
-      name: '햇볕 데임',
-      description: '햇볕 데임으로 인해 작물이 얼어버릴 수 있습니다.',
-      damageType: WEATHER_DAMAGES.SUNBURN,
-    },
-  ];
+  useEffect(() => {
+    try {
+      const fetchWeatherDamage = async () => {
+        const res = await getWeatherDamage();
+        setWeatherRisk(res.data);
+      };
+      fetchWeatherDamage();
+    } catch (error) {
+      console.error('기상 리스크별 피해 목록 조회 실패:', error);
+    }
+  }, []);
 
   const pestRisks = [
     {
@@ -72,16 +83,15 @@ const DamagePests = () => {
   ];
 
   useEffect(() => {
-    if (isVisible) {
-      const WeatherRisk = '폭우';
-      setTitle(`${WeatherRisk}에는 특히 이런 피해를 입을 수 있어요.`);
+    if (isWeatherRiskVisible && weatherRisk) {
+      setTitle(`${weatherRisk?.riskName}에는 특히 이런 피해를 입을 수 있어요.`);
       setDamageInfoCardContent(`${nickName}님의 작물도 주의가 필요해요!`);
     } else {
       setTitle('오늘 날씨에는 이런 병해충을 조심하세요.');
       setDamageInfoCardContent('병해충 정보를 볼 작물을 선택하세요.');
     }
     setSelectedRiskName(null);
-  }, [isVisible]);
+  }, [isWeatherRiskVisible, nickName, weatherRisk]);
 
   const handleCardClick = (name: string) => {
     if (selectedRiskName === name) {
@@ -93,19 +103,24 @@ const DamagePests = () => {
 
   return (
     <div css={S.DamagePests} ref={containerRef}>
-      <div css={Typography.Subtitle_700} style={{ marginBottom: 12 }}>
+      <div
+        css={css`
+          ${Typography.Subtitle_700};
+          margin-bottom: 12px;
+        `}
+      >
         {title}
       </div>
       <div css={S.DamagePestsContentWrapper}>
-        {isVisible ? (
+        {weatherRisk && isWeatherRiskVisible ? (
           <>
             <DamageInfoCard
-              isWeatherVisible={isVisible}
+              isWeatherVisible={isWeatherRiskVisible}
               content={damageInfoCardContent}
-              cropList={[{ myCropName: '복숭아' }, { myCropName: '포도' }]}
+              cropList={weatherRisk?.myCropList ?? []}
             />
             <div css={S.DamageCardRowWrapper}>
-              {risk.map((item, index) => (
+              {weatherRisk?.risks?.map((item, index) => (
                 <div
                   key={item.name}
                   css={css`
@@ -118,28 +133,32 @@ const DamagePests = () => {
                   `}
                 >
                   <DamageCard
-                    name={item.name}
-                    description={item.description}
-                    damageType={item.damageType}
+                    name={item.name ?? ''}
+                    description={item.description ?? ''}
+                    damageType={
+                      item.damageType as WeatherDamagesType | PestDamagesType
+                    }
                     selectedRiskName={selectedRiskName}
-                    onClick={() => handleCardClick(item.name)}
+                    onClick={() => handleCardClick(item.name ?? '')}
                   />
                 </div>
               ))}
             </div>
             <DamagePestArrowButton
-              onClick={toggle}
-              isWeatherVisible={isVisible}
+              onClick={hideWeatherRiskVisible}
+              isWeatherVisible={isWeatherRiskVisible}
             />
           </>
         ) : (
           <>
-            <DamagePestArrowButton
-              onClick={toggle}
-              isWeatherVisible={isVisible}
-            />
+            {weatherRisk && (
+              <DamagePestArrowButton
+                onClick={showWeatherRiskVisible}
+                isWeatherVisible={isWeatherRiskVisible}
+              />
+            )}
             <DamageInfoCard
-              isWeatherVisible={isVisible}
+              isWeatherVisible={isWeatherRiskVisible}
               content={damageInfoCardContent}
               cropList={[{ myCropName: '복숭아' }, { myCropName: '포도' }]}
             />
@@ -151,7 +170,9 @@ const DamagePests = () => {
                     position: absolute;
                     top: 0;
                     left: ${getLeft({
-                      parentWidth,
+                      parentWidth: weatherRisk
+                        ? parentWidth
+                        : pestOnlyParentWidth,
                       componentWidth,
                       index,
                       count: pestRisks.length,
