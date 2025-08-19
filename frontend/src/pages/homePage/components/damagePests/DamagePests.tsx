@@ -15,18 +15,22 @@ import useVisibility from '@/hooks/useVisibility';
 import { useClickOutside } from '@/hooks/handleClickOutside';
 import { useUserStore } from '@/store/useUserStore';
 import { getWeatherDamage } from '@/apis/damage.api';
-import type { Risk } from '@/types/openapiGenerator';
+import type { GetWeatherRiskCardListResponse } from '@/types/openapiGenerator';
 
 const DamagePests = () => {
   const { nickName } = useUserStore();
-  const { isVisible: isWeatherRiskVisible, toggle: toggleWeatherRiskVisible } =
-    useVisibility(true);
+  const {
+    isVisible: isWeatherRiskVisible,
+    show: showWeatherRiskVisible,
+    hide: hideWeatherRiskVisible,
+  } = useVisibility(true);
+
   const [title, setTitle] = useState('');
   const [damageInfoCardContent, setDamageInfoCardContent] = useState('');
   const [selectedRiskName, setSelectedRiskName] = useState<string | null>(null);
 
-  const [weatherRiskName, setWeatherRiskName] = useState('');
-  const [weatherRisks, setWeatherRisks] = useState<Risk[]>([]);
+  const [weatherRisk, setWeatherRisk] =
+    useState<GetWeatherRiskCardListResponse | null>(null);
 
   const containerRef = useClickOutside<HTMLDivElement>(
     () => setSelectedRiskName(null),
@@ -34,14 +38,15 @@ const DamagePests = () => {
   );
 
   const parentWidth = 866;
+  const pestOnlyParentWidth = 966;
+
   const componentWidth = 342;
 
   useEffect(() => {
     try {
       const fetchWeatherDamage = async () => {
         const res = await getWeatherDamage();
-        setWeatherRiskName(res.data.riskName ?? '');
-        setWeatherRisks(res.data.risks ?? []);
+        setWeatherRisk(res.data);
       };
       fetchWeatherDamage();
     } catch (error) {
@@ -78,15 +83,15 @@ const DamagePests = () => {
   ];
 
   useEffect(() => {
-    if (isWeatherRiskVisible) {
-      setTitle(`${weatherRiskName}에는 특히 이런 피해를 입을 수 있어요.`);
+    if (isWeatherRiskVisible && weatherRisk) {
+      setTitle(`${weatherRisk?.riskName}에는 특히 이런 피해를 입을 수 있어요.`);
       setDamageInfoCardContent(`${nickName}님의 작물도 주의가 필요해요!`);
     } else {
       setTitle('오늘 날씨에는 이런 병해충을 조심하세요.');
       setDamageInfoCardContent('병해충 정보를 볼 작물을 선택하세요.');
     }
     setSelectedRiskName(null);
-  }, [isWeatherRiskVisible, nickName, weatherRiskName]);
+  }, [isWeatherRiskVisible, nickName, weatherRisk]);
 
   const handleCardClick = (name: string) => {
     if (selectedRiskName === name) {
@@ -98,19 +103,24 @@ const DamagePests = () => {
 
   return (
     <div css={S.DamagePests} ref={containerRef}>
-      <div css={Typography.Subtitle_700} style={{ marginBottom: 12 }}>
+      <div
+        css={css`
+          ${Typography.Subtitle_700};
+          margin-bottom: 12px;
+        `}
+      >
         {title}
       </div>
       <div css={S.DamagePestsContentWrapper}>
-        {isWeatherRiskVisible ? (
+        {weatherRisk && isWeatherRiskVisible ? (
           <>
             <DamageInfoCard
               isWeatherVisible={isWeatherRiskVisible}
               content={damageInfoCardContent}
-              cropList={[{ myCropName: '복숭아' }, { myCropName: '포도' }]}
+              cropList={weatherRisk?.myCropList ?? []}
             />
             <div css={S.DamageCardRowWrapper}>
-              {weatherRisks.map((item, index) => (
+              {weatherRisk?.risks?.map((item, index) => (
                 <div
                   key={item.name}
                   css={css`
@@ -135,16 +145,18 @@ const DamagePests = () => {
               ))}
             </div>
             <DamagePestArrowButton
-              onClick={toggleWeatherRiskVisible}
+              onClick={hideWeatherRiskVisible}
               isWeatherVisible={isWeatherRiskVisible}
             />
           </>
         ) : (
           <>
-            <DamagePestArrowButton
-              onClick={toggleWeatherRiskVisible}
-              isWeatherVisible={isWeatherRiskVisible}
-            />
+            {weatherRisk && (
+              <DamagePestArrowButton
+                onClick={showWeatherRiskVisible}
+                isWeatherVisible={isWeatherRiskVisible}
+              />
+            )}
             <DamageInfoCard
               isWeatherVisible={isWeatherRiskVisible}
               content={damageInfoCardContent}
@@ -158,7 +170,9 @@ const DamagePests = () => {
                     position: absolute;
                     top: 0;
                     left: ${getLeft({
-                      parentWidth,
+                      parentWidth: weatherRisk
+                        ? parentWidth
+                        : pestOnlyParentWidth,
                       componentWidth,
                       index,
                       count: pestRisks.length,
