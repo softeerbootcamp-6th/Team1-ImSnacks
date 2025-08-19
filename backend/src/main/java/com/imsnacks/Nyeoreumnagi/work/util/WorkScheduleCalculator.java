@@ -40,9 +40,10 @@ public class WorkScheduleCalculator {
     private List<RecommendWorksResponse.RecommendedWorksResponse> windowsForWork(RecommendedWork work,
                                                                                  List<ShortTermWeatherForecast> forecasts,
                                                                                  int minHours,
+                                                                                 int neighborCount,
                                                                                  LocalDateTime requestTime
     ) {
-        LocalDateTime from =requestTime.truncatedTo(ChronoUnit.HOURS);
+        LocalDateTime from = requestTime.truncatedTo(ChronoUnit.HOURS);
 
         List<ShortTermWeatherForecast> sorted = forecasts.stream()
                 .sorted(Comparator.comparing(f -> toDateTimeWithRoll(from, f)))
@@ -110,7 +111,7 @@ public class WorkScheduleCalculator {
             result.add(new RecommendWorksResponse.RecommendedWorksResponse(
                     work.getName(),
                     entry.getKey(),
-                    0, // neighborCount 필드는 0으로 임시 설정
+                    neighborCount,
                     entry.getValue()
             ));
         }
@@ -131,10 +132,11 @@ public class WorkScheduleCalculator {
     }
 
     public List<RecommendWorksResponse.RecommendedWorksResponse> windowsForWork(RecommendedWork work,
-                                                                                 List<ShortTermWeatherForecast> forecasts,
+                                                                                List<ShortTermWeatherForecast> forecasts,
+                                                                                int neighborCount,
                                                                                 LocalDateTime requestDateTime
-                                                                                ) {
-        return windowsForWork(work, forecasts, 2, requestDateTime);
+    ) {
+        return windowsForWork(work, forecasts, 2, neighborCount, requestDateTime);
     }
 
 }
