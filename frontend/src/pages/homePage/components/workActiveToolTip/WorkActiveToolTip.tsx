@@ -1,10 +1,12 @@
-import useWorkBlocks from '@/pages/homePage/hooks/useWorkBlocks';
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 import calculateTimeToPosition from '../../utils/calculateTimeToPosition';
 import * as S from './WorkActiveToolTip.style';
 
-const WorkActiveToolTip = () => {
-  const { selectedRecommendedWork } = useWorkBlocks();
-
+const WorkActiveToolTip = ({
+  selectedRecommendedWork,
+}: {
+  selectedRecommendedWork: RecommendedWorksResponse | null;
+}) => {
   if (!selectedRecommendedWork) return;
 
   return (

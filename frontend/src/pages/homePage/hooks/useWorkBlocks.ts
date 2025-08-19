@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork } from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
@@ -38,16 +37,11 @@ const useWorkBlocks = () => {
     }
   };
 
-  const [selectedRecommendedWork, setSelectedRecommendedWork] =
-    useState<RecommendedWorksResponse | null>(null);
-
   return {
     workBlocks,
     addWorkBlock,
     updateWorkBlocks,
     removeWorkBlock,
-    selectedRecommendedWork,
-    setSelectedRecommendedWork,
   };
 };
 

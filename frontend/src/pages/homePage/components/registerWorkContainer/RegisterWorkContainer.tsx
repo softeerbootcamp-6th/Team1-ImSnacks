@@ -16,6 +16,7 @@ interface RegisterWorkContainerProps {
     work: RecommendedWorksResponse,
     crop: MyCropResponse
   ) => void;
+  setSelectedRecommendedWork: (work: RecommendedWorksResponse | null) => void;
 }
 
 const RegisterWorkContainer = ({
@@ -24,6 +25,7 @@ const RegisterWorkContainer = ({
   selectedCrop,
   handleCropClick,
   handleCreateWork,
+  setSelectedRecommendedWork,
 }: RegisterWorkContainerProps) => {
   return (
     <div css={S.RegisterWorkContainer}>
@@ -55,6 +57,7 @@ const RegisterWorkContainer = ({
             <BtnCreateWork
               key={work.workId}
               work={work}
+              setSelectedRecommendedWork={setSelectedRecommendedWork}
               onClick={() => handleCreateWork(work, selectedCrop!)}
             />
           ))}

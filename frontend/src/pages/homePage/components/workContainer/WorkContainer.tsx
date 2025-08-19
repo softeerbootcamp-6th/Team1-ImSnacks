@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
@@ -35,6 +35,11 @@ const WorkContainer = ({
   );
   const [graphData, setGraphData] = useState<GetWeatherGraphResponse>();
 
+  // setCurrentTab 함수를 메모이제이션하여 GraphMenu 리렌더링 방지
+  const handleCurrentTabChange = useCallback((tab: WeatherMetrics) => {
+    setCurrentTab(tab);
+  }, []);
+
   // API 데이터 가져오기
   useEffect(() => {
     let ignore = false;
@@ -54,8 +59,14 @@ const WorkContainer = ({
   const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
     useWorkBlocks();
   const { containerRef, scrollOffset, setScrollOffset } = useContainer();
-  const { recommendedWorks, myCrops, selectedCrop, handleCropClick } =
-    useRecommendedWorks();
+  const {
+    recommendedWorks,
+    myCrops,
+    selectedCrop,
+    handleCropClick,
+    selectedRecommendedWork,
+    setSelectedRecommendedWork,
+  } = useRecommendedWorks();
   const { handleCreateWork } = useCreateWorkBlock({
     containerRef: containerRef as React.RefObject<HTMLDivElement>,
     scrollOffset,
@@ -92,7 +103,10 @@ const WorkContainer = ({
         onMouseLeave={handleEndDrag}
         css={WorkContainerS.ContainerWrapper}
       >
-        <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
+        <GraphMenu
+          currentTab={currentTab}
+          setCurrentTab={handleCurrentTabChange}
+        />
 
         {graphData && (
           <div css={ChartS.FixedYAxisWrapper}>
@@ -189,7 +203,9 @@ const WorkContainer = ({
               );
             })}
 
-            <WorkCellsContainer />
+            <WorkCellsContainer
+              selectedRecommendedWork={selectedRecommendedWork}
+            />
           </div>
         </div>
       </div>
@@ -199,6 +215,7 @@ const WorkContainer = ({
         selectedCrop={selectedCrop}
         handleCropClick={handleCropClick}
         handleCreateWork={handleCreateWork}
+        setSelectedRecommendedWork={setSelectedRecommendedWork}
       />
     </>
   );
