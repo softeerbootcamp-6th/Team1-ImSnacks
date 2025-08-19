@@ -2,10 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
-import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
 import useWorkBlocks from '@/pages/homePage/hooks/useWorkBlocks';
-import DragOverlay from '@/components/dnd/DragOverlay';
-import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 
 import MainGraph from '../mainGraph/MainGraph';
 import GraphMenu from '../graphMenu/GraphMenu';
@@ -24,6 +21,7 @@ import useDragWorkBlock from '@/pages/homePage/hooks/useDragWorkBlock';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
+import type { WorkBlockType } from '@/types/workCard.type';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -58,7 +56,9 @@ const WorkContainer = ({
 
   const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
     useWorkBlocks();
+
   const { containerRef, scrollOffset, setScrollOffset } = useContainer();
+
   const {
     recommendedWorks,
     myCrops,
@@ -67,6 +67,7 @@ const WorkContainer = ({
     selectedRecommendedWork,
     setSelectedRecommendedWork,
   } = useRecommendedWorks();
+
   const { handleCreateWork } = useCreateWorkBlock({
     containerRef: containerRef as React.RefObject<HTMLDivElement>,
     scrollOffset,
@@ -74,35 +75,81 @@ const WorkContainer = ({
     workBlocks,
   });
 
-  const {
-    handleStartDrag,
-    handleEndDrag,
-    handleResize,
-    draggingBlockId,
-    isRevertingItemId,
-    isDragging,
-    updatePosition,
-    isDraggingItem,
-  } = useDragWorkBlock(
+  const { handleResize } = useDragWorkBlock(
     workBlocks,
     updateWorkBlocks,
     containerRef as React.RefObject<HTMLDivElement>,
     scrollOffset
   );
 
+  // 드래그 상태
+  const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
+    null
+  );
+  const [dragPosition, setDragPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
+  // 컨테이너 내부 좌표 변환 함수
+  const getContainerCoords = (e: PointerEvent | React.MouseEvent) => {
+    if (!containerRef.current) return { x: 0, y: 0 };
+    const rect = containerRef.current.getBoundingClientRect();
+
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+  };
+
+  // 드래그 시작
+  const handleStartDrag = (e: React.MouseEvent, block: WorkBlockType) => {
+    e.stopPropagation();
+    setDraggingBlock(block);
+    setDragPosition(getContainerCoords(e));
+
+    // document 이벤트 등록
+    document.addEventListener('pointermove', handleMouseMove);
+    document.addEventListener('pointerup', handleEndDrag);
+  };
+
+  // 마우스 이동
+  const handleMouseMove = (e: PointerEvent) => {
+    if (!draggingBlock) return;
+    setDragPosition(getContainerCoords(e));
+  };
+
+  // 드래그 끝
+  const handleEndDrag = (e: PointerEvent) => {
+    if (!draggingBlock) return;
+
+    const pos = getContainerCoords(e);
+
+    // drop 위치를 block 좌표로 업데이트
+    const newBlocks = workBlocks.map(block =>
+      block.id === draggingBlock.id
+        ? {
+            ...block,
+            position: {
+              x: pos.x,
+              y: pos.y,
+            },
+          }
+        : block
+    );
+    updateWorkBlocks(newBlocks);
+
+    setDraggingBlock(null);
+    setDragPosition(null);
+
+    // 이벤트 해제
+    document.removeEventListener('pointermove', handleMouseMove);
+    document.removeEventListener('pointerup', handleEndDrag);
+  };
+
   return (
     <>
-      <div
-        ref={containerRef}
-        onMouseMove={e => {
-          updatePosition(e, (block, pos) =>
-            updateBlockWorkTime(block, pos, 100)
-          );
-        }}
-        onMouseUp={handleEndDrag}
-        onMouseLeave={handleEndDrag}
-        css={WorkContainerS.ContainerWrapper}
-      >
+      <div ref={containerRef} css={WorkContainerS.ContainerWrapper}>
         <GraphMenu
           currentTab={currentTab}
           setCurrentTab={handleCurrentTabChange}
@@ -123,7 +170,14 @@ const WorkContainer = ({
             </div>
           </div>
         )}
-        <div css={WorkContainerS.MaskGradientWrapper}>
+        <div
+          css={[
+            WorkContainerS.MaskGradientWrapper,
+            css`
+              position: relative;
+            `,
+          ]}
+        >
           <div
             css={WorkContainerS.ScrollContainer}
             onScroll={e => {
@@ -137,56 +191,18 @@ const WorkContainer = ({
 
             {workBlocks.map(block => {
               const { id, position } = block;
-              const isCurrentlyDragging =
-                isDraggingItem(id) || isRevertingItemId === id;
 
-              // 드래그 중인 블록은 DragOverlay만 렌더링
-              if (isCurrentlyDragging) {
-                const overlayPosition = {
-                  x:
-                    draggingBlockId === id
-                      ? workBlocks.find(b => b.id === id)?.position.x ||
-                        position.x
-                      : position.x,
-                  y:
-                    draggingBlockId === id
-                      ? workBlocks.find(b => b.id === id)?.position.y ||
-                        position.y
-                      : position.y,
-                };
-
-                return (
-                  <DragOverlay
-                    key={`overlay-${id}`}
-                    position={overlayPosition}
-                    containerRef={containerRef}
-                    scrollOffset={scrollOffset}
-                  >
-                    <WorkCardRegister
-                      block={workBlocks.find(b => b.id === id) || block}
-                      isDragging={isDragging}
-                      onDelete={() => removeWorkBlock(id)}
-                      onResize={newBlock => handleResize(id, newBlock)}
-                      containerRef={containerRef}
-                      scrollOffset={scrollOffset}
-                      allBlocks={workBlocks}
-                      updateWorkBlocks={updateWorkBlocks}
-                    />
-                  </DragOverlay>
-                );
-              }
               return (
                 <div
                   key={id}
-                  css={[
-                    DragOverlayStyle.DragOverlay({
-                      x: position.x,
-                      y: position.y,
-                    }),
-                    css`
-                      position: absolute;
-                    `,
-                  ]}
+                  css={css`
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    transform: translate3d(${position.x}px, ${position.y}px, 0);
+                    pointer-events: auto;
+                    z-index: 1000;
+                  `}
                   onMouseDown={e => handleStartDrag(e, block)}
                 >
                   <WorkCardRegister
@@ -202,13 +218,39 @@ const WorkContainer = ({
                 </div>
               );
             })}
-
             <WorkCellsContainer
               selectedRecommendedWork={selectedRecommendedWork}
             />
           </div>
+          {/* 드래그 중일 때 오버레이 */}
+          {draggingBlock && dragPosition && (
+            <div
+              css={css`
+                position: absolute;
+                left: 0;
+                top: 0;
+                transform: translate3d(
+                  ${dragPosition.x}px,
+                  ${dragPosition.y}px,
+                  0
+                );
+                pointer-events: auto;
+                z-index: 1000;
+              `}
+            >
+              <WorkCardRegister
+                block={draggingBlock}
+                isDragging={true}
+                containerRef={containerRef}
+                scrollOffset={scrollOffset}
+                allBlocks={workBlocks}
+                updateWorkBlocks={updateWorkBlocks}
+              />
+            </div>
+          )}
         </div>
       </div>
+
       <RegisterWorkContainer
         recommendedWorks={recommendedWorks}
         myCrops={myCrops}
