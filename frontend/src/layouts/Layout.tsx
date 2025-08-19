@@ -60,10 +60,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
           max-width: 1328px;
           position: relative;
           z-index: 1;
+          width: 100%;
         `}
-        // css={css`
-        //   width: 100%;
-        // `}
       >
         {children}
       </main>

@@ -1,25 +1,26 @@
-import type { WeatherMetrics } from '@/types/weather.types';
 import S from './MobileCurrentWeatherContent.style';
 import { FLAT_ICON } from '@/constants/flatIcons';
-
-interface MobileCurrentWeatherContentProps {
-  data: {
-    metric: string;
-    metricType: WeatherMetrics;
-    value: number;
-  };
-}
+import type {
+  GetWeatherGraphResponseWeatherMetricEnum,
+  GetWeatherStatusResponse,
+} from '@/types/openapiGenerator';
+import { getUnit } from '@/utils/getUnit';
 
 const MobileCurrentWeatherContent = ({
-  data: { metric, metricType, value },
-}: MobileCurrentWeatherContentProps) => {
+  metric,
+  metricType,
+  value,
+}: GetWeatherStatusResponse) => {
   const FlatIconComponent = FLAT_ICON[metricType as keyof typeof FLAT_ICON];
 
   return (
     <div css={S.MobileCurrentWeatherContent}>
       <div>
         <h3>{metric}</h3>
-        <p>{value}</p>
+        <p>
+          {value}{' '}
+          {getUnit(metricType as GetWeatherGraphResponseWeatherMetricEnum)}
+        </p>
       </div>
 
       <FlatIconComponent
