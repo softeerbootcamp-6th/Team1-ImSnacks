@@ -19,7 +19,7 @@ import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContaine
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
 import type { WorkBlockType } from '@/types/workCard.type';
-import updateBlockWorkTime from '../../utils/updateBlockWorkTime';
+import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
 import { sortWorkBlocks } from '../../utils/sortWorkBlocks';
 
 const WorkContainer = ({
@@ -116,10 +116,21 @@ const WorkContainer = ({
       setDragPosition(containerCoords);
       const newX = containerCoords.x + scrollOffset - dragOffset.x;
       const newY = containerCoords.y - dragOffset.y;
-      setDraggingBlock(
-        updateBlockWorkTime(draggingBlock, { x: newX, y: newY }, 100)
-        //{ ...draggingBlock, position: { x: newX, y: newY } }
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
+        draggingBlock.startTime,
+        draggingBlock.endTime,
+        {
+          x: newX,
+          y: newY,
+        }
       );
+      setDraggingBlock({
+        ...draggingBlock,
+        position: { x: newX, y: newY },
+        startTime: newStartTime,
+        endTime: newEndTime,
+        workTime: newWorkTime,
+      });
     };
 
     // 드래그 끝
@@ -133,11 +144,18 @@ const WorkContainer = ({
           x: pos.x + scrollOffset - dragOffset.x,
           y: pos.y - dragOffset.y,
         };
-        const newTimeUpdatedBlock = updateBlockWorkTime(
-          block,
-          newBlockPosition,
-          100
+        const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
+          block.startTime,
+          block.endTime,
+          newBlockPosition
         );
+        const newTimeUpdatedBlock = {
+          ...block,
+          position: newBlockPosition,
+          startTime: newStartTime,
+          endTime: newEndTime,
+          workTime: newWorkTime,
+        };
         return block.id === draggingBlock.id ? newTimeUpdatedBlock : block;
       });
 
