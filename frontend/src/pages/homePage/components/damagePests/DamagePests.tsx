@@ -3,19 +3,29 @@ import { useEffect, useState } from 'react';
 import DamageInfoCard from '../damageInfoCard/DamageInfoCard';
 import DamageCard from '../damageCard/DamageCard';
 import DamagePestArrowButton from '../damagePestArrowButton/DamagePestArrowButton';
-import { PEST_DAMAGES, WEATHER_DAMAGES } from '@/types/damage.type';
+import {
+  PEST_DAMAGES,
+  type PestDamagesType,
+  type WeatherDamagesType,
+} from '@/types/damage.type';
 import S from './DamagePests.style';
 import { css } from '@emotion/react';
 import { getLeft } from '../../utils/damagePestsUtil';
 import useVisibility from '@/hooks/useVisibility';
 import { useClickOutside } from '@/hooks/handleClickOutside';
+import { useUserStore } from '@/store/useUserStore';
+import { getWeatherDamage } from '@/apis/damage.api';
+import type { Risk } from '@/types/openapiGenerator';
 
 const DamagePests = () => {
-  const nickName = '밤비';
+  const { nickName } = useUserStore();
   const { isVisible, toggle } = useVisibility(true);
   const [title, setTitle] = useState('');
   const [damageInfoCardContent, setDamageInfoCardContent] = useState('');
   const [selectedRiskName, setSelectedRiskName] = useState<string | null>(null);
+
+  const [weatherRiskName, setWeatherRiskName] = useState('');
+  const [weatherRisks, setWeatherRisks] = useState<Risk[]>([]);
 
   const containerRef = useClickOutside<HTMLDivElement>(
     () => setSelectedRiskName(null),
@@ -25,23 +35,14 @@ const DamagePests = () => {
   const parentWidth = 866;
   const componentWidth = 342;
 
-  const risk = [
-    {
-      name: '낙과',
-      description: '낙과로 인해 작물에 피해가 발생할 수 있습니다.',
-      damageType: WEATHER_DAMAGES.FRUIT_DROP,
-    },
-    {
-      name: '열과',
-      description: '열과로 인해 작물의 생장이 저해될 수 있습니다.',
-      damageType: WEATHER_DAMAGES.FRUIT_CRAKING,
-    },
-    {
-      name: '햇볕 데임',
-      description: '햇볕 데임으로 인해 작물이 얼어버릴 수 있습니다.',
-      damageType: WEATHER_DAMAGES.SUNBURN,
-    },
-  ];
+  useEffect(() => {
+    const fetchWeatherDamage = async () => {
+      const res = await getWeatherDamage();
+      setWeatherRiskName(res.data.riskName ?? '');
+      setWeatherRisks(res.data.risks ?? []);
+    };
+    fetchWeatherDamage();
+  }, []);
 
   const pestRisks = [
     {
@@ -73,15 +74,14 @@ const DamagePests = () => {
 
   useEffect(() => {
     if (isVisible) {
-      const WeatherRisk = '폭우';
-      setTitle(`${WeatherRisk}에는 특히 이런 피해를 입을 수 있어요.`);
+      setTitle(`${weatherRiskName}에는 특히 이런 피해를 입을 수 있어요.`);
       setDamageInfoCardContent(`${nickName}님의 작물도 주의가 필요해요!`);
     } else {
       setTitle('오늘 날씨에는 이런 병해충을 조심하세요.');
       setDamageInfoCardContent('병해충 정보를 볼 작물을 선택하세요.');
     }
     setSelectedRiskName(null);
-  }, [isVisible]);
+  }, [isVisible, nickName, weatherRiskName]);
 
   const handleCardClick = (name: string) => {
     if (selectedRiskName === name) {
@@ -105,7 +105,7 @@ const DamagePests = () => {
               cropList={[{ myCropName: '복숭아' }, { myCropName: '포도' }]}
             />
             <div css={S.DamageCardRowWrapper}>
-              {risk.map((item, index) => (
+              {weatherRisks.map((item, index) => (
                 <div
                   key={item.name}
                   css={css`
@@ -118,11 +118,13 @@ const DamagePests = () => {
                   `}
                 >
                   <DamageCard
-                    name={item.name}
-                    description={item.description}
-                    damageType={item.damageType}
+                    name={item.name ?? ''}
+                    description={item.description ?? ''}
+                    damageType={
+                      item.damageType as WeatherDamagesType | PestDamagesType
+                    }
                     selectedRiskName={selectedRiskName}
-                    onClick={() => handleCardClick(item.name)}
+                    onClick={() => handleCardClick(item.name ?? '')}
                   />
                 </div>
               ))}
