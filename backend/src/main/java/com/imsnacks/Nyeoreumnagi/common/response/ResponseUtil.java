@@ -23,7 +23,6 @@ public class ResponseUtil {
                 .build();
 
 
-        System.out.println("cookie.toString() = " + cookie.toString());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new CustomResponseBody<>(StatusCode.SUCCESS.getCode(),StatusCode.SUCCESS.getMessage(), data));
