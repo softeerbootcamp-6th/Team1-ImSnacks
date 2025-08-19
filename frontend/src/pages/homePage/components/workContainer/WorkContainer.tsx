@@ -18,7 +18,7 @@ import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
-import type { Size, WorkBlockType } from '@/types/workCard.type';
+import type { WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '../../utils/updateBlockWorkTime';
 import { sortWorkBlocks } from '../../utils/sortWorkBlocks';
 
@@ -74,30 +74,37 @@ const WorkContainer = ({
     y: number;
   } | null>(null);
 
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+
   // 컨테이너 내부 좌표 변환 함수
   const getContainerCoords = useCallback(
-    (e: PointerEvent, size: Size) => {
+    (e: PointerEvent) => {
       if (!containerRef.current) return { x: 0, y: 0 };
       const rect = containerRef.current.getBoundingClientRect();
 
       return {
-        x: e.clientX - rect.left - (size.width ?? 0) / 2,
-        y: e.clientY - rect.top - (size.height ?? 0) / 2,
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
       };
     },
     [containerRef]
   );
 
   const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
-    const containerCoords = getContainerCoords(e, block.size);
+    const containerCoords = getContainerCoords(e);
 
-    setDraggingBlock(
-      updateBlockWorkTime(
-        block,
-        { x: containerCoords.x + scrollOffset, y: containerCoords.y },
-        100
-      )
-    );
+    const rect = containerRef.current?.getBoundingClientRect();
+
+    setDragOffset({
+      x: e.clientX - (rect?.left ?? 0) + scrollOffset - block.position.x,
+      y: e.clientY - (rect?.top ?? 0) - block.position.y,
+    });
+
+    // 시작 시에는 블록 위치를 변경하지 않음 (초기 흔들림 방지)
+    setDraggingBlock(block);
     setDragPosition(containerCoords);
   };
 
@@ -105,14 +112,13 @@ const WorkContainer = ({
     // 마우스 이동
     const handlePointerMove = (e: PointerEvent) => {
       if (!draggingBlock) return;
-      const containerCoords = getContainerCoords(e, draggingBlock.size);
+      const containerCoords = getContainerCoords(e);
       setDragPosition(containerCoords);
+      const newX = containerCoords.x + scrollOffset - dragOffset.x;
+      const newY = containerCoords.y - dragOffset.y;
       setDraggingBlock(
-        updateBlockWorkTime(
-          draggingBlock,
-          { x: containerCoords.x + scrollOffset, y: containerCoords.y },
-          100
-        )
+        updateBlockWorkTime(draggingBlock, { x: newX, y: newY }, 100)
+        //{ ...draggingBlock, position: { x: newX, y: newY } }
       );
     };
 
@@ -120,12 +126,12 @@ const WorkContainer = ({
     const handleEndDrag = (e: PointerEvent) => {
       if (!draggingBlock) return;
 
-      const pos = getContainerCoords(e, draggingBlock.size);
-      // drop 위치를 block 좌표로 업데이트
+      const pos = getContainerCoords(e);
+      // drop 위치를 block 좌표로 업데이트 (오프셋 반영)
       const newBlocks = workBlocks.map(block => {
         const newBlockPosition = {
-          x: pos.x + scrollOffset,
-          y: pos.y,
+          x: pos.x + scrollOffset - dragOffset.x,
+          y: pos.y - dragOffset.y,
         };
         const newTimeUpdatedBlock = updateBlockWorkTime(
           block,
@@ -151,6 +157,8 @@ const WorkContainer = ({
     };
   }, [
     draggingBlock,
+    dragOffset.x,
+    dragOffset.y,
     getContainerCoords,
     scrollOffset,
     updateWorkBlocks,
@@ -242,11 +250,10 @@ const WorkContainer = ({
               left: 0;
               top: 0;
               transform: translate3d(
-                  ${dragPosition.x}px,
-                  ${dragPosition.y}px,
-                  0
-                )
-                translate(-50%, -50%);
+                ${dragPosition.x - dragOffset.x}px,
+                ${dragPosition.y - dragOffset.y}px,
+                0
+              );
               pointer-events: none;
               z-index: 1000;
             `}
