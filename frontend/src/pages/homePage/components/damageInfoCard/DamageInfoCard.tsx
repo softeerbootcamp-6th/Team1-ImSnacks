@@ -7,18 +7,22 @@ import S from './DamageInfoCard.style';
 import { css } from '@emotion/react';
 import { Typography } from '@/styles/typography';
 import { Assets, ColorStatus } from '@/styles/colors';
-import type { MyCropDto } from '@/types/openapiGenerator';
+import type { MyCropCard } from '@/types/openapiGenerator';
 
 interface DamageInfoCardProps {
   isWeatherVisible: boolean;
   content: string;
-  cropList: MyCropDto[];
+  cropList: MyCropCard[];
+  selectedPestCrop?: MyCropCard | null;
+  setSelectedPestCrop?: (crop: MyCropCard | null) => void;
 }
 
 const DamageInfoCard = ({
   isWeatherVisible,
   content,
   cropList,
+  selectedPestCrop,
+  setSelectedPestCrop,
 }: DamageInfoCardProps) => {
   return (
     <div css={S.DamageInfoCard}>
@@ -50,8 +54,13 @@ const DamageInfoCard = ({
             status={
               isWeatherVisible
                 ? BTN_SELECT_CHIP_STATUSES.DISABLED
+                : selectedPestCrop?.myCropId === crop.myCropId
+                ? BTN_SELECT_CHIP_STATUSES.PRESSED
                 : BTN_SELECT_CHIP_STATUSES.DEFAULT
             }
+            onClick={() => {
+              setSelectedPestCrop?.(crop);
+            }}
           />
         ))}
       </div>

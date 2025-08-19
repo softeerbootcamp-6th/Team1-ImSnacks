@@ -4,7 +4,6 @@ import DamageInfoCard from '../damageInfoCard/DamageInfoCard';
 import DamageCard from '../damageCard/DamageCard';
 import DamagePestArrowButton from '../damagePestArrowButton/DamagePestArrowButton';
 import {
-  PEST_DAMAGES,
   type PestDamagesType,
   type WeatherDamagesType,
 } from '@/types/damage.type';
@@ -14,8 +13,12 @@ import { getLeft } from '../../utils/damagePestsUtil';
 import useVisibility from '@/hooks/useVisibility';
 import { useClickOutside } from '@/hooks/handleClickOutside';
 import { useUserStore } from '@/store/useUserStore';
-import { getWeatherDamage } from '@/apis/damage.api';
-import type { GetWeatherRiskCardListResponse } from '@/types/openapiGenerator';
+import { getPestDamage, getWeatherDamage } from '@/apis/damage.api';
+import type {
+  GetWeatherRiskCardListResponse,
+  MyCropCard,
+  PestCard,
+} from '@/types/openapiGenerator';
 
 const DamagePests = () => {
   const { nickName } = useUserStore();
@@ -31,6 +34,14 @@ const DamagePests = () => {
 
   const [weatherRisk, setWeatherRisk] =
     useState<GetWeatherRiskCardListResponse | null>(null);
+  const [pestRisks, setPestRisks] = useState<PestCard[] | null>([]);
+  const [pestRisksMyCrops, setPestRisksMyCrops] = useState<MyCropCard[] | null>(
+    []
+  );
+
+  const [selectedPestCrop, setSelectedPestCrop] = useState<MyCropCard | null>(
+    null
+  );
 
   const containerRef = useClickOutside<HTMLDivElement>(
     () => setSelectedRiskName(null),
@@ -48,39 +59,20 @@ const DamagePests = () => {
         const res = await getWeatherDamage();
         setWeatherRisk(res.data);
       };
+      const fetchPestDamage = async () => {
+        const res = await getPestDamage();
+        setPestRisks(res.data.pestRisks ?? null);
+        setPestRisksMyCrops(res.data.myCrops ?? null);
+        setSelectedPestCrop(res.data.myCrops?.[0] ?? null);
+
+        console.log(res.data);
+      };
       fetchWeatherDamage();
+      fetchPestDamage();
     } catch (error) {
       console.error('기상 리스크별 피해 목록 조회 실패:', error);
     }
   }, []);
-
-  const pestRisks = [
-    {
-      name: '진딧물',
-      damageType: PEST_DAMAGES.GERMS,
-      description: '진딧물로 인해 작물에 피해가 발생할 수 있습니다.',
-    },
-    {
-      name: '총채벌레',
-      damageType: PEST_DAMAGES.BUGS,
-      description: '총채벌레로 인해 작물의 생장이 저해될 수 있습니다.',
-    },
-    {
-      name: '햇볕 데임',
-      damageType: PEST_DAMAGES.GERMS,
-      description: '햇볕 데임으로 인해 작물이 얼어버릴 수 있습니다.',
-    },
-    {
-      name: '바보',
-      damageType: PEST_DAMAGES.GERMS,
-      description: '진딧물로 인해 작물에 피해가 발생할 수 있습니다.',
-    },
-    {
-      name: '밤비',
-      damageType: PEST_DAMAGES.BUGS,
-      description: '총채벌레로 인해 작물의 생장이 저해될 수 있습니다.',
-    },
-  ];
 
   useEffect(() => {
     if (isWeatherRiskVisible && weatherRisk) {
@@ -92,6 +84,16 @@ const DamagePests = () => {
     }
     setSelectedRiskName(null);
   }, [isWeatherRiskVisible, nickName, weatherRisk]);
+
+  useEffect(() => {
+    if (selectedPestCrop?.myCropId) {
+      const fetchPestDamage = async () => {
+        const res = await getPestDamage(selectedPestCrop.myCropId);
+        setPestRisks(res.data.pestRisks ?? null);
+      };
+      fetchPestDamage();
+    }
+  }, [selectedPestCrop]);
 
   const handleCardClick = (name: string) => {
     if (selectedRiskName === name) {
@@ -160,10 +162,12 @@ const DamagePests = () => {
             <DamageInfoCard
               isWeatherVisible={isWeatherRiskVisible}
               content={damageInfoCardContent}
-              cropList={[{ myCropName: '복숭아' }, { myCropName: '포도' }]}
+              cropList={pestRisksMyCrops ?? []}
+              selectedPestCrop={selectedPestCrop}
+              setSelectedPestCrop={setSelectedPestCrop}
             />
             <div css={S.DamageCardRowWrapper}>
-              {pestRisks.map((item, index) => (
+              {pestRisks?.map((item, index) => (
                 <div
                   key={item.name}
                   css={css`
@@ -175,7 +179,7 @@ const DamagePests = () => {
                         : pestOnlyParentWidth,
                       componentWidth,
                       index,
-                      count: pestRisks.length,
+                      count: pestRisks?.length ?? 0,
                     })}px;
                     z-index: ${selectedRiskName === item.name
                       ? 999
@@ -183,11 +187,13 @@ const DamagePests = () => {
                   `}
                 >
                   <DamageCard
-                    name={item.name}
-                    description={item.description}
-                    damageType={item.damageType}
+                    name={item.name ?? ''}
+                    description={item.description ?? ''}
+                    damageType={
+                      item.damageType as WeatherDamagesType | PestDamagesType
+                    }
                     selectedRiskName={selectedRiskName}
-                    onClick={() => handleCardClick(item.name)}
+                    onClick={() => handleCardClick(item.name ?? '')}
                   />
                 </div>
               ))}
