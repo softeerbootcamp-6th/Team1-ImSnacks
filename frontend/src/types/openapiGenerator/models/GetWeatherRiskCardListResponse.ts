@@ -10,12 +10,13 @@
  * Do not edit the class manually.
  */
 
+import { MyCropDto } from '../models/MyCropDto';
+import { Risk } from '../models/Risk';
 
-export class GetWeatherConditionResponse {
-    'weatherCondition'?: string;
-    'weatherKeyword'?: string;
-    'temperature'?: number;
-    'memberName'?: string;
+export class GetWeatherRiskCardListResponse {
+    'riskName'?: string;
+    'risks'?: Array<Risk>;
+    'myCropList'?: Array<MyCropDto>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -23,32 +24,26 @@ export class GetWeatherConditionResponse {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "weatherCondition",
-            "baseName": "weatherCondition",
+            "name": "riskName",
+            "baseName": "riskName",
             "type": "string",
             "format": ""
         },
         {
-            "name": "weatherKeyword",
-            "baseName": "weatherKeyword",
-            "type": "string",
+            "name": "risks",
+            "baseName": "risks",
+            "type": "Array<Risk>",
             "format": ""
         },
         {
-            "name": "temperature",
-            "baseName": "temperature",
-            "type": "number",
-            "format": "int32"
-        },
-        {
-            "name": "memberName",
-            "baseName": "memberName",
-            "type": "string",
+            "name": "myCropList",
+            "baseName": "myCropList",
+            "type": "Array<MyCropDto>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherConditionResponse.attributeTypeMap;
+        return GetWeatherRiskCardListResponse.attributeTypeMap;
     }
 
     public constructor() {

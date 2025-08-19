@@ -1,5 +1,6 @@
 import HTTP from './http';
 import {
+  GetAirQualityResponse,
   GetDailyMaxPrecipitationResponse,
   GetFcstRiskResponse,
   GetHumidityResponse,
@@ -44,6 +45,9 @@ export const getWeatherWind = () =>
   HTTP.get<GetWindInfoResponse>('/weather/windInfo');
 
 export const getWeatherUV = () => HTTP.get<GetUVInfoResponse>('/weather/uv');
+
+export const getWeatherAirQuality = () =>
+  HTTP.get<GetAirQualityResponse>('/weather/airQualityInfo');
 
 export const getWeatherSunset = () =>
   HTTP.get<GetSunRiseSetTimeResponse>('/weather/sunriseSet');
