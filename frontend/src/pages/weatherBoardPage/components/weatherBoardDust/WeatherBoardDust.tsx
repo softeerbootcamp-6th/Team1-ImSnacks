@@ -1,37 +1,62 @@
 import { GrayScale } from '@/styles/colors';
 import {
   getFineDustLevelAndColor,
-  getUltrafineDustLevelAndColor,
+  getUltraDustLevelAndColor,
   createCircularProgressPath,
 } from '../../utils/dustUtil';
 import { useDustAnimation } from '../../hooks/useDustAnimation';
 import S from './WeatherBoardDust.style';
+import { GetAirQualityResponse } from '@/types/openapiGenerator';
+import { useEffect, useState } from 'react';
+import { getWeatherAirQuality } from '@/apis/weather.api';
 
-const WeatherBoardDust = ({
-  fineDustValue,
-  ultrafineDustValue,
-}: {
-  fineDustValue: number;
-  ultrafineDustValue: number;
-}) => {
-  const { level: fineDustLevel, color: fineDustColor } =
-    getFineDustLevelAndColor(fineDustValue);
-  const { level: ultrafineDustLevel, color: ultrafineDustColor } =
-    getUltrafineDustLevelAndColor(ultrafineDustValue);
+const WeatherBoardDust = () => {
+  const [airQualityData, setAirQualityData] = useState<GetAirQualityResponse>();
+
+  const fetchAirQualityData = async () => {
+    try {
+      const res = await getWeatherAirQuality();
+      if (res.data) setAirQualityData(res.data);
+    } catch (error) {
+      console.error('Error fetching air quality data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAirQualityData();
+  }, []);
+
+  const { level: pmValueLevel, color: pmValueColor } = getFineDustLevelAndColor(
+    airQualityData?.pm10Value || 0
+  );
+  const { level: pm25ValueLevel, color: pm25ValueColor } =
+    getUltraDustLevelAndColor(airQualityData?.pm25Value || 0);
 
   // path 생성
-  const fineDustPath = createCircularProgressPath(fineDustValue, 180);
-  const ultrafineDustPath = createCircularProgressPath(ultrafineDustValue, 100);
+  const pmValuePath = createCircularProgressPath(
+    airQualityData?.pm10Value || 0,
+    180
+  );
+  const pm25ValuePath = createCircularProgressPath(
+    airQualityData?.pm25Value || 0,
+    100
+  );
 
   // 애니메이션 훅 사용
-  const fineDustAnimation = useDustAnimation(fineDustValue, 180);
-  const ultrafineDustAnimation = useDustAnimation(ultrafineDustValue, 100);
+  const pmValueAnimation = useDustAnimation(
+    airQualityData?.pm10Value || 0,
+    180
+  );
+  const pm25ValueAnimation = useDustAnimation(
+    airQualityData?.pm25Value || 0,
+    100
+  );
 
   return (
     <div css={S.WeatherBoardDust}>
       <div css={S.DustSection}>
         <h3>미세먼지(PM10)</h3>
-        <p>{fineDustLevel}</p>
+        <p>{pmValueLevel}</p>
         <div css={S.DustChartWrapper}>
           <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
             <path
@@ -40,26 +65,26 @@ const WeatherBoardDust = ({
               fillOpacity="0.5"
             />
 
-            {fineDustPath && (
+            {pmValuePath && (
               <path
-                d={fineDustPath}
-                stroke={fineDustColor}
+                d={pmValuePath}
+                stroke={pmValueColor}
                 strokeWidth="7.5"
                 fill="none"
                 strokeLinecap="round"
-                css={fineDustAnimation.animationStyle}
+                css={pmValueAnimation.animationStyle}
               />
             )}
           </svg>
           <div css={S.DustValueWrapper}>
-            <div css={S.DustValue}>{fineDustValue}</div>
+            <div css={S.DustValue}>{airQualityData?.pm10Value || 0}</div>
             <div css={S.DustUnit}>µg/m³</div>
           </div>
         </div>
       </div>
       <div css={S.DustSection}>
         <h3>초미세먼지(PM2.5)</h3>
-        <p>{ultrafineDustLevel}</p>
+        <p>{pm25ValueLevel}</p>
         <div css={S.DustChartWrapper}>
           <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
             <path
@@ -68,19 +93,19 @@ const WeatherBoardDust = ({
               fillOpacity="0.5"
             />
 
-            {ultrafineDustPath && (
+            {pm25ValuePath && (
               <path
-                d={ultrafineDustPath}
-                stroke={ultrafineDustColor}
+                d={pm25ValuePath}
+                stroke={pm25ValueColor}
                 strokeWidth="7.5"
                 fill="none"
                 strokeLinecap="round"
-                css={ultrafineDustAnimation.animationStyle}
+                css={pm25ValueAnimation.animationStyle}
               />
             )}
           </svg>
           <div css={S.DustValueWrapper}>
-            <div css={S.DustValue}>{ultrafineDustValue}</div>
+            <div css={S.DustValue}>{airQualityData?.pm25Value || 0}</div>
             <div css={S.DustUnit}>µg/m³</div>
           </div>
         </div>

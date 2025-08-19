@@ -11,11 +11,9 @@
  */
 
 
-export class GetWeatherConditionResponse {
-    'weatherCondition'?: string;
-    'weatherKeyword'?: string;
-    'temperature'?: number;
-    'memberName'?: string;
+export class MyCropCard {
+    'myCropId'?: number;
+    'myCropName'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -23,32 +21,20 @@ export class GetWeatherConditionResponse {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "weatherCondition",
-            "baseName": "weatherCondition",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "weatherKeyword",
-            "baseName": "weatherKeyword",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "temperature",
-            "baseName": "temperature",
+            "name": "myCropId",
+            "baseName": "myCropId",
             "type": "number",
-            "format": "int32"
+            "format": "int64"
         },
         {
-            "name": "memberName",
-            "baseName": "memberName",
+            "name": "myCropName",
+            "baseName": "myCropName",
             "type": "string",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherConditionResponse.attributeTypeMap;
+        return MyCropCard.attributeTypeMap;
     }
 
     public constructor() {

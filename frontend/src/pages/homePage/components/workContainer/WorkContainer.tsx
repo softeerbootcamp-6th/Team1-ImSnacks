@@ -7,17 +7,14 @@ import useWorkBlocks from '@/pages/homePage/hooks/useWorkBlocks';
 import MainGraph from '../mainGraph/MainGraph';
 import GraphMenu from '../graphMenu/GraphMenu';
 import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
-import { getWeatherGraph } from '@/apis/weather.api';
-import {
-  GetWeatherGraphResponse,
-  WeatherRiskDto,
-} from '@/types/openapiGenerator';
+import { WeatherRiskDto } from '@/types/openapiGenerator';
 import { generateYTicks } from '../../utils/lineChartUtil';
 import { getUnit } from '@/utils/getUnit';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/hooks/useContainer';
 import WorkContainerS from './WorkContainer.style';
 import useDragWorkBlock from '@/pages/homePage/hooks/useDragWorkBlock';
+import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
@@ -31,28 +28,12 @@ const WorkContainer = ({
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.PRECIPITATION
   );
-  const [graphData, setGraphData] = useState<GetWeatherGraphResponse>();
 
-  // setCurrentTab 함수를 메모이제이션하여 GraphMenu 리렌더링 방지
-  const handleCurrentTabChange = useCallback((tab: WeatherMetrics) => {
-    setCurrentTab(tab);
-  }, []);
+  const { data: graphData, error } = useWeatherGraphQuery(currentTab);
 
-  // API 데이터 가져오기
-  useEffect(() => {
-    let ignore = false;
-    (async () => {
-      try {
-        const res = await getWeatherGraph(currentTab);
-        if (!ignore && res.data) setGraphData(res.data);
-      } catch (e) {
-        if (!ignore) console.error('Error fetching graph data:', e);
-      }
-    })();
-    return () => {
-      ignore = true;
-    };
-  }, [currentTab]);
+  if (error) {
+    console.error('Error fetching graph data:', error);
+  }
 
   const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
     useWorkBlocks();

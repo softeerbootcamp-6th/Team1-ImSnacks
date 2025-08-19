@@ -8,12 +8,15 @@ import {
 } from './types/weather.types';
 import { useWeatherConditionStore } from './store/useWeatherConditionStore';
 import { useTimeStore } from './store/useTimeStore';
+import { useUserStore } from './store/useUserStore';
 
 function App() {
   const { setWeatherCondition } = useWeatherConditionStore();
+  const { setNickName } = useUserStore();
   const { currentTime, setCurrentTime } = useTimeStore();
 
   // 초기 렌더링 시
+  // TODO 미소: 로그인 페이지에서는 실행되면 안되어서 위치를 바꾸던가 해야할듯...
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -32,6 +35,7 @@ function App() {
             setWeatherCondition(
               weatherConditionFromApi as WeatherConditionsType
             );
+            setNickName(res.data.memberName || '');
           }
         }
       } catch (error) {
@@ -41,7 +45,7 @@ function App() {
 
     fetchWeather();
     setCurrentTime(currentTime);
-  }, [currentTime, setCurrentTime, setWeatherCondition]);
+  }, [currentTime, setCurrentTime, setWeatherCondition, setNickName]);
 
   return (
     <>

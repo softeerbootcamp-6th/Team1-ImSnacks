@@ -1,5 +1,6 @@
 import HTTP from './http';
 import {
+  GetAirQualityResponse,
   GetDailyMaxPrecipitationResponse,
   GetFcstRiskResponse,
   GetHumidityResponse,
@@ -11,6 +12,7 @@ import {
   GetWeatherConditionResponse,
   GetWeatherGraphResponse,
   GetWeatherGraphResponseWeatherMetricEnum,
+  GetWeatherStatusResponse,
   GetWindInfoResponse,
 } from '@/types/openapiGenerator';
 
@@ -45,5 +47,11 @@ export const getWeatherWind = () =>
 
 export const getWeatherUV = () => HTTP.get<GetUVInfoResponse>('/weather/uv');
 
+export const getWeatherAirQuality = () =>
+  HTTP.get<GetAirQualityResponse>('/weather/airQualityInfo');
+
 export const getWeatherSunset = () =>
   HTTP.get<GetSunRiseSetTimeResponse>('/weather/sunriseSet');
+
+export const getWeatherStatus = () =>
+  HTTP.get<GetWeatherStatusResponse[]>('/weather/status');
