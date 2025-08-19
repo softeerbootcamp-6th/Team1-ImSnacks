@@ -18,7 +18,7 @@ public class ResponseUtil {
                 .path("/")
                 .maxAge(86400 * 3)
                 .httpOnly(true)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
 
