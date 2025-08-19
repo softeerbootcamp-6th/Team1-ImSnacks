@@ -23,7 +23,7 @@ export const useLogin = (): UseLoginReturn => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const setAccessToken = useTokenStore().setAccessToken;
+  const { setAccessToken } = useTokenStore();
 
   const handleIdentifierChange = (value: string) => {
     setIdentifier(value);
@@ -49,13 +49,11 @@ export const useLogin = (): UseLoginReturn => {
       setIsLoading(false);
       return;
     }
-
     try {
       const res = await postLogin({ identifier, password });
       if (res.code === 200) {
         setAccessToken(res.data.accessToken!);
         useUserStore.setState({ nickName: res.data.nickname });
-        navigate('/');
         navigate('/');
       } else {
         setError('아이디 또는 비밀번호가 올바르지 않습니다.');
