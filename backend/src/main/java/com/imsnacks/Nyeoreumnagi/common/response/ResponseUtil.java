@@ -1,5 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.common.response;
 
+import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -14,12 +15,7 @@ public class ResponseUtil {
     }
 
     public static <T> ResponseEntity<CustomResponseBody<T>> success(T data, UUID refreshToken) {
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken.toString())
-                .path("/")
-                .maxAge(86400 * 3)
-                .httpOnly(true)
-                .sameSite("none")
-                .build();
+        Cookie cookie = CookieUtils.createCookie("refreshToken", refreshToken.toString(), 86400 * 3, "/");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
