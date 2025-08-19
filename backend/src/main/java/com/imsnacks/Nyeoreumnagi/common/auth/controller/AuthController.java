@@ -37,9 +37,9 @@ public class AuthController {
     @Operation(summary = "accessToken 재발급")
     @ApiResponse(responseCode = "200", description = "accessToken 재발급 성공")
     @ApiResponse(responseCode = "400", description = "accessToken 재발급 실패")
-    public ResponseEntity<CustomResponseBody<LoginResponse>> refreshToken(@CookieValue(name = "refreshToken") UUID refreshToken){
+    public ResponseEntity<CustomResponseBody<LoginAccessTokenResponse>> refreshToken(@CookieValue(name = "refreshToken") UUID refreshToken){
         LoginResponse response = authService.refreshToken(refreshToken);
-        return ResponseUtil.success(response);
+        return ResponseUtil.success(response.loginAccessTokenResponse(), response.refreshToken());
     }
 
 
