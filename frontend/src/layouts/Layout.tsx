@@ -54,7 +54,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
           `}
         />
       )}
-      <NavBar isWeatherPage={isWeatherPage} />
+      {window.location.pathname !== '/login' && (
+        <NavBar isWeatherPage={isWeatherPage} />
+      )}
       <main
         css={css`
           max-width: 1328px;
