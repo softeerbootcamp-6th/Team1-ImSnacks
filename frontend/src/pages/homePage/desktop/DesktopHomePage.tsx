@@ -2,11 +2,11 @@ import WorkBlocksProvider from '@/pages/homePage/contexts/WorksProvider';
 import Headline from '../components/headline/Headline';
 import S from './DesktopHomePage.style';
 import WorkContainer from '../components/workContainer/WorkContainer';
-import RegisterWorkContainer from '../components/registerWorkContainer/RegisterWorkContainer';
 import DamagePests from '../components/damagePests/DamagePests';
 import type { WeatherRiskDto } from '@/types/openapiGenerator';
 import { getWeatherRisk } from '@/apis/weather.api';
 import { useEffect, useState } from 'react';
+import ContainerProvider from '../contexts/ContainerProvider';
 
 const DesktopHomePage = () => {
   const [weatherRiskData, setWeatherRiskData] = useState<WeatherRiskDto[]>([]);
@@ -26,10 +26,11 @@ const DesktopHomePage = () => {
   return (
     <div css={S.DesktopHomePage}>
       <Headline />
-      <WorkBlocksProvider>
-        <WorkContainer weatherRiskData={weatherRiskData} />
-        <RegisterWorkContainer />
-      </WorkBlocksProvider>
+      <ContainerProvider>
+        <WorkBlocksProvider>
+          <WorkContainer weatherRiskData={weatherRiskData} />
+        </WorkBlocksProvider>
+      </ContainerProvider>
       <DamagePests />
     </div>
   );
