@@ -161,8 +161,7 @@ public class PestServiceTest {
 
         // expected
         var pestCards = List.of(귤응애.toCard());
-        //var cropCards = List.of(new GetPestCardListResponse.MyCropCard(마이귤.getId(), 마이귤.getCrop().getName()));
-        var cropCards = new ArrayList<GetPestCardListResponse.MyCropCard>();
+        var cropCards = List.of(마이귤.toCard());
         var expected = new GetPestCardListResponse(pestCards, cropCards);
 
         // actual
@@ -285,8 +284,7 @@ public class PestServiceTest {
 
         // expected
         var pestCards = List.of(귤응애.toCard());
-        //var cropCards = List.of(new GetPestCardListResponse.MyCropCard(마이귤.getId(), 마이귤.getCrop().getName()));
-        var cropCards = new ArrayList<GetPestCardListResponse.MyCropCard>();
+        var cropCards = List.of(마이귤.toCard());
         var expected = new GetPestCardListResponse(pestCards, cropCards);
 
         // actual
@@ -407,7 +405,7 @@ public class PestServiceTest {
         // expected
         var pestCards = List.of(귤응애.toCard(), 왕담배나방.toCard(), 어떤병.toCard());
         //var cropCards = List.of(new GetPestCardListResponse.MyCropCard(마이귤.getId(), 마이귤.getCrop().getName()));
-        var cropCards = new ArrayList<GetPestCardListResponse.MyCropCard>();
+        var cropCards = List.of(마이귤.toCard());
         var expected = new GetPestCardListResponse(pestCards, cropCards);
         LocalDateTime testDate = LocalDateTime.of(2025, 8, 18, 10, 10);
         // actual

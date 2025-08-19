@@ -1,9 +1,5 @@
 package com.imsnacks.Nyeoreumnagi.damage.pest.service;
 
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
-import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
-import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
-import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse;
 import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse.MyCropCard;
 import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse.PestCard;
@@ -12,6 +8,10 @@ import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
+import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
+import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
+import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus;
@@ -22,8 +22,8 @@ import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,15 +40,44 @@ public class PestService {
     private static final int MAX_PEST_CARD_LIST_SIZE = 6;
 
     public GetPestCardListResponse getPestCardList(final Long memberId, @Nullable final Long myCropId) {
+        if (myCropId == null) {
+            return responseDefault(memberId);
+        }
+
         final Farm farm = farmRepo.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MemberResponseStatus.NO_FARM_INFO));
-        final Crop target = (myCropId == null) ? findDefaultCrop(memberId) : findCropBy(myCropId, memberId);
+        final Crop target = findCropBy(myCropId, memberId);
         final List<PestCard> pestCards = getPestCards(target, farm.getNx(), farm.getNy());
-        final List<MyCropCard> myCropCards = (myCropId == null) ? getMyCropCards(memberId) : new ArrayList<>();
+        final List<MyCropCard> myCropCards = getMyCropCards(memberId);
 
         if (pestCards.isEmpty()) {
             final List<PestCard> defaultPestCards = getDefaultPestCards(target);
             return (new GetPestCardListResponse(defaultPestCards, myCropCards));
         }
+
+        return (new GetPestCardListResponse(pestCards, myCropCards));
+    }
+
+    public GetPestCardListResponse responseDefault(final long memberId) {
+        final Farm farm = farmRepo.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MemberResponseStatus.NO_FARM_INFO));
+        final List<MyCrop> myCrops = myCropRepo.findAllByMember_IdOrderByCrop_Id(memberId);
+        if (myCrops.isEmpty()) {
+            throw new CropException(CropResponseStatus.MY_CROP_NOT_FOUND);
+        }
+        final Crop crop = myCrops.get(0).getCrop();
+        if (crop == null) {
+            throw new CropException(CropResponseStatus.MY_CROP_NOT_FOUND);
+        }
+
+        final List<PestCard> pestCards = getPestCards(crop, farm.getNx(), farm.getNy());
+        final List<MyCropCard> myCropCards = myCrops.stream()
+                .map(x -> x.toCard())
+                .toList();
+
+        if (pestCards.isEmpty()) {
+            final List<PestCard> defaultPestCards = getDefaultPestCards(crop);
+            return (new GetPestCardListResponse(defaultPestCards, myCropCards));
+        }
+
         return (new GetPestCardListResponse(pestCards, myCropCards));
     }
 
@@ -65,18 +94,6 @@ public class PestService {
         return myCrops.stream()
                 .map(x -> x.toCard())
                 .toList();
-    }
-
-    private Crop findDefaultCrop(long memberId) {
-        List<MyCrop> myCrops = myCropRepo.findAllByMember_IdOrderByCrop_Id(memberId);
-        if (myCrops.isEmpty()) {
-            throw new CropException(CropResponseStatus.MY_CROP_NOT_FOUND);
-        }
-        Crop crop = myCrops.get(0).getCrop();
-        if (crop == null) {
-            throw new CropException(CropResponseStatus.MY_CROP_NOT_FOUND);
-        }
-        return crop;
     }
 
     private Crop findCropBy(long myCropId, long memberId) {
@@ -163,11 +180,4 @@ public class PestService {
         };
     }
 
-    private List<ShortTermWeatherForecast> getForecastList(final int nx, final int ny) {
-        List<ShortTermWeatherForecast> ret = fcstRepo.findAllByNxAndNy(nx, ny);
-        if (ret.isEmpty()) {
-            throw new WeatherException(WeatherResponseStatus.NO_WEATHER_VALUE);
-        }
-        return ret;
-    }
 }
