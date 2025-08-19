@@ -5,12 +5,7 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import type { Size } from '@/types/workCard.type';
 
-interface WorkCardContainerProps {
-  isDragging: boolean;
-  size: Size;
-}
-
-const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
+const WorkCardContainer = (size: Size) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -24,7 +19,6 @@ const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
   height: ${size.height ? `${size.height}px` : 'auto'};
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: ${isDragging ? 1000 : 1};
   user-select: none;
 
   cursor: grab;

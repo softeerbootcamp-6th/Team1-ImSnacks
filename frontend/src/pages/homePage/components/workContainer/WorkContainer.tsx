@@ -18,7 +18,7 @@ import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
-import type { WorkBlockType } from '@/types/workCard.type';
+import type { Size, WorkBlockType } from '@/types/workCard.type';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -73,38 +73,39 @@ const WorkContainer = ({
   } | null>(null);
 
   // 컨테이너 내부 좌표 변환 함수
-  const getContainerCoords = (e: PointerEvent | React.MouseEvent) => {
+  const getContainerCoords = (e: PointerEvent, size: Size) => {
     if (!containerRef.current) return { x: 0, y: 0 };
     const rect = containerRef.current.getBoundingClientRect();
 
     return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      x: e.clientX - rect.left + scrollOffset - (size.width ?? 0) / 2,
+      y: e.clientY - rect.top - (size.height ?? 0) / 2,
     };
   };
 
   // 드래그 시작
-  const handleStartDrag = (e: React.MouseEvent, block: WorkBlockType) => {
-    e.stopPropagation();
+  const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
+    const containerCoords = getContainerCoords(e, block.size);
+
     setDraggingBlock(block);
-    setDragPosition(getContainerCoords(e));
+    setDragPosition(containerCoords);
 
     // document 이벤트 등록
-    document.addEventListener('pointermove', handleMouseMove);
-    document.addEventListener('pointerup', handleEndDrag);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handleEndDrag);
   };
 
   // 마우스 이동
-  const handleMouseMove = (e: PointerEvent) => {
+  const handlePointerMove = (e: PointerEvent) => {
     if (!draggingBlock) return;
-    setDragPosition(getContainerCoords(e));
+    setDragPosition(getContainerCoords(e, draggingBlock.size));
   };
 
   // 드래그 끝
   const handleEndDrag = (e: PointerEvent) => {
     if (!draggingBlock) return;
 
-    const pos = getContainerCoords(e);
+    const pos = getContainerCoords(e, draggingBlock.size);
 
     // drop 위치를 block 좌표로 업데이트
     const newBlocks = workBlocks.map(block =>
@@ -124,8 +125,8 @@ const WorkContainer = ({
     setDragPosition(null);
 
     // 이벤트 해제
-    document.removeEventListener('pointermove', handleMouseMove);
-    document.removeEventListener('pointerup', handleEndDrag);
+    window.removeEventListener('pointermove', handlePointerMove);
+    window.removeEventListener('pointerup', handleEndDrag);
   };
 
   return (
@@ -178,10 +179,14 @@ const WorkContainer = ({
                     left: 0;
                     top: 0;
                     transform: translate3d(${position.x}px, ${position.y}px, 0);
+
+                    opacity: ${draggingBlock?.id === id ? 0.5 : 1};
                     pointer-events: auto;
                     z-index: 1000;
                   `}
-                  onMouseDown={e => handleStartDrag(e, block)}
+                  onPointerDown={e =>
+                    handleStartDrag(e as unknown as PointerEvent, block)
+                  }
                 >
                   <WorkCardRegister
                     block={block}
@@ -200,33 +205,34 @@ const WorkContainer = ({
               selectedRecommendedWork={selectedRecommendedWork}
             />
           </div>
-          {/* 드래그 중일 때 오버레이 */}
-          {draggingBlock && dragPosition && (
-            <div
-              css={css`
-                position: absolute;
-                left: 0;
-                top: 0;
-                transform: translate3d(
+        </div>
+        {/* 드래그 중일 때 오버레이 */}
+        {draggingBlock && dragPosition && (
+          <div
+            css={css`
+              position: absolute;
+              left: 0;
+              top: 0;
+              transform: translate3d(
                   ${dragPosition.x}px,
                   ${dragPosition.y}px,
                   0
-                );
-                pointer-events: auto;
-                z-index: 1000;
-              `}
-            >
-              <WorkCardRegister
-                block={draggingBlock}
-                isDragging={true}
-                containerRef={containerRef}
-                scrollOffset={scrollOffset}
-                allBlocks={workBlocks}
-                updateWorkBlocks={updateWorkBlocks}
-              />
-            </div>
-          )}
-        </div>
+                )
+                translate(-50%, -50%);
+              pointer-events: none;
+              z-index: 1000;
+            `}
+          >
+            <WorkCardRegister
+              block={draggingBlock}
+              isDragging={true}
+              containerRef={containerRef}
+              scrollOffset={scrollOffset}
+              allBlocks={workBlocks}
+              updateWorkBlocks={updateWorkBlocks}
+            />
+          </div>
+        )}
       </div>
 
       <RegisterWorkContainer

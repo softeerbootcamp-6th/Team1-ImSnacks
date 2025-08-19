@@ -68,13 +68,7 @@ const WorkCardRegister = ({
 
   return (
     <div
-      css={S.WorkCardContainer({
-        isDragging,
-        size: {
-          width: newWidth,
-          height: block.size.height,
-        },
-      })}
+      css={S.WorkCardContainer({ width: newWidth, height: block.size.height })}
       onMouseDown={onMouseDown}
       onMouseEnter={show}
       onMouseLeave={hide}
