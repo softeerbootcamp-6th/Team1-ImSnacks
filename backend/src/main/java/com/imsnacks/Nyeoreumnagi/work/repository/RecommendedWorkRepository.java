@@ -17,11 +17,11 @@ public interface RecommendedWorkRepository extends JpaRepository<RecommendedWork
                       AND mw.start_time <  DATE(NOW()) + INTERVAL 1 DAY
                       AND ST_Distance_Sphere(
                             ST_SRID(f.location, 4326),
-                            (SELECT ST_SRID(location, 4326) FROM farm WHERE member_id = :currentMemberId)
+                            (SELECT ST_SRID(location, 4326) FROM farm WHERE member_id = :memberId)
                           ) <= 5000
-                      AND mw.member_id <> :currentMemberId
+                      AND mw.member_id <> :memberId
             """, nativeQuery = true)
-    long countNearbySameWork(
+    int countNearbySameWork(
             @Param("memberId") long memberId,
             @Param("workId") long workId
     );
