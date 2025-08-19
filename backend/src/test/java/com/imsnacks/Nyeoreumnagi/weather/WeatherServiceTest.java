@@ -19,6 +19,10 @@ import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -161,7 +165,9 @@ class WeatherServiceTest {
     void 정상_날씨_조회_성공() {
         // given
         long memberId = 1L;
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, 60, 120, "regioncode", null);
 
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
@@ -187,7 +193,9 @@ class WeatherServiceTest {
         Long memberId = 1L;
 
         // given: member, farm, sunrise/sunset mock
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, 60, 120, "regioncode", null);
 
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
         when(sunriseSunSetTime.getSunriseTime()).thenReturn(LocalTime.of(5, 40));

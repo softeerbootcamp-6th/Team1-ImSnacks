@@ -17,6 +17,10 @@ import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -89,7 +93,9 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -110,7 +116,9 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -131,7 +139,9 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
         final LocalDateTime evening = LocalDateTime.of(2025, 8, 16, 19, 0);
@@ -150,7 +160,9 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
 
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
@@ -170,7 +182,9 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         final LocalDateTime from = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).minusHours(1);
@@ -205,7 +219,9 @@ class WeatherBriefingTest {
         final long memberId = 42L;
         final int nx = 60;
         final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
         final long jobExecutionId = 1L;
