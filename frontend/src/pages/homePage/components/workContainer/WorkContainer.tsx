@@ -63,7 +63,7 @@ const WorkContainer = ({
     updateWorkBlocks,
     containerRef as React.RefObject<HTMLDivElement>,
     scrollOffset
-  );
+  ); //TODO: 전체 블록을 업데이트하는 게 아니라 블록 하나만 리사이즈 후 업데이트 필요
 
   // 드래그 상태
   const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
