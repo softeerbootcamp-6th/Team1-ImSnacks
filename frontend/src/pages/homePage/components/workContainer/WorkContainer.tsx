@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
@@ -10,17 +10,14 @@ import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 import MainGraph from '../mainGraph/MainGraph';
 import GraphMenu from '../graphMenu/GraphMenu';
 import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
-import { getWeatherGraph } from '@/apis/weather.api';
-import {
-  GetWeatherGraphResponse,
-  WeatherRiskDto,
-} from '@/types/openapiGenerator';
+import { WeatherRiskDto } from '@/types/openapiGenerator';
 import { generateYTicks } from '../../utils/lineChartUtil';
 import { getUnit } from '@/utils/getUnit';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/contexts/useContainer';
 import WorkContainerS from './WorkContainer.style';
 import useDragWorkBlock from '@/pages/homePage/hooks/useDragWorkBlock';
+import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -30,23 +27,12 @@ const WorkContainer = ({
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.PRECIPITATION
   );
-  const [graphData, setGraphData] = useState<GetWeatherGraphResponse>();
 
-  // API 데이터 가져오기
-  useEffect(() => {
-    let ignore = false;
-    (async () => {
-      try {
-        const res = await getWeatherGraph(currentTab);
-        if (!ignore && res.data) setGraphData(res.data);
-      } catch (e) {
-        if (!ignore) console.error('Error fetching graph data:', e);
-      }
-    })();
-    return () => {
-      ignore = true;
-    };
-  }, [currentTab]);
+  const { data: graphData, error } = useWeatherGraphQuery(currentTab);
+
+  if (error) {
+    console.error('Error fetching graph data:', error);
+  }
 
   const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
   const { containerRef, scrollOffset, setScrollOffset } = useContainer();
