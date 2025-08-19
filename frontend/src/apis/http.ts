@@ -1,4 +1,4 @@
-import { token } from '@/store/token';
+import { useTokenStore } from '@/store/useTokenStore';
 const baseUrl = import.meta.env.VITE_API_URL;
 import type { ApiRes } from './res';
 import { ApiError } from './ApiError';
@@ -8,11 +8,13 @@ const customFetch = async (url: string, options: RequestInit) => {
     throw new Error('Base URL is not defined');
   }
 
+  const accessToken = useTokenStore.getState().accessToken;
+
   const response = await fetch(`${baseUrl}${url}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token.get()}`,
+      Authorization: `Bearer ${accessToken}`,
       ...options.headers, // 사용자가 전달한 헤더가 있다면 우선 적용
     },
   });
