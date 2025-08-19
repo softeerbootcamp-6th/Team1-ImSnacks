@@ -19,6 +19,7 @@ public class ResponseUtil {
                 .maxAge(86400 * 3)
                 .httpOnly(true)
                 .sameSite("None")
+                .secure(true)
                 .build();
 
 
