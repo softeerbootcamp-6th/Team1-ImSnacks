@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
@@ -131,10 +131,7 @@ const WorkContainer = ({
   return (
     <>
       <div ref={containerRef} css={WorkContainerS.ContainerWrapper}>
-        <GraphMenu
-          currentTab={currentTab}
-          setCurrentTab={handleCurrentTabChange}
-        />
+        <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
 
         {graphData && (
           <div css={ChartS.FixedYAxisWrapper}>
