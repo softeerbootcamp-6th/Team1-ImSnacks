@@ -33,7 +33,7 @@ public class AuthService {
         AuthTokens token = jwtProvider.createToken(member.getId());
         member.setRefreshToken(token.getRefreshToken());
 
-        return new LoginResponse(member.getNickname(), token.getAccessToken(), token.getRefreshToken());
+        return new LoginResponse(token.getRefreshToken(), new LoginResponse.LoginAccessTokenResponse(member.getNickname(), token.getAccessToken()));
     }
 
     @Transactional
@@ -41,6 +41,6 @@ public class AuthService {
         Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
         AuthTokens token = jwtProvider.createToken(member.getId());
-        return new LoginResponse(member.getNickname(), token.getAccessToken(), token.getRefreshToken());
+        return new LoginResponse(token.getRefreshToken(), new LoginResponse.LoginAccessTokenResponse(member.getNickname(), token.getAccessToken()));
     }
 }

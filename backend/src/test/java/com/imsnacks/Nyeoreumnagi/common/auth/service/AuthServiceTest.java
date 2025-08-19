@@ -44,8 +44,8 @@ class AuthServiceTest {
         LoginResponse response = authService.login(request);
 
         // Then (검증)
-        assertThat(response.nickname()).isEqualTo("테스트유저");
-        assertThat(response.accessToken()).isEqualTo("mock_access_token");
+        assertThat(response.loginAccessTokenResponse().nickname()).isEqualTo("테스트유저");
+        assertThat(response.loginAccessTokenResponse().accessToken()).isEqualTo("mock_access_token");
         assertThat(response.refreshToken()).isEqualTo(mockTokens.getRefreshToken());
     }
 
@@ -63,8 +63,8 @@ class AuthServiceTest {
         LoginResponse response = authService.refreshToken(oldRefreshToken);
 
         // Then (검증)
-        assertThat(response.nickname()).isEqualTo("테스트유저");
-        assertThat(response.accessToken()).isEqualTo("new_access_token");
+        assertThat(response.loginAccessTokenResponse().nickname()).isEqualTo("테스트유저");
+        assertThat(response.loginAccessTokenResponse().accessToken()).isEqualTo("new_access_token");
         assertThat(response.refreshToken()).isEqualTo(newMockTokens.getRefreshToken());
     }
 }
