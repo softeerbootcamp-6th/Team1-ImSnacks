@@ -41,7 +41,7 @@ public class PestService {
 
     public GetPestCardListResponse getPestCardList(final Long memberId, @Nullable final Long myCropId) {
         final Farm farm = farmRepo.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MemberResponseStatus.NO_FARM_INFO));
-        final Crop target = (myCropId == null) ? findDefaultCrop(memberId) : findCropBy(myCropId);
+        final Crop target = (myCropId == null) ? findDefaultCrop(memberId) : findCropBy(myCropId, memberId);
         final List<PestCard> pestCards = getPestCards(target, farm.getNx(), farm.getNy());
         final List<MyCropCard> myCropCards = (myCropId == null) ? getMyCropCards(memberId) : new ArrayList<>();
 
@@ -79,8 +79,11 @@ public class PestService {
         return crop;
     }
 
-    private Crop findCropBy(@NotNull long myCropId) {
+    private Crop findCropBy(long myCropId, long memberId) {
         final MyCrop myCrop = myCropRepo.findById(myCropId).orElseThrow(() -> new CropException(CropResponseStatus.MY_CROP_NOT_FOUND));
+        if (!myCrop.getMember().getId().equals(memberId)) {
+            throw new CropException(CropResponseStatus.MY_CROP_NOT_YOURS);
+        }
         final Crop crop = myCrop.getCrop();
         if (crop == null) {
             throw new CropException(CropResponseStatus.MY_CROP_NOT_FOUND);
