@@ -25,7 +25,8 @@ const DamageCardTitle = css`
 const DamageCardDescription = css`
   ${Typography.Body_S_400}
   color: ${Assets.Text.Global.Body};
-  width: 70%;
+  width: 75%;
+  word-break: keep-all;
 `;
 
 export default {
