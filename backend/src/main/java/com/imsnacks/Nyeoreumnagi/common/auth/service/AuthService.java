@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 
 @Service
@@ -31,6 +33,14 @@ public class AuthService {
         AuthTokens token = jwtProvider.createToken(member.getId());
         member.setRefreshToken(token.getRefreshToken());
 
+        return new LoginResponse(member.getNickname(), token.getAccessToken(), token.getRefreshToken());
+    }
+
+    @Transactional
+    public LoginResponse refreshToken(UUID refreshToken){
+        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        AuthTokens token = jwtProvider.createToken(member.getId());
         return new LoginResponse(member.getNickname(), token.getAccessToken(), token.getRefreshToken());
     }
 }
