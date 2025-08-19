@@ -11,10 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,4 +31,15 @@ public class AuthController {
         LoginResponse response = authService.login(request);
         return ResponseUtil.success(response);
     }
+
+    @GetMapping("/refresh")
+    @Operation(summary = "accessToken 재발급")
+    @ApiResponse(responseCode = "200", description = "accessToken 재발급 성공")
+    @ApiResponse(responseCode = "400", description = "accessToken 재발급 실패")
+    public ResponseEntity<CustomResponseBody<LoginResponse>> refreshToken(@RequestHeader UUID refreshToken){
+        LoginResponse response = authService.refreshToken(refreshToken);
+        return ResponseUtil.success(response);
+    }
+
+
 }
