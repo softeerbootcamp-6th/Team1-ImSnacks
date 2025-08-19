@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
@@ -18,9 +18,8 @@ import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
-import type { WorkBlockType } from '@/types/workCard.type';
-import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
-import { sortWorkBlocks } from '../../utils/sortWorkBlocks';
+import { useDragBlock } from '@/dndTimeline/hooks/useDragBlock';
+import DragContainer from '@/dndTimeline/components/DragContainer';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -65,127 +64,20 @@ const WorkContainer = ({
     scrollOffset
   ); //TODO: 전체 블록을 업데이트하는 게 아니라 블록 하나만 리사이즈 후 업데이트 필요
 
-  // 드래그 상태
-  const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
-    null
-  );
-  const [dragPosition, setDragPosition] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-
-  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-
-  // 컨테이너 내부 좌표 변환 함수
-  const getContainerCoords = useCallback(
-    (e: PointerEvent) => {
-      if (!containerRef.current) return { x: 0, y: 0 };
-      const rect = containerRef.current.getBoundingClientRect();
-
-      return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
-    },
-    [containerRef]
-  );
-
-  const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
-    const containerCoords = getContainerCoords(e);
-
-    const rect = containerRef.current?.getBoundingClientRect();
-
-    setDragOffset({
-      x: e.clientX - (rect?.left ?? 0) + scrollOffset - block.position.x,
-      y: e.clientY - (rect?.top ?? 0) - block.position.y,
+  const { draggingBlock, dragPosition, dragOffset, handleStartDrag } =
+    useDragBlock({
+      containerRef,
+      scrollOffset,
+      workBlocks,
+      updateWorkBlocks,
     });
-
-    // 시작 시에는 블록 위치를 변경하지 않음 (초기 흔들림 방지)
-    setDraggingBlock(block);
-    setDragPosition(containerCoords);
-  };
-
-  useEffect(() => {
-    // 마우스 이동
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!draggingBlock) return;
-      const containerCoords = getContainerCoords(e);
-      setDragPosition(containerCoords);
-      const newX = containerCoords.x + scrollOffset - dragOffset.x;
-      const newY = containerCoords.y - dragOffset.y;
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
-        draggingBlock.startTime,
-        draggingBlock.endTime,
-        {
-          x: newX,
-          y: newY,
-        }
-      );
-      setDraggingBlock({
-        ...draggingBlock,
-        position: { x: newX, y: newY },
-        startTime: newStartTime,
-        endTime: newEndTime,
-        workTime: newWorkTime,
-      });
-    };
-
-    // 드래그 끝
-    const handleEndDrag = (e: PointerEvent) => {
-      if (!draggingBlock) return;
-
-      const pos = getContainerCoords(e);
-      // drop 위치를 block 좌표로 업데이트 (오프셋 반영)
-      const newBlocks = workBlocks.map(block => {
-        const newBlockPosition = {
-          x: pos.x + scrollOffset - dragOffset.x,
-          y: pos.y - dragOffset.y,
-        };
-        const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
-          block.startTime,
-          block.endTime,
-          newBlockPosition
-        );
-        const newTimeUpdatedBlock = {
-          ...block,
-          position: newBlockPosition,
-          startTime: newStartTime,
-          endTime: newEndTime,
-          workTime: newWorkTime,
-        };
-        return block.id === draggingBlock.id ? newTimeUpdatedBlock : block;
-      });
-
-      const newSortedBlocks = sortWorkBlocks(newBlocks);
-      updateWorkBlocks(newSortedBlocks);
-
-      setDraggingBlock(null);
-      setDragPosition(null);
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handleEndDrag);
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handleEndDrag);
-    };
-  }, [
-    draggingBlock,
-    dragOffset.x,
-    dragOffset.y,
-    getContainerCoords,
-    scrollOffset,
-    updateWorkBlocks,
-    workBlocks,
-  ]);
 
   return (
     <>
-      <div ref={containerRef} css={WorkContainerS.ContainerWrapper}>
+      <DragContainer
+        containerRef={containerRef}
+        css={WorkContainerS.ContainerWrapper}
+      >
         <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
 
         {graphData && (
@@ -286,7 +178,7 @@ const WorkContainer = ({
             />
           </div>
         )}
-      </div>
+      </DragContainer>
 
       <RegisterWorkContainer
         recommendedWorks={recommendedWorks}
