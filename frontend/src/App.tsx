@@ -14,6 +14,7 @@ function App() {
   const { currentTime, setCurrentTime } = useTimeStore();
 
   // 초기 렌더링 시
+  // TODO 미소: 로그인 페이지에서는 실행되면 안되어서 위치를 바꾸던가 해야할듯...
   useEffect(() => {
     const fetchWeather = async () => {
       try {
