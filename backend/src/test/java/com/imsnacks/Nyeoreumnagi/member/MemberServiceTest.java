@@ -13,7 +13,10 @@ import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -24,7 +27,6 @@ import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +59,9 @@ class MemberServiceTest {
     void getMemberAddress_success() {
         // given
         Long memberId = 1L;
-        Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", 36.12, 127.12, 12, 60, "regionCode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", point, 12, 60, "regioncode", null);
 
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
