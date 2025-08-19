@@ -56,7 +56,7 @@ class AuthControllerTest {
 
         LoginResponse response = authService.login(request);
 
-        assertThat(response.accessToken()).isEqualTo(accessToken);
+        assertThat(response.loginAccessTokenResponse().accessToken()).isEqualTo(accessToken);
         assertThat(response.refreshToken()).isEqualTo(refreshToken);
 
         verify(memberRepository, times(1)).findOneByIdentifier(identifier);
