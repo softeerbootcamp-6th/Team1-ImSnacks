@@ -37,19 +37,16 @@ export const useCreateWorkBlock = ({
         // 시작 시간과 종료 시간 계산
 
         //TODO: scrollOffset에 따라 몇번째 recommendationDurations를 사용할지 결정
-        const newStartTime = dayjs(
-          work.recommendationDurations?.[0]?.startTime ||
-            dayjs().set('minute', 0) //추천 시간 없을 시 현재 시간에 생성
-        );
-        const newEndTime = dayjs(
-          work.recommendationDurations?.[0]?.endTime ||
-            dayjs().add(2, 'hour').set('minute', 0)
-        );
+        const newStartTime = work.recommendationDurations?.[0]?.startTime
+          ? dayjs(work.recommendationDurations?.[0]?.startTime).set('minute', 0)
+          : dayjs().set('minute', 0);
+
+        const newEndTime = newStartTime.add(2, 'hour');
 
         // 위치와 크기 계산
         const { x, width } = calculateTimeToPosition(
-          newStartTime.format('YYYY-MM-DD HH:mm:ss'),
-          newEndTime.format('YYYY-MM-DD HH:mm:ss')
+          newStartTime.format('YYYY-MM-DDTHH:mm'),
+          newEndTime.format('YYYY-MM-DDTHH:mm')
         );
 
         // 컨테이너 정보 가져오기

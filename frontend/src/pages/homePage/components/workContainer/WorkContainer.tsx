@@ -20,6 +20,7 @@ import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
 import type { Size, WorkBlockType } from '@/types/workCard.type';
 import updateBlockWorkTime from '../../utils/updateBlockWorkTime';
+import { sortWorkBlocks } from '../../utils/sortWorkBlocks';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -133,7 +134,9 @@ const WorkContainer = ({
         );
         return block.id === draggingBlock.id ? newTimeUpdatedBlock : block;
       });
-      updateWorkBlocks(newBlocks);
+
+      const newSortedBlocks = sortWorkBlocks(newBlocks);
+      updateWorkBlocks(newSortedBlocks);
 
       setDraggingBlock(null);
       setDragPosition(null);
