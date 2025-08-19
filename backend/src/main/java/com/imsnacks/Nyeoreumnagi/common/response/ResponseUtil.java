@@ -18,6 +18,7 @@ public class ResponseUtil {
                 .path("/")
                 .maxAge(86400 * 3)
                 .httpOnly(true)
+                .sameSite("none")
                 .build();
 
         return ResponseEntity.ok()
