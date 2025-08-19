@@ -1,25 +1,26 @@
 package com.imsnacks.Nyeoreumnagi.pest.service;
 
+import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestCondition;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
 import com.imsnacks.Nyeoreumnagi.damage.pest.enums.DamageType;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.PestService;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
+import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
-import com.imsnacks.Nyeoreumnagi.damage.pest.dto.response.GetPestCardListResponse;
-import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestCondition;
-import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
-import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
-import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
-import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
+import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
+import com.imsnacks.Nyeoreumnagi.work.exception.CropResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,8 +84,27 @@ public class PestServiceTest {
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.empty());
         try {
             pestService.getPestCardList(memberId, null);
-        } catch(MemberException e) {
+        } catch (MemberException e) {
             assertThat(e.getStatus()).isEqualTo(MemberResponseStatus.NO_FARM_INFO);
+        }
+    }
+
+    @Test
+    void 요청을_보낸_멤버의_작물이_아닌_경우_예외를_던진다() {
+        long myId = 42L;
+        int nx = 60;
+        int ny = 120;
+        Farm farm = new Farm(myId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        Member other = new Member(77L, "", "", "", "", null, farm);
+        MyCrop myCrop = new MyCrop(1L, null, other, null);
+
+        when(farmRepo.findByMember_Id(myId)).thenReturn(Optional.of(farm));
+        when(myCropRepo.findById(1L)).thenReturn(Optional.of(myCrop));
+
+        try {
+            pestService.getPestCardList(myId, 1L);
+        } catch (CropException e) {
+            assertThat(e.getStatus()).isEqualTo(CropResponseStatus.MY_CROP_NOT_YOURS);
         }
     }
 
