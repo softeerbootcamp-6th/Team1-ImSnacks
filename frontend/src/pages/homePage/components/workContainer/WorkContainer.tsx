@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
@@ -73,17 +73,20 @@ const WorkContainer = ({
   } | null>(null);
 
   // 컨테이너 내부 좌표 변환 함수
-  const getContainerCoords = (e: PointerEvent, size: Size) => {
-    if (!containerRef.current) return { x: 0, y: 0 };
-    const rect = containerRef.current.getBoundingClientRect();
+  const getContainerCoords = useCallback(
+    (e: PointerEvent, size: Size) => {
+      if (!containerRef.current) return { x: 0, y: 0 };
+      const rect = containerRef.current.getBoundingClientRect();
 
-    return {
-      x: e.clientX - rect.left + scrollOffset - (size.width ?? 0) / 2,
-      y: e.clientY - rect.top - (size.height ?? 0) / 2,
-    };
-  };
+      return {
+        x: e.clientX - rect.left - (size.width ?? 0) / 2,
+        y: e.clientY - rect.top - (size.height ?? 0) / 2,
+      };
+    },
+    [containerRef]
+  );
+  //TODO: 스크롤 시 좌표 이상하게 그려짐
 
-  // 드래그 시작
   const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
     const containerCoords = getContainerCoords(e, block.size);
 
@@ -91,43 +94,117 @@ const WorkContainer = ({
     setDragPosition(containerCoords);
 
     // document 이벤트 등록
+    //window.addEventListener('pointermove', handlePointerMove);
+    //window.addEventListener('pointerup', handleEndDrag);
+  };
+
+  useEffect(() => {
+    // 드래그 시작
+    // const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
+    //   const containerCoords = getContainerCoords(e, block.size);
+
+    //   setDraggingBlock(block);
+    //   setDragPosition(containerCoords);
+
+    //   // document 이벤트 등록
+    //   //window.addEventListener('pointermove', handlePointerMove);
+    //   //window.addEventListener('pointerup', handleEndDrag);
+    // };
+
+    // 마우스 이동
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!draggingBlock) return;
+      setDragPosition(getContainerCoords(e, draggingBlock.size));
+    };
+
+    // 드래그 끝
+    const handleEndDrag = (e: PointerEvent) => {
+      if (!draggingBlock) return;
+
+      const pos = getContainerCoords(e, draggingBlock.size);
+
+      // drop 위치를 block 좌표로 업데이트
+      const newBlocks = workBlocks.map(block =>
+        block.id === draggingBlock.id
+          ? {
+              ...block,
+              position: {
+                x: pos.x + scrollOffset,
+                y: pos.y,
+              },
+            }
+          : block
+      );
+      updateWorkBlocks(newBlocks);
+
+      setDraggingBlock(null);
+      setDragPosition(null);
+
+      // 이벤트 해제
+      //window.removeEventListener('pointermove', handlePointerMove);
+      //window.removeEventListener('pointerup', handleEndDrag);
+    };
+
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerup', handleEndDrag);
-  };
 
-  // 마우스 이동
-  const handlePointerMove = (e: PointerEvent) => {
-    if (!draggingBlock) return;
-    setDragPosition(getContainerCoords(e, draggingBlock.size));
-  };
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handleEndDrag);
+    };
+  }, [
+    draggingBlock,
+    getContainerCoords,
+    scrollOffset,
+    updateWorkBlocks,
+    workBlocks,
+  ]);
 
-  // 드래그 끝
-  const handleEndDrag = (e: PointerEvent) => {
-    if (!draggingBlock) return;
+  // // 드래그 시작
+  // const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
+  //   const containerCoords = getContainerCoords(e, block.size);
 
-    const pos = getContainerCoords(e, draggingBlock.size);
+  //   setDraggingBlock(block);
+  //   setDragPosition(containerCoords);
 
-    // drop 위치를 block 좌표로 업데이트
-    const newBlocks = workBlocks.map(block =>
-      block.id === draggingBlock.id
-        ? {
-            ...block,
-            position: {
-              x: pos.x,
-              y: pos.y,
-            },
-          }
-        : block
-    );
-    updateWorkBlocks(newBlocks);
+  //   // document 이벤트 등록
+  //   window.addEventListener('pointermove', handlePointerMove);
+  //   window.addEventListener('pointerup', handleEndDrag);
+  // };
 
-    setDraggingBlock(null);
-    setDragPosition(null);
+  // // 마우스 이동
+  // const handlePointerMove = (e: PointerEvent) => {
+  //   if (!draggingBlock) return;
+  //   setDragPosition(getContainerCoords(e, draggingBlock.size));
+  // };
 
-    // 이벤트 해제
-    window.removeEventListener('pointermove', handlePointerMove);
-    window.removeEventListener('pointerup', handleEndDrag);
-  };
+  // // 드래그 끝
+  // const handleEndDrag = (e: PointerEvent) => {
+  //   if (!draggingBlock) return;
+
+  //   const pos = getContainerCoords(e, draggingBlock.size);
+
+  //   // drop 위치를 block 좌표로 업데이트
+  //   const newBlocks = workBlocks.map(block =>
+  //     block.id === draggingBlock.id
+  //       ? {
+  //           ...block,
+  //           position: {
+  //             x: pos.x,
+  //             y: pos.y,
+  //           },
+  //         }
+  //       : block
+  //   );
+  //   updateWorkBlocks(newBlocks);
+
+  //   setDraggingBlock(null);
+  //   setDragPosition(null);
+
+  //   // 이벤트 해제
+  //   window.removeEventListener('pointermove', handlePointerMove);
+  //   window.removeEventListener('pointerup', handleEndDrag);
+  // };
 
   return (
     <>
