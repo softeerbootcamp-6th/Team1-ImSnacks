@@ -3,7 +3,7 @@ import { IC24DragIcon } from '@/assets/icons/flat';
 import S from './WorkCell.style';
 import { ColorPrimary } from '@/styles/colors';
 import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
-import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
+import useWorkBlocks from '@/pages/homePage/hooks/useWorkBlocks';
 
 interface WorkCellProps {
   type: WorkCellType;

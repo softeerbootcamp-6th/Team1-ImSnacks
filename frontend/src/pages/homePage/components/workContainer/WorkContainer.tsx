@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
-import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
+import useWorkBlocks from '@/pages/homePage/hooks/useWorkBlocks';
 import DragOverlay from '@/components/dnd/DragOverlay';
 import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
 
@@ -18,7 +18,7 @@ import {
 import { generateYTicks } from '../../utils/lineChartUtil';
 import { getUnit } from '@/utils/getUnit';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
-import useContainer from '@/pages/homePage/contexts/useContainer';
+import useContainer from '@/pages/homePage/hooks/useContainer';
 import WorkContainerS from './WorkContainer.style';
 import useDragWorkBlock from '@/pages/homePage/hooks/useDragWorkBlock';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
@@ -51,11 +51,17 @@ const WorkContainer = ({
     };
   }, [currentTab]);
 
-  const { workBlocks, updateWorkBlocks, removeWorkBlock } = useWorkBlocks();
+  const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
+    useWorkBlocks();
   const { containerRef, scrollOffset, setScrollOffset } = useContainer();
   const { recommendedWorks, myCrops, selectedCrop, handleCropClick } =
     useRecommendedWorks();
-  const { handleCreateWork } = useCreateWorkBlock();
+  const { handleCreateWork } = useCreateWorkBlock({
+    containerRef: containerRef as React.RefObject<HTMLDivElement>,
+    scrollOffset,
+    addWorkBlock,
+    workBlocks,
+  });
 
   const {
     handleStartDrag,

@@ -9,8 +9,6 @@ import calculateTimeToPosition from '../utils/calculateTimeToPosition';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/utils/collisionUtils';
 import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
-import useContainer from '@/pages/homePage/contexts/useContainer';
-import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
 import { postMyWork } from '@/apis/myWork.api';
 
 interface UseCreateWorkBlockReturn {
@@ -20,10 +18,19 @@ interface UseCreateWorkBlockReturn {
   ) => Promise<void>;
 }
 
-export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
-  const { containerRef, scrollOffset } = useContainer();
-  const { addWorkBlock, workBlocks } = useWorkBlocks();
+interface UseCreateWorkBlockProps {
+  containerRef: React.RefObject<HTMLDivElement> | null;
+  scrollOffset: number;
+  addWorkBlock: (workBlock: WorkBlockType) => void;
+  workBlocks: WorkBlockType[];
+}
 
+export const useCreateWorkBlock = ({
+  containerRef,
+  scrollOffset,
+  addWorkBlock,
+  workBlocks,
+}: UseCreateWorkBlockProps): UseCreateWorkBlockReturn => {
   const handleCreateWork = useCallback(
     async (work: RecommendedWorksResponse, selectedCrop: MyCropResponse) => {
       try {
@@ -46,7 +53,7 @@ export const useCreateWorkBlock = (): UseCreateWorkBlockReturn => {
         );
 
         // 컨테이너 정보 가져오기
-        const containerRect = containerRef.current?.getBoundingClientRect();
+        const containerRect = containerRef?.current?.getBoundingClientRect();
         if (!containerRect) {
           console.warn('Container rect not available');
           return;
