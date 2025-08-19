@@ -95,14 +95,7 @@ const WorkContainer = ({
             </div>
           </div>
         )}
-        <div
-          css={[
-            WorkContainerS.MaskGradientWrapper,
-            css`
-              position: relative;
-            `,
-          ]}
-        >
+        <div css={WorkContainerS.MaskGradientWrapper}>
           <div
             css={WorkContainerS.ScrollContainer}
             onScroll={e => {
