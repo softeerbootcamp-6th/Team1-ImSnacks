@@ -19,6 +19,7 @@ import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContaine
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
 import type { Size, WorkBlockType } from '@/types/workCard.type';
+import updateBlockWorkTime from '../../utils/updateBlockWorkTime';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -85,36 +86,33 @@ const WorkContainer = ({
     },
     [containerRef]
   );
-  //TODO: 스크롤 시 좌표 이상하게 그려짐
 
   const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
     const containerCoords = getContainerCoords(e, block.size);
 
-    setDraggingBlock(block);
+    setDraggingBlock(
+      updateBlockWorkTime(
+        block,
+        { x: containerCoords.x + scrollOffset, y: containerCoords.y },
+        100
+      )
+    );
     setDragPosition(containerCoords);
-
-    // document 이벤트 등록
-    //window.addEventListener('pointermove', handlePointerMove);
-    //window.addEventListener('pointerup', handleEndDrag);
   };
 
   useEffect(() => {
-    // 드래그 시작
-    // const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
-    //   const containerCoords = getContainerCoords(e, block.size);
-
-    //   setDraggingBlock(block);
-    //   setDragPosition(containerCoords);
-
-    //   // document 이벤트 등록
-    //   //window.addEventListener('pointermove', handlePointerMove);
-    //   //window.addEventListener('pointerup', handleEndDrag);
-    // };
-
     // 마우스 이동
     const handlePointerMove = (e: PointerEvent) => {
       if (!draggingBlock) return;
-      setDragPosition(getContainerCoords(e, draggingBlock.size));
+      const containerCoords = getContainerCoords(e, draggingBlock.size);
+      setDragPosition(containerCoords);
+      setDraggingBlock(
+        updateBlockWorkTime(
+          draggingBlock,
+          { x: containerCoords.x + scrollOffset, y: containerCoords.y },
+          100
+        )
+      );
     };
 
     // 드래그 끝
@@ -122,27 +120,23 @@ const WorkContainer = ({
       if (!draggingBlock) return;
 
       const pos = getContainerCoords(e, draggingBlock.size);
-
       // drop 위치를 block 좌표로 업데이트
-      const newBlocks = workBlocks.map(block =>
-        block.id === draggingBlock.id
-          ? {
-              ...block,
-              position: {
-                x: pos.x + scrollOffset,
-                y: pos.y,
-              },
-            }
-          : block
-      );
+      const newBlocks = workBlocks.map(block => {
+        const newBlockPosition = {
+          x: pos.x + scrollOffset,
+          y: pos.y,
+        };
+        const newTimeUpdatedBlock = updateBlockWorkTime(
+          block,
+          newBlockPosition,
+          100
+        );
+        return block.id === draggingBlock.id ? newTimeUpdatedBlock : block;
+      });
       updateWorkBlocks(newBlocks);
 
       setDraggingBlock(null);
       setDragPosition(null);
-
-      // 이벤트 해제
-      //window.removeEventListener('pointermove', handlePointerMove);
-      //window.removeEventListener('pointerup', handleEndDrag);
     };
 
     window.addEventListener('pointermove', handlePointerMove);
@@ -159,52 +153,6 @@ const WorkContainer = ({
     updateWorkBlocks,
     workBlocks,
   ]);
-
-  // // 드래그 시작
-  // const handleStartDrag = (e: PointerEvent, block: WorkBlockType) => {
-  //   const containerCoords = getContainerCoords(e, block.size);
-
-  //   setDraggingBlock(block);
-  //   setDragPosition(containerCoords);
-
-  //   // document 이벤트 등록
-  //   window.addEventListener('pointermove', handlePointerMove);
-  //   window.addEventListener('pointerup', handleEndDrag);
-  // };
-
-  // // 마우스 이동
-  // const handlePointerMove = (e: PointerEvent) => {
-  //   if (!draggingBlock) return;
-  //   setDragPosition(getContainerCoords(e, draggingBlock.size));
-  // };
-
-  // // 드래그 끝
-  // const handleEndDrag = (e: PointerEvent) => {
-  //   if (!draggingBlock) return;
-
-  //   const pos = getContainerCoords(e, draggingBlock.size);
-
-  //   // drop 위치를 block 좌표로 업데이트
-  //   const newBlocks = workBlocks.map(block =>
-  //     block.id === draggingBlock.id
-  //       ? {
-  //           ...block,
-  //           position: {
-  //             x: pos.x,
-  //             y: pos.y,
-  //           },
-  //         }
-  //       : block
-  //   );
-  //   updateWorkBlocks(newBlocks);
-
-  //   setDraggingBlock(null);
-  //   setDragPosition(null);
-
-  //   // 이벤트 해제
-  //   window.removeEventListener('pointermove', handlePointerMove);
-  //   window.removeEventListener('pointerup', handleEndDrag);
-  // };
 
   return (
     <>
