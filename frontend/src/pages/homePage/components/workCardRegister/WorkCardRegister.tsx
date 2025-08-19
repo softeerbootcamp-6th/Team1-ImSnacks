@@ -77,8 +77,12 @@ const WorkCardRegister = ({
       {!isDragging && onResize && (
         <div
           css={S.WorkCardResizeHandleLeft}
-          onMouseDown={e => handleResizeStart(e, block, 'left')}
-          onMouseUp={handleResizeEnd}
+          onPointerDown={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleResizeStart(e, block, 'left');
+          }}
+          onPointerUp={handleResizeEnd}
         />
       )}
 
@@ -86,8 +90,12 @@ const WorkCardRegister = ({
       {!isDragging && onResize && (
         <div
           css={S.WorkCardResizeHandleRight}
-          onMouseDown={e => handleResizeStart(e, block, 'right')}
-          onMouseUp={handleResizeEnd}
+          onPointerDown={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleResizeStart(e, block, 'right');
+          }}
+          onPointerUp={handleResizeEnd}
         />
       )}
 
@@ -101,7 +109,10 @@ const WorkCardRegister = ({
       {isVisible && !isResizing && !isDragging && (
         <button
           onClick={onDelete}
-          onMouseDown={e => e.stopPropagation()}
+          onPointerDown={e => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
           css={S.WorkCardDeleteButton}
         >
           ×

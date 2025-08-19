@@ -246,7 +246,7 @@ const WorkContainer = ({
                     block={block}
                     isDragging={false}
                     onDelete={() => removeWorkBlock(id)}
-                    onResize={newBlock => handleResize(id, newBlock)}
+                    onResize={block => handleResize(block.id, block)}
                     containerRef={containerRef}
                     scrollOffset={scrollOffset}
                     allBlocks={workBlocks}

@@ -62,7 +62,6 @@ const WorkCardResizeHandle = css`
   top: 0;
   bottom: 0;
   width: 8px;
-  cursor: ew-resize;
   background-color: transparent;
   transition: background-color 0.2s ease;
 
@@ -73,6 +72,11 @@ const WorkCardResizeHandle = css`
   &:active {
     background-color: ${GrayScale.G400};
   }
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: ew-resize;
 `;
 
 const WorkCardResizeHandleLeft = css`
