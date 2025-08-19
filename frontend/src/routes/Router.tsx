@@ -1,9 +1,13 @@
 import { useRoutes, Outlet } from 'react-router';
 import Layout from '@/layouts/Layout';
-import HomePage from '@/pages/homePage/HomePage';
-import MyFarmPage from '@/pages/myFarmPage/MyFarmPage';
-import WeatherBoardPage from '@/pages/weatherBoardPage/WeatherBoardPage';
-import LoginPage from '@/pages/loginPage/LoginPage';
+import { lazy } from 'react';
+
+export const HomePage = lazy(() => import('@/pages/homePage/HomePage'));
+export const MyFarmPage = lazy(() => import('@/pages/myFarmPage/MyFarmPage'));
+export const WeatherBoardPage = lazy(
+  () => import('@/pages/weatherBoardPage/WeatherBoardPage')
+);
+export const LoginPage = lazy(() => import('@/pages/loginPage/LoginPage'));
 
 export const Router = () => {
   const routes = useRoutes([
@@ -26,10 +30,6 @@ export const Router = () => {
         {
           element: <MyFarmPage />,
           path: 'my-farm',
-        },
-        {
-          element: <div>My Page</div>,
-          path: 'my-page',
         },
         {
           element: <LoginPage />,

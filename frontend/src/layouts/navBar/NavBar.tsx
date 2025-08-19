@@ -2,7 +2,6 @@ const NAVITEMS = [
   { title: '홈', path: '/' },
   { title: '날씨 정보', path: '/weather-board' },
   { title: '내 농장', path: '/my-farm' },
-  { title: '마이 페이지', path: '/my-page' },
 ];
 
 import S from './NavBar.styles';
