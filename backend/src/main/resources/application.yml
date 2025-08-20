@@ -5,12 +5,6 @@ spring:
   application:
     name: Nyeoreumnagi
 
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
 
 ---
 
@@ -19,17 +13,23 @@ spring:
     activate:
       on-profile: local
 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
   datasource:
-    url: jdbc:h2:./batchdb;MODE=MySQL;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:${RDS_PORT}/${RDS_DATABASE}?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+
   jpa:
-    hibernate.ddl-auto: update
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        highlight_sql: true
+    show-sql: true
+
+
 
 ---
 

@@ -15,6 +15,7 @@ import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
+import com.imsnacks.Nyeoreumnagi.work.repository.RecommendedWorkRepository;
 import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class RecommendedWorkService {
     private final FarmRepository farmRepository;
     private final LifeCycleResolver lifeCycleResolver;
     private final WorkScheduleCalculator workScheduleCalculator;
+    private final RecommendedWorkRepository recommendedWorkRepository;
 
 
     public RecommendWorksResponse recommendWorks(Long myCropId, Long memberId) {
@@ -64,7 +66,10 @@ public class RecommendedWorkService {
 
         lifeCycleAndRecommendedWorkRepository.findAllByLifeCycle_Id(nowLifeCycleId)
                 .stream().map(LifeCycleAndRecommendedWork::getRecommendedWork)
-                .forEach(recommendedWork -> recommendedWorksResponse.addAll(workScheduleCalculator.windowsForWork(recommendedWork, forecasts, now)));
+                .forEach(recommendedWork -> {
+                    int neighborCount = recommendedWorkRepository.countNearbySameWork(memberId, recommendedWork.getId());
+                    recommendedWorksResponse.addAll(workScheduleCalculator.windowsForWork(recommendedWork, forecasts, neighborCount, now));
+                });
 
         List<RecommendWorksResponse.MyCropResponse> myCropResponses = myCropList.stream().map(my -> new RecommendWorksResponse.MyCropResponse(my.getId(), my.getCrop().getName())).toList();
         return new RecommendWorksResponse(recommendedWorksResponse, myCropResponses);

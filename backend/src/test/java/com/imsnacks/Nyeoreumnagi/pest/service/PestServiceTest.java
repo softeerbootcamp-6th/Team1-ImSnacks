@@ -23,6 +23,10 @@ import com.imsnacks.Nyeoreumnagi.work.exception.CropResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -114,7 +118,9 @@ public class PestServiceTest {
         long memberId = 42L;
         int nx = 60;
         int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -175,7 +181,9 @@ public class PestServiceTest {
         long memberId = 42L;
         int nx = 60;
         int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -237,7 +245,9 @@ public class PestServiceTest {
         long memberId = 42L;
         int nx = 60;
         int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -298,7 +308,9 @@ public class PestServiceTest {
         long memberId = 42L;
         int nx = 60;
         int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
