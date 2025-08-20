@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    if: ${{ startsWith(github.head_ref, 'feat/fe') || startsWith(github.head_ref, 'fix/fe') }}
+    if: ${{ startsWith(github.head_ref, 'feat/fe') || startsWith(github.head_ref, 'fix/fe') || startsWith(github.head_ref, 'refactor/fe') }}
 
     steps:
       - name: Checkout code
