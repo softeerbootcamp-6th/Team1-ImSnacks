@@ -10,11 +10,13 @@ import { useWeatherConditionStore } from './store/useWeatherConditionStore';
 import { useTimeStore } from './store/useTimeStore';
 import { useUserStore } from './store/useUserStore';
 import { useLocation } from 'react-router';
+import { useIsMobileStore } from './store/useIsMobileStore';
 
 function App() {
   const { setWeatherCondition } = useWeatherConditionStore();
   const { setNickName } = useUserStore();
   const { currentTime, setCurrentTime } = useTimeStore();
+  const { setIsMobile } = useIsMobileStore();
   const location = useLocation();
 
   // 초기 렌더링 시
@@ -48,7 +50,20 @@ function App() {
 
     fetchWeather();
     setCurrentTime(currentTime);
-  }, [currentTime, setCurrentTime, setWeatherCondition, setNickName]);
+
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    setIsMobile(isMobile);
+  }, [
+    currentTime,
+    setCurrentTime,
+    setWeatherCondition,
+    setNickName,
+    setIsMobile,
+    location.pathname,
+  ]);
 
   return (
     <>
