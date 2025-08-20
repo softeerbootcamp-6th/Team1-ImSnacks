@@ -56,7 +56,7 @@ export const findCollisionFreePosition = (
 ): Position => {
   const { position, size } = draggedBlock;
   let offset = 0;
-  const maxAttempts = 50;
+  const maxAttempts = 500;
   const yLayers = [1, 2, 3].map(layer => getYCoordinate(layer));
 
   for (let attempts = 0; attempts < maxAttempts; attempts++) {
@@ -78,6 +78,7 @@ export const findCollisionFreePosition = (
     }
     offset += 10;
   }
-
+  alert('작업을 추가할 수 있는 위치가 없습니다!');
+  //TODO: 충돌 없는 위치 찾지 못할 경우 예외처리
   return position;
 };
