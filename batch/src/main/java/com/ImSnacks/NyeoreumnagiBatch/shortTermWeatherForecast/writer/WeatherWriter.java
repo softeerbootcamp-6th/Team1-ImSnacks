@@ -1,17 +1,20 @@
 package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer;
 
-import com.ImSnacks.NyeoreumnagiBatch.common.entity.ShortTermWeatherForecast;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.ShortTermWeatherForecastShadow;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRiskShadow;
+import com.ImSnacks.NyeoreumnagiBatch.common.repository.ShortTermWeatherForecastShadowRepository;
+import com.ImSnacks.NyeoreumnagiBatch.common.repository.WeatherRiskShadowRepository;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRisk;
-import com.ImSnacks.NyeoreumnagiBatch.common.entity.WeatherRiskRepository;
 import lombok.extern.slf4j.Slf4j;
-import com.ImSnacks.NyeoreumnagiBatch.common.repository.ShortTermWeatherForecastRepository;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -22,9 +25,11 @@ import java.util.List;
 @StepScope
 public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecutionListener {
     @Autowired
-    private ShortTermWeatherForecastRepository weatherRepository;
+    private ShortTermWeatherForecastShadowRepository weatherShadowRepository;
     @Autowired
-    private WeatherRiskRepository weatherRiskRepository;
+    private WeatherRiskShadowRepository weatherRiskShadowRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private Long jobExecutionId;
 
@@ -36,13 +41,13 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
     @Override
     public void write(Chunk<? extends ShortTermWeatherDto> chunk) {
         log.info("writing data...");
-        List<ShortTermWeatherForecast> forecasts = new ArrayList<>();
-        List<WeatherRisk> weatherRisks = new ArrayList<>();
+        List<ShortTermWeatherForecastShadow> forecasts = new ArrayList<>();
+        List<WeatherRiskShadow> weatherRisks = new ArrayList<>();
 
         List<? extends ShortTermWeatherDto> items = chunk.getItems();
         items.forEach(item -> {
             item.getWeatherForecastByTimeList().forEach(weatherForecastByTime -> {
-                forecasts.add(ShortTermWeatherForecast.builder()
+                forecasts.add(ShortTermWeatherForecastShadow.builder()
                         .nx(item.getNx())
                         .ny(item.getNy())
                         .fcstTime(weatherForecastByTime.getFcstTime())
@@ -57,7 +62,7 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
             });
 
             item.getWeatherRiskList().forEach(weatherRisk -> {
-                weatherRisks.add(WeatherRisk.builder()
+                weatherRisks.add(WeatherRiskShadow.builder()
                         .name(weatherRisk.getName())
                         .jobExecutionId(jobExecutionId)
                         .startTime(weatherRisk.getStartTime())
@@ -68,7 +73,27 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
             });
 
         });
-        weatherRepository.saveAll(forecasts);
-        weatherRiskRepository.saveAll(weatherRisks);
+        weatherShadowRepository.saveAll(forecasts);
+        weatherRiskShadowRepository.saveAll(weatherRisks);
+    }
+
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+        log.info("afterStep: shadow 테이블 rename 작업 시작");
+
+        try {
+            jdbcTemplate.execute("DROP TABLE IF EXISTS short_term_weather_forecast_backup");
+            jdbcTemplate.execute("RENAME TABLE short_term_weather_forecast TO short_term_weather_forecast_backup, " +
+                    "short_term_weather_forecast_shadow TO short_term_weather_forecast");
+            jdbcTemplate.execute("DROP TABLE IF EXISTS weather_risk_backup");
+            jdbcTemplate.execute("RENAME TABLE weather_risk TO weather_risk_backup, " +
+                    "weather_risk_shadow TO weather_risk");
+            log.info("테이블 rename 성공");
+        } catch (Exception e) {
+            log.error("테이블 rename 실패", e);
+            return ExitStatus.FAILED;
+        }
+
+        return ExitStatus.COMPLETED;
     }
 }
