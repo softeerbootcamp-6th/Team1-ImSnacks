@@ -12,14 +12,5 @@ export const getAuthRefresh = async () => {
     credentials: 'include',
   });
 
-  if (!response.ok) {
-    const errorBody = await response.json();
-    throw new ApiError(
-      response.status,
-      errorBody.code,
-      errorBody.msg,
-      errorBody.data
-    );
-  }
   return response.json();
 };
