@@ -31,13 +31,7 @@ const WeatherBoardPage = () => {
 
   return (
     <div css={S.WeatherBoardPage}>
-      <div
-        css={css`
-          width: 100%;
-          text-align: start;
-          margin-bottom: 4px;
-        `}
-      >
+      <div css={S.MyFarmAddressWrapper}>
         <p css={S.MyFarmAddress}>{address}</p>
       </div>
 
@@ -47,14 +41,7 @@ const WeatherBoardPage = () => {
           ${S.WeatherBoardContent};
         `}
       >
-        <div
-          css={css`
-            ${FlexStyles.flexRow};
-            justify-content: space-between;
-            width: 100%;
-            height: 588px;
-          `}
-        >
+        <div css={S.WeatherBoardFirRow}>
           <div
             css={css`
               width: 990px;
@@ -62,44 +49,20 @@ const WeatherBoardPage = () => {
               gap: 24px;
             `}
           >
-            <div
-              css={css`
-                width: 100%;
-                height: 280px;
-              `}
-            >
+            <div css={S.WeatherBoardTemperatureWrapper}>
               <WeatherBoardTemperature />
             </div>
-            <div
-              css={css`
-                ${FlexStyles.flexRow};
-                justify-content: space-between;
-                height: 284px;
-                ${S.WeatherBoardContent}
-              `}
-            >
+            <div css={S.WeatherBoardSecRow}>
               <WeatherBoardPrecipitation />
               <WeatherBoardHumidity />
               <WeatherBoardWind />
             </div>
           </div>
-          <div
-            css={css`
-              width: 314px;
-              height: 100%;
-            `}
-          >
+          <div css={S.WeatherBoardWeeklyWrapper}>
             <WeatherBoardWeekly />
           </div>
         </div>
-        <div
-          css={css`
-            ${FlexStyles.flexRow};
-            justify-content: space-between;
-            height: 205px;
-            ${S.WeatherBoardContent}
-          `}
-        >
+        <div css={S.WeatherBoardThirdRow}>
           <WeatherBoardUV />
           <WeatherBoardDust />
           <WeatherBoardSunset />
