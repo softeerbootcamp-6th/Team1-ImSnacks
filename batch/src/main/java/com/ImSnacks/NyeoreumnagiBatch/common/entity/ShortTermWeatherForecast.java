@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ShortTermWeatherForecast")
+@Table(name = "short_term_weather_forecast")
 @IdClass(ShortTermWeatherForecastId.class)
 @Getter
 @NoArgsConstructor
