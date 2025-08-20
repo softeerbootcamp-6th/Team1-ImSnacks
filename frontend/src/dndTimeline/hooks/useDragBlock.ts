@@ -9,6 +9,7 @@ import type { WorkBlockType } from '@/types/workCard.type';
 import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
 import { sortWorkBlocks } from '@/pages/homePage/utils/sortWorkBlocks';
 import type { Position } from '@/dndTimeline/types/position.type';
+import { patchMyWorkTime } from '@/apis/myWork.api';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -146,7 +147,7 @@ export const useDragBlock = ({
     [draggingBlock, dragOffset, getContainerCoords, scrollOffset]
   );
 
-  const handleEndDrag = useCallback(() => {
+  const handleEndDrag = useCallback(async () => {
     if (!draggingBlock) return;
 
     const newBlocks = workBlocks.map(block => {
@@ -189,6 +190,16 @@ export const useDragBlock = ({
       animateBlocksTransition(newBlocks, newSortedBlocks);
     } else {
       updateWorkBlocks(newSortedBlocks);
+    }
+
+    try {
+      await patchMyWorkTime({
+        myWorkId: draggingBlock.id,
+        startTime: draggingBlock.startTime,
+        endTime: draggingBlock.endTime,
+      });
+    } catch (error) {
+      console.error('작업 시간 업데이트 실패:', error);
     }
 
     setDraggingBlock(null);
