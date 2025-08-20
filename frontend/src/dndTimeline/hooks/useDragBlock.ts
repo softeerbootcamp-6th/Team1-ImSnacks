@@ -27,6 +27,8 @@ export const useDragBlock = ({
   const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
     null
   );
+
+  //렌더링 시에만 사용하는 위치, scrollOffset 보정 x
   const [dragPosition, setDragPosition] = useState<Position | null>(null);
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
 
@@ -85,7 +87,7 @@ export const useDragBlock = ({
           sortAnimationTimeoutRef.current = window.setTimeout(step, 16);
         } else {
           sortAnimationTimeoutRef.current = null;
-
+          // 애니메이션 완료 후 최종 상태로 업데이트
           updateWorkBlocks(nextBlocks);
         }
       };
@@ -150,6 +152,8 @@ export const useDragBlock = ({
   const handleEndDrag = useCallback(async () => {
     if (!draggingBlock) return;
 
+    console.log('handleEndDrag 호출됨', { draggingBlockId: draggingBlock.id });
+
     const newBlocks = workBlocks.map(block => {
       const newBlockPosition = {
         x: draggingBlock.position.x,
@@ -174,23 +178,11 @@ export const useDragBlock = ({
 
     const newSortedBlocks = sortWorkBlocks(newBlocks);
 
-    // 변경 여부 확인 후 전이 애니메이션 적용 (드래깅하던 위치를 기준으로 비교)
-    const changed = newBlocks.some(prev => {
-      const next = newSortedBlocks.find(b => b.id === prev.id);
-      if (!next) return false;
-      return (
-        prev.position.x !== next.position.x ||
-        prev.position.y !== next.position.y ||
-        (prev.size.width ?? 0) !== (next.size.width ?? 0)
-      );
-    });
+    animateBlocksTransition(newBlocks, newSortedBlocks);
 
-    if (changed) {
-      // 드래깅하던 아이템은 드래깅 종료 위치에서 정렬 위치로 이동
-      animateBlocksTransition(newBlocks, newSortedBlocks);
-    } else {
-      updateWorkBlocks(newSortedBlocks);
-    }
+    // 상태 초기화를 마지막에 수행
+    setDraggingBlock(null);
+    setDragPosition(null);
 
     try {
       await patchMyWorkTime({
@@ -201,10 +193,7 @@ export const useDragBlock = ({
     } catch (error) {
       console.error('작업 시간 업데이트 실패:', error);
     }
-
-    setDraggingBlock(null);
-    setDragPosition(null);
-  }, [animateBlocksTransition, draggingBlock, updateWorkBlocks, workBlocks]);
+  }, [animateBlocksTransition, draggingBlock, workBlocks]);
 
   useEffect(() => {
     window.addEventListener('pointermove', handlePointerMove);
