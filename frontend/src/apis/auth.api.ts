@@ -1,4 +1,3 @@
-import { ApiError } from './ApiError';
 import HTTP from './http';
 import { LoginRequest, LoginResponse } from '@/types/openapiGenerator';
 
