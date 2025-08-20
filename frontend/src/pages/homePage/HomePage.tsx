@@ -1,9 +1,10 @@
+import { useIsMobileStore } from '@/store/useIsMobileStore';
 import DesktopHomePage from './desktop/DesktopHomePage';
-//import MobileHomePage from './mobile/MobileHomePage';
+import MobileHomePage from './mobile/MobileHomePage';
 
 const HomePage = () => {
-  return <DesktopHomePage />;
-  //return <MobileHomePage />;
+  const { isMobile } = useIsMobileStore();
+  return isMobile ? <MobileHomePage /> : <DesktopHomePage />;
 };
 
 export default HomePage;
