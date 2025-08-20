@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { postLogin } from '@/apis/auth.api';
-import { token } from '@/store/token';
+import { useTokenStore } from '@/store/useTokenStore';
 import { useUserStore } from '@/store/useUserStore';
 import { ApiError } from '@/apis/ApiError';
 
@@ -23,6 +23,7 @@ export const useLogin = (): UseLoginReturn => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
+  const { setAccessToken } = useTokenStore();
 
   const handleIdentifierChange = (value: string) => {
     setIdentifier(value);
@@ -48,11 +49,10 @@ export const useLogin = (): UseLoginReturn => {
       setIsLoading(false);
       return;
     }
-
     try {
       const res = await postLogin({ identifier, password });
       if (res.code === 200) {
-        token.set(res.data.accessToken!);
+        setAccessToken(res.data.accessToken!);
         useUserStore.setState({ nickName: res.data.nickname });
         navigate('/');
       } else {

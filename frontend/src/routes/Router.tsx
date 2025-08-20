@@ -1,9 +1,13 @@
 import { useRoutes, Outlet } from 'react-router';
 import Layout from '@/layouts/Layout';
-import HomePage from '@/pages/homePage/HomePage';
-import MyFarmPage from '@/pages/myFarmPage/MyFarmPage';
-import WeatherBoardPage from '@/pages/weatherBoardPage/WeatherBoardPage';
-import LoginPage from '@/pages/loginPage/LoginPage';
+import { lazy, Suspense } from 'react';
+
+const HomePage = lazy(() => import('@/pages/homePage/HomePage'));
+const MyFarmPage = lazy(() => import('@/pages/myFarmPage/MyFarmPage'));
+const WeatherBoardPage = lazy(
+  () => import('@/pages/weatherBoardPage/WeatherBoardPage')
+);
+const LoginPage = lazy(() => import('@/pages/loginPage/LoginPage'));
 
 export const Router = () => {
   const routes = useRoutes([
@@ -11,7 +15,23 @@ export const Router = () => {
       path: '/',
       element: (
         <Layout>
-          <Outlet />
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '200px',
+                  fontSize: '16px',
+                }}
+              >
+                페이지를 불러오는 중...
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </Layout>
       ),
       children: [
@@ -26,10 +46,6 @@ export const Router = () => {
         {
           element: <MyFarmPage />,
           path: 'my-farm',
-        },
-        {
-          element: <div>My Page</div>,
-          path: 'my-page',
         },
         {
           element: <LoginPage />,

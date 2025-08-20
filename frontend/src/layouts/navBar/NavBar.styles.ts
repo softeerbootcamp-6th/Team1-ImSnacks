@@ -18,7 +18,7 @@ const NavBarWrapper = (isWeatherPage: boolean) => css`
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
-  width: 596px;
+  width: 468px;
   height: 52px;
   overflow: hidden;
   padding: ${Spacing.Spacing200};
