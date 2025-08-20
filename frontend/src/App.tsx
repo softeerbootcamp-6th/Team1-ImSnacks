@@ -9,15 +9,17 @@ import {
 import { useWeatherConditionStore } from './store/useWeatherConditionStore';
 import { useTimeStore } from './store/useTimeStore';
 import { useUserStore } from './store/useUserStore';
+import { useLocation } from 'react-router';
 
 function App() {
   const { setWeatherCondition } = useWeatherConditionStore();
   const { setNickName } = useUserStore();
   const { currentTime, setCurrentTime } = useTimeStore();
+  const location = useLocation();
 
   // 초기 렌더링 시
   useEffect(() => {
-    if (window.location.pathname === '/login') return;
+    if (location.pathname === '/login') return;
 
     const fetchWeather = async () => {
       try {

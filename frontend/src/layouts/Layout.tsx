@@ -6,10 +6,12 @@ import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';
 import { backgroundTheme } from '@/constants/backgroundTheme';
 import { useFadeTransition } from '@/hooks/useFadeTransition';
 import type { WeatherConditionsType } from '@/types/weather.types';
+import { useLocation } from 'react-router';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { weatherCondition } = useWeatherConditionStore();
-  const isWeatherPage = window.location.pathname === '/weather-board';
+  const location = useLocation();
+  const isWeatherPage = location.pathname === '/weather-board';
 
   const { prev, isFading, durationMs } = useFadeTransition(weatherCondition, {
     durationMs: 1000,
