@@ -5,10 +5,12 @@ import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 @Component
 public class WorkScheduleCalculator {
@@ -18,6 +20,8 @@ public class WorkScheduleCalculator {
     private static final int LOW_HUMIDITY = 30;
     private static final double STRONG_WIND = 14.0;
     private static final double RAIN_MM = 0.1;
+
+    private static final int COOLDOWN_GAP_HOURS = 5;
 
     private boolean meets(RecommendedWork w, ShortTermWeatherForecast f) {
         boolean rain = f.getPrecipitation() >= RAIN_MM;
@@ -40,6 +44,7 @@ public class WorkScheduleCalculator {
     private List<RecommendWorksResponse.RecommendedWorksResponse> windowsForWork(RecommendedWork work,
                                                                                  List<ShortTermWeatherForecast> forecasts,
                                                                                  int minHours,
+                                                                                 int maxHours,
                                                                                  int neighborCount,
                                                                                  LocalDateTime requestTime
     ) {
@@ -50,72 +55,95 @@ public class WorkScheduleCalculator {
                 .toList();
 
         Map<Long, List<RecommendWorksResponse.RecommendationDurations>> durationsByWorkId = new HashMap<>();
+
         LocalDateTime winStart = null;
-        LocalDateTime prevOk = null;
+        LocalDateTime prevOk   = null;
+        LocalDateTime cooldownUntil = null;
+
+        BiConsumer<LocalDateTime, LocalDateTime> closeWindow = (start, endExclusive) -> {
+            int hours = (int) Duration.between(start, endExclusive).toHours();
+            if (hours >= minHours) {
+                durationsByWorkId
+                        .computeIfAbsent(work.getId(), k -> new ArrayList<>())
+                        .add(new RecommendWorksResponse.RecommendationDurations(
+                                start.toString(),
+                                endExclusive.toString(),
+                                work.getRecommendation()
+                        ));
+            }
+        };
+
         for (ShortTermWeatherForecast f : sorted) {
+            LocalDateTime curr = toDateTimeWithRoll(from, f);
+
+            // 쿨다운 중이면 스킵
+            if (cooldownUntil != null && !curr.isBefore(cooldownUntil)) {
+                // 쿨다운 끝이 현재와 같거나 이전이면 쿨다운 해제
+                cooldownUntil = null;
+            }
+            if (cooldownUntil != null && curr.isBefore(cooldownUntil)) {
+                // 쿨다운 기간 → 강제 끊김 상태 유지
+                winStart = null;
+                prevOk = null;
+                continue;
+            }
+
             boolean ok = meets(work, f);
-            LocalDateTime curr = toDateTimeWithRoll(requestTime, f);
 
             if (ok) {
                 if (winStart == null) {
                     winStart = curr;
+                    prevOk = curr;
                 } else {
-                    if (!prevOk.plusHours(1).equals(curr)) {
-                        // 연속이 끊김 → 이전 구간 종료 처리
-                        int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
-                        if (hours >= minHours) {
-                            // 기존 리스트에 추천 시간대 추가
-                            durationsByWorkId.computeIfAbsent(work.getId(), k -> new ArrayList<>())
-                                    .add(new RecommendWorksResponse.RecommendationDurations(
-                                            winStart.toString(),
-                                            prevOk.plusHours(1).toString(),
-                                            work.getRecommendation()
-                                    ));
-                        }
+                    // 연속성 체크 (시간이 1시간 단위로 이어지는지)
+                    if (prevOk.plusHours(1).equals(curr)) {
+                        prevOk = curr;
+                    } else {
+                        // 불연속 → 이전 구간 닫기
+                        closeWindow.accept(winStart, prevOk.plusHours(1));
                         winStart = curr;
+                        prevOk = curr;
                     }
                 }
-                prevOk = curr;
+
+                // 현재 구간 길이 계산
+                int currLen = (int) Duration.between(winStart, prevOk.plusHours(1)).toHours();
+
+                if (currLen >= maxHours) {
+                    // 상한 도달 → 구간 닫고 5시간 쿨다운
+                    LocalDateTime endExclusive = prevOk.plusHours(1);
+                    closeWindow.accept(winStart, endExclusive);
+                    cooldownUntil = endExclusive.plusHours(COOLDOWN_GAP_HOURS);
+                    winStart = null;
+                    prevOk = null;
+                }
+
             } else {
+                // 조건 불만족 → 진행 중 구간이 있으면 닫기
                 if (winStart != null) {
-                    int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
-                    if (hours >= minHours) {
-                        // 기존 리스트에 추천 시간대 추가
-                        durationsByWorkId.computeIfAbsent(work.getId(), k -> new ArrayList<>())
-                                .add(new RecommendWorksResponse.RecommendationDurations(
-                                        winStart.toString(),
-                                        prevOk.plusHours(1).toString(),
-                                        work.getRecommendation()
-                                ));
-                    }
+                    closeWindow.accept(winStart, prevOk.plusHours(1));
                     winStart = null;
                     prevOk = null;
                 }
             }
         }
 
+        // 루프 종료 후 미종료 구간 처리
         if (winStart != null) {
-            int hours = (int) java.time.Duration.between(winStart, prevOk.plusHours(1)).toHours();
-            if (hours >= minHours) {
-                durationsByWorkId.computeIfAbsent(work.getId(), k -> new ArrayList<>())
-                        .add(new RecommendWorksResponse.RecommendationDurations(
-                                winStart.toString(),
-                                prevOk.plusHours(1).toString(),
-                                work.getRecommendation()
-                        ));
-            }
+            closeWindow.accept(winStart, prevOk.plusHours(1));
         }
 
+        // 결과 매핑
         List<RecommendWorksResponse.RecommendedWorksResponse> result = new ArrayList<>();
-        for (Map.Entry<Long, List<RecommendWorksResponse.RecommendationDurations>> entry : durationsByWorkId.entrySet()) {
-            result.add(new RecommendWorksResponse.RecommendedWorksResponse(
-                    work.getName(),
-                    entry.getKey(),
-                    neighborCount,
-                    entry.getValue()
-            ));
-        }
+        List<RecommendWorksResponse.RecommendationDurations> durations =
+                durationsByWorkId.getOrDefault(work.getId(), Collections.emptyList());
 
+        result.add(new RecommendWorksResponse.RecommendedWorksResponse(
+                work.getName(),
+                work.getId(),
+                neighborCount,
+                durations
+        ));
         return result;
     }
 
@@ -136,7 +164,7 @@ public class WorkScheduleCalculator {
                                                                                 int neighborCount,
                                                                                 LocalDateTime requestDateTime
     ) {
-        return windowsForWork(work, forecasts, 2, neighborCount, requestDateTime);
+        return windowsForWork(work, forecasts, 2, 4, neighborCount, requestDateTime);
     }
 
 }
