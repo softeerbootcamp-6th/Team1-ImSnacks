@@ -1,15 +1,11 @@
-import {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  type RefObject,
-} from 'react';
-import type { Position, Size, WorkBlockType } from '@/types/workCard.type';
+import { useState, useCallback, useEffect, type RefObject } from 'react';
+import type { Position, WorkBlockType } from '@/types/workCard.type';
+import isInBound from '@/dndTimeline/utils/isInBound';
 import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
 import { sortWorkBlocks } from '@/pages/homePage/utils/sortWorkBlocks';
 import { patchMyWorkTime } from '@/apis/myWork.api';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
+import { useBlocksTransition } from '@/dndTimeline/hooks/useBlocksTransition';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -17,27 +13,6 @@ interface UseDragBlockProps {
   workBlocks: WorkBlockType[];
   updateWorkBlocks: (blocks: WorkBlockType[]) => void;
 }
-
-const isInBound = (
-  position: Position,
-  block: { size: Size },
-  scrollOffset: number,
-  containerRect: HTMLDivElement | null,
-  defaultPosition: Position
-): boolean => {
-  if (!containerRect) return false;
-  const { x, y } = position;
-  const itemWidth = block.size.width;
-  const itemHeight = block.size.height;
-
-  const isInBound =
-    x >= defaultPosition.x + scrollOffset &&
-    y >= defaultPosition.y &&
-    x + itemWidth <= containerRect.clientWidth + scrollOffset &&
-    y + itemHeight <= containerRect.clientHeight;
-
-  return isInBound;
-};
 
 export const useDragBlock = ({
   containerRef,
@@ -51,73 +26,13 @@ export const useDragBlock = ({
 
   //렌더링 시에만 사용하는 위치, scrollOffset 보정 x
   const [dragPosition, setDragPosition] = useState<Position | null>(null);
+
+  //마우스 위치와 블록 위치 차이
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
 
-  // 정렬 전이 애니메이션 timeout id
-  const sortAnimationTimeoutRef = useRef<number | null>(null);
-
-  const animateBlocksTransition = useCallback(
-    (
-      prevBlocks: WorkBlockType[],
-      nextBlocks: WorkBlockType[],
-      durationMs = 250
-    ) => {
-      if (sortAnimationTimeoutRef.current !== null) {
-        clearTimeout(sortAnimationTimeoutRef.current);
-        sortAnimationTimeoutRef.current = null;
-      }
-
-      const start = performance.now();
-      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-
-      const fromMap = new Map<number, WorkBlockType>();
-      prevBlocks.forEach(b => fromMap.set(Number(b.id), b));
-
-      const step = () => {
-        const now = performance.now();
-        const elapsed = now - start;
-        const t = Math.min(1, elapsed / durationMs);
-        const eased = easeOutCubic(t);
-
-        const frameBlocks: WorkBlockType[] = nextBlocks.map(toBlock => {
-          const id = Number(toBlock.id);
-          const fromBlock = fromMap.get(id);
-          if (!fromBlock) return toBlock;
-
-          const fromX = fromBlock.position.x;
-          const fromY = fromBlock.position.y;
-          const fromW = fromBlock.size.width ?? 0;
-          const toX = toBlock.position.x;
-          const toY = toBlock.position.y;
-          const toW = toBlock.size.width ?? 0;
-
-          const x = fromX + (toX - fromX) * eased;
-          const y = fromY + (toY - fromY) * eased;
-          const width = fromW + (toW - fromW) * eased;
-
-          return {
-            ...toBlock,
-            position: { x, y },
-            size: { ...toBlock.size, width },
-          } as WorkBlockType;
-        });
-
-        updateWorkBlocks(frameBlocks);
-
-        if (t < 1) {
-          sortAnimationTimeoutRef.current = window.setTimeout(step, 16);
-        } else {
-          sortAnimationTimeoutRef.current = null;
-          // 애니메이션 완료 후 최종 상태로 업데이트
-          updateWorkBlocks(nextBlocks);
-        }
-      };
-
-      // 즉시 1프레임 수행
-      step();
-    },
-    [updateWorkBlocks]
-  );
+  // 전이 애니메이션 훅 사용
+  const { animateBlocksTransition } =
+    useBlocksTransition<WorkBlockType>(updateWorkBlocks);
 
   const getContainerCoords = useCallback(
     (e: PointerEvent) => {
@@ -179,6 +94,7 @@ export const useDragBlock = ({
     setDraggingBlock(null);
     setDragPosition(null);
 
+    //컨테이너 밖일 떄 초기 위치로 복귀
     if (
       !isInBound(
         currentDraggingBlock.position,
@@ -198,6 +114,8 @@ export const useDragBlock = ({
       animateBlocksTransition(currentBlocks, workBlocks);
       return;
     }
+
+    //TODO: 해당 위치에 놓을 수 없을 시 가능한 위치로 이동
 
     const newBlocks = workBlocks.map(block => {
       // 드래깅 중인 블록만 위치 업데이트
