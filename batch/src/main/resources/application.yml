@@ -51,10 +51,10 @@ spring:
       enabled: true
       path: /h2-console
   datasource:
-    url: jdbc:h2:./batchdb;MODE=MySQL;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:${RDS_PORT}/${RDS_DATABASE}?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
 
 ---
 
