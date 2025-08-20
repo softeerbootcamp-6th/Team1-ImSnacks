@@ -5,11 +5,11 @@ import {
   useRef,
   type RefObject,
 } from 'react';
-import type { WorkBlockType } from '@/types/workCard.type';
+import type { Position, Size, WorkBlockType } from '@/types/workCard.type';
 import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
 import { sortWorkBlocks } from '@/pages/homePage/utils/sortWorkBlocks';
-import type { Position } from '@/dndTimeline/types/position.type';
 import { patchMyWorkTime } from '@/apis/myWork.api';
+import { getYCoordinate } from '@/constants/workTimeCoordinate';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -17,6 +17,27 @@ interface UseDragBlockProps {
   workBlocks: WorkBlockType[];
   updateWorkBlocks: (blocks: WorkBlockType[]) => void;
 }
+
+const isInBound = (
+  position: Position,
+  block: { size: Size },
+  scrollOffset: number,
+  containerRect: HTMLDivElement | null,
+  defaultPosition: Position
+): boolean => {
+  if (!containerRect) return false;
+  const { x, y } = position;
+  const itemWidth = block.size.width;
+  const itemHeight = block.size.height;
+
+  const isInBound =
+    x >= defaultPosition.x + scrollOffset &&
+    y >= defaultPosition.y &&
+    x + itemWidth <= containerRect.clientWidth + scrollOffset &&
+    y + itemHeight <= containerRect.clientHeight;
+
+  return isInBound;
+};
 
 export const useDragBlock = ({
   containerRef,
@@ -153,30 +174,50 @@ export const useDragBlock = ({
     if (!draggingBlock) return;
 
     const currentDraggingBlock = draggingBlock;
+
     // 상태 초기화
     setDraggingBlock(null);
     setDragPosition(null);
 
+    if (
+      !isInBound(
+        currentDraggingBlock.position,
+        currentDraggingBlock,
+        scrollOffset,
+        containerRef.current,
+        { x: 0, y: getYCoordinate(1) }
+      )
+    ) {
+      const currentBlocks = workBlocks.map(block => {
+        if (block.id === currentDraggingBlock.id) {
+          return currentDraggingBlock;
+        }
+        return block;
+      });
+
+      animateBlocksTransition(currentBlocks, workBlocks);
+      return;
+    }
+
     const newBlocks = workBlocks.map(block => {
-      const newBlockPosition = {
-        x: currentDraggingBlock.position.x,
-        y: currentDraggingBlock.position.y,
-      };
+      // 드래깅 중인 블록만 위치 업데이트
+      if (block.id !== currentDraggingBlock.id) {
+        return block;
+      }
+
       const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
-        block.startTime,
-        block.endTime,
-        newBlockPosition
+        currentDraggingBlock.startTime,
+        currentDraggingBlock.endTime,
+        currentDraggingBlock.position
       );
 
-      return block.id === currentDraggingBlock.id
-        ? {
-            ...block,
-            position: newBlockPosition,
-            startTime: newStartTime,
-            endTime: newEndTime,
-            workTime: newWorkTime,
-          }
-        : block;
+      return {
+        ...block,
+        position: currentDraggingBlock.position,
+        startTime: newStartTime,
+        endTime: newEndTime,
+        workTime: newWorkTime,
+      };
     });
 
     const newSortedBlocks = sortWorkBlocks(newBlocks);
@@ -192,7 +233,13 @@ export const useDragBlock = ({
     } catch (error) {
       console.error('작업 시간 업데이트 실패:', error);
     }
-  }, [animateBlocksTransition, draggingBlock, workBlocks]);
+  }, [
+    animateBlocksTransition,
+    containerRef,
+    draggingBlock,
+    scrollOffset,
+    workBlocks,
+  ]);
 
   useEffect(() => {
     window.addEventListener('pointermove', handlePointerMove);
