@@ -1,5 +1,5 @@
 import type { WorkBlockType, Position } from '@/types/workCard.type';
-import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
+import { WORK_TIME_Y_COORDINATE_LIST } from '@/constants/workTimeCoordinate';
 import { patchMyWorkTime } from '@/apis/myWork.api';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
@@ -159,7 +159,7 @@ const useDragWorkBlock = (
 
         // 유효하지 않은 위치 검사 및 되돌리기
         moveToValidPosition(
-          Object.values(WORK_TIME_Y_COORDINATE),
+          WORK_TIME_Y_COORDINATE_LIST,
           draggingId,
           draggingBlock,
           revertAnimationRef,

@@ -4,8 +4,19 @@ import isInBound from '@/dndTimeline/utils/isInBound';
 import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
 import { sortWorkBlocks } from '@/pages/homePage/utils/sortWorkBlocks';
 import { patchMyWorkTime } from '@/apis/myWork.api';
-import { getYCoordinate } from '@/constants/workTimeCoordinate';
+import {
+  getYCoordinate,
+  WORK_TIME_Y_COORDINATE_LIST,
+} from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/dndTimeline/hooks/useBlocksTransition';
+import {
+  findCollisionFreePosition,
+  hasCollision,
+} from '@/utils/collisionUtils';
+import {
+  getTimeUpdatedBlock,
+  getTimeUpdatedBlocks,
+} from '../utils/updateBlockTime';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -13,6 +24,24 @@ interface UseDragBlockProps {
   workBlocks: WorkBlockType[];
   updateWorkBlocks: (blocks: WorkBlockType[]) => void;
 }
+
+const isFullyBlocked = (
+  currentDraggingBlock: WorkBlockType,
+  otherBlocks: WorkBlockType[]
+) => {
+  const collidesAtY = (y: number) =>
+    otherBlocks.some(otherBlock =>
+      hasCollision(
+        {
+          ...currentDraggingBlock,
+          position: { x: currentDraggingBlock.position.x, y },
+        },
+        otherBlock
+      )
+    );
+
+  return WORK_TIME_Y_COORDINATE_LIST.every(y => collidesAtY(y));
+};
 
 export const useDragBlock = ({
   containerRef,
@@ -104,49 +133,51 @@ export const useDragBlock = ({
         { x: 0, y: getYCoordinate(1) }
       )
     ) {
-      const currentBlocks = workBlocks.map(block => {
-        if (block.id === currentDraggingBlock.id) {
-          return currentDraggingBlock;
-        }
-        return block;
-      });
+      const currentBlocks = getTimeUpdatedBlocks(
+        workBlocks,
+        currentDraggingBlock
+      );
 
       animateBlocksTransition(currentBlocks, workBlocks);
       return;
     }
 
-    //TODO: 해당 위치에 놓을 수 없을 시 가능한 위치로 이동
+    // 해당 x좌표와 valid한 y좌표 조합에 블록이 이미 존재하는지 확인
+    // 블록이 이미 있다면 가능한 위치로 이동
+    const otherBlocks = workBlocks.filter(
+      b => b.id !== currentDraggingBlock.id
+    );
 
-    const newBlocks = workBlocks.map(block => {
-      // 드래깅 중인 블록만 위치 업데이트
-      if (block.id !== currentDraggingBlock.id) {
-        return block;
-      }
+    let newSortedBlocks: WorkBlockType[] = [];
+    let newCurrentDraggingBlock = currentDraggingBlock;
+    const newBlocks = getTimeUpdatedBlocks(workBlocks, currentDraggingBlock);
 
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
-        currentDraggingBlock.startTime,
-        currentDraggingBlock.endTime,
-        currentDraggingBlock.position
+    if (isFullyBlocked(currentDraggingBlock, otherBlocks)) {
+      const collisionFreePosition = findCollisionFreePosition(
+        currentDraggingBlock,
+        otherBlocks,
+        containerRef.current?.getBoundingClientRect() ?? new DOMRect(),
+        scrollOffset
       );
 
-      return {
-        ...block,
-        position: currentDraggingBlock.position,
-        startTime: newStartTime,
-        endTime: newEndTime,
-        workTime: newWorkTime,
-      };
-    });
+      newCurrentDraggingBlock = getTimeUpdatedBlock(currentDraggingBlock, {
+        ...currentDraggingBlock,
+        position: collisionFreePosition,
+      });
 
-    const newSortedBlocks = sortWorkBlocks(newBlocks);
-
+      newSortedBlocks = sortWorkBlocks(
+        getTimeUpdatedBlocks(workBlocks, newCurrentDraggingBlock)
+      );
+    } else {
+      newSortedBlocks = sortWorkBlocks(newBlocks);
+    }
     animateBlocksTransition(newBlocks, newSortedBlocks);
 
     try {
       await patchMyWorkTime({
-        myWorkId: currentDraggingBlock.id,
-        startTime: currentDraggingBlock.startTime,
-        endTime: currentDraggingBlock.endTime,
+        myWorkId: newCurrentDraggingBlock.id,
+        startTime: newCurrentDraggingBlock.startTime,
+        endTime: newCurrentDraggingBlock.endTime,
       });
     } catch (error) {
       console.error('작업 시간 업데이트 실패:', error);
