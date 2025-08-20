@@ -1,6 +1,8 @@
 import { BorderRadius } from '@/styles/borderRadius';
 import { GrayScale, Opacity } from '@/styles/colors';
+import { FlexStyles } from '@/styles/commonStyles';
 import { Spacing } from '@/styles/spacing';
+import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
 const MobileTodo = css`
@@ -23,7 +25,15 @@ const MobileTodoList = css`
   background: ${Opacity.White.W200};
 `;
 
+const EmptyTodoMessage = css`
+  ${Typography.Body_S_700};
+  color: ${GrayScale.White};
+  width: 100%;
+  text-align: center;
+`;
+
 export default {
   MobileTodo,
   MobileTodoList,
+  EmptyTodoMessage,
 };
