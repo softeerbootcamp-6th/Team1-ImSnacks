@@ -8,6 +8,7 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,7 +44,8 @@ public class AuthService {
 
         AuthTokens token = jwtProvider.createToken(member.getId());
         member.setRefreshToken(token.getRefreshToken());
+        log.info("token : {}", member.getRefreshToken());
 
-        return new LoginResponse(token.getRefreshToken(), new LoginResponse.LoginAccessTokenResponse(member.getNickname(), token.getAccessToken()));
+        return new LoginResponse(member.getRefreshToken(), new LoginResponse.LoginAccessTokenResponse(member.getNickname(), token.getAccessToken()));
     }
 }
