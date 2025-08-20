@@ -1,6 +1,5 @@
 import { BorderRadius } from '@/styles/borderRadius';
 import { GrayScale, Opacity } from '@/styles/colors';
-import { FlexStyles } from '@/styles/commonStyles';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
