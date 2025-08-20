@@ -58,7 +58,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           `}
         />
       )}
-      {window.location.pathname !== '/login' && !isMobile && (
+      {location.pathname !== '/login' && !isMobile && (
         <NavBar isWeatherPage={isWeatherPage} />
       )}
       <main
