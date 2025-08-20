@@ -16,30 +16,11 @@ const customFetch = async (url: string, options: RequestInit) => {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
-      // Authorization: accessToken
-      //   ? `Bearer ${accessToken}`
-      //   : 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaXNzIjoibnllb3JldW1uYWdpIiwiaWF0IjoxNzU1NTc0NDAyLCJleHAiOjE3NTU5MzQ0MDJ9.x4UVYiyZ3pUI48QY7JVgIFIkvEOREuEUTv4N7y7xMJE',
-      ...options.headers, // 사용자가 전달한 헤더가 있다면 우선 적용
+      ...options.headers,
     },
+    credentials: 'include',
   });
 
-  // if (response.status === 400) {
-  //   //TODO: 400 에러 발생 시 refresh token 을 이용해 새로운 access token 을 발급받고 다시 요청
-  //   try {
-  //     console.error('refreshing...', response);
-  //     // reissue
-  //     // if(response.)
-  //     const res = await getAuthRefresh();
-  //     if (res.code === 200) {
-  //       useTokenStore.setState({ accessToken: res.data.accessToken });
-
-  //       return customFetch(url, options);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error refreshing token:', error);
-  //     // window.location.href = '/login';
-  //   }
-  // }
   if (!response.ok) {
     const errorBody = await response.json();
 
@@ -60,8 +41,14 @@ const customFetch = async (url: string, options: RequestInit) => {
         }
       } catch (error) {
         console.error('Error refreshing token:', error);
+        // window.location.href = '/login'; // TODO: 배포 시에는 주석 해제
         // 토큰 갱신 실패 시 원래 에러를 던짐
-        // window.location.href = '/login';
+        throw new ApiError(
+          response.status,
+          errorBody.code,
+          errorBody.msg,
+          errorBody.data
+        );
       }
     }
 
