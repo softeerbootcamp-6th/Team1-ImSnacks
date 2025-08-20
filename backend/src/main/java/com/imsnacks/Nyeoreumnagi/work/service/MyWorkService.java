@@ -1,7 +1,9 @@
 package com.imsnacks.Nyeoreumnagi.work.service;
 
+import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
+import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
@@ -14,11 +16,13 @@ import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
+import com.imsnacks.Nyeoreumnagi.work.event.MyWorkCompletedEvent;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyWorkRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.RecommendedWorkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +51,9 @@ public class MyWorkService {
     private final RecommendedWorkRepository recommendedWorkRepository;
     private final MyCropRepository myCropRepository;
     private final MemberRepository memberRepository;
+
+    private final ApplicationEventPublisher publisher;
+    private final FarmRepository farmRepository;
 
     @Transactional
     public RegisterMyWorkResponse registerMyWork(RegisterMyWorkRequest request, Long memberId) {
@@ -170,7 +177,16 @@ public class MyWorkService {
 
     @Transactional
     public void updateMyWorkStatus(UpdateMyWorkStatusRequest request, long memberId){
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
         MyWork myWork = myWorkRepository.findByIdAndMember_Id(request.myWorkId(), memberId).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
+        if (request.status().equals(COMPLETED)) {
+            publisher.publishEvent(new MyWorkCompletedEvent(myWork.getId(),
+                    myWork.getRecommendedWork().getId(),
+                    farm.getLocation().getY(),
+                    farm.getLocation().getX(),
+                    LocalDate.now()));
+
+        }
         myWork.setWorkStatus(request.status());
     }
 }
