@@ -41,6 +41,8 @@ public class AuthService {
         Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
         AuthTokens token = jwtProvider.createToken(member.getId());
+        member.setRefreshToken(token.getRefreshToken());
+
         return new LoginResponse(token.getRefreshToken(), new LoginResponse.LoginAccessTokenResponse(member.getNickname(), token.getAccessToken()));
     }
 }
