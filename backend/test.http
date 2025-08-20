@@ -1,0 +1,13 @@
+###
+POST http://api.nyeoreumnagi.site/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "user001",
+  "password": "encodedPw1"
+}
+###
+
+ GET http://api.nyeoreumnagi.site/auth/refresh
+Accept: application/json
+

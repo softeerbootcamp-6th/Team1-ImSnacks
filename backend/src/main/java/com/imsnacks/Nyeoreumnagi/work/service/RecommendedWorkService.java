@@ -15,9 +15,9 @@ import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
-import com.imsnacks.Nyeoreumnagi.work.repository.RecommendedWorkRepository;
 import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +42,8 @@ public class RecommendedWorkService {
     private final FarmRepository farmRepository;
     private final LifeCycleResolver lifeCycleResolver;
     private final WorkScheduleCalculator workScheduleCalculator;
-    private final RecommendedWorkRepository recommendedWorkRepository;
 
+    private final NearbyAggregationService nearbyService;
 
     public RecommendWorksResponse recommendWorks(Long myCropId, Long memberId) {
         LocalDateTime now = LocalDateTime.now(ZONE);
@@ -67,12 +67,27 @@ public class RecommendedWorkService {
         lifeCycleAndRecommendedWorkRepository.findAllByLifeCycle_Id(nowLifeCycleId)
                 .stream().map(LifeCycleAndRecommendedWork::getRecommendedWork)
                 .forEach(recommendedWork -> {
-                    int neighborCount = recommendedWorkRepository.countNearbySameWork(memberId, recommendedWork.getId());
+                    int neighborCount = (int) getNeighborCountForWork(memberId, recommendedWork.getId());
                     recommendedWorksResponse.addAll(workScheduleCalculator.windowsForWork(recommendedWork, forecasts, neighborCount, now));
                 });
 
         List<RecommendWorksResponse.MyCropResponse> myCropResponses = myCropList.stream().map(my -> new RecommendWorksResponse.MyCropResponse(my.getId(), my.getCrop().getName())).toList();
         return new RecommendWorksResponse(recommendedWorksResponse, myCropResponses);
+    }
+
+    private long getNeighborCountForWork(long currentMemberId, long workId) {
+        // 내 기준점: 내 농장 위치
+        Point loc = farmRepository.findByMember_Id(currentMemberId)
+                .orElseThrow()
+                .getLocation(); // x=lon, y=lat
+
+        double centerLat = loc.getY();
+        double centerLon = loc.getX();
+
+        // k-익명 3 적용 예시
+        return nearbyService.countNeighborsWithin5kmUsingFact(
+                workId, currentMemberId, centerLat, centerLon, true, 3
+        );
     }
 
 }
