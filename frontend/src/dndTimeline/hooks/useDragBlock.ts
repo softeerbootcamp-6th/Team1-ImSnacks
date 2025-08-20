@@ -152,12 +152,15 @@ export const useDragBlock = ({
   const handleEndDrag = useCallback(async () => {
     if (!draggingBlock) return;
 
-    console.log('handleEndDrag 호출됨', { draggingBlockId: draggingBlock.id });
+    const currentDraggingBlock = draggingBlock;
+    // 상태 초기화
+    setDraggingBlock(null);
+    setDragPosition(null);
 
     const newBlocks = workBlocks.map(block => {
       const newBlockPosition = {
-        x: draggingBlock.position.x,
-        y: draggingBlock.position.y,
+        x: currentDraggingBlock.position.x,
+        y: currentDraggingBlock.position.y,
       };
       const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
         block.startTime,
@@ -165,7 +168,7 @@ export const useDragBlock = ({
         newBlockPosition
       );
 
-      return block.id === draggingBlock.id
+      return block.id === currentDraggingBlock.id
         ? {
             ...block,
             position: newBlockPosition,
@@ -180,15 +183,11 @@ export const useDragBlock = ({
 
     animateBlocksTransition(newBlocks, newSortedBlocks);
 
-    // 상태 초기화를 마지막에 수행
-    setDraggingBlock(null);
-    setDragPosition(null);
-
     try {
       await patchMyWorkTime({
-        myWorkId: draggingBlock.id,
-        startTime: draggingBlock.startTime,
-        endTime: draggingBlock.endTime,
+        myWorkId: currentDraggingBlock.id,
+        startTime: currentDraggingBlock.startTime,
+        endTime: currentDraggingBlock.endTime,
       });
     } catch (error) {
       console.error('작업 시간 업데이트 실패:', error);
