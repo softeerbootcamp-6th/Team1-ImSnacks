@@ -2,23 +2,23 @@ package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Builder;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "short_term_weather_forecast")
+@Table(name = "short_term_weather_forecast_shadow")
 @IdClass(ShortTermWeatherForecastId.class)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class ShortTermWeatherForecast {
+public class ShortTermWeatherForecastShadow {
     @Id
     private int nx;
 

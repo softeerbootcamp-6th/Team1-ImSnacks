@@ -6,6 +6,7 @@ import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDa
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDayWeatherConditionReader;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDayTemperatureWriter;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDayWeatherConditionWriter;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.ShadowTableInitTasklet;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.WeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
@@ -38,9 +39,10 @@ public class WeatherJobConfig {
     private final SevenDayTemperatureWriter sevenDayTemperatureWriter;
 
     @Bean
-    public Job weatherJob(JobRepository jobRepository, Step weatherStep) {
+    public Job weatherJob(JobRepository jobRepository, Step weatherStep, Step shadowTableInitStep) {
         return new JobBuilder("weatherJob", jobRepository)
-                .start(weatherStep)
+                .start(shadowTableInitStep)
+                .next(weatherStep)
                 .build();
     }
 
@@ -68,6 +70,14 @@ public class WeatherJobConfig {
                 .reader(weatherReader)
                 .processor(weatherProcessor)
                 .writer(weatherWriter)
+                .build();
+    }
+
+    @Bean
+    public Step shadowTableInitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+                                    ShadowTableInitTasklet shadowTableInitTasklet) {
+        return new StepBuilder("shadowTableInitStep", jobRepository)
+                .tasklet(shadowTableInitTasklet, transactionManager)
                 .build();
     }
 
