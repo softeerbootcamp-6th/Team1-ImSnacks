@@ -42,13 +42,6 @@ const customFetch = async (url: string, options: RequestInit) => {
       } catch (error) {
         console.error('Error refreshing token:', error);
         // window.location.href = '/login'; // TODO: 배포 시에는 주석 해제
-        // 토큰 갱신 실패 시 원래 에러를 던짐
-        throw new ApiError(
-          response.status,
-          errorBody.code,
-          errorBody.msg,
-          errorBody.data
-        );
       }
     }
 
