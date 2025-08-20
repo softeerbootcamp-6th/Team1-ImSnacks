@@ -4,19 +4,14 @@ import isInBound from '@/dndTimeline/utils/isInBound';
 import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
 import { sortWorkBlocks } from '@/pages/homePage/utils/sortWorkBlocks';
 import { patchMyWorkTime } from '@/apis/myWork.api';
-import {
-  getYCoordinate,
-  WORK_TIME_Y_COORDINATE_LIST,
-} from '@/constants/workTimeCoordinate';
+import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/dndTimeline/hooks/useBlocksTransition';
-import {
-  findCollisionFreePosition,
-  hasCollision,
-} from '@/utils/collisionUtils';
+import { findCollisionFreePosition } from '@/utils/collisionUtils';
 import {
   getTimeUpdatedBlock,
   getTimeUpdatedBlocks,
 } from '../utils/updateBlockTime';
+import isFullyOverlapped from '@/dndTimeline/utils/isFullyOverlapped';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -24,24 +19,6 @@ interface UseDragBlockProps {
   workBlocks: WorkBlockType[];
   updateWorkBlocks: (blocks: WorkBlockType[]) => void;
 }
-
-const isFullyBlocked = (
-  currentDraggingBlock: WorkBlockType,
-  otherBlocks: WorkBlockType[]
-) => {
-  const collidesAtY = (y: number) =>
-    otherBlocks.some(otherBlock =>
-      hasCollision(
-        {
-          ...currentDraggingBlock,
-          position: { x: currentDraggingBlock.position.x, y },
-        },
-        otherBlock
-      )
-    );
-
-  return WORK_TIME_Y_COORDINATE_LIST.every(y => collidesAtY(y));
-};
 
 export const useDragBlock = ({
   containerRef,
@@ -152,7 +129,7 @@ export const useDragBlock = ({
     let newCurrentDraggingBlock = currentDraggingBlock;
     const newBlocks = getTimeUpdatedBlocks(workBlocks, currentDraggingBlock);
 
-    if (isFullyBlocked(currentDraggingBlock, otherBlocks)) {
+    if (isFullyOverlapped(currentDraggingBlock, otherBlocks)) {
       const collisionFreePosition = findCollisionFreePosition(
         currentDraggingBlock,
         otherBlocks,
