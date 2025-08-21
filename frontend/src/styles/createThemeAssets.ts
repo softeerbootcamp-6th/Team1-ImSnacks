@@ -27,6 +27,9 @@ export const createThemeAssets = (themeKey: keyof typeof ColorTheme): Theme => {
             Disabled: theme.Pressed,
           },
         },
+        ToolTip: {
+          Default: theme.Pressed,
+        },
       },
     },
   };

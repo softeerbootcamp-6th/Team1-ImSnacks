@@ -24,6 +24,9 @@ declare module '@emotion/react' {
             Disabled: string;
           };
         };
+        ToolTip: {
+          Default: string;
+        };
       };
     };
   }

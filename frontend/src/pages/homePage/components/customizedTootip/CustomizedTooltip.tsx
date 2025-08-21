@@ -1,10 +1,9 @@
 import ToolTip from '@/components/toolTip/ToolTip';
-import { Assets } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
 import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
 import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
 import { getUnit } from '@/utils/getUnit';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
 const CustomTooltip = ({
   active,
@@ -17,6 +16,7 @@ const CustomTooltip = ({
   label?: string;
   graphData: GetWeatherGraphResponse;
 }) => {
+  const theme = useTheme();
   if (
     !active ||
     !payload ||
@@ -43,7 +43,7 @@ const CustomTooltip = ({
           <div
             css={css`
               ${Typography.Caption};
-              color: ${Assets.Text.ToolTip.Default};
+              color: ${theme.Assets.Text.ToolTip.Default};
             `}
           >
             {`${label ?? ''}:00 | ${payload[0]?.value ?? 0}${getUnit(

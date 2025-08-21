@@ -54,7 +54,7 @@ export const tooltipArrowPosition = {
 const tooltipColorByType = (theme: Theme) => ({
   Default: css`
     background-color: ${GrayScale.White};
-    color: ${Assets.Text.ToolTip.Default};
+    color: ${theme.Assets.Text.ToolTip.Default};
   `,
   Working: css`
     background-color: ${GrayScale.White};
