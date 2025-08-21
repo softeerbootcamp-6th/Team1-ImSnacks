@@ -1,10 +1,10 @@
-import { Assets, ColorPrimary, GrayScale } from '@/styles/colors';
+import { GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 
 const GraphMenuTab = css``;
 
-const GraphMenuTabActive = css`
+const GraphMenuTabActive = (theme: Theme) => css`
   display: flex;
   padding: var(--Spacing-200, 4px) var(--Spacing-400, 12px)
     var(--Spacing-200, 4px) var(--Spacing-300, 8px);
@@ -13,7 +13,7 @@ const GraphMenuTabActive = css`
   gap: ${Spacing.Spacing100};
 
   border-radius: 200px;
-  background-color: ${ColorPrimary.B700};
+  background-color: ${theme.Assets.Global.Button.Pressed};
   color: ${GrayScale.White};
 
   svg path {
@@ -21,7 +21,7 @@ const GraphMenuTabActive = css`
   }
 `;
 
-const GraphMenuTabDefault = css`
+const GraphMenuTabDefault = (theme: Theme) => css`
   display: inline-flex;
   padding: ${Spacing.Spacing200};
   justify-content: center;
@@ -31,12 +31,12 @@ const GraphMenuTabDefault = css`
   background-color: ${GrayScale.White};
 
   svg {
-    color: ${Assets.Global.Button.Default};
+    color: ${theme.Assets.Global.Button.Default};
     transition: color 0.2s ease;
   }
 
   &:hover {
-    background-color: ${ColorPrimary.B300};
+    background-color: ${theme.ColorPrimary.B300};
     svg path {
       fill: ${GrayScale.White};
     }

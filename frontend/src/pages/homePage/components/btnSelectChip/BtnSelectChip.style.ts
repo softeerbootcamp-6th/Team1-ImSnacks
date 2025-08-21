@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Assets, GrayScale } from '@/styles/colors';
+import { GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
@@ -7,6 +7,7 @@ import type {
   BtnSelectChipSize,
   BtnSelectChipStatus,
 } from '@/types/btnSelectChip.type';
+import type { Theme } from '@emotion/react';
 
 const BtnSelectChipSizeStyle = {
   Small: css`
@@ -17,25 +18,25 @@ const BtnSelectChipSizeStyle = {
   `,
 };
 
-const BtnSelectChipStatusStyle = {
+const BtnSelectChipStatusStyle = (theme: Theme) => ({
   Default: css`
-    background-color: ${Assets.Global.Button.Default};
-    color: ${Assets.Text.Button.SelectChip.Default};
+    background-color: ${theme.Assets.Global.Button.Default};
+    color: ${theme.Assets.Text.Button.SelectChip.Default};
   `,
   Pressed: css`
-    background-color: ${Assets.Global.Button.Pressed};
-    color: ${Assets.Text.Button.SelectChip.Pressed};
+    background-color: ${theme.Assets.Global.Button.Pressed};
+    color: ${theme.Assets.Text.Button.SelectChip.Pressed};
   `,
   Hover: css`
-    background-color: ${Assets.Global.Button.Hover};
-    color: ${Assets.Text.Button.SelectChip.Hover};
+    background-color: ${theme.Assets.Global.Button.Hover};
+    color: ${theme.Assets.Text.Button.SelectChip.Hover};
   `,
   Disabled: css`
     background-color: ${GrayScale.White};
-    color: ${Assets.Text.Button.SelectChip.Disabled};
+    color: ${theme.Assets.Text.Button.SelectChip.Disabled};
     cursor: default;
   `,
-};
+});
 
 const BtnSelectChipBase = css`
   ${Typography.Body_S_400}
@@ -51,26 +52,27 @@ const BtnSelectChipBase = css`
 
 export const BtnSelectChip = (
   size: BtnSelectChipSize,
-  status: BtnSelectChipStatus
+  status: BtnSelectChipStatus,
+  theme: Theme
 ) => css`
   ${BtnSelectChipBase}
   ${BtnSelectChipSizeStyle[size]}
-  ${BtnSelectChipStatusStyle[status]}
+  ${BtnSelectChipStatusStyle(theme)[status]}
   
   &:hover {
-    ${BtnSelectChipStatusStyle.Hover}
+    ${BtnSelectChipStatusStyle(theme).Hover}
   }
 
   &:active {
-    ${BtnSelectChipStatusStyle.Pressed}
+    ${BtnSelectChipStatusStyle(theme).Pressed}
   }
 
   &:focus {
-    ${BtnSelectChipStatusStyle.Pressed}
+    ${BtnSelectChipStatusStyle(theme).Pressed}
   }
 
   &:disabled {
-    ${BtnSelectChipStatusStyle.Disabled}
+    ${BtnSelectChipStatusStyle(theme).Disabled}
   }
 `;
 
