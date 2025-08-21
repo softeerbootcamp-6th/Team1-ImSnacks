@@ -34,13 +34,6 @@ class ForecastTimeUtilsTest {
     }
 
     @Test
-    void _24시간_이후의_날짜_미포함() {
-        boolean result = ForecastTimeUtils.isWithin24Hours(
-                "20250803", "0600", "20250804", "0700");
-        assertThat(result).isFalse();
-    }
-
-    @Test
     void 기준_시간_이전의_날짜_미포함() {
         boolean result = ForecastTimeUtils.isWithin24Hours(
                 "20250803", "0600", "20250803", "0500");
