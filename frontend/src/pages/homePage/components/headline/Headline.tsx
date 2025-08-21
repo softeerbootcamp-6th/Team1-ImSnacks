@@ -66,6 +66,20 @@ const Headline = () => {
           containerCss={css`
             width: 200px;
             height: 150px;
+            animation: headline-bounce 2.3s ease-in-out infinite;
+            @keyframes headline-bounce {
+              0% {
+                transform: translateY(0);
+              }
+
+              40% {
+                transform: translateY(10px);
+              }
+
+              100% {
+                transform: translateY(0);
+              }
+            }
           `}
           iconCss={S.HeadlineWeatherIcon}
         />

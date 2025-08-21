@@ -1,33 +1,23 @@
 import S from './WeatherBoardWeekly.style';
 import WeeklyContent from '../weeklyContent/WeeklyContent';
-import { useEffect, useState } from 'react';
+import { Suspense } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import type { GetSevenDaysForecastResponse } from '@/types/openapiGenerator';
 import { getWeatherSevenDays } from '@/apis/weather.api';
+import { CircularSpinner } from '@/components/common/CircularSpinner';
 
 const WeatherBoardWeekly = () => {
-  const [weeklyWeatherData, setWeeklyWeatherData] =
-    useState<GetSevenDaysForecastResponse[]>();
+  const Content = () => {
+    const { data: weeklyWeatherData } = useSuspenseQuery({
+      queryKey: ['weather', 'weekly'],
+      queryFn: async (): Promise<GetSevenDaysForecastResponse[]> => {
+        const res = await getWeatherSevenDays();
+        return res.data;
+      },
+      staleTime: 24 * 60 * 60 * 1000,
+    });
 
-  const fetchWeeklyWeatherData = async () => {
-    try {
-      const res = await getWeatherSevenDays();
-      if (res.data) {
-        setWeeklyWeatherData(res.data);
-      }
-    } catch (error) {
-      console.error('Error fetching weekly weather data:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchWeeklyWeatherData();
-  }, []);
-
-  return (
-    <div css={S.WeatherBoardWeekly}>
-      <div css={S.WeeklyTitleWrapper}>
-        <h3 css={S.WeeklyTitle}>7일 간의 날씨 예보</h3>
-      </div>
+    return (
       <div css={S.WeeklyContentContainer}>
         {weeklyWeatherData?.map((data: GetSevenDaysForecastResponse, index) => (
           <WeeklyContent
@@ -39,6 +29,18 @@ const WeatherBoardWeekly = () => {
           />
         ))}
       </div>
+    );
+  };
+
+  return (
+    <div css={S.WeatherBoardWeekly}>
+      <div css={S.WeeklyTitleWrapper}>
+        <h3 css={S.WeeklyTitle}>7일 간의 날씨 예보</h3>
+      </div>
+
+      <Suspense fallback={<CircularSpinner minHeight={200} />}>
+        <Content />
+      </Suspense>
     </div>
   );
 };
