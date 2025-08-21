@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 @EnableBatchProcessing
 public class BatchConfiguration {
 
-  private static final String ISOLATION_REPEATABLE_READ = "ISOLATION_READ_COMMITTED";
+  private static final String ISOLATION_READ_COMMITTED = "ISOLATION_READ_COMMITTED";
 
   @Autowired
   private DataSource dataSource;
@@ -31,7 +31,7 @@ public class BatchConfiguration {
     factory.setDataSource(dataSource);
     factory.setTransactionManager(platformTransactionManager);
     factory.setValidateTransactionState(true);
-    factory.setIsolationLevelForCreate(ISOLATION_REPEATABLE_READ);
+    factory.setIsolationLevelForCreate(ISOLATION_READ_COMMITTED);
     factory.setIncrementerFactory(customIncrementerFactory());
     factory.afterPropertiesSet();
     return factory.getObject();

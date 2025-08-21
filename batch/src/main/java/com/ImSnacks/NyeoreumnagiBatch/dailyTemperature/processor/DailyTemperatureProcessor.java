@@ -36,7 +36,7 @@ public class DailyTemperatureProcessor implements ItemProcessor<DailyTemperature
         if(item.getSnow() > 1) return WeatherCondition.SNOW;
         if(item.getPrecipitation() >= 30) return WeatherCondition.HEAVY_RAIN;
         if(item.getPrecipitation() > 0) return WeatherCondition.RAIN;
-        if(item.getFcstTime() > 6){
+        if(item.getFcstTime() > 6 && item.getFcstTime() < 18){
             if(item.getSkyStatus() == 1) return WeatherCondition.SUNNY;
             if(item.getSkyStatus() == 3) return WeatherCondition.LESS_CLOUDY;
             if(item.getSkyStatus() == 4) return WeatherCondition.CLOUDY;

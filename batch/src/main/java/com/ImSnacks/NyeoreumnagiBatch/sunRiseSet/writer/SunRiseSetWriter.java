@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,41 +22,35 @@ import java.util.stream.Collectors;
 public class SunRiseSetWriter implements ItemWriter<SunRiseSetProcessorResponseDto> {
 
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void write(Chunk<? extends SunRiseSetProcessorResponseDto> chunk) throws Exception {
         log.info("Writing SunRiseSet started");
 
-        List<? extends SunRiseSetProcessorResponseDto> items = chunk.getItems();
-        List<Integer> nxList = items.stream()
-                .map(i -> i.nx())
-                .toList();
-        List<Integer> nyList = items.stream()
-                .map(i -> i.ny())
-                .toList();
+        batchUpsertSunrise((List<SunRiseSetProcessorResponseDto>) chunk.getItems());
+    }
 
-        Map<NxNy, DashboardTodayWeather> existingMap = dashboardTodayWeatherRepository
-                .findByNxInAndNyIn(nxList, nyList).stream()
-                .collect(Collectors.toMap(
-                        e -> new NxNy(e.getNx(), e.getNy()),
-                        e -> e
-                ));
+    public void batchUpsertSunrise(List<SunRiseSetProcessorResponseDto> items) {
+        if (items.isEmpty()) return;
 
-        List<DashboardTodayWeather> entitiesToSave = new ArrayList<>();
-        for (SunRiseSetProcessorResponseDto item : items) {
-            NxNy key = new NxNy(item.nx(), item.ny());
-            DashboardTodayWeather entity = existingMap.getOrDefault(key,
-                    DashboardTodayWeather.builder()
-                            .nx(item.nx())
-                            .ny(item.ny())
-                            .build()
-            );
+        StringBuilder sql = new StringBuilder();
+        sql.append("INSERT INTO dashboard_today_weather (nx, ny, sunrise_time, sunset_time) VALUES ");
 
-            entity.setSunriseTime(item.sunRise());
-            entity.setSunSetTime(item.sunSet());
-            entitiesToSave.add(entity);
+        List<Object> params = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            sql.append("(?, ?, ?, ?)");
+            if (i < items.size() - 1) sql.append(", ");
+            SunRiseSetProcessorResponseDto item = items.get(i);
+            params.add(item.nx());
+            params.add(item.ny());
+            params.add(item.sunRise());
+            params.add(item.sunSet());
         }
 
-        dashboardTodayWeatherRepository.saveAll(entitiesToSave);
+        sql.append(" ON DUPLICATE KEY UPDATE ")
+                .append("sunrise_time=VALUES(sunrise_time), sunset_time=VALUES(sunset_time)");
+
+        jdbcTemplate.update(sql.toString(), params.toArray());
     }
 }
