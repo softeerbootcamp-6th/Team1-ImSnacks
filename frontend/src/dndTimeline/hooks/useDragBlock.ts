@@ -1,12 +1,13 @@
-import { useState, useCallback, useEffect, type RefObject } from 'react';
+import { useState, useCallback, type RefObject } from 'react';
 import type { Position, WorkBlockType } from '@/types/workCard.type';
 import isInBound from '@/dndTimeline/utils/isInBound';
 import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
-import { patchMyWorkTime } from '@/apis/myWork.api';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/dndTimeline/hooks/useBlocksTransition';
 import { getTimeUpdatedBlocks } from '../utils/updateBlockTime';
 import { resolveCollision } from '@/dndTimeline/utils/resolveCollision';
+import updateBlockTimeOnServer from '@/dndTimeline/utils/updateBlockTimeOnServer';
+import { useSetPointerEvents } from '@/dndTimeline/hooks/useSetPointerEvents';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -24,9 +25,8 @@ export const useDragBlock = ({
   const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
     null
   );
-
   //렌더링 시에만 사용하는 위치, scrollOffset 보정 x
-  const [dragPosition, setDragPosition] = useState<Position | null>(null);
+  const [pointerPosition, setPointerPosition] = useState<Position | null>(null);
 
   //마우스 위치와 블록 위치 차이
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
@@ -55,7 +55,7 @@ export const useDragBlock = ({
       });
 
       setDraggingBlock(block);
-      setDragPosition(containerCoords);
+      setPointerPosition(containerCoords);
     },
     [containerRef, getContainerCoords, scrollOffset]
   );
@@ -65,19 +65,22 @@ export const useDragBlock = ({
       if (!draggingBlock) return;
 
       const containerCoords = getContainerCoords(e);
-      setDragPosition(containerCoords);
+      setPointerPosition(containerCoords);
 
-      const newX = containerCoords.x + scrollOffset - dragOffset.x;
-      const newY = containerCoords.y - dragOffset.y;
+      const newPosition = {
+        x: containerCoords.x + scrollOffset - dragOffset.x,
+        y: containerCoords.y - dragOffset.y,
+      };
+
       const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
         draggingBlock.startTime,
         draggingBlock.endTime,
-        { x: newX, y: newY }
+        newPosition
       );
 
       setDraggingBlock({
         ...draggingBlock,
-        position: { x: newX, y: newY },
+        position: newPosition,
         startTime: newStartTime,
         endTime: newEndTime,
         workTime: newWorkTime,
@@ -93,9 +96,9 @@ export const useDragBlock = ({
 
     // 상태 초기화
     setDraggingBlock(null);
-    setDragPosition(null);
+    setPointerPosition(null);
 
-    //컨테이너 밖일 떄 초기 위치로 복귀
+    //컨테이너 밖일 때 초기 위치로 복귀
     if (
       !isInBound(
         currentDraggingBlock.position,
@@ -124,15 +127,7 @@ export const useDragBlock = ({
 
     animateBlocksTransition(newBlocks, sortedBlocks);
 
-    try {
-      await patchMyWorkTime({
-        myWorkId: updatedBlock.id,
-        startTime: updatedBlock.startTime,
-        endTime: updatedBlock.endTime,
-      });
-    } catch (error) {
-      console.error('작업 시간 업데이트 실패:', error);
-    }
+    await updateBlockTimeOnServer(updatedBlock);
   }, [
     animateBlocksTransition,
     containerRef,
@@ -141,19 +136,14 @@ export const useDragBlock = ({
     workBlocks,
   ]);
 
-  useEffect(() => {
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handleEndDrag);
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handleEndDrag);
-    };
-  }, [handlePointerMove, handleEndDrag]);
+  useSetPointerEvents({
+    onPointerMove: handlePointerMove,
+    onPointerUp: handleEndDrag,
+  });
 
   return {
     draggingBlock,
-    dragPosition,
+    pointerPosition,
     dragOffset,
     handleStartDrag,
   };

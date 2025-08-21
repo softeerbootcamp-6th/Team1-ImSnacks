@@ -59,7 +59,7 @@ const WorkContainer = ({
 
   const { handleResize } = useResizeBlock(workBlocks, updateWorkBlocks);
 
-  const { draggingBlock, dragPosition, dragOffset, handleStartDrag } =
+  const { draggingBlock, pointerPosition, dragOffset, handleStartDrag } =
     useDragBlock({
       containerRef,
       scrollOffset,
@@ -132,11 +132,11 @@ const WorkContainer = ({
             />
           </div>
         </div>
-        {draggingBlock && dragPosition && (
+        {draggingBlock && pointerPosition && (
           <DraggingItem
             position={{
-              x: dragPosition.x - dragOffset.x,
-              y: dragPosition.y - dragOffset.y,
+              x: pointerPosition.x - dragOffset.x,
+              y: pointerPosition.y - dragOffset.y,
             }}
           >
             <WorkCardRegister
