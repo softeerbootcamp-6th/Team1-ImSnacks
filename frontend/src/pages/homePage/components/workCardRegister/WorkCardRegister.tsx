@@ -1,11 +1,12 @@
 import S from './WorkCardRegister.style';
 import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
 import useVisibility from '@/hooks/useVisibility';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useChangeTimeByResize } from '@/pages/homePage/hooks/work/useChangeTimeByResize';
 import { useResizeCollision } from '@/components/dnd/hooks/useResizeCollision';
 import { patchMyWorkTime } from '@/apis/myWork.api';
+import { css } from '@emotion/react';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -33,6 +34,25 @@ const WorkCardRegister = ({
   const { show, hide, isVisible } = useVisibility();
   const [newWidth, setNewWidth] = useState(block.size.width);
   const [isResizing, setIsResizing] = useState(false);
+  const [isToolTipVisible, setIsToolTipVisible] = useState(false);
+  const [isPassedTime, setIsPassedTime] = useState(block.position.x < 0);
+
+  useEffect(() => {
+    setIsToolTipVisible(
+      !isDragging &&
+        !isResizing &&
+        isVisible &&
+        (isPassedTime ? newWidth + block.position.x : newWidth) < 145
+    );
+    setIsPassedTime(block.position.x < 0);
+  }, [
+    isVisible,
+    isDragging,
+    isResizing,
+    newWidth,
+    isPassedTime,
+    block.position.x,
+  ]);
 
   const { handleResizeCollision } = useResizeCollision({
     containerRef,
@@ -67,58 +87,85 @@ const WorkCardRegister = ({
   };
 
   return (
-    <div
-      css={S.WorkCardContainer({ width: newWidth, height: block.size.height })}
-      onMouseDown={onMouseDown}
-      onMouseEnter={show}
-      onMouseLeave={hide}
-    >
-      {/* 왼쪽 리사이징 핸들 */}
-      {!isDragging && onResize && (
+    <>
+      <div
+        css={S.WorkCardContainer({
+          width: newWidth,
+          height: block.size.height,
+        })}
+        onMouseDown={onMouseDown}
+        onMouseEnter={show}
+        onMouseLeave={hide}
+      >
+        {/* {isToolTipVisible && (
+          <ToolTip
+            direction={'Top'}
+            content={
+              <div css={S.WorkCardToolTip}>
+                <div css={S.WorkCardToolTipContent}>
+                  <div css={S.WorkCardToolTipTitle}>{block.workName}</div>
+                  <div css={S.WorkCardToolTipCropName}>{block.cropName}</div>
+                </div>
+                <div css={S.WorkCardToolTipTime}>{block.workTime}</div>
+              </div>
+            }
+            type={'Default'}
+            offset={80}
+          />
+        )} */}
+        {/* 왼쪽 리사이징 핸들 */}
+        {!isDragging && onResize && (
+          <div
+            css={S.WorkCardResizeHandleLeft}
+            onPointerDown={e => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleResizeStart(e, block, 'left');
+            }}
+            onPointerUp={handleResizeEnd}
+          />
+        )}
+
+        {/* 오른쪽 리사이징 핸들 */}
+        {!isDragging && onResize && (
+          <div
+            css={S.WorkCardResizeHandleRight}
+            onPointerDown={e => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleResizeStart(e, block, 'right');
+            }}
+            onPointerUp={handleResizeEnd}
+          />
+        )}
         <div
-          css={S.WorkCardResizeHandleLeft}
-          onPointerDown={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleResizeStart(e, block, 'left');
-          }}
-          onPointerUp={handleResizeEnd}
-        />
-      )}
-
-      {/* 오른쪽 리사이징 핸들 */}
-      {!isDragging && onResize && (
-        <div
-          css={S.WorkCardResizeHandleRight}
-          onPointerDown={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleResizeStart(e, block, 'right');
-          }}
-          onPointerUp={handleResizeEnd}
-        />
-      )}
-
-      <WorkCardRegisterContent
-        width={newWidth}
-        cropName={block.cropName}
-        workName={block.workName}
-        workTime={block.workTime}
-      />
-
-      {isVisible && !isResizing && !isDragging && (
-        <button
-          onClick={onDelete}
-          onPointerDown={e => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-          css={S.WorkCardDeleteButton}
+          css={css`
+            margin-left: ${isPassedTime ? -block.position.x : 0}px;
+          `}
         >
-          ×
-        </button>
-      )}
-    </div>
+          <WorkCardRegisterContent
+            width={isPassedTime ? newWidth + block.position.x : newWidth}
+            cropName={block.cropName}
+            workName={block.workName}
+            workTime={block.workTime}
+            isToolTipVisible={isToolTipVisible}
+          />
+        </div>
+
+        {isVisible && !isResizing && !isDragging && (
+          <button
+            onClick={onDelete}
+            onPointerDown={e => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            css={S.WorkCardDeleteButton}
+          >
+            ×
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 

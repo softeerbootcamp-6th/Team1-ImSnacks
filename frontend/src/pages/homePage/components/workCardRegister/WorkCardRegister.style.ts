@@ -4,6 +4,37 @@ import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import type { Size } from '@/types/size.type';
+import { FlexStyles } from '@/styles/commonStyles';
+import { Assets } from '@/styles/colors';
+
+const WorkCardToolTip = css`
+  ${FlexStyles.flexColumn};
+  gap: ${Spacing.Spacing100};
+  padding: 0 ${Spacing.Spacing200};
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`;
+
+const WorkCardToolTipContent = css`
+  ${FlexStyles.flexRow};
+  gap: ${Spacing.Spacing300};
+`;
+
+const WorkCardToolTipTitle = css`
+  ${Typography.Body_S_400}
+  color: ${Assets.Text.WorkCard.Default.Headline};
+`;
+
+const WorkCardToolTipCropName = css`
+  ${Typography.Caption_S}
+  color: ${Assets.Text.WorkCard.Default.Headline};
+`;
+
+const WorkCardToolTipTime = css`
+  ${Typography.Caption_S}
+  color: ${Assets.Text.WorkCard.Default.Body};
+`;
 
 const WorkCardContainer = (size: Size) => css`
   position: absolute;
@@ -20,6 +51,7 @@ const WorkCardContainer = (size: Size) => css`
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   user-select: none;
+  overflow: visible;
 
   cursor: grab;
 
@@ -93,6 +125,11 @@ const WorkCardResizeHandleRight = css`
 
 export default {
   WorkCardContainer,
+  WorkCardToolTip,
+  WorkCardToolTipContent,
+  WorkCardToolTipTitle,
+  WorkCardToolTipCropName,
+  WorkCardToolTipTime,
   WorkCardDeleteButton,
   WorkCardResizeHandleLeft,
   WorkCardResizeHandleRight,
