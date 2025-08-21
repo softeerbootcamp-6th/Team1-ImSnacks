@@ -10,6 +10,8 @@ interface UseRecommendedWorksReturn {
   myCrops: MyCropResponse[];
   selectedCrop: MyCropResponse | null;
   handleCropClick: (crop: MyCropResponse) => void;
+  selectedRecommendedWork: RecommendedWorksResponse | null;
+  setSelectedRecommendedWork: (work: RecommendedWorksResponse | null) => void;
 }
 
 export const useRecommendedWorks = (): UseRecommendedWorksReturn => {
@@ -18,6 +20,8 @@ export const useRecommendedWorks = (): UseRecommendedWorksReturn => {
   >([]);
   const [myCrops, setMyCrops] = useState<MyCropResponse[]>([]);
   const [selectedCrop, setSelectedCrop] = useState<MyCropResponse | null>(null);
+  const [selectedRecommendedWork, setSelectedRecommendedWork] =
+    useState<RecommendedWorksResponse | null>(null);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -64,5 +68,7 @@ export const useRecommendedWorks = (): UseRecommendedWorksReturn => {
     myCrops,
     selectedCrop,
     handleCropClick,
+    selectedRecommendedWork,
+    setSelectedRecommendedWork,
   };
 };

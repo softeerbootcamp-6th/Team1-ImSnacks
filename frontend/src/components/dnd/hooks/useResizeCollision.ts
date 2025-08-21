@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
-import type { Position, WorkBlockType } from '@/types/workCard.type';
+import type { WorkBlockType } from '@/types/workCard.type';
+import type { Position } from '@/types/position.type';
 import {
   findCollisionFreePosition,
   hasCollision,
-} from '@/utils/collisionUtils';
-import animateBlock from '@/utils/animateBlock';
+} from '@/components/dnd/utils/collisionUtils';
+import animateBlock from '@/components/dnd/utils/animateBlock';
 
 interface UseResizeCollisionProps {
   containerRef?: React.RefObject<HTMLDivElement | null>;

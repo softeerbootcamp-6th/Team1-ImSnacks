@@ -3,8 +3,8 @@ import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegister
 import useVisibility from '@/hooks/useVisibility';
 import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
-import { useChangeTimeByResize } from '@/pages/homePage/hooks/useChangeTimeByResize';
-import { useResizeCollision } from '@/hooks/useResizeCollision';
+import { useChangeTimeByResize } from '@/pages/homePage/hooks/work/useChangeTimeByResize';
+import { useResizeCollision } from '@/components/dnd/hooks/useResizeCollision';
 import { patchMyWorkTime } from '@/apis/myWork.api';
 
 interface WorkCardRegisterProps {
@@ -68,13 +68,7 @@ const WorkCardRegister = ({
 
   return (
     <div
-      css={S.WorkCardContainer({
-        isDragging,
-        size: {
-          width: newWidth,
-          height: block.size.height,
-        },
-      })}
+      css={S.WorkCardContainer({ width: newWidth, height: block.size.height })}
       onMouseDown={onMouseDown}
       onMouseEnter={show}
       onMouseLeave={hide}
@@ -83,8 +77,12 @@ const WorkCardRegister = ({
       {!isDragging && onResize && (
         <div
           css={S.WorkCardResizeHandleLeft}
-          onMouseDown={e => handleResizeStart(e, block, 'left')}
-          onMouseUp={handleResizeEnd}
+          onPointerDown={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleResizeStart(e, block, 'left');
+          }}
+          onPointerUp={handleResizeEnd}
         />
       )}
 
@@ -92,8 +90,12 @@ const WorkCardRegister = ({
       {!isDragging && onResize && (
         <div
           css={S.WorkCardResizeHandleRight}
-          onMouseDown={e => handleResizeStart(e, block, 'right')}
-          onMouseUp={handleResizeEnd}
+          onPointerDown={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleResizeStart(e, block, 'right');
+          }}
+          onPointerUp={handleResizeEnd}
         />
       )}
 
@@ -107,7 +109,10 @@ const WorkCardRegister = ({
       {isVisible && !isResizing && !isDragging && (
         <button
           onClick={onDelete}
-          onMouseDown={e => e.stopPropagation()}
+          onPointerDown={e => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
           css={S.WorkCardDeleteButton}
         >
           ×

@@ -1,15 +1,13 @@
-import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
-import type { CropNameType } from '@/types/crop.type';
-import { getYCoordinate } from '@/constants/workTimeCoordinate';
+import dayjs from 'dayjs';
 import calculateTimeToPosition from './calculateTimeToPosition';
-import type { GetMyWorksOfTodayResponse } from '@/types/openapiGenerator';
+import isTimeOverlapping from '@/components/dnd/utils/isTimeOverlapping';
+import { getYCoordinate } from '@/constants/workTimeCoordinate';
+import type { CropNameType } from '@/types/crop.type';
 
-export const getInitialWorkBlocks = (
-  todayWorkScheduleData: GetMyWorksOfTodayResponse[]
-) => {
+export const sortWorkBlocks = (workBlocks: WorkBlockType[]) => {
   // 1. 시작 시간 기준 정렬
-  const sortedWorks = [...todayWorkScheduleData].sort(
+  const sortedWorks = [...workBlocks].sort(
     (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf()
   );
 
@@ -46,9 +44,9 @@ export const getInitialWorkBlocks = (
 
     // 5. 블록 생성
     blocks.push({
-      id: work.myWorkId ?? 0,
-      cropName: work.myCropName as CropNameType,
-      workName: work.myWorkName ?? '',
+      id: work.id ?? 0,
+      cropName: work.cropName as CropNameType,
+      workName: work.workName ?? '',
       workTime: work.workTime ?? '',
       startTime: work.startTime ?? '',
       endTime: work.endTime ?? '',
@@ -59,17 +57,3 @@ export const getInitialWorkBlocks = (
 
   return blocks;
 };
-
-// 시간 겹침 여부 체크
-const isTimeOverlapping = (
-  a: { startTime: string; endTime: string },
-  b: { startTime: string; endTime: string }
-) => {
-  const startA = dayjs(a.startTime).valueOf();
-  const endA = dayjs(a.endTime).valueOf();
-  const startB = dayjs(b.startTime).valueOf();
-  const endB = dayjs(b.endTime).valueOf();
-  return !(startA >= endB || endA <= startB);
-};
-
-export default getInitialWorkBlocks;
