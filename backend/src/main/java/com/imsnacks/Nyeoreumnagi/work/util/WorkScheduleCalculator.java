@@ -148,7 +148,7 @@ public class WorkScheduleCalculator {
     }
 
     private LocalDateTime toDateTimeWithRoll(LocalDateTime from, ShortTermWeatherForecast f) {
-        int t = f.getFcstTime(); // 예: 0~23
+        int t = f.getFcstTime().getHour(); // 예: 0~23
         LocalDateTime dt = LocalDateTime.of(from.toLocalDate(), LocalTime.of(t, 0));
 
 
