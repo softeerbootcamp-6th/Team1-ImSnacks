@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { IC24DragIcon } from '@/assets/icons/flat';
 import S from './WorkCell.style';
 import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
-import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
 import { useTheme } from '@emotion/react';
 
 interface WorkCellProps {
@@ -12,7 +11,6 @@ interface WorkCellProps {
 
 const WorkCell = ({ type, status }: WorkCellProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { workBlocks } = useWorkBlocks();
   const theme = useTheme();
 
   return (
@@ -21,7 +19,7 @@ const WorkCell = ({ type, status }: WorkCellProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isHovered && workBlocks.length === 0 && (
+      {isHovered && (
         <div css={S.HoverCell(theme)}>
           <div css={S.DragIcon}>
             <IC24DragIcon

@@ -3,14 +3,9 @@ import { ColorStatus, GrayScale } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
-import type { Size } from '@/types/workCard.type';
+import type { Size } from '@/types/size.type';
 
-interface WorkCardContainerProps {
-  isDragging: boolean;
-  size: Size;
-}
-
-const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
+const WorkCardContainer = (size: Size) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -24,7 +19,6 @@ const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
   height: ${size.height ? `${size.height}px` : 'auto'};
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: ${isDragging ? 1000 : 1};
   user-select: none;
 
   cursor: grab;
@@ -68,7 +62,6 @@ const WorkCardResizeHandle = css`
   top: 0;
   bottom: 0;
   width: 8px;
-  cursor: ew-resize;
   background-color: transparent;
   transition: background-color 0.2s ease;
 
@@ -79,6 +72,11 @@ const WorkCardResizeHandle = css`
   &:active {
     background-color: ${GrayScale.G400};
   }
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: ew-resize;
 `;
 
 const WorkCardResizeHandleLeft = css`

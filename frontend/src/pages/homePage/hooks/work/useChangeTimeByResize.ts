@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
-import calculateTimeToPosition from '../utils/calculateTimeToPosition';
+import calculateTimeToPosition from '@/pages/homePage/utils/work/calculateTimeToPosition';
 
 interface UseResizeProps {
   onResize: (newBlock: WorkBlockType) => void;
@@ -17,12 +17,10 @@ export const useChangeTimeByResize = ({ onResize }: UseResizeProps) => {
 
   const handleResizeStart = useCallback(
     (
-      e: React.MouseEvent<HTMLDivElement>,
+      e: React.PointerEvent<HTMLDivElement>,
       block: WorkBlockType,
       direction: 'left' | 'right'
     ) => {
-      e.stopPropagation();
-
       if (!block.size?.width) return;
 
       const startTime = dayjs(block.startTime);
@@ -35,7 +33,7 @@ export const useChangeTimeByResize = ({ onResize }: UseResizeProps) => {
         direction,
       };
 
-      const handleMouseMove = (moveEvent: MouseEvent) => {
+      const handlePointerMove = (moveEvent: PointerEvent) => {
         if (!resizeRef.current) return;
 
         const { startX, startTime, endTime, direction } = resizeRef.current;
@@ -80,14 +78,14 @@ export const useChangeTimeByResize = ({ onResize }: UseResizeProps) => {
         });
       };
 
-      const handleMouseUp = () => {
+      const handlePointerUp = () => {
         resizeRef.current = null;
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('pointermove', handlePointerMove);
+        window.removeEventListener('pointerup', handlePointerUp);
       };
 
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', handlePointerUp);
     },
     [onResize]
   );

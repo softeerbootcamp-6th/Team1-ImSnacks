@@ -1,14 +1,9 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
-import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
-import WorkBlocksContext, {
-  type WorkBlocksContextType,
-} from './WorkBlocksContext';
-import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
-import { deleteMyWork, getMyWorkOfToday } from '@/apis/myWork.api';
-import type { ContainerContextType } from './ContainerContext';
+import { getMyWorkOfToday, deleteMyWork } from '@/apis/myWork.api';
+import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
 
-const WorksProvider = ({ children }: { children: ReactNode }) => {
+const useWorkBlocks = () => {
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
 
   useEffect(() => {
@@ -42,25 +37,12 @@ const WorksProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollOffset, setScrollOffset] = useState(0);
-
-  const [selectedRecommendedWork, setSelectedRecommendedWork] =
-    useState<RecommendedWorksResponse | null>(null);
-
-  const value: WorkBlocksContextType & ContainerContextType = {
+  return {
     workBlocks,
     addWorkBlock,
     updateWorkBlocks,
     removeWorkBlock,
-    containerRef,
-    selectedRecommendedWork,
-    setSelectedRecommendedWork,
-    scrollOffset,
-    setScrollOffset,
   };
-
-  return <WorkBlocksContext value={value}>{children}</WorkBlocksContext>;
 };
 
-export default WorksProvider;
+export default useWorkBlocks;

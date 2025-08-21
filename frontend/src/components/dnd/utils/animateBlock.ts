@@ -1,5 +1,6 @@
-import type { Position, WorkBlockType } from '@/types/workCard.type';
-import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
+import type { WorkBlockType } from '@/types/workCard.type';
+import type { Position } from '@/types/position.type';
+import updateBlockWorkTime from '@/pages/homePage/utils/work/updateBlockWorkTime';
 
 const animateBlock = (
   revertAnimationRef: React.RefObject<number | null>,
