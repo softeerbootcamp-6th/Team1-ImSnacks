@@ -57,7 +57,7 @@ const WorkCardTitle = css`
 const WorkCardCropName = css`
   ${Typography.Caption_S}
   color: ${Assets.Text.WorkCard.Default.Headline};
-  width: 50px;
+  min-width: 50px;
 `;
 
 const WorkCardTime = css`

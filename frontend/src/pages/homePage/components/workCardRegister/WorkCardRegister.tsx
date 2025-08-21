@@ -80,7 +80,7 @@ const WorkCardRegister = ({
         onMouseEnter={show}
         onMouseLeave={hide}
       >
-        {!isDragging && !isResizing && isVisible && newWidth < 160 && (
+        {!isDragging && !isResizing && isVisible && newWidth < 145 && (
           <ToolTip
             direction={'Top'}
             content={

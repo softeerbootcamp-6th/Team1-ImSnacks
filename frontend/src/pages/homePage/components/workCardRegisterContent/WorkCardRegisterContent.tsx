@@ -30,7 +30,7 @@ const WorkCardRegisterContent = ({
               {workName}
             </div>
           )}
-          {width && width > 150 && (
+          {width && width > 120 && (
             <div
               css={[S.WorkCardCropName, isCompleted && S.CompletedTextStyle]}
             >
