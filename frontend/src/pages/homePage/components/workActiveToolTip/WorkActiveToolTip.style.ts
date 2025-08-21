@@ -1,8 +1,13 @@
 import { css } from '@emotion/react';
-import { ColorPrimary, Opacity } from '@/styles/colors';
+import { Opacity } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
+import type { Theme } from '@emotion/react';
 
-export const WorkActiveToolTipContainer = (x: number, width: number) => css`
+export const WorkActiveToolTipContainer = (
+  x: number,
+  width: number,
+  theme: Theme
+) => css`
   position: absolute;
   top: 16px;
   left: ${x}px;
@@ -17,29 +22,29 @@ export const WorkActiveToolTipContainer = (x: number, width: number) => css`
   justify-content: center;
   background-image: linear-gradient(
       to right,
-      ${ColorPrimary.B700} 0%,
-      ${ColorPrimary.B700} 50%,
+      ${theme.ColorPrimary.B700} 0%,
+      ${theme.ColorPrimary.B700} 50%,
       transparent 50%,
       transparent 100%
     ),
     linear-gradient(
       to right,
-      ${ColorPrimary.B700} 0%,
-      ${ColorPrimary.B700} 50%,
+      ${theme.ColorPrimary.B700} 0%,
+      ${theme.ColorPrimary.B700} 50%,
       transparent 50%,
       transparent 100%
     ),
     linear-gradient(
       to bottom,
-      ${ColorPrimary.B700} 0%,
-      ${ColorPrimary.B700} 50%,
+      ${theme.ColorPrimary.B700} 0%,
+      ${theme.ColorPrimary.B700} 50%,
       transparent 50%,
       transparent 100%
     ),
     linear-gradient(
       to bottom,
-      ${ColorPrimary.B700} 0%,
-      ${ColorPrimary.B700} 50%,
+      ${theme.ColorPrimary.B700} 0%,
+      ${theme.ColorPrimary.B700} 50%,
       transparent 50%,
       transparent 100%
     );
@@ -48,9 +53,9 @@ export const WorkActiveToolTipContainer = (x: number, width: number) => css`
   background-position: 0 0, 0 100%, 0 0, 100% 0;
 `;
 
-export const WorkActiveToolTipText = css`
+export const WorkActiveToolTipText = (theme: Theme) => css`
   ${Typography.Body_S_700}
-  color: ${ColorPrimary.B700};
+  color: ${theme.ColorPrimary.B700};
   padding: 12px 16px;
   text-align: center;
   white-space: pre-wrap;

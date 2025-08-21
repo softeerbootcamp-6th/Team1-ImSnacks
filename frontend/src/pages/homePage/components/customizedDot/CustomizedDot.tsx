@@ -1,5 +1,6 @@
 import { GrayScale } from '@/styles/colors';
 import type { WeatherRiskDto } from '@/types/openapiGenerator';
+import { useTheme } from '@emotion/react';
 
 const DOT_SIZE = 18;
 const DOT_RADIUS = 7;
@@ -25,6 +26,7 @@ const CustomizedDot = ({
   wrapperMargin: { top: number; bottom: number; left: number; right: number };
   chartHeight: number;
 }) => {
+  const theme = useTheme();
   // 차트의 실제 높이 계산 (전체 높이 - 상단 마진 - 하단 마진)
   const topMargin = wrapperMargin.top;
   const bottomMargin = wrapperMargin.bottom;
@@ -86,7 +88,7 @@ const CustomizedDot = ({
           cx={DOT_SIZE / 2}
           cy={DOT_SIZE / 2}
           r={DOT_RADIUS}
-          fill={GrayScale.G400} // TODO 미소: weatherCondition에 따라 색상 변경
+          fill={theme.ColorPrimary.B300}
           stroke={GrayScale.White}
           strokeWidth={DOT_STROKE_WIDTH}
           strokeLinejoin="round"

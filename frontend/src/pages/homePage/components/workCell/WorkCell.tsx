@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { IC24DragIcon } from '@/assets/icons/flat';
 import S from './WorkCell.style';
-import { ColorPrimary } from '@/styles/colors';
 import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
 import useWorkBlocks from '@/pages/homePage/contexts/useWorkBlocks';
+import { useTheme } from '@emotion/react';
 
 interface WorkCellProps {
   type: WorkCellType;
@@ -13,6 +13,7 @@ interface WorkCellProps {
 const WorkCell = ({ type, status }: WorkCellProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const { workBlocks } = useWorkBlocks();
+  const theme = useTheme();
 
   return (
     <div
@@ -21,9 +22,13 @@ const WorkCell = ({ type, status }: WorkCellProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       {isHovered && workBlocks.length === 0 && (
-        <div css={S.HoverCell}>
+        <div css={S.HoverCell(theme)}>
           <div css={S.DragIcon}>
-            <IC24DragIcon width={24} height={24} fill={ColorPrimary.B300} />
+            <IC24DragIcon
+              width={24}
+              height={24}
+              fill={theme.ColorPrimary.B300}
+            />
           </div>
           <p>작업 일정을{'\n'}클릭 하세요</p>
         </div>

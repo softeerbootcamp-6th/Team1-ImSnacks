@@ -6,6 +6,7 @@ import {
   type BtnSelectChipSize,
   type BtnSelectChipStatus,
 } from '@/types/btnSelectChip.type';
+import { useTheme } from '@emotion/react';
 
 interface BtnSelectChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: BtnSelectChipSize;
@@ -19,9 +20,11 @@ const BtnSelectChip = ({
   status = BTN_SELECT_CHIP_STATUSES.DEFAULT,
   ...props
 }: BtnSelectChipProps) => {
+  const theme = useTheme();
+
   return (
     <button
-      css={S.BtnSelectChip(size, status)}
+      css={S.BtnSelectChip(size, status, theme)}
       {...props}
       disabled={status === BTN_SELECT_CHIP_STATUSES.DISABLED}
     >

@@ -263,6 +263,29 @@ export const Gradient = {
   },
 };
 
+export const ColorTheme = {
+  Hot: {
+    Default: GrayScale.G100,
+    Pressed: '#ED473B',
+    Hover: '#FFD664',
+  },
+  Dark: {
+    Default: GrayScale.G200,
+    Pressed: '#26374F',
+    Hover: '#91B2C2',
+  },
+  Night: {
+    Default: GrayScale.G200,
+    Pressed: '#181324',
+    Hover: '#5A659D',
+  },
+  Default: {
+    Default: GrayScale.G200,
+    Pressed: ColorPrimary.B700,
+    Hover: ColorPrimary.B300,
+  },
+};
+
 // 통합된 컬러 시스템
 export const colorSystem = {
   // Primary Colors
