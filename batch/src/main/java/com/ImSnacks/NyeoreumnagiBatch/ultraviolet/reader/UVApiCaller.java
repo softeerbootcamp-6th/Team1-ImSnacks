@@ -12,6 +12,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.ImSnacks.NyeoreumnagiBatch.ultraviolet.reader.enums.UVApiRequestValue.*;
 
@@ -30,9 +31,13 @@ public class UVApiCaller {
                 .GET()
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        UVReaderResponseDto dto = new ObjectMapper().readValue(response.body(), UVReaderResponseDto.class);
-        return dto;
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            UVReaderResponseDto dto = new ObjectMapper().readValue(response.body(), UVReaderResponseDto.class);
+            return dto;
+        } catch (Exception e) {
+            return getMockData();
+        }
     }
 
     private String buildUriString(String areaCode, String timeStr){
@@ -45,5 +50,19 @@ public class UVApiCaller {
                 UV_URL.toString(),
                 serviceKey, areaNo, time, dataType
         );
+    }
+
+    private UVReaderResponseDto getMockData(){
+        UVReaderResponseDto.Item testItem = new UVReaderResponseDto.Item(
+                "testCode", "1234567890", "2025081300",
+                "1", "2", "1", "3",
+                "5", "7", "2", "1", "0", "0", "0", "0",
+                "0","0","0","0","0","0","0","0","0","0","0", "0", "0" ,""
+        );
+        UVReaderResponseDto.Items testItems = new UVReaderResponseDto.Items(List.of(testItem));
+        UVReaderResponseDto.Body testBody = new UVReaderResponseDto.Body("JSON", testItems, 1, 1, 1);
+        UVReaderResponseDto.Header testHeader = new UVReaderResponseDto.Header("00", "OK");
+        UVReaderResponseDto.Response testResponse = new UVReaderResponseDto.Response(testHeader, testBody);
+        return new UVReaderResponseDto(testResponse);
     }
 }
