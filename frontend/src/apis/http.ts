@@ -41,7 +41,7 @@ const customFetch = async (url: string, options: RequestInit) => {
         }
       } catch (error) {
         console.error('Error refreshing token:', error);
-        // window.location.href = '/login'; // TODO: 배포 시에는 주석 해제
+        // window.location.href = '/login'; // TODO 배포: 배포 시에는 주석 해제
       }
     }
 
