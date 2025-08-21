@@ -97,22 +97,6 @@ const WorkCardRegister = ({
         onMouseEnter={show}
         onMouseLeave={hide}
       >
-        {/* {isToolTipVisible && (
-          <ToolTip
-            direction={'Top'}
-            content={
-              <div css={S.WorkCardToolTip}>
-                <div css={S.WorkCardToolTipContent}>
-                  <div css={S.WorkCardToolTipTitle}>{block.workName}</div>
-                  <div css={S.WorkCardToolTipCropName}>{block.cropName}</div>
-                </div>
-                <div css={S.WorkCardToolTipTime}>{block.workTime}</div>
-              </div>
-            }
-            type={'Default'}
-            offset={80}
-          />
-        )} */}
         {/* 왼쪽 리사이징 핸들 */}
         {!isDragging && onResize && (
           <div
