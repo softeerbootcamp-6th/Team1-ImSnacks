@@ -10,6 +10,6 @@ export const useTimeStore = create<{
   currentTime: dayjs(),
   setCurrentTime: (time: dayjs.Dayjs) => set({ currentTime: time }),
   resetCurrentTime: () => set({ currentTime: dayjs() }),
-
-  increaseTime: () => set({ currentTime: dayjs().add(1, 'minute') }),
+  increaseTime: () =>
+    set(state => ({ currentTime: state.currentTime.add(1, 'minute') })),
 }));

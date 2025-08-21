@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import useWorkBlocks from '@/pages/homePage/hooks/work/useWorkBlocks';
@@ -20,6 +20,7 @@ import DragContainer from '@/components/dnd/dragContainer/DragContainer';
 import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
 import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
+import { useTimeStore } from '@/store/useTimeStore';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -30,11 +31,18 @@ const WorkContainer = ({
     WEATHER_METRICS.PRECIPITATION
   );
 
-  const { data: graphData, error } = useWeatherGraphQuery(currentTab);
+  const { currentTime } = useTimeStore();
+  const { data: graphData, error, refetch } = useWeatherGraphQuery(currentTab);
 
   if (error) {
     console.error('Error fetching graph data:', error);
   }
+
+  useEffect(() => {
+    if (currentTime.minute() === 0) {
+      refetch();
+    }
+  }, [currentTime, refetch]);
 
   const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
     useWorkBlocks();
