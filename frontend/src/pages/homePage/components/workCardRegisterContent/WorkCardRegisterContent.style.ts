@@ -8,6 +8,7 @@ import type { CropNameType } from '@/types/crop.type';
 import { FlexStyles } from '@/styles/commonStyles';
 
 const WorkCardContent = css`
+  position: relative;
   display: flex;
   min-width: 0;
   flex-direction: row;
@@ -40,6 +41,7 @@ const WorkCardTitle = css`
   ${Typography.Body_S_400}
   color: ${Assets.Text.WorkCard.Default.Headline};
   display: block;
+  flex: 1 1 auto;
   min-width: 0;
   width: 100%;
   white-space: nowrap;
@@ -50,13 +52,20 @@ const WorkCardTitle = css`
 const WorkCardCropName = css`
   ${Typography.Caption_S}
   color: ${Assets.Text.WorkCard.Default.Headline};
-  min-width: 50px;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const WorkCardTime = css`
   ${Typography.Caption_S}
   color: ${Assets.Text.WorkCard.Default.Body};
   display: block;
+  flex: 1 1 auto;
   min-width: 0;
   width: 100%;
   white-space: nowrap;
