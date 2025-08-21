@@ -1,4 +1,6 @@
-import type { Position, Size, WorkBlockType } from '@/types/workCard.type';
+import type { Position } from '@/types/position.type';
+import type { Size } from '@/types/size.type';
+import type { WorkBlockType } from '@/types/workCard.type';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 
 // 충돌 감지 함수

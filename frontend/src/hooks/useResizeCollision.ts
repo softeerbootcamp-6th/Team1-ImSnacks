@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
-import type { Position, WorkBlockType } from '@/types/workCard.type';
+import type { WorkBlockType } from '@/types/workCard.type';
+import type { Position } from '@/types/position.type';
 import {
   findCollisionFreePosition,
   hasCollision,

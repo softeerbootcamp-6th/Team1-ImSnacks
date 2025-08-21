@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import type { Position } from '@/types/workCard.type';
+import type { Position } from '@/types/position.type';
 
 const DraggingItem = ({
   position,

@@ -1,13 +1,14 @@
 import { useState, useCallback, type RefObject } from 'react';
-import type { Position, WorkBlockType } from '@/types/workCard.type';
-import isInBound from '@/dndTimeline/utils/isInBound';
-import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
+import type { WorkBlockType } from '@/types/workCard.type';
+import type { Position } from '@/types/position.type';
+import isInBound from '@/utils/isInBound';
+import updateWorkTimeByPos from '@/utils/updateWorkTimeByPos';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
-import { useBlocksTransition } from '@/dndTimeline/hooks/useBlocksTransition';
+import { useBlocksTransition } from '@/hooks/useBlocksTransition';
 import { getTimeUpdatedBlocks } from '../utils/updateBlockTime';
-import { resolveCollision } from '@/dndTimeline/utils/resolveCollision';
-import updateBlockTimeOnServer from '@/dndTimeline/utils/updateBlockTimeOnServer';
-import { useSetPointerEvents } from '@/dndTimeline/hooks/useSetPointerEvents';
+import { resolveCollision } from '@/utils/resolveCollision';
+import updateBlockTimeOnServer from '@/utils/updateBlockTimeOnServer';
+import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;

@@ -8,7 +8,7 @@ import type {
 import calculateTimeToPosition from '../utils/calculateTimeToPosition';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/utils/collisionUtils';
-import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
+import updateWorkTimeByPos from '@/utils/updateWorkTimeByPos';
 import { postMyWork } from '@/apis/myWork.api';
 
 interface UseCreateWorkBlockReturn {

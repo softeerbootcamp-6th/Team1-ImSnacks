@@ -1,4 +1,5 @@
-import type { Position, Size } from '@/types/workCard.type';
+import type { Position } from '@/types/position.type';
+import type { Size } from '@/types/size.type';
 
 const isInBound = (
   position: Position,

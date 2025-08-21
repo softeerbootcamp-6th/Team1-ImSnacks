@@ -15,11 +15,11 @@ import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
-import { useDragBlock } from '@/dndTimeline/hooks/useDragBlock';
-import DragContainer from '@/dndTimeline/components/dragContainer/DragContainer';
-import { useResizeBlock } from '@/dndTimeline/hooks/useResizeBlock';
-import DraggableItem from '@/dndTimeline/components/draggableItem/DraggableItem';
-import DraggingItem from '@/dndTimeline/components/draggingItem/DraggingItem';
+import { useDragBlock } from '@/hooks/useDragBlock';
+import DragContainer from '@/components/dnd/dragContainer/DragContainer';
+import { useResizeBlock } from '@/hooks/useResizeBlock';
+import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
+import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
 
 const WorkContainer = ({
   weatherRiskData,

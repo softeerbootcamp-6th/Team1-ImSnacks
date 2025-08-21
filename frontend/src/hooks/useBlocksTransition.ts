@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import type { BlockType } from '@/dndTimeline/types/blockType.type';
+import type { BlockType } from '@/types/blockType.type';
 
 export const useBlocksTransition = <T extends BlockType>(
   updateWorkBlocks: (blocks: T[]) => void

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimePx';
-import type { Position } from '@/dndTimeline/types/position.type';
+import type { Position } from '@/types/position.type';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 
 const updateWorkTimeByPos = (
