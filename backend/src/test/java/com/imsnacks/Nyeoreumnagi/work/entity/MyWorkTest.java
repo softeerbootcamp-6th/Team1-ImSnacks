@@ -3,7 +3,9 @@ package com.imsnacks.Nyeoreumnagi.work.entity;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.UUID;
 
@@ -74,7 +76,22 @@ class MyWorkTest {
         assertThat(myWorkDone).isFalse();
     }
 
-    private MyWork createMyWork(){
+    @Test
+    void 농작업_시간대를_형식에_맞게_반환한다() {
+        int startHour = 12;
+        int startMin = 30;
+        int endHour = 23;
+        int endMin = 0;
+        MyWork myWork = createMyWork(LocalDateTime.of(LocalDate.now(), LocalTime.of(startHour, startMin)),
+                LocalDateTime.of(LocalDate.now(), LocalTime.of(endHour, endMin))
+        );
+
+        String workTimeZone = myWork.getWorkHours();
+
+        assertThat(workTimeZone).isEqualTo(startHour + ":" + startMin + " - " + endHour + ":" + endMin + endMin);
+    }
+
+    private MyWork createMyWork() {
         Member member = createMember();
         RecommendedWork recommendedWork = createRecommendedWork();
         LocalDateTime startTime = LocalDateTime.of(2025, Month.AUGUST, 8, 23, 10, 0);
@@ -83,4 +100,13 @@ class MyWorkTest {
 
         return MyWork.createMyWork(member, recommendedWork, startTime, endTime, cropName);
     }
+
+    private MyWork createMyWork(LocalDateTime startTime, LocalDateTime endTime) {
+        Member member = createMember();
+        RecommendedWork recommendedWork = createRecommendedWork();
+        String cropName = "포도";
+
+        return MyWork.createMyWork(member, recommendedWork, startTime, endTime, cropName);
+    }
 }
+

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,11 +27,8 @@ public class Farm {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private Double latitude;
-
-    @Column(nullable = false)
-    private Double longitude;
+    @Column(columnDefinition = "POINT SRID 4326")
+    private Point location;
 
     @Column(nullable = false)
     private Integer nx;
@@ -42,4 +40,16 @@ public class Farm {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Member member;
+
+    public String engraftAddress(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(state);
+        builder.append(" ");
+        builder.append(city);
+        builder.append(" ");
+        builder.append(town);
+        builder.append(" ");
+        builder.append(address);
+        return builder.toString();
+    }
 }

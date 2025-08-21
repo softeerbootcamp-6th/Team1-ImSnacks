@@ -5,16 +5,35 @@ import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetAirQualityResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetDailyMaxPrecipitationResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetFcstRiskResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetHumidityResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetSevenDaysForecastResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetSunRiseSetTimeResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetTemperatureResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetUVInfoResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefingResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherConditionResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherStatusResponse;
+import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWindInfoResponse;
+import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.SevenDayWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.SevenDayWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.AirQualityInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.PrecipitationInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +41,28 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric.HUMIDITY;
+import static com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric.PRECIPITATION;
+import static com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric.TEMPERATURE;
+import static com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric.WIND_SPEED;
 import static com.imsnacks.Nyeoreumnagi.common.enums.WindDirection.getDirectionStringFromDegree;
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.NO_FARM_INFO;
-import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.*;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.INVALID_SEVEN_DAY_FORECAST_COUNT;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.INVALID_WEATHER_METRIC;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_AIR_QUALITY_INFO;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_HUMIDITY_INFO;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_PRECIPITATION;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_SUNRISE_SET;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_TEMPERATURE_INFO;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_UV_INFO;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_WEATHER_LOCATION;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_WEATHER_VALUE;
+import static com.imsnacks.Nyeoreumnagi.weather.exception.WeatherResponseStatus.NO_WIND_INFO;
 
 @Slf4j
 @Service
@@ -40,10 +73,12 @@ public class WeatherService {
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     private final WeatherRiskRepository weatherRiskRepository;
     private final DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    private final DashboardWeatherForecastRepository dashboardWeatherForecastRepository;
     private final SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository;
+    private final Briefing briefing;
 
     public GetWeatherGraphResponse getWeatherGraph(Long memberId, WeatherMetric weatherMetric) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         int nx = farm.getNx();
@@ -61,11 +96,14 @@ public class WeatherService {
         int maxLimit = getUpperLimit(maxValue);
         int minLimit = getLowerLimit(minValue, weatherMetric);
 
-        return new GetWeatherGraphResponse(maxLimit, minLimit, weatherMetric, valuePerTimes);
+        LocalDateTime lastUpdatedTime = weatherInfos.get(0).getUpdateAt();
+        boolean isUpdated = weatherInfos.get(0).isUpdated();
+
+        return new GetWeatherGraphResponse(maxLimit, minLimit, weatherMetric, isUpdated, lastUpdatedTime, valuePerTimes);
     }
 
     public GetFcstRiskResponse getWeatherRisk(Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         int nx = farm.getNx();
@@ -78,11 +116,13 @@ public class WeatherService {
     }
 
     public GetWeatherConditionResponse getWeatherCondition(Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         int nx = farm.getNx();
         int ny = farm.getNy();
+        if (farm.getMember() == null) throw new MemberException(NO_FARM_INFO);
+        String memberName = farm.getMember().getNickname();
 
         int nowTime = LocalDateTime.now().getHour();
         ShortTermWeatherForecast weatherInfoNearest = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
@@ -95,36 +135,36 @@ public class WeatherService {
         WeatherCondition weatherCondition = weatherInfoNearest.getWeatherCondition(sunriseSunSetTime);
         int temperature = weatherInfoNearest.getTemperature();
 
-        return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature);
+        return new GetWeatherConditionResponse(weatherCondition.toString(), weatherCondition.getKeyword(), temperature, memberName);
     }
 
     public GetWeatherBriefingResponse getWeatherBriefing(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
+        final LocalDateTime now = LocalDateTime.now();
+
         final List<WeatherRisk> allRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
         if (allRisks.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
-            return new GetWeatherBriefingResponse(false, "");
+            return new GetWeatherBriefingResponse(false, briefing.buildNoRiskWelcomeMsg(now.getHour()), briefing.buildNoRiskWeatherMsg(memberId, now.getHour()));
         }
 
-        final LocalDateTime now = LocalDateTime.now(ZoneId.of(Briefing.KST));
         final List<WeatherRisk> filteredRisk = allRisks.stream()
                 .filter(r -> r.getEndTime().isAfter(now))
                 .sorted(Briefing.RISK_COMPARATOR) // 우선 순위가 가장 앞서는 것이 맨 앞에 오도록 정렬한다.
                 .toList();
         if (filteredRisk.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
-            return new GetWeatherBriefingResponse(false, "");
+            return new GetWeatherBriefingResponse(false, briefing.buildNoRiskWelcomeMsg(now.getHour()), briefing.buildNoRiskWeatherMsg(memberId, now.getHour()));
         }
-        final String msg = Briefing.buildMsg(filteredRisk.get(0));
 
-        return new GetWeatherBriefingResponse(true, msg);
+        return new GetWeatherBriefingResponse(true, briefing.buildWelcomeMsg(now.getHour()), briefing.buildWeatherMsg(filteredRisk.get(0)));
     }
 
     public GetSunRiseSetTimeResponse getSunRiseSetTime(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
@@ -141,7 +181,7 @@ public class WeatherService {
     }
 
     public GetUVInfoResponse getUVInfo(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
@@ -174,13 +214,13 @@ public class WeatherService {
     }
 
     public GetWindInfoResponse getWindInfo(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        WindInfo windInfo = dashboardTodayWeatherRepository.findWindByNxAndNy(nx, ny).orElseThrow(()-> new WeatherException(NO_WIND_INFO));
+        WindInfo windInfo = dashboardTodayWeatherRepository.findWindByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_WIND_INFO));
         validateWindInfo(windInfo);
 
         Integer windSpeed = windInfo.getMaxWindSpeed();
@@ -191,7 +231,7 @@ public class WeatherService {
     }
 
     public GetHumidityResponse getHumidity(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
@@ -204,32 +244,113 @@ public class WeatherService {
     }
 
     public GetDailyMaxPrecipitationResponse getDailyMaxPrecipitation(final Long memberId) {
-        assert(memberId != null);
+        assert (memberId != null);
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
 
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        PrecipitationInfo precipitationInfo = dashboardTodayWeatherRepository.findPrecipitationByNxAndNy(nx,ny).orElseThrow(()-> new WeatherException(NO_PRECIPITATION));
+        PrecipitationInfo precipitationInfo = dashboardTodayWeatherRepository.findPrecipitationByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_PRECIPITATION));
         validatePrecipitationInfo(precipitationInfo);
 
         return new GetDailyMaxPrecipitationResponse(precipitationInfo.getMaxPrecipitation());
     }
 
+    public GetAirQualityResponse getAirQuality(final Long memberId) {
+        assert (memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        AirQualityInfo airQualityInfo = dashboardTodayWeatherRepository.findAirQualityByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_PRECIPITATION));
+        validateAirQualityInfo(airQualityInfo);
+
+        return new GetAirQualityResponse(airQualityInfo.getPm10Value(), airQualityInfo.getPm10Grade(), airQualityInfo.getPm25Value(), airQualityInfo.getPm25Grade());
+    }
+
+
+    public GetTemperatureResponse getTemperature(final Long memberId) {
+        assert (memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        List<Integer> valid3HourIntervals = List.of(2, 5, 8, 11, 14, 17, 20, 23);
+        List<DashboardWeatherForecast> weathers =
+                dashboardWeatherForecastRepository.findByNxAndNyAndFcstTimeInOrderByFcstTime(nx, ny, valid3HourIntervals);
+
+        validateWeatherInfos(weathers);
+
+        Integer maxTemperature = weathers.stream()
+                .map(DashboardWeatherForecast::getTemperature)
+                .max(Comparator.comparingInt(Integer::intValue))
+                .orElseThrow(() -> new WeatherException(NO_TEMPERATURE_INFO));
+        Integer minTemperature = weathers.stream()
+                .map(DashboardWeatherForecast::getTemperature)
+                .min(Comparator.comparingInt(Integer::intValue))
+                .orElseThrow(() -> new WeatherException(NO_TEMPERATURE_INFO));
+
+        List<GetTemperatureResponse.TemperaturePerTime> temperaturePerTimes = weathers.stream()
+                .map(GetTemperatureResponse.TemperaturePerTime::from)
+                .toList();
+
+        return new GetTemperatureResponse(maxTemperature, minTemperature, temperaturePerTimes);
+    }
+
+    public List<GetWeatherStatusResponse> getWeatherStatus(final Long memberId) {
+        assert (memberId != null);
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
+
+        final int nx = farm.getNx();
+        final int ny = farm.getNy();
+
+        ShortTermWeatherForecast weatherInfo = shortTermWeatherForecastRepository.findTopByNxAndNyAndFcstTimeLessThanEqualOrderByFcstTimeDesc(nx, ny, LocalDateTime.now().getHour())
+                .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
+
+        List<GetWeatherStatusResponse> weatherStatus = new ArrayList<>();
+        weatherStatus.add(new GetWeatherStatusResponse(PRECIPITATION.getMetricName(), (int) weatherInfo.getPrecipitation(), PRECIPITATION.toString()));
+        weatherStatus.add(new GetWeatherStatusResponse(TEMPERATURE.getMetricName(), weatherInfo.getTemperature(), TEMPERATURE.toString()));
+        weatherStatus.add(new GetWeatherStatusResponse(HUMIDITY.getMetricName(), weatherInfo.getHumidity(), HUMIDITY.toString()));
+        weatherStatus.add(new GetWeatherStatusResponse(WIND_SPEED.getMetricName(), (int) weatherInfo.getWindSpeed(), WIND_SPEED.toString()));
+
+        return weatherStatus;
+    }
+
+    private void validateWeatherInfos(List<DashboardWeatherForecast> weathers) {
+        if (weathers.size() != 8) {
+            throw new WeatherException(NO_TEMPERATURE_INFO);
+        }
+        for (DashboardWeatherForecast dashboardWeatherForecast : weathers) {
+            if (dashboardWeatherForecast.getTemperature() == null) {
+                throw new WeatherException(NO_TEMPERATURE_INFO);
+            }
+        }
+    }
+
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
-        if(precipitationInfo.getMaxPrecipitation() == null){
+        if (precipitationInfo.getMaxPrecipitation() == null) {
             throw new WeatherException(NO_PRECIPITATION);
         }
     }
 
+    private void validateAirQualityInfo(AirQualityInfo airQualityInfo) {
+        if (airQualityInfo.getPm10Grade() == null || airQualityInfo.getPm10Grade() == null
+                || airQualityInfo.getPm10Grade() == null || airQualityInfo.getPm10Grade() == null
+        ) {
+            throw new WeatherException(NO_AIR_QUALITY_INFO);
+        }
+    }
+
     private void validateHumidityInfo(HumidityInfo humidityInfo) {
-        if(humidityInfo.getMaxHumidity() == null){
+        if (humidityInfo.getMaxHumidity() == null) {
             throw new WeatherException(NO_HUMIDITY_INFO);
         }
     }
 
     private void validateWindInfo(WindInfo windInfo) {
-        if(windInfo.getWindDirection() == null || windInfo.getMaxWindSpeed() == null) {
+        if (windInfo.getWindDirection() == null || windInfo.getMaxWindSpeed() == null) {
             throw new WeatherException(NO_WIND_INFO);
         }
     }
@@ -276,7 +397,7 @@ public class WeatherService {
 
     private double getValue(ShortTermWeatherForecast forecast, WeatherMetric metric) {
         switch (metric) {
-            case PERCIPITATION:
+            case PRECIPITATION:
                 return forecast.getPrecipitation();
             case TEMPERATURE:
                 return forecast.getTemperature();

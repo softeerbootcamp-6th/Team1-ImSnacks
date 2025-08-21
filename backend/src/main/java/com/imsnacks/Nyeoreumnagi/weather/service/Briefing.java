@@ -1,13 +1,24 @@
 package com.imsnacks.Nyeoreumnagi.weather.service;
 
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
+import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
+import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 
+@RequiredArgsConstructor
+@Component
 public final class Briefing {
+    private final MyCropRepository myCropRepo;
+
     public static final int AM = 0;
     public static final String AM_KOR = "오전";
     public static final String PM_KOR = "오후";
@@ -18,8 +29,39 @@ public final class Briefing {
     public static final String KST = "Asia/Seoul";
     public static final Comparator<WeatherRisk> RISK_COMPARATOR = new RiskComparator();
 
-    public static String buildMsg(final WeatherRisk risk) {
-        assert(risk != null);
+    public static final String WORK_HOUR_NO_RISK_WEATHER_MSG_ONE = "오늘은 농사짓기 딱 좋은 날씨에요.";
+    public static final String WORK_HOUR_NO_RISK_WEATHER_MSG_TWO = "하늘도 도와주는 하루예요. 작업하기 좋겠어요.";
+    public static final String WORK_HOUR_NO_RISK_WEATHER_MSG_THREE = "오늘 같은 날은 %s도 기분 좋을 거예요.";
+
+    public static final String OFF_HOUR_NO_RISK_WEATHER_MSG_ONE = "오늘도 고생 많으셨어요. 푹 쉬시고 내일 다시 힘내요.";
+    public static final String OFF_HOUR_NO_RISK_WEATHER_MSG_TWO = "내일의 계획을 세우고, 편안하게 쉬어보세요.";
+    public static final String OFF_HOUR_NO_RISK_WEATHER_MSG_THREE = "이제 잘 쉬어야 할 시간이에요. 좋은 밤 보내세요.";
+
+    public static final String GOOD_MORNING = "작업 시 기상 상황에 유의하세요.";
+    public static final String GOOD_AFTERNOON = "기상 상황을 수시로 확인하세요.";
+    public static final String GOOD_EVENING = "기상 리스크가 예보되어 있어요.";
+    public static final String GOOD_NIGHT = "작업 전에 기상 상황을 미리 확인하세요.";
+
+    public static final String GOOD_MORNING_NO_RISK = "오늘도 힘찬 하루 보내세요.";
+    public static final String GOOD_AFTERNOON_NO_RISK = "점심은 맛있게 드셨나요?";
+    public static final String GOOD_EVENING_NO_RISK = "오늘 하루도 수고 많으셨어요.";
+    public static final String GOOD_NIGHT_NO_RISK = "편안한 시간 보내고 계신가요?";
+
+    public static String buildWelcomeMsg(int hour) {
+        if (hour < 6) return GOOD_NIGHT;
+        else if (hour < 12) return GOOD_MORNING;
+        else if (hour < 18) return GOOD_AFTERNOON;
+        else return GOOD_EVENING;
+    }
+
+    public static String buildNoRiskWelcomeMsg(int hour) {
+        if (hour < 6) return GOOD_NIGHT_NO_RISK;
+        else if (hour < 12) return GOOD_MORNING_NO_RISK;
+        else if (hour < 18) return GOOD_AFTERNOON_NO_RISK;
+        else return GOOD_EVENING_NO_RISK;
+    }
+
+    public static String buildWeatherMsg(final WeatherRisk risk) {
         final String from = getClockHourAsString(risk.getStartTime()); // <오전/오후> <1-12>시
         final String to = getClockHourAsString(risk.getEndTime());
 
@@ -30,6 +72,46 @@ public final class Briefing {
 
         return sb.toString();
     }
+
+    public String buildNoRiskWeatherMsg(long memberId, int hour) {
+        List<String> messages = new ArrayList<>();
+        if (hour >= 6 && hour < 18) {
+            messages.add(WORK_HOUR_NO_RISK_WEATHER_MSG_ONE);
+            messages.add(WORK_HOUR_NO_RISK_WEATHER_MSG_TWO);
+            List<MyCrop> myCrops = getMyCropListOrNull(memberId);
+            if (myCrops != null) {
+                String cropName = selectMyCropRandom(myCrops);
+                messages.add(String.format(WORK_HOUR_NO_RISK_WEATHER_MSG_THREE, cropName));
+            }
+        } else {
+            messages.add(OFF_HOUR_NO_RISK_WEATHER_MSG_ONE);
+            messages.add(OFF_HOUR_NO_RISK_WEATHER_MSG_TWO);
+            messages.add(OFF_HOUR_NO_RISK_WEATHER_MSG_THREE);
+        }
+        return selectMessageRandom(messages);
+    }
+
+    private List<MyCrop> getMyCropListOrNull(long memberId) {
+        List<MyCrop> myCrops = myCropRepo.findAllByMember_Id(memberId);
+        if (myCrops.isEmpty()) {
+            return null;
+        }
+        return myCrops;
+    }
+
+    private String selectMyCropRandom(List<MyCrop> myCrops) {
+        Random random = new Random();
+        int idx = random.nextInt(myCrops.size());
+        MyCrop myCrop = myCrops.get(idx);
+        return myCrop.getCrop().getName();
+    }
+
+    private String selectMessageRandom(List<String> messages) {
+        Random random = new Random();
+        int idx = random.nextInt(messages.size());
+        return messages.get(idx);
+    }
+
 
     private static String getClockHourAsString(final LocalDateTime time) {
         final StringBuilder sb = new StringBuilder();
@@ -60,7 +142,7 @@ public final class Briefing {
             if (t1 != t2) {
                 return (t1 > t2) ? -1 : 1;
             }
-           //  3. 기간이 더 긴 것을 우선한다.
+            //  3. 기간이 더 긴 것을 우선한다.
             final long duration1 = Math.abs(ChronoUnit.MINUTES.between(r1.getStartTime(), r1.getEndTime()));
             final long duration2 = Math.abs(ChronoUnit.MINUTES.between(r2.getStartTime(), r2.getEndTime()));
             if (duration1 == duration2) {

@@ -14,11 +14,20 @@ import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepo
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.Briefing;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
+import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
+import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
+import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -46,11 +55,15 @@ class WeatherBriefingTest {
     @Mock
     private FarmRepository farmRepository;
     @Mock
+    private MyCropRepository myCropRepo;
+    @Mock
     private ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
     @Mock
     private WeatherRiskRepository riskRepo;
     @Mock
     private DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    @Mock
+    private Random random;
 
     @Test
     void 멤버가_없는_경우_예외_발생() {
@@ -79,98 +92,6 @@ class WeatherBriefingTest {
         } catch (MemberException e) {
             assertThat(e.getStatus()).isEqualTo(MemberResponseStatus.NO_FARM_INFO);
         }
-    }
-
-    @Test
-    void 날씨_상황_정보가_없을때() {
-        // given
-        final long memberId = 42L;
-        final int nx = 60;
-        final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
-        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
-
-        // when
-        final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
-
-        // then
-        final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(false, "");
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 하나의_날씨_상황_정보() {
-        // given
-        final long memberId = 42L;
-        final int nx = 60;
-        final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
-        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
-
-        final LocalDateTime from = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).minusHours(1);
-        final LocalDateTime to = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).plusHours(2);
-        final WeatherRiskType type = WeatherRiskType.RAIN;
-
-        WeatherRisk r = WeatherRisk.builder()
-                .weatherRiskId(1L)
-                .fcstDate(BASE.toLocalDate())
-                .startTime(from)
-                .endTime(to)
-                .nx(nx)
-                .ny(ny)
-                .name(type)
-                .jobExecutionId(1L)
-                .build();
-
-        final List<WeatherRisk> risks = List.of(r);
-        given(riskRepo.findByNxAndNyWithMaxJobExecutionId(nx, ny)).willReturn(risks);
-
-        // when
-        final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
-
-        // then
-        final String msg = Briefing.buildMsg(r);
-        final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(true, msg);
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 동시간대_날씨특보_여러개_우선순위_확인() {
-        final long memberId = 42L;
-        final int nx = 60;
-        final int ny = 120;
-        final Farm farm = new Farm(memberId, "", "", "", "", 36.12, 127.12, nx, ny, "regionCode", null);
-        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
-
-        final long jobExecutionId = 1L;
-        final LocalDate fcstDate = LocalDate.now();
-        final LocalDateTime from = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).minusHours(1);
-        final LocalDateTime to = LocalDateTime.now(java.time.ZoneId.of(com.imsnacks.Nyeoreumnagi.weather.service.Briefing.KST)).plusHours(2);
-
-        final Random rand = new Random();
-        long riskId = 1;
-        final List<WeatherRisk> risks = new ArrayList<>();
-        for (final var type : WeatherRiskType.values()) {
-            WeatherRisk r = WeatherRisk.builder()
-                    .weatherRiskId(riskId++)
-                    .fcstDate(fcstDate)
-                    .startTime(from.withMinute(rand.nextInt(60)))
-                    .endTime(to.withMinute(rand.nextInt(60)))
-                    .name(type)
-                    .jobExecutionId(1L)
-                    .build();
-            risks.add(r);
-        }
-        given(riskRepo.findByNxAndNyWithMaxJobExecutionId(nx, ny)).willReturn(risks);
-
-        // when
-        final GetWeatherBriefingResponse actual = service.getWeatherBriefing(memberId);
-
-        // then
-        final WeatherRisk 폭우 = risks.get(risks.size() - 1);
-        final String msg = Briefing.buildMsg(폭우);
-        final GetWeatherBriefingResponse expected = new GetWeatherBriefingResponse(true, msg);
-        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

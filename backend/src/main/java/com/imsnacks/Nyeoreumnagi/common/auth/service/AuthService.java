@@ -8,11 +8,15 @@ import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,6 +35,17 @@ public class AuthService {
         AuthTokens token = jwtProvider.createToken(member.getId());
         member.setRefreshToken(token.getRefreshToken());
 
-        return new LoginResponse(member.getNickname(), token.getAccessToken(), token.getRefreshToken());
+        return new LoginResponse(token.getRefreshToken(), new LoginResponse.LoginAccessTokenResponse(member.getNickname(), token.getAccessToken()));
+    }
+
+    @Transactional
+    public LoginResponse refreshToken(UUID refreshToken){
+        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        AuthTokens token = jwtProvider.createToken(member.getId());
+        member.setRefreshToken(token.getRefreshToken());
+        log.info("token : {}", member.getRefreshToken());
+
+        return new LoginResponse(member.getRefreshToken(), new LoginResponse.LoginAccessTokenResponse(member.getNickname(), token.getAccessToken()));
     }
 }

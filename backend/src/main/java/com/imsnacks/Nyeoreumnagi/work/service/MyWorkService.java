@@ -1,22 +1,28 @@
 package com.imsnacks.Nyeoreumnagi.work.service;
 
+import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
+import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.DeleteMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.ModifyMyWorkRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.request.RegisterMyWorkRequest;
+import com.imsnacks.Nyeoreumnagi.work.dto.request.UpdateMyWorkStatusRequest;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfTodayResponse;
+import com.imsnacks.Nyeoreumnagi.work.dto.response.GetMyWorksOfWeeklyResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.ModifyMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RegisterMyWorkResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
+import com.imsnacks.Nyeoreumnagi.work.event.MyWorkCompletedEvent;
 import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyWorkRepository;
 import com.imsnacks.Nyeoreumnagi.work.repository.RecommendedWorkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +30,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,6 +51,9 @@ public class MyWorkService {
     private final RecommendedWorkRepository recommendedWorkRepository;
     private final MyCropRepository myCropRepository;
     private final MemberRepository memberRepository;
+
+    private final ApplicationEventPublisher publisher;
+    private final FarmRepository farmRepository;
 
     @Transactional
     public RegisterMyWorkResponse registerMyWork(RegisterMyWorkRequest request, Long memberId) {
@@ -101,14 +113,14 @@ public class MyWorkService {
                         myWork.getId(),
                         myWork.getCropName(),
                         myWork.getRecommendedWorkName(),
-                        myWork.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + myWork.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                        myWork.getWorkHours(),
                         myWork.getStartTime().toString(),
                         myWork.getEndTime().toString(),
                         myWork.getWorkStatus()
                 )
         );
 
-        if(isMobile){
+        if (isMobile) {
             return responseStream.sorted(Comparator
                             .comparing(GetMyWorksOfTodayResponse::status, (s1, s2) -> {
                                 if (s1.equals(INCOMPLETED) && s2.equals(COMPLETED)) {
@@ -126,5 +138,60 @@ public class MyWorkService {
 
         return responseStream.sorted(Comparator.comparing(GetMyWorksOfTodayResponse::startTime))
                 .collect(Collectors.toList());
+    }
+
+    public List<GetMyWorksOfWeeklyResponse> getMyWorksOfWeekly(String startDateString, Long memberId) {
+        LocalDate startDate;
+        try {
+            startDate = LocalDate.parse(startDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        } catch (DateTimeParseException e) {
+            throw new WorkException(INVALID_START_TIME_FORMAT);
+        }
+        if (startDate.isAfter(LocalDate.now())) {
+            throw new WorkException(START_TIME_IS_FUTURE);
+        }
+        List<GetMyWorksOfWeeklyResponse> responseList = new ArrayList<>();
+
+        TreeMap<LocalDate, List<MyWork>> workDataMap = myWorkRepository.findByMember_IdAndStartTimeBetween(memberId, startDate.atStartOfDay(), startDate.plusDays(7).atStartOfDay())
+                .stream().collect(Collectors.groupingBy(work -> work.getStartTime().toLocalDate(),
+                        TreeMap::new,
+                        Collectors.toList()
+                ));
+
+        workDataMap.forEach((key, value) -> responseList.add(
+                new GetMyWorksOfWeeklyResponse(
+                        key,
+                        value.stream().map(w -> new GetMyWorksOfWeeklyResponse.WorkCardData(
+                                w.getId(),
+                                w.getCropName(),
+                                w.getRecommendedWorkName(),
+                                w.getWorkHours(),
+                                w.getWorkStatus()
+                        )).toList()
+                )
+        ));
+
+        return responseList;
+    }
+
+    @Transactional
+    public void updateMyWorkStatus(UpdateMyWorkStatusRequest request, long memberId){
+        Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
+        MyWork myWork = myWorkRepository.findById(request.myWorkId()).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
+
+        if(!myWork.getMember().getId().equals(memberId)){
+            throw new WorkException(MY_WORK_NOT_FOUND);
+        }
+
+        if (request.status().equals(COMPLETED)) {
+            publisher.publishEvent(new MyWorkCompletedEvent(myWork.getMember().getId(),
+                    myWork.getRecommendedWork().getId(),
+                    farm.getLocation().getY(),
+                    farm.getLocation().getX(),
+                    LocalDate.now()));
+
+        }
+        myWork.setWorkStatus(request.status());
     }
 }

@@ -1,5 +1,6 @@
-package com.ImSnacks.NyeoreumnagiBatch.writer.entity;
+package com.ImSnacks.NyeoreumnagiBatch.common.entity;
 
+import com.ImSnacks.NyeoreumnagiBatch.common.enums.WeatherCondition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

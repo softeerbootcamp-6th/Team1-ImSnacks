@@ -54,8 +54,8 @@ public class WeatherRiskIntervalMerger {
         if(end.isBefore(now)) return;
         if(start.isBefore(now)) start = now;
 
-        String s = String.valueOf(start.getHour());
-        String e = String.valueOf(end.getHour());
+        String s = String.format("%02d", start.getHour());
+        String e = String.format("%02d", end.getHour());
         if (!merged.isEmpty()) {
             GetFcstRiskResponse.WeatherRiskDto last = merged.get(merged.size() - 1);
             if (last.category().equals(riskType) && last.endTime().equals(s)) {

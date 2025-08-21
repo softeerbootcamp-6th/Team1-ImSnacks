@@ -17,6 +17,7 @@ import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,19 +43,20 @@ public class RecommendedWorkService {
     private final LifeCycleResolver lifeCycleResolver;
     private final WorkScheduleCalculator workScheduleCalculator;
 
+    private final NearbyAggregationService nearbyService;
 
     public RecommendWorksResponse recommendWorks(Long myCropId, Long memberId) {
         LocalDateTime now = LocalDateTime.now(ZONE);
 
         List<MyCrop> myCropList = new ArrayList<>();
         if (myCropId == null) {
-            myCropList = myCropRepository.findAllByOrderByCrop_Id();
+            myCropList = myCropRepository.findAllByMember_IdOrderById(memberId);
             myCropId = myCropList.get(0).getId();
         }
         MyCrop myCrop = myCropRepository.findById(myCropId).orElseThrow(() -> new CropException(MY_CROP_NOT_FOUND));
         List<LifeCycle> lifeCyclesOrderByStep = lifeCycleRepository.findAllByCrop_IdOrderByStep(myCrop.getCrop().getId());
 
-        long nowLifeCycleId = lifeCycleResolver.calculateLifeCycle(myCrop, lifeCyclesOrderByStep, now);
+        long nowLifeCycleId = lifeCycleResolver.calculateLifeCycle(myCrop, lifeCyclesOrderByStep, now).getId();
 
 
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(NO_FARM_INFO));
@@ -64,10 +66,28 @@ public class RecommendedWorkService {
 
         lifeCycleAndRecommendedWorkRepository.findAllByLifeCycle_Id(nowLifeCycleId)
                 .stream().map(LifeCycleAndRecommendedWork::getRecommendedWork)
-                .forEach(recommendedWork -> recommendedWorksResponse.addAll(workScheduleCalculator.windowsForWork(recommendedWork, forecasts, now)));
+                .forEach(recommendedWork -> {
+                    int neighborCount = (int) getNeighborCountForWork(memberId, recommendedWork.getId());
+                    recommendedWorksResponse.addAll(workScheduleCalculator.windowsForWork(recommendedWork, forecasts, neighborCount, now));
+                });
 
         List<RecommendWorksResponse.MyCropResponse> myCropResponses = myCropList.stream().map(my -> new RecommendWorksResponse.MyCropResponse(my.getId(), my.getCrop().getName())).toList();
         return new RecommendWorksResponse(recommendedWorksResponse, myCropResponses);
+    }
+
+    private long getNeighborCountForWork(long currentMemberId, long workId) {
+        // 내 기준점: 내 농장 위치
+        Point loc = farmRepository.findByMember_Id(currentMemberId)
+                .orElseThrow()
+                .getLocation(); // x=lon, y=lat
+
+        double centerLat = loc.getY();
+        double centerLon = loc.getX();
+
+        // k-익명 3 적용 예시
+        return nearbyService.countNeighborsWithin5kmUsingFact(
+                workId, currentMemberId, centerLat, centerLon, true, 3
+        );
     }
 
 }

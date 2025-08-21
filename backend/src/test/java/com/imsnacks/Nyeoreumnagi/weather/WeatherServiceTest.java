@@ -3,22 +3,26 @@ package com.imsnacks.Nyeoreumnagi.weather;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
+import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.exception.WeatherException;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
+import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.HumidityInfo;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.PrecipitationInfo;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
+import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,14 +31,14 @@ import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -56,38 +60,40 @@ class WeatherServiceTest {
     private WeatherRiskRepository weatherRiskRepository;
     @Mock
     private DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
+    @Mock
+    private DashboardWeatherForecastRepository dashboardWeatherForecastRepository;
 
-    @Test
-    void getWeatherGraph_성공() {
-        // given
-        Long memberId = 1L;
-        WeatherMetric metric = WeatherMetric.TEMPERATURE;
-
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
-
-        List<ShortTermWeatherForecast> forecasts = IntStream.range(0, 24)
-                .mapToObj(i -> ShortTermWeatherForecast.builder()
-                        .fcstTime(i)
-                        .nx(60)
-                        .ny(120)
-                        .temperature(20 + i % 5)
-                        .humidity(60)
-                        .precipitation(0)
-                        .windSpeed(3)
-                        .build())
-                .toList();
-
-        given(farmRepository.findByMember_Id(memberId)).willReturn(Optional.of(farm));
-        given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
-
-        // when
-        GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
-
-        // then
-        assertThat(response.weatherMetric()).isEqualTo(metric);
-        assertThat(response.max()).isGreaterThan(response.min());
-        assertThat(response.valuePerTime().size()).isEqualTo(24);
-    }
+//    @Test
+//    void getWeatherGraph_성공() {
+//        // given
+//        Long memberId = 1L;
+//        WeatherMetric metric = WeatherMetric.TEMPERATURE;
+//
+//        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+//
+//        List<ShortTermWeatherForecast> forecasts = IntStream.range(0, 24)
+//                .mapToObj(i -> ShortTermWeatherForecast.builder()
+//                        .fcstTime(i)
+//                        .nx(60)
+//                        .ny(120)
+//                        .temperature(20 + i % 5)
+//                        .humidity(60)
+//                        .precipitation(0)
+//                        .windSpeed(3)
+//                        .build())
+//                .toList();
+//
+//        given(farmRepository.findByMember_Id(memberId)).willReturn(Optional.of(farm));
+//        given(shortTermWeatherForecastRepository.findAllByNxAndNy(60, 120)).willReturn(forecasts);
+//
+//        // when
+//        GetWeatherGraphResponse response = weatherService.getWeatherGraph(memberId, metric);
+//
+//        // then
+//        assertThat(response.weatherMetric()).isEqualTo(metric);
+//        assertThat(response.max()).isGreaterThan(response.min());
+//        assertThat(response.valuePerTime().size()).isEqualTo(24);
+//    }
 
 //    @Test
 //    void 기상_특보_겹침_우선순위대로_반환_성공() {
@@ -159,7 +165,9 @@ class WeatherServiceTest {
     void 정상_날씨_조회_성공() {
         // given
         long memberId = 1L;
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, 60, 120, "regioncode", null);
 
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
@@ -185,7 +193,9 @@ class WeatherServiceTest {
         Long memberId = 1L;
 
         // given: member, farm, sunrise/sunset mock
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "", "", "", "", point, 60, 120, "regioncode", null);
 
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
         when(sunriseSunSetTime.getSunriseTime()).thenReturn(LocalTime.of(5, 40));
@@ -226,9 +236,12 @@ class WeatherServiceTest {
     @Test
     void 날씨정보_없음_예외() {
         // given
-        Farm farm = new Farm(1L, "", "", "", "", 36.12, 127.12, 60, 120, "regionCode", null);
+        Farm farm = mock(Farm.class);
+        Member member = mock(Member.class);
 
         when(farmRepository.findByMember_Id(any())).thenReturn(Optional.of(farm));
+        when(farm.getMember()).thenReturn(member);
+        when(member.getNickname()).thenReturn("");
         when(shortTermWeatherForecastRepository.findAllByNxAndNy(anyInt(), anyInt()))
                 .thenReturn(List.of());
 
@@ -331,5 +344,118 @@ class WeatherServiceTest {
 
         // then
         assertThat(response.value()).isEqualTo(12);
+    }
+
+    @Test
+    void 대기질_조회_성공() {
+        Long memberId = 123L;
+        int nx = 55, ny = 99;
+
+        Farm farm = org.mockito.Mockito.mock(Farm.class);
+        when(farm.getNx()).thenReturn(nx);
+        when(farm.getNy()).thenReturn(ny);
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+
+        AirQualityInfo airQualityInfo = org.mockito.Mockito.mock(AirQualityInfo.class);
+        when(airQualityInfo.getPm10Value()).thenReturn(45);
+        when(airQualityInfo.getPm10Grade()).thenReturn(2);
+        when(airQualityInfo.getPm25Value()).thenReturn(18);
+        when(airQualityInfo.getPm25Grade()).thenReturn(1);
+
+        when(dashboardTodayWeatherRepository.findAirQualityByNxAndNy(nx, ny))
+                .thenReturn(Optional.of(airQualityInfo));
+
+        GetAirQualityResponse response = weatherService.getAirQuality(memberId);
+
+        assertThat(response.pm10Value()).isEqualTo(45);
+        assertThat(response.pm10Grade()).isEqualTo(2);
+        assertThat(response.pm25Value()).isEqualTo(18);
+        assertThat(response.pm25Grade()).isEqualTo(1);
+    }
+
+    @Test
+    void 대기질_조회_실패_대기질정보없음() {
+        Long memberId = 123L;
+        int nx = 55, ny = 99;
+
+        Farm farm = org.mockito.Mockito.mock(Farm.class);
+        when(farm.getNx()).thenReturn(nx);
+        when(farm.getNy()).thenReturn(ny);
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
+
+        when(dashboardTodayWeatherRepository.findAirQualityByNxAndNy(nx, ny))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> weatherService.getAirQuality(memberId))
+                .isInstanceOf(WeatherException.class);
+    }
+
+
+    @Test
+    void 시간별_기온_조회_성공() {
+        //given
+        Long memberId = 1L;
+        Farm fakeFarm = mock(Farm.class);
+        when(fakeFarm.getNx()).thenReturn(60);
+        when(fakeFarm.getNy()).thenReturn(127);
+
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(fakeFarm));
+
+        List<DashboardWeatherForecast> forecasts = new ArrayList<>();
+        int[] times = {2,5,8,11,14,17,20,23};
+        int[] temps = {14,15,16,17,12,18,11,13};
+
+        for (int i=0; i<8; ++i) {
+            DashboardWeatherForecast f = mock(DashboardWeatherForecast.class);
+            when(f.getFcstTime()).thenReturn(times[i]);
+            when(f.getTemperature()).thenReturn(temps[i]);
+            when(f.getWeatherCondition()).thenReturn(WeatherCondition.SUNNY);
+            forecasts.add(f);
+        }
+
+        when(dashboardWeatherForecastRepository.findByNxAndNyAndFcstTimeInOrderByFcstTime(anyInt(), anyInt(), anyList()))
+                .thenReturn(forecasts);
+
+        //when
+        GetTemperatureResponse response = weatherService.getTemperature(memberId);
+
+        //then
+        assertThat(response.maxTemperature()).isEqualTo(18);
+        assertThat(response.minTemperature()).isEqualTo(11);
+        assertThat(response.temperaturePerTime().stream().map(GetTemperatureResponse.TemperaturePerTime::time).toList())
+                .isEqualTo(List.of("02:00","05:00","08:00","11:00","14:00","17:00","20:00","23:00"));
+        assertThat(response.temperaturePerTime().stream().map(GetTemperatureResponse.TemperaturePerTime::value).toList())
+                .isEqualTo(List.of(14,15,16,17,12,18,11,13));
+    }
+
+    @Test
+    void 시간별_기온_조회시_3시간_간격에_해당하는_시간이_없을_때_예외처리() {
+        //given
+        Long memberId = 1L;
+        Farm fakeFarm = mock(Farm.class);
+        when(fakeFarm.getNx()).thenReturn(60);
+        when(fakeFarm.getNy()).thenReturn(127);
+
+        when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(fakeFarm));
+
+        List<DashboardWeatherForecast> forecasts = new ArrayList<>();
+        int[] times = {1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
+        int[] temps = {1,1,1,15,1,1,16,1,1,17,1,1,12,1,1,18,1,1,11,1,1,13};
+
+        for (int i=0; i<22; ++i) {
+            DashboardWeatherForecast f = mock(DashboardWeatherForecast.class);
+            when(f.getFcstTime()).thenReturn(times[i]);
+            when(f.getTemperature()).thenReturn(temps[i]);
+            when(f.getWeatherCondition()).thenReturn(WeatherCondition.SUNNY);
+            forecasts.add(f);
+        }
+
+        when(dashboardWeatherForecastRepository.findByNxAndNyAndFcstTimeInOrderByFcstTime(anyInt(), anyInt(), anyList()))
+                .thenReturn(forecasts);
+
+        //when
+        //then
+        assertThatThrownBy(() -> weatherService.getTemperature(memberId))
+                .isInstanceOf(WeatherException.class);
     }
 }

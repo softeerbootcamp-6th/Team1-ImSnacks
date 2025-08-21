@@ -1,6 +1,6 @@
 package com.imsnacks.Nyeoreumnagi.work.entity;
 
-import com.imsnacks.Nyeoreumnagi.pest.entity.PestRisk;
+import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

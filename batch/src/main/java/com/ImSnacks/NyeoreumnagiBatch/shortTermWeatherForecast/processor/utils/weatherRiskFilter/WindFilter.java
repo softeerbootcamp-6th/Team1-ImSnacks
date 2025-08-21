@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -20,7 +21,7 @@ public class WindFilter extends WeatherRiskFilter{
 
     @Override
     public List<ShortTermWeatherDto.WeatherRiskDto> filtering(Map<LocalDateTime, List<VilageFcstItemsDto>> metrics) {
-        Map<LocalDateTime, WeatherRiskType> riskPerTime = new HashMap<>();
+        Map<LocalDateTime, WeatherRiskType> riskPerTime = new LinkedHashMap<>();
         metrics.forEach((k, v) -> {
             VilageFcstItemsDto item = v.stream()
                     .filter(i -> i.getCategory().equals(metricCategory))
