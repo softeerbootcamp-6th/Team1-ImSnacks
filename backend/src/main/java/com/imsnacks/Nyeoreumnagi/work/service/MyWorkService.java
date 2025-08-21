@@ -180,7 +180,7 @@ public class MyWorkService {
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
         MyWork myWork = myWorkRepository.findByIdAndMember_Id(request.myWorkId(), memberId).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
         if (request.status().equals(COMPLETED)) {
-            publisher.publishEvent(new MyWorkCompletedEvent(myWork.getId(),
+            publisher.publishEvent(new MyWorkCompletedEvent(myWork.getMember().getId(),
                     myWork.getRecommendedWork().getId(),
                     farm.getLocation().getY(),
                     farm.getLocation().getX(),
