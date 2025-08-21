@@ -82,7 +82,7 @@ const BtnCreateWorkTooltip = css`
 
 const BtnCreateWorkTooltipCount = (theme: Theme) => css`
   ${Typography.Body_S_700}
-  background-color: ${theme.ColorPrimary.B400};
+  background-color: ${theme.ColorPrimary.B300};
   border-radius: ${BorderRadius.Base.Round};
   box-sizing: border-box;
   padding: 4px 8px;
