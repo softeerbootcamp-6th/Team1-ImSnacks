@@ -7,8 +7,6 @@ import { useChangeTimeByResize } from '@/pages/homePage/hooks/work/useChangeTime
 import { useResizeCollision } from '@/components/dnd/hooks/useResizeCollision';
 import { patchMyWorkTime } from '@/apis/myWork.api';
 import ToolTip from '@/components/toolTip/ToolTip';
-import { FlexStyles } from '@/styles/commonStyles';
-import WorkCardContentS from '../workCardRegisterContent/WorkCardRegisterContent.style';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -85,15 +83,11 @@ const WorkCardRegister = ({
             direction={'Top'}
             content={
               <div css={S.WorkCardToolTip}>
-                <div css={FlexStyles.flexRow}>
-                  <div css={WorkCardContentS.WorkCardTitle}>
-                    {block.workName}
-                  </div>
-                  <div css={WorkCardContentS.WorkCardCropName}>
-                    {block.cropName}
-                  </div>
+                <div css={S.WorkCardToolTipContent}>
+                  <div css={S.WorkCardToolTipTitle}>{block.workName}</div>
+                  <div css={S.WorkCardToolTipCropName}>{block.cropName}</div>
                 </div>
-                <div css={WorkCardContentS.WorkCardTime}>{block.workTime}</div>
+                <div css={S.WorkCardToolTipTime}>{block.workTime}</div>
               </div>
             }
             type={'Default'}
