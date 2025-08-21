@@ -8,7 +8,6 @@ const WorkActiveToolTip = ({
 }: {
   selectedRecommendedWork: RecommendedWorksResponse | null;
 }) => {
-const WorkActiveToolTip = () => {
   const theme = useTheme();
 
   if (!selectedRecommendedWork) return;
