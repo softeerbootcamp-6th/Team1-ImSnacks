@@ -10,12 +10,17 @@ import { useWeatherConditionStore } from './store/useWeatherConditionStore';
 import { useTimeStore } from './store/useTimeStore';
 import { useUserStore } from './store/useUserStore';
 import { useLocation } from 'react-router';
+import { ThemeProvider } from '@emotion/react';
+import { createThemeAssets } from './styles/createThemeAssets';
+import { weatherToTheme } from './utils/weatherToTheme';
 
 function App() {
-  const { setWeatherCondition } = useWeatherConditionStore();
+  const { weatherCondition, setWeatherCondition } = useWeatherConditionStore();
   const { setNickName } = useUserStore();
   const { currentTime, setCurrentTime } = useTimeStore();
   const location = useLocation();
+
+  const weatherTheme = createThemeAssets(weatherToTheme[weatherCondition]);
 
   // 초기 렌더링 시
   useEffect(() => {
@@ -48,13 +53,19 @@ function App() {
 
     fetchWeather();
     setCurrentTime(currentTime);
-  }, [currentTime, setCurrentTime, setWeatherCondition, setNickName]);
+  }, [
+    currentTime,
+    setCurrentTime,
+    setWeatherCondition,
+    setNickName,
+    location.pathname,
+  ]);
 
   return (
-    <>
+    <ThemeProvider theme={weatherTheme}>
       <GlobalStyles />
       <Router />
-    </>
+    </ThemeProvider>
   );
 }
 
