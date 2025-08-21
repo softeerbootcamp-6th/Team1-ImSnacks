@@ -2,16 +2,11 @@ import { useState, useCallback, useEffect, type RefObject } from 'react';
 import type { Position, WorkBlockType } from '@/types/workCard.type';
 import isInBound from '@/dndTimeline/utils/isInBound';
 import updateWorkTimeByPos from '@/dndTimeline/utils/updateWorkTimeByPos';
-import { sortWorkBlocks } from '@/pages/homePage/utils/sortWorkBlocks';
 import { patchMyWorkTime } from '@/apis/myWork.api';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/dndTimeline/hooks/useBlocksTransition';
-import { findCollisionFreePosition } from '@/utils/collisionUtils';
-import {
-  getTimeUpdatedBlock,
-  getTimeUpdatedBlocks,
-} from '../utils/updateBlockTime';
-import isFullyOverlapped from '@/dndTimeline/utils/isFullyOverlapped';
+import { getTimeUpdatedBlocks } from '../utils/updateBlockTime';
+import { resolveCollision } from '@/dndTimeline/utils/resolveCollision';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -119,42 +114,21 @@ export const useDragBlock = ({
       return;
     }
 
-    // 해당 x좌표와 valid한 y좌표 조합에 블록이 이미 존재하는지 확인
-    // 블록이 이미 있다면 가능한 위치로 이동
-    const otherBlocks = workBlocks.filter(
-      b => b.id !== currentDraggingBlock.id
-    );
+    // 충돌 해결 및 블록 정렬
+    const { updatedBlock, sortedBlocks, newBlocks } = resolveCollision({
+      draggingBlock: currentDraggingBlock,
+      workBlocks,
+      containerRef,
+      scrollOffset,
+    });
 
-    let newSortedBlocks: WorkBlockType[] = [];
-    let newCurrentDraggingBlock = currentDraggingBlock;
-    const newBlocks = getTimeUpdatedBlocks(workBlocks, currentDraggingBlock);
-
-    if (isFullyOverlapped(currentDraggingBlock, otherBlocks)) {
-      const collisionFreePosition = findCollisionFreePosition(
-        currentDraggingBlock,
-        otherBlocks,
-        containerRef.current?.getBoundingClientRect() ?? new DOMRect(),
-        scrollOffset
-      );
-
-      newCurrentDraggingBlock = getTimeUpdatedBlock(currentDraggingBlock, {
-        ...currentDraggingBlock,
-        position: collisionFreePosition,
-      });
-
-      newSortedBlocks = sortWorkBlocks(
-        getTimeUpdatedBlocks(workBlocks, newCurrentDraggingBlock)
-      );
-    } else {
-      newSortedBlocks = sortWorkBlocks(newBlocks);
-    }
-    animateBlocksTransition(newBlocks, newSortedBlocks);
+    animateBlocksTransition(newBlocks, sortedBlocks);
 
     try {
       await patchMyWorkTime({
-        myWorkId: newCurrentDraggingBlock.id,
-        startTime: newCurrentDraggingBlock.startTime,
-        endTime: newCurrentDraggingBlock.endTime,
+        myWorkId: updatedBlock.id,
+        startTime: updatedBlock.startTime,
+        endTime: updatedBlock.endTime,
       });
     } catch (error) {
       console.error('작업 시간 업데이트 실패:', error);
