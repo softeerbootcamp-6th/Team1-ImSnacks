@@ -15,8 +15,8 @@ import static com.imsnacks.Nyeoreumnagi.work.entity.WorkActivityFact.*;
 public interface WorkActivityFactRepository extends JpaRepository<WorkActivityFact, Key> {
     @Modifying
     @Query(value = """
-      INSERT IGNORE INTO work_activity_fact(day, work_id, tile, member_id)
-      VALUES (:day, :workId, :tile, :memberId)
+      INSERT IGNORE INTO work_activity_fact(day, work_id, tile, member_id, created_at)
+      VALUES (:day, :workId, :tile, :memberId, now())
       """, nativeQuery = true)
     int insertIgnore(@org.springframework.data.repository.query.Param("day") java.time.LocalDate day,
                      @org.springframework.data.repository.query.Param("workId") long workId,
