@@ -27,7 +27,7 @@ public class ShortTermWeatherForecast {
 
     @Id
     @Column(name = "fcst_time")
-    private int fcstTime;
+    private LocalDateTime fcstTime;
 
     @Column(nullable = false)
     private double precipitation;
