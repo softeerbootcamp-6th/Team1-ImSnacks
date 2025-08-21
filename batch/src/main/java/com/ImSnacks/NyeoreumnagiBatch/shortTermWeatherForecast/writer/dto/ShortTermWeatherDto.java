@@ -21,7 +21,7 @@ public class ShortTermWeatherDto {
     @Builder
     @AllArgsConstructor
     public static class WeatherForecastByTimeDto {
-        private int fcstTime;
+        private LocalDateTime fcstTime;
         private double precipitation;
         private int temperature;
         private int humidity;
