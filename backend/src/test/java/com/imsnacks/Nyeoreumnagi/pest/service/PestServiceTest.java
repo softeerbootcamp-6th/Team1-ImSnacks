@@ -98,7 +98,9 @@ public class PestServiceTest {
         long myId = 42L;
         int nx = 60;
         int ny = 120;
-        Farm farm = new Farm(myId, "", "", "", "", 36.12, 127.12, nx, ny, "regioncode", null);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(myId, "", "", "", "", point, nx, ny, "regioncode", null);
         Member other = new Member(77L, "", "", "", "", null, farm);
         MyCrop myCrop = new MyCrop(1L, null, other, null);
 

@@ -12,6 +12,9 @@ spring:
         format_sql: true
         highlight_sql: true
 
+  main:
+    allow-bean-definition-overriding: true
+
 
   batch:
     job:
@@ -24,10 +27,7 @@ spring:
   #      schema-locations: classpath:init-farm.sql
 #      data-locations: classpath:insert_unique_nxny.sql
 
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.orm.jdbc.bind: trace
+
 api:
   service:
     key: ${OPEN_API_KEY}
@@ -55,6 +55,17 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
 
 ---
 
