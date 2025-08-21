@@ -2,6 +2,7 @@ package com.imsnacks.Nyeoreumnagi.work.repository;
 
 import com.imsnacks.Nyeoreumnagi.work.entity.WorkActivityFact;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -12,8 +13,8 @@ import java.util.List;
 import static com.imsnacks.Nyeoreumnagi.work.entity.WorkActivityFact.*;
 
 public interface WorkActivityFactRepository extends JpaRepository<WorkActivityFact, Key> {
-    @org.springframework.data.jpa.repository.Modifying
-    @org.springframework.data.jpa.repository.Query(value = """
+    @Modifying
+    @Query(value = """
       INSERT IGNORE INTO work_activity_fact(day, work_id, tile, member_id)
       VALUES (:day, :workId, :tile, :memberId)
       """, nativeQuery = true)
