@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { css } from '@emotion/react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import useWorkBlocks from '@/pages/homePage/hooks/useWorkBlocks';
-
 import MainGraph from '../mainGraph/MainGraph';
 import GraphMenu from '../graphMenu/GraphMenu';
 import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
@@ -18,8 +16,10 @@ import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContaine
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
 import { useDragBlock } from '@/dndTimeline/hooks/useDragBlock';
-import DragContainer from '@/dndTimeline/components/DragContainer';
+import DragContainer from '@/dndTimeline/components/dragContainer/DragContainer';
 import { useResizeBlock } from '@/dndTimeline/hooks/useResizeBlock';
+import DraggableItem from '@/dndTimeline/components/draggableItem/DraggableItem';
+import DraggingItem from '@/dndTimeline/components/draggingItem/DraggingItem';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -106,33 +106,25 @@ const WorkContainer = ({
               const { id, position } = block;
 
               return (
-                <div
+                <DraggableItem
                   key={id}
-                  css={css`
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    transform: translate3d(${position.x}px, ${position.y}px, 0);
-
-                    opacity: ${draggingBlock?.id === id ? 0.5 : 1};
-                    pointer-events: auto;
-                    z-index: 1000;
-                  `}
-                  onPointerDown={e =>
-                    handleStartDrag(e as unknown as PointerEvent, block)
-                  }
+                  position={position}
+                  isDragging={draggingBlock?.id === id}
+                  handleStartDrag={e => handleStartDrag(e.nativeEvent, block)}
                 >
                   <WorkCardRegister
                     block={block}
                     isDragging={false}
                     onDelete={() => removeWorkBlock(id)}
-                    onResize={block => handleResize(block.id, block)}
+                    onResize={updatedBlock =>
+                      handleResize(updatedBlock.id, updatedBlock)
+                    }
                     containerRef={containerRef}
                     scrollOffset={scrollOffset}
                     allBlocks={workBlocks}
                     updateWorkBlocks={updateWorkBlocks}
                   />
-                </div>
+                </DraggableItem>
               );
             })}
             <WorkCellsContainer
@@ -140,21 +132,12 @@ const WorkContainer = ({
             />
           </div>
         </div>
-        {/* 드래그 중일 때 오버레이 */}
         {draggingBlock && dragPosition && (
-          <div
-            css={css`
-              position: absolute;
-              left: 0;
-              top: 0;
-              transform: translate3d(
-                ${dragPosition.x - dragOffset.x}px,
-                ${dragPosition.y - dragOffset.y}px,
-                0
-              );
-              pointer-events: none;
-              z-index: 1000;
-            `}
+          <DraggingItem
+            position={{
+              x: dragPosition.x - dragOffset.x,
+              y: dragPosition.y - dragOffset.y,
+            }}
           >
             <WorkCardRegister
               block={draggingBlock}
@@ -164,7 +147,7 @@ const WorkContainer = ({
               allBlocks={workBlocks}
               updateWorkBlocks={updateWorkBlocks}
             />
-          </div>
+          </DraggingItem>
         )}
       </DragContainer>
 
