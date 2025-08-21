@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
-import { ColorPrimary, Opacity } from '@/styles/colors';
+import { Opacity } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Typography } from '@/styles/typography';
 import type { WorkCellType, WorkCellStatus } from '@/types/workCell.type';
+import type { Theme } from '@emotion/react';
 
 const borderRadius = {
   Start: css`
@@ -38,9 +39,9 @@ const baseStyle = css`
   justify-content: center;
 `;
 
-const HoverCell = css`
+const HoverCell = (theme: Theme) => css`
   ${Typography.Caption_S}
-  color: ${ColorPrimary.B300};
+  color: ${theme.ColorPrimary.B300};
   text-align: center;
   white-space: pre-line;
   display: flex;

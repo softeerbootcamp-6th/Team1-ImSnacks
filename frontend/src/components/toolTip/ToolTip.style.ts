@@ -1,8 +1,8 @@
 import { BorderRadius } from '@/styles/borderRadius';
-import { Assets, ColorPrimary, GrayScale } from '@/styles/colors';
+import { Assets, GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 import type { TooltipDirectionType, TooltipType } from '@/types/tooltip.type';
 
 export const tooltipPosition = {
@@ -51,22 +51,22 @@ export const tooltipArrowPosition = {
   `,
 };
 
-const tooltipColorByType = {
+const tooltipColorByType = (theme: Theme) => ({
   Default: css`
     background-color: ${GrayScale.White};
-    color: ${Assets.Text.ToolTip.Default};
+    color: ${theme.Assets.Text.ToolTip.Default};
   `,
   Working: css`
     background-color: ${GrayScale.White};
     color: ${Assets.Text.ToolTip.Neighbor};
   `,
   Neighbor: css`
-    background-color: ${ColorPrimary.B300};
+    background-color: ${theme.ColorPrimary.B300};
     color: ${Assets.Text.ToolTip.Neighbor};
   `,
-};
+});
 
-const TooltipArrowColorByType = {
+const TooltipArrowColorByType = (theme: Theme) => ({
   Default: css`
     color: ${GrayScale.White};
   `,
@@ -74,19 +74,20 @@ const TooltipArrowColorByType = {
     color: ${GrayScale.White};
   `,
   Neighbor: css`
-    color: ${ColorPrimary.B300};
+    color: ${theme.ColorPrimary.B300};
   `,
-};
+});
 
 const ToolTip = (
   direction: TooltipDirectionType,
   type: TooltipType,
+  theme: Theme,
   offset?: number,
   isAbsolute?: boolean
 ) => css`
   position: ${isAbsolute ? 'absolute' : 'relative'};
   ${tooltipPosition[direction](offset)}
-  ${tooltipColorByType[type]};
+  ${tooltipColorByType(theme)[type]};
   ${Typography.Caption_S}
   z-index: 10;
 
@@ -103,11 +104,15 @@ const ToolTip = (
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
-const TooltipArrow = (direction: TooltipDirectionType, type: TooltipType) =>
+const TooltipArrow = (
+  direction: TooltipDirectionType,
+  type: TooltipType,
+  theme: Theme
+) =>
   css`
     position: absolute;
     ${tooltipArrowPosition[direction]()}
-    ${TooltipArrowColorByType[type]}
+    ${TooltipArrowColorByType(theme)[type]}
   `;
 
 export default { ToolTip, TooltipArrow };
