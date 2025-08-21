@@ -3,14 +3,40 @@ import { ColorStatus, GrayScale } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
-import type { Size } from '@/types/workCard.type';
+import type { Size } from '@/types/size.type';
+import { FlexStyles } from '@/styles/commonStyles';
+import { Assets } from '@/styles/colors';
 
-interface WorkCardContainerProps {
-  isDragging: boolean;
-  size: Size;
-}
+const WorkCardToolTip = css`
+  ${FlexStyles.flexColumn};
+  gap: ${Spacing.Spacing100};
+  padding: 0 ${Spacing.Spacing200};
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`;
 
-const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
+const WorkCardToolTipContent = css`
+  ${FlexStyles.flexRow};
+  gap: ${Spacing.Spacing300};
+`;
+
+const WorkCardToolTipTitle = css`
+  ${Typography.Body_S_400}
+  color: ${Assets.Text.WorkCard.Default.Headline};
+`;
+
+const WorkCardToolTipCropName = css`
+  ${Typography.Caption_S}
+  color: ${Assets.Text.WorkCard.Default.Headline};
+`;
+
+const WorkCardToolTipTime = css`
+  ${Typography.Caption_S}
+  color: ${Assets.Text.WorkCard.Default.Body};
+`;
+
+const WorkCardContainer = (size: Size) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -24,7 +50,6 @@ const WorkCardContainer = ({ isDragging, size }: WorkCardContainerProps) => css`
   height: ${size.height ? `${size.height}px` : 'auto'};
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: ${isDragging ? 1000 : 1};
   user-select: none;
 
   cursor: grab;
@@ -68,7 +93,6 @@ const WorkCardResizeHandle = css`
   top: 0;
   bottom: 0;
   width: 8px;
-  cursor: ew-resize;
   background-color: transparent;
   transition: background-color 0.2s ease;
 
@@ -79,6 +103,11 @@ const WorkCardResizeHandle = css`
   &:active {
     background-color: ${GrayScale.G400};
   }
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: ew-resize;
 `;
 
 const WorkCardResizeHandleLeft = css`
@@ -95,6 +124,11 @@ const WorkCardResizeHandleRight = css`
 
 export default {
   WorkCardContainer,
+  WorkCardToolTip,
+  WorkCardToolTipContent,
+  WorkCardToolTipTitle,
+  WorkCardToolTipCropName,
+  WorkCardToolTipTime,
   WorkCardDeleteButton,
   WorkCardResizeHandleLeft,
   WorkCardResizeHandleRight,

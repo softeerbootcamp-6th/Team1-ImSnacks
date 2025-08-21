@@ -1,296 +1,172 @@
-import { useEffect, useRef, useState } from 'react';
-import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
-import { GrayScale } from '@/styles/colors';
-import { useDragAndDrop } from '@/hooks/dnd/useDragAndDrop';
-import type { Position, WorkBlockType } from '@/types/workCard.type';
-import updateBlockWorkTime from '@/pages/homePage/utils/updateBlockWorkTime';
-import useWorkBlocks from '@/contexts/useWorkBlocks';
-import DragOverlay from '@/components/dnd/DragOverlay';
-import DragOverlayStyle from '@/components/dnd/DragOverlay.style';
-import { useRevertPosition } from '@/hooks/dnd/useRevertPosition';
-import animateBlock from '@/utils/animateBlock';
-import { hasCollisionWithOthers } from '@/utils/collisionUtils';
-import {
-  findFuturePosition,
-  handleCollisionRevert,
-  moveToValidPosition,
-  cleanupDragState,
-} from '../../utils/workContainerUtils';
-import { WORK_TIME_Y_COORDINATE } from '@/constants/workTimeCoordinate';
+import useWorkBlocks from '@/pages/homePage/hooks/work/useWorkBlocks';
 import MainGraph from '../mainGraph/MainGraph';
+import GraphMenu from '../graphMenu/GraphMenu';
+import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
+import { WeatherRiskDto } from '@/types/openapiGenerator';
+import { generateYTicks } from '../../utils/lineChartUtil';
+import { getUnit } from '@/utils/getUnit';
+import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
+import useContainer from '@/pages/homePage/hooks/useContainer';
+import WorkContainerS from './WorkContainer.style';
+import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
+import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
+import { useRecommendedWorks } from '../../hooks/work/useRecommendedWorks';
+import { useCreateWorkBlock } from '../../hooks/work/useCreateWorkBlock';
+import { useDragBlock } from '@/components/dnd/hooks/useDragBlock';
+import DragContainer from '@/components/dnd/dragContainer/DragContainer';
+import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
+import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
+import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
+import { useTimeStore } from '@/store/useTimeStore';
 
-const WorkContainer = () => {
-  const { workBlocks, updateWorkBlocks, removeWorkBlock, containerRef } =
-    useWorkBlocks();
-
-  const [scrollOffset, setScrollOffset] = useState(0);
-  const [initialPosition, setInitialPosition] = useState<Position | null>(null);
-  const [futurePosition, setFuturePosition] = useState<Position | null>(null);
-  const latestBlocksRef = useRef<WorkBlockType[]>(workBlocks);
-  const revertAnimationRef = useRef<number | null>(null);
-  const [isRevertingItemId, setIsRevertingItemId] = useState<number | null>(
-    null
+const WorkContainer = ({
+  weatherRiskData,
+}: {
+  weatherRiskData: WeatherRiskDto[];
+}) => {
+  const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
+    WEATHER_METRICS.PRECIPITATION
   );
 
-  // 드래그 중인 블록의 ID만 추적
-  const [draggingBlockId, setDraggingBlockId] = useState<number | null>(null);
+  const { currentTime } = useTimeStore();
+  const { data: graphData, error, refetch } = useWeatherGraphQuery(currentTab);
+
+  if (error) {
+    console.error('Error fetching graph data:', error);
+  }
 
   useEffect(() => {
-    latestBlocksRef.current = workBlocks;
-  }, [workBlocks]);
+    if (currentTime.minute() === 0) {
+      refetch();
+    }
+  }, [currentTime, refetch]);
+
+  const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
+    useWorkBlocks();
+
+  const { containerRef, scrollOffset, setScrollOffset } = useContainer();
 
   const {
-    isDragging,
-    startDrag,
-    updatePosition,
-    endDrag,
-    isDraggingItem,
-    draggedItemRef,
-  } = useDragAndDrop<WorkBlockType>({
-    getItemId: block => block.id,
-    getItemPosition: block => block.position,
-    onPositionChange: updated => {
-      // workBlocks를 직접 업데이트하여 즉시 반영
-      updateWorkBlocks(updated);
+    recommendedWorks,
+    myCrops,
+    selectedCrop,
+    handleCropClick,
+    selectedRecommendedWork,
+    setSelectedRecommendedWork,
+  } = useRecommendedWorks();
 
-      // futurePosition 업데이트 - 충돌하지 않는 위치 계산
-      const futurePosition = findFuturePosition(
-        updated,
-        draggingBlockId,
-        containerRef,
-        scrollOffset
-      );
-      if (futurePosition) {
-        setFuturePosition(futurePosition);
-      }
-    },
+  const { handleCreateWork } = useCreateWorkBlock({
     containerRef: containerRef as React.RefObject<HTMLDivElement>,
+    scrollOffset,
+    addWorkBlock,
+    workBlocks,
   });
 
-  const { checkAndRevert } = useRevertPosition<WorkBlockType>({
-    draggedItem: draggedItemRef.current,
-    initialPosition,
-    getItemPosition: block => block.position,
-    onRevert: () => {
-      setIsRevertingItemId(draggedItemRef.current?.id || null);
-      if (!draggedItemRef.current || !initialPosition) return;
+  const { handleResize } = useResizeBlock(workBlocks, updateWorkBlocks);
 
-      const revertId = draggedItemRef.current.id;
-      const currentPos = draggedItemRef.current.position;
-
-      animateBlock(
-        revertAnimationRef,
-        setIsRevertingItemId,
-        latestBlocksRef,
-        updateWorkBlocks,
-        revertId as number,
-        currentPos,
-        initialPosition
-      );
-    },
-  });
-
-  const handleStartDrag = (e: React.MouseEvent, block: WorkBlockType) => {
-    setInitialPosition(block.position);
-    setDraggingBlockId(block.id);
-    setFuturePosition(null);
-    draggedItemRef.current = block;
-    startDrag(e, block.id, workBlocks);
-  };
-
-  const handleEndDrag = () => {
-    const draggingId = draggingBlockId;
-    if (draggingId !== null) {
-      const rect = containerRef.current?.getBoundingClientRect();
-      if (rect) {
-        checkAndRevert(rect, scrollOffset);
-      }
-
-      const draggingBlock = workBlocks.find(block => block.id === draggingId);
-      if (draggingBlock) {
-        // 다른 블록과의 충돌 검사
-        const isCollision = hasCollisionWithOthers(
-          draggingBlock,
-          workBlocks,
-          draggingId
-        );
-
-        if (isCollision) {
-          handleCollisionRevert(
-            draggingId,
-            draggingBlock,
-            futurePosition,
-            initialPosition,
-            revertAnimationRef,
-            setIsRevertingItemId,
-            latestBlocksRef,
-            updateWorkBlocks
-          );
-          cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
-          return;
-        }
-
-        // 유효하지 않은 위치 검사 및 되돌리기
-        const isInvalidPosition = moveToValidPosition(
-          Object.values(WORK_TIME_Y_COORDINATE),
-          draggingId,
-          draggingBlock,
-          revertAnimationRef,
-          setIsRevertingItemId,
-          latestBlocksRef,
-          updateWorkBlocks
-        );
-
-        if (isInvalidPosition) {
-          cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
-          return;
-        }
-      }
-    }
-
-    cleanupDragState(setDraggingBlockId, setFuturePosition, endDrag);
-  };
-
-  const handleResize = (blockId: number, newBlock: WorkBlockType) => {
-    if (draggingBlockId === blockId) {
-      // 드래그 중일 때는 workBlocks를 직접 업데이트
-      const updatedBlocks = workBlocks.map(b =>
-        b.id === blockId ? newBlock : b
-      );
-      updateWorkBlocks(updatedBlocks);
-    } else {
-      // 드래그 중이 아닐 때는 즉시 업데이트
-      const updatedBlocks = workBlocks.map(b =>
-        b.id === blockId ? newBlock : b
-      );
-      updateWorkBlocks(updatedBlocks);
-    }
-  };
+  const { draggingBlock, pointerPosition, dragOffset, handleStartDrag } =
+    useDragBlock({
+      containerRef,
+      scrollOffset,
+      workBlocks,
+      updateWorkBlocks,
+    });
 
   return (
     <>
-      <div
-        ref={containerRef}
-        onMouseMove={e => {
-          updatePosition(e, (block, pos) =>
-            updateBlockWorkTime(block, pos, 100)
-          );
-        }}
-        onMouseUp={handleEndDrag}
-        onMouseLeave={handleEndDrag}
-        css={css`
-          width: 100%;
-        `}
+      <DragContainer
+        containerRef={containerRef}
+        css={WorkContainerS.ContainerWrapper}
       >
-        <div
-          css={css`
-            overflow-x: auto;
-            overflow-y: hidden;
-            position: relative;
+        <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
 
-            &::-webkit-scrollbar {
-              height: 8px;
-            }
+        {graphData && (
+          <div css={ChartS.FixedYAxisWrapper}>
+            {getUnit(graphData.weatherMetric ?? 'PRECIPITATION')}
+            <div css={ChartS.YAxis}>
+              {generateYTicks({
+                min: graphData.min ?? 0,
+                max: graphData.max ?? 100,
+              }).map(tick => (
+                <div key={tick} css={ChartS.YAxisTick}>
+                  {tick}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <div css={WorkContainerS.MaskGradientWrapper}>
+          <div
+            css={WorkContainerS.ScrollContainer}
+            onScroll={e => {
+              setScrollOffset(e.currentTarget.scrollLeft);
+            }}
+          >
+            <MainGraph
+              graphData={graphData}
+              weatherRiskData={weatherRiskData}
+            />
 
-            &::-webkit-scrollbar-track {
-              background: transparent;
-              border-radius: 4px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-              background: ${GrayScale.G50};
-              border-radius: 4px;
-            }
-          `}
-          onScroll={e => {
-            setScrollOffset(e.currentTarget.scrollLeft);
-          }}
-        >
-          <MainGraph />
-          {workBlocks.map(block => {
-            const { id, position } = block;
-            const isCurrentlyDragging =
-              isDraggingItem(id) || isRevertingItemId === id;
-
-            // 드래그 중인 블록은 DragOverlay만 렌더링
-            if (isCurrentlyDragging) {
-              const overlayPosition = {
-                x:
-                  draggingBlockId === id
-                    ? workBlocks.find(b => b.id === id)?.position.x ||
-                      position.x
-                    : position.x,
-                y:
-                  draggingBlockId === id
-                    ? workBlocks.find(b => b.id === id)?.position.y ||
-                      position.y
-                    : position.y,
-              };
+            {workBlocks.map(block => {
+              const { id, position } = block;
 
               return (
-                <DragOverlay
-                  key={`overlay-${id}`}
-                  position={overlayPosition}
-                  containerRef={containerRef}
-                  scrollOffset={scrollOffset}
+                <DraggableItem
+                  key={id}
+                  position={position}
+                  isDragging={draggingBlock?.id === id}
+                  handleStartDrag={e => handleStartDrag(e.nativeEvent, block)}
                 >
                   <WorkCardRegister
-                    block={workBlocks.find(b => b.id === id) || block}
-                    isDragging={isDragging}
+                    block={block}
+                    isDragging={false}
                     onDelete={() => removeWorkBlock(id)}
-                    onResize={newBlock => handleResize(id, newBlock)}
+                    onResize={updatedBlock =>
+                      handleResize(updatedBlock.id, updatedBlock)
+                    }
                     containerRef={containerRef}
                     scrollOffset={scrollOffset}
                     allBlocks={workBlocks}
                     updateWorkBlocks={updateWorkBlocks}
                   />
-                </DragOverlay>
+                </DraggableItem>
               );
-            }
-            return (
-              <div
-                key={id}
-                css={[
-                  DragOverlayStyle.DragOverlay({
-                    x: position.x,
-                    y: position.y,
-                  }),
-                  css`
-                    position: absolute;
-                  `,
-                ]}
-                onMouseDown={e => handleStartDrag(e, block)}
-              >
-                <WorkCardRegister
-                  block={block}
-                  isDragging={false}
-                  onDelete={() => removeWorkBlock(id)}
-                  onResize={newBlock => handleResize(id, newBlock)}
-                  containerRef={containerRef}
-                  scrollOffset={scrollOffset}
-                  allBlocks={workBlocks}
-                  updateWorkBlocks={updateWorkBlocks}
-                />
-              </div>
-            );
-          })}
-          <div
-            css={css`
-              display: flex;
-              flex-direction: row;
-              gap: 8px;
-              align-items: center;
-              min-width: max-content;
-              padding: 16px 0;
-              position: relative;
-            `}
-          >
-            <WorkCellsContainer />
+            })}
+            <WorkCellsContainer
+              selectedRecommendedWork={selectedRecommendedWork}
+            />
           </div>
         </div>
-      </div>
+        {draggingBlock && pointerPosition && (
+          <DraggingItem
+            position={{
+              x: pointerPosition.x - dragOffset.x,
+              y: pointerPosition.y - dragOffset.y,
+            }}
+          >
+            <WorkCardRegister
+              block={draggingBlock}
+              isDragging={true}
+              containerRef={containerRef}
+              scrollOffset={scrollOffset}
+              allBlocks={workBlocks}
+              updateWorkBlocks={updateWorkBlocks}
+            />
+          </DraggingItem>
+        )}
+      </DragContainer>
+
+      <RegisterWorkContainer
+        recommendedWorks={recommendedWorks}
+        myCrops={myCrops}
+        selectedCrop={selectedCrop}
+        handleCropClick={handleCropClick}
+        handleCreateWork={handleCreateWork}
+        setSelectedRecommendedWork={setSelectedRecommendedWork}
+      />
     </>
   );
 };

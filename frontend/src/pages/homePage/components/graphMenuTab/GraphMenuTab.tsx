@@ -1,6 +1,7 @@
 import { FLAT_ICON } from '@/constants/flatIcons';
 import S from './GraphMenuTab.style';
 import type { WeatherMetrics } from '@/types/weather.types';
+import { useTheme } from '@emotion/react';
 
 interface GraphMenuTabProps {
   title: string;
@@ -15,6 +16,7 @@ const GraphMenuTab = ({
   currentTab,
   setCurrentTab,
 }: GraphMenuTabProps) => {
+  const theme = useTheme();
   const isActive = currentTab === weatherMetric;
   const FlatIconComponent = FLAT_ICON[weatherMetric];
 
@@ -26,7 +28,9 @@ const GraphMenuTab = ({
   return (
     <button
       onClick={handleClick}
-      css={isActive ? S.GraphMenuTabActive : S.GraphMenuTabDefault}
+      css={
+        isActive ? S.GraphMenuTabActive(theme) : S.GraphMenuTabDefault(theme)
+      }
     >
       {FlatIconComponent && <FlatIconComponent width={24} height={24} />}
       {isActive && <span>{title}</span>}

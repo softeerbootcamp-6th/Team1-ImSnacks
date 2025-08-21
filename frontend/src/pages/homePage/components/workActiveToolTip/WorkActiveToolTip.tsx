@@ -1,23 +1,36 @@
-import useWorkBlocks from '@/contexts/useWorkBlocks';
-import calculateTimeToPosition from '../../utils/calculateTimeToPosition';
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
+import calculateTimeToPosition from '../../utils/work/calculateTimeToPosition';
 import * as S from './WorkActiveToolTip.style';
+import { useTheme } from '@emotion/react';
 
-const WorkActiveToolTip = () => {
-  const { selectedRecommendedWork } = useWorkBlocks();
-
-  const { x, width } = calculateTimeToPosition(
-    selectedRecommendedWork?.startTime || '',
-    selectedRecommendedWork?.endTime || ''
-  );
+const WorkActiveToolTip = ({
+  selectedRecommendedWork,
+}: {
+  selectedRecommendedWork: RecommendedWorksResponse | null;
+}) => {
+  const theme = useTheme();
 
   if (!selectedRecommendedWork) return;
 
   return (
-    <div css={S.WorkActiveToolTipContainer(x, width)}>
-      <div css={S.WorkActiveToolTipText}>
-        {selectedRecommendedWork.recommendation}
-      </div>
-    </div>
+    <>
+      {selectedRecommendedWork?.recommendationDurations?.map(duration => {
+        const { x, width } = calculateTimeToPosition(
+          duration.startTime || '',
+          duration.endTime || ''
+        );
+        return (
+          <div
+            key={`${duration.startTime}-${duration.endTime}`}
+            css={S.WorkActiveToolTipContainer(x, width, theme)}
+          >
+            <div css={S.WorkActiveToolTipText(theme)}>
+              {duration.recommendation}
+            </div>
+          </div>
+        );
+      })}
+    </>
   );
 };
 

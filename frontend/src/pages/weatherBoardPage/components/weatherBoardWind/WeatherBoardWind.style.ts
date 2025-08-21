@@ -19,14 +19,48 @@ const WeatherBoardWindContent = css`
   position: relative;
 `;
 
-const WindArrow = (degree: number) => css`
-  ${getArrowPosition(degree)};
+const WindArrow = (degree: number) => {
+  const generateKeyframes = (targetDegree: number) => {
+    const steps = Math.min(targetDegree, 36);
+    const stepSize = targetDegree / steps;
+
+    let keyframes = '';
+    for (let i = 0; i <= steps; i++) {
+      const currentDegree = Math.round(i * stepSize);
+      const percentage = (i / steps) * 100;
+      const position = getArrowPosition(currentDegree);
+      keyframes += `
+        ${percentage}% {
+          transform: ${position.transform};
+        }
+      `;
+    }
+
+    return keyframes;
+  };
+
+  return css`
+    position: absolute;
+    top: 50%;
+    transform-origin: center;
+    animation: windRotation-${degree} 1.7s ease-out forwards;
+
+    @keyframes windRotation-${degree} {
+      ${generateKeyframes(degree)}
+    }
+  `;
+};
+
+const WindArrowInitial = css`
   position: absolute;
   top: 50%;
+  transform-origin: center;
+  ${getArrowPosition(0)};
 `;
 
 export default {
   WeatherBoardWind,
   WeatherBoardWindContent,
   WindArrow,
+  WindArrowInitial,
 };

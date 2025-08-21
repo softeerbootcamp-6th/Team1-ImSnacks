@@ -5,6 +5,7 @@ import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { FlexStyles } from '@/styles/commonStyles';
+import { gradientMask } from '@/styles/gradientMask';
 
 const getDayColor = (dayName: string, isToday = false) => {
   if (isToday) return GrayScale.White;
@@ -13,14 +14,17 @@ const getDayColor = (dayName: string, isToday = false) => {
   return GrayScale.G900;
 };
 
-const WeeklyCalendar = css`
+const WeeklyCalendar = (hasMoreWorks: boolean, isExpanded: boolean) => css`
   display: flex;
-  height: 714px;
   flex-direction: column;
   gap: ${Spacing.Spacing200};
   border-radius: ${BorderRadius.Base.S_Hard};
   background-color: ${Opacity.White.W800};
   ${customBorderGradientStyles.gradientBorder}
+  ${hasMoreWorks ? 'min-height: 714px;' : 'height: 714px;'}
+  position: relative;
+
+  ${hasMoreWorks && !isExpanded && gradientMask('Bottom', 200)}
 `;
 
 const DayContainer = css`
@@ -42,6 +46,7 @@ const DateInfoContainer = css`
 const DateContainer = css`
   border-right: 1px solid ${GrayScale.G300};
   height: 100%;
+  width: 162px;
   ${FlexStyles.flexColumn}
 `;
 

@@ -7,28 +7,36 @@ import {
   Tooltip,
   Area,
 } from 'recharts';
+import { useRef } from 'react';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
-import { getUnit } from '@/utils/getUnit';
-import { generateYTicks, getProcessedData } from '../../utils/lineChartUtil';
+import { getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
 import CustomizedDot from '../customizedDot/CustomizedDot';
-import CustomTooltip from '../customizedTootip/CustomizedTooltip';
-import type { MainGraphData, WeatherRiskData } from '@/types/mainGraph.type';
 import WeatherRiskText from '../weatherRiskText/WeatherRiskText';
+import PortalTooltipWrapper from '../portalTooltipWrapper/PortalTooltipWrapper';
+import type {
+  GetWeatherGraphResponse,
+  WeatherRiskDto,
+} from '@/types/openapiGenerator';
 
-interface MainLineChartProps {
-  graphData: MainGraphData;
-  weatherRiskData: WeatherRiskData[];
-}
+const MainLineChart = ({
+  graphData,
+  weatherRiskData,
+}: {
+  graphData?: GetWeatherGraphResponse;
+  weatherRiskData: WeatherRiskDto[];
+}) => {
+  const chartRef = useRef<HTMLDivElement>(null);
 
-const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
-  const pointSpacing = 100;
+  if (!graphData || !graphData.valuePerTime) {
+    return <div css={S.LoadingWrapper}>로딩 중...</div>;
+  }
+
+  const pointSpacing = 97;
   const chartWidth = Math.max(
     300,
-    (graphData.valuePerTime.length - 1) * pointSpacing + 100
+    graphData.valuePerTime?.length * pointSpacing
   );
-
-  const yTicks = generateYTicks({ min: graphData.min, max: graphData.max });
 
   const GraphHighlight = (
     <defs>
@@ -40,7 +48,7 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
     </defs>
   );
 
-  const processedData = getProcessedData(graphData, weatherRiskData);
+  const processedData = getProcessedData(graphData, weatherRiskData ?? []);
 
   const WRAPPER_MARGIN = {
     top: 53,
@@ -52,21 +60,8 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
 
   return (
     <div css={S.MainLineChart}>
-      {/* Fixed Y축 */}
-      <div css={S.FixedYAxisWrapper}>
-        {getUnit(graphData.weatherMetric)}
-        <div css={S.YAxis}>
-          {yTicks.map(tick => (
-            <div key={tick} css={S.YAxisTick}>
-              {tick}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Line Chart */}
       {/* <div css={S.LineChartScrollWrapper}> */}
-      <div css={S.LineChartInnerWrapper(chartWidth)}>
+      <div css={S.LineChartInnerWrapper(chartWidth)} ref={chartRef}>
         <ComposedChart
           width={chartWidth}
           height={CHART_HEIGHT}
@@ -88,7 +83,10 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
             tickMargin={60}
           />
           <YAxis
-            domain={[graphData.min, graphData.max]}
+            domain={[
+              graphData.min !== undefined ? graphData.min : 0,
+              graphData.max !== undefined ? graphData.max : 100,
+            ]}
             tickCount={6}
             type="number"
             axisLine={false}
@@ -98,7 +96,17 @@ const MainLineChart = ({ graphData, weatherRiskData }: MainLineChartProps) => {
               display: 'none',
             }}
           />
-          <Tooltip content={<CustomTooltip graphData={graphData} />} />
+          <Tooltip
+            content={props => (
+              <PortalTooltipWrapper
+                {...props}
+                graphData={graphData}
+                chartRef={chartRef}
+              />
+            )}
+            allowEscapeViewBox={{ x: true, y: true }}
+            wrapperStyle={{ visibility: 'hidden' }}
+          />
 
           {weatherRiskData.map((item, index) => (
             <Area

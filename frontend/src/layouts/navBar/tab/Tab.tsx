@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { Link } from 'react-router';
 import { Typography } from '@/styles/typography';
 import S from './Tab.styles';
 
@@ -12,7 +13,7 @@ const Tab = ({
   isActive: boolean;
 }) => {
   return (
-    <a href={path} css={S.LinkStyle}>
+    <Link to={path} css={S.LinkStyle}>
       <li
         css={css`
           ${S.TabStyle}
@@ -22,7 +23,7 @@ const Tab = ({
       >
         {label}
       </li>
-    </a>
+    </Link>
   );
 };
 

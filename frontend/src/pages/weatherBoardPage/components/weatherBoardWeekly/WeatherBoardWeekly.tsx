@@ -1,69 +1,46 @@
 import S from './WeatherBoardWeekly.style';
 import WeeklyContent from '../weeklyContent/WeeklyContent';
-import { WEATHER_CONDITIONS } from '@/types/weather.types';
-
-const weeklyWeatherData = [
-  {
-    title: '오늘',
-    weather: WEATHER_CONDITIONS.RAIN,
-    highestTemperature: 30,
-    lowestTemperature: 20,
-  },
-  {
-    title: '내일',
-    weather: WEATHER_CONDITIONS.CLOUDY,
-    highestTemperature: 28,
-    lowestTemperature: 18,
-  },
-  {
-    title: '수요일',
-    weather: WEATHER_CONDITIONS.RAIN,
-    highestTemperature: 25,
-    lowestTemperature: 15,
-  },
-  {
-    title: '목요일',
-    weather: WEATHER_CONDITIONS.SNOW,
-    highestTemperature: 22,
-    lowestTemperature: 10,
-  },
-  {
-    title: '금요일',
-    weather: WEATHER_CONDITIONS.SUNNY,
-    highestTemperature: 26,
-    lowestTemperature: 16,
-  },
-  {
-    title: '토요일',
-    weather: WEATHER_CONDITIONS.CLOUDY,
-    highestTemperature: 24,
-    lowestTemperature: 14,
-  },
-  {
-    title: '일요일',
-    weather: WEATHER_CONDITIONS.LESS_CLOUDY,
-    highestTemperature: 27,
-    lowestTemperature: 17,
-  },
-];
+import { Suspense } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import type { GetSevenDaysForecastResponse } from '@/types/openapiGenerator';
+import { getWeatherSevenDays } from '@/apis/weather.api';
+import { CircularSpinner } from '@/components/common/CircularSpinner';
 
 const WeatherBoardWeekly = () => {
+  const Content = () => {
+    const { data: weeklyWeatherData } = useSuspenseQuery({
+      queryKey: ['weather', 'weekly'],
+      queryFn: async (): Promise<GetSevenDaysForecastResponse[]> => {
+        const res = await getWeatherSevenDays();
+        return res.data;
+      },
+      staleTime: 24 * 60 * 60 * 1000,
+    });
+
+    return (
+      <div css={S.WeeklyContentContainer}>
+        {weeklyWeatherData?.map((data: GetSevenDaysForecastResponse, index) => (
+          <WeeklyContent
+            key={index}
+            dayOfWeek={data.dayOfWeek}
+            weatherCondition={data.weatherCondition}
+            minTemperature={data.minTemperature}
+            maxTemperature={data.maxTemperature}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div css={S.WeatherBoardWeekly}>
       <div css={S.WeeklyTitleWrapper}>
         <h3 css={S.WeeklyTitle}>7일 간의 날씨 예보</h3>
       </div>
-      <div css={S.WeeklyContentContainer}>
-        {weeklyWeatherData.map((data, index) => (
-          <WeeklyContent
-            key={index}
-            title={data.title}
-            weather={data.weather}
-            highestTemperature={data.highestTemperature}
-            lowestTemperature={data.lowestTemperature}
-          />
-        ))}
-      </div>
+
+      <Suspense fallback={<CircularSpinner minHeight={200} />}>
+        <Content />
+      </Suspense>
     </div>
   );
 };

@@ -5,20 +5,23 @@ import useVisibility from '@/hooks/useVisibility';
 import ToolTip from '@/components/toolTip/ToolTip';
 import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
 import { css } from '@emotion/react';
-import useWorkBlocks from '@/contexts/useWorkBlocks';
+import { useTheme } from '@emotion/react';
 
 interface BtnCreateWorkProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   work: RecommendedWorksResponse;
   isDragging?: boolean;
+  setSelectedRecommendedWork: (work: RecommendedWorksResponse | null) => void;
 }
 
 const BtnCreateWork = ({
   work,
   isDragging = false,
+  setSelectedRecommendedWork,
   ...props
 }: BtnCreateWorkProps) => {
   const { isVisible, show, hide } = useVisibility();
-  const { setSelectedRecommendedWork } = useWorkBlocks();
+
+  const theme = useTheme();
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     setSelectedRecommendedWork(null);
@@ -35,7 +38,7 @@ const BtnCreateWork = ({
       `}
     >
       <button
-        css={S.BtnCreateWork(isDragging)}
+        css={S.BtnCreateWork(isDragging, theme)}
         {...props}
         onClick={handleClick}
         onMouseEnter={() => {
@@ -54,7 +57,7 @@ const BtnCreateWork = ({
           content={
             <div css={S.BtnCreateWorkTooltip}>
               이웃 작업 현황
-              <div css={S.BtnCreateWorkTooltipCount}>
+              <div css={S.BtnCreateWorkTooltipCount(theme)}>
                 {work.neighborCount || 0}
               </div>
             </div>

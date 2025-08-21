@@ -16,6 +16,8 @@ export class GetWeatherGraphResponse {
     'max'?: number;
     'min'?: number;
     'weatherMetric'?: GetWeatherGraphResponseWeatherMetricEnum;
+    'isUpdated'?: boolean;
+    'lastUpdateTime'?: Date;
     'valuePerTime'?: Array<ValuePerTime>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -42,6 +44,18 @@ export class GetWeatherGraphResponse {
             "format": ""
         },
         {
+            "name": "isUpdated",
+            "baseName": "isUpdated",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "lastUpdateTime",
+            "baseName": "lastUpdateTime",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
             "name": "valuePerTime",
             "baseName": "valuePerTime",
             "type": "Array<ValuePerTime>",
@@ -57,7 +71,7 @@ export class GetWeatherGraphResponse {
 }
 
 export const GetWeatherGraphResponseWeatherMetricEnum = {
-  Percipitation: 'PERCIPITATION',
+  Precipitation: 'PRECIPITATION',
   Temperature: 'TEMPERATURE',
   Humidity: 'HUMIDITY',
   WindSpeed: 'WIND_SPEED'

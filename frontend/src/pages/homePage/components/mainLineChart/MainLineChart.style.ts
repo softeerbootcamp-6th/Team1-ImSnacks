@@ -4,7 +4,6 @@ import { css } from '@emotion/react';
 
 const MainLineChart = css`
   width: 100%;
-  position: relative;
 
   &::after {
     content: '';
@@ -13,7 +12,6 @@ const MainLineChart = css`
     right: 44px;
     width: 25px;
     height: 90%;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.1), transparent);
     pointer-events: none;
     z-index: 5;
   }
@@ -49,22 +47,27 @@ const YAxisTick = css`
   color: ${Assets.Text.Global.Clear};
 `;
 
-const LineChartScrollWrapper = css`
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: calc(100% - 44px);
-  height: 373px;
-  position: relative;
+// TODO: 일단 현재는 미사용, 나중에 스크롤 스타일 수정 필요
+// const LineChartScrollWrapper = css`
+//   overflow-y: hidden;
+//   width: calc(100% - 44px);
+//   height: 373px;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
+//   &::-webkit-scrollbar {
+//     display: none;
+//   }
+// `;
 
 const LineChartInnerWrapper = (chartWidth: number) => css`
   width: ${chartWidth}px;
   height: 373px;
-  position: relative;
+`;
+
+const LoadingWrapper = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 373px;
 `;
 
 export default {
@@ -72,6 +75,7 @@ export default {
   FixedYAxisWrapper,
   YAxis,
   YAxisTick,
-  LineChartScrollWrapper,
+  // LineChartScrollWrapper,
   LineChartInnerWrapper,
+  LoadingWrapper,
 };

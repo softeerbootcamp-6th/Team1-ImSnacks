@@ -7,7 +7,7 @@ export const getFineDustLevelAndColor = (value: number) => {
   return { level: '매우 나쁨', color: ColorStatus.Global.Red };
 };
 
-export const getUltrafineDustLevelAndColor = (value: number) => {
+export const getUltraDustLevelAndColor = (value: number) => {
   if (value < 15) return { level: '좋음', color: ColorPrimary.B400 };
   if (value < 35) return { level: '보통', color: ColorStatus.Global.Green };
   if (value < 75) return { level: '나쁨', color: ColorStatus.Global.Orange };

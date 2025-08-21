@@ -1,24 +1,48 @@
-import type { ApiRes } from './res';
 import HTTP from './http';
 import type {
   RegisterMyWorkRequest,
   RegisterMyWorkResponse,
+  GetMyWorksOfTodayResponse,
+  GetMyWorksOfWeeklyResponse,
+  DeleteMyWorkRequest,
+  CustomResponseBodyVoid,
+  ModifyMyWorkRequest,
+  CustomResponseBodyModifyMyWorkResponse,
+  UpdateMyWorkStatusRequest,
 } from '@/types/openapiGenerator';
+import type { ReplaceTimesDateToString } from '@/types/replaceTimesDateToString.type';
 
-export const getMyWork = async (): Promise<ApiRes> => {
-  const res = await HTTP.get('/myWork');
-  return res;
-};
+export const getMyWorkOfToday = (isMobile: boolean) =>
+  HTTP.get<GetMyWorksOfTodayResponse[]>(
+    `/myWork/today?isMobile=${isMobile ? 'true' : 'false'}`
+  );
 
-export const postMyWork = (body: RegisterMyWorkRequest) =>
-  HTTP.post<RegisterMyWorkRequest, RegisterMyWorkResponse>('/myWork', body);
+export const getMyWorkOfWeekly = (startDate: string) =>
+  HTTP.get<GetMyWorksOfWeeklyResponse[]>(
+    `/myWork/weekly?startDate=${startDate}`
+  );
 
-export const patchMyWork = async (body: unknown): Promise<ApiRes> => {
-  const res = await HTTP.patch('/myWork', body);
-  return res;
-};
+export const postMyWork = (
+  body: ReplaceTimesDateToString<RegisterMyWorkRequest>
+) =>
+  HTTP.post<
+    ReplaceTimesDateToString<RegisterMyWorkRequest>,
+    RegisterMyWorkResponse
+  >('/myWork', body);
 
-export const deleteMyWork = async (body: unknown): Promise<ApiRes> => {
-  const res = await HTTP.delete('/myWork', body);
-  return res;
-};
+export const deleteMyWork = (body: DeleteMyWorkRequest) =>
+  HTTP.delete<DeleteMyWorkRequest, CustomResponseBodyVoid>('/myWork', body);
+
+export const patchMyWorkTime = (
+  body: ReplaceTimesDateToString<ModifyMyWorkRequest> & { myWorkId: number }
+) =>
+  HTTP.patch<
+    ReplaceTimesDateToString<ModifyMyWorkRequest>,
+    CustomResponseBodyModifyMyWorkResponse
+  >('/myWork/time', body);
+
+export const patchMyWorkStatus = (body: UpdateMyWorkStatusRequest) =>
+  HTTP.patch<
+    UpdateMyWorkStatusRequest,
+    CustomResponseBodyModifyMyWorkResponse[]
+  >('/myWork/status', body);

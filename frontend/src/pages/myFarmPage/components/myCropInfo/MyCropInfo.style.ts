@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 const MyCropInfoContainer = css`
   display: flex;
   flex-direction: column;
+  min-height: 260px;
 `;
 
 const CropInfoCardContainer = css`

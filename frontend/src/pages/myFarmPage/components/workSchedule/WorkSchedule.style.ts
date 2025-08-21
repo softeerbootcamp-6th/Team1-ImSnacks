@@ -10,15 +10,18 @@ const WorkScheduleContainer = css`
   flex-direction: column;
 `;
 
-const WorkScheduleContent = css`
-  height: 770px;
+const WorkScheduleContent = (isExpanded: boolean) => css`
   display: flex;
   flex-direction: column;
   border-radius: ${BorderRadius.Base.S_Hard};
   ${customBorderGradientStyles.gradientBorder}
   padding: ${Spacing.Spacing300};
   gap: ${Spacing.Spacing300};
+  ${isExpanded ? 'min-height: 770px;' : 'height: 770px;'}
+
   background-color: ${Opacity.White.W100};
+
+  position: relative;
 `;
 
 const WorkScheduleHeader = css`

@@ -12,10 +12,10 @@
 
 
 export class RegisterMyWorkRequest {
-    'recommendedWorkId': number;
-    'myCropId': number;
-    'startTime': Date;
-    'endTime': Date;
+    'recommendedWorkId'?: number;
+    'myCropId'?: number;
+    'startTime'?: Date;
+    'endTime'?: Date;
 
     static readonly discriminator: string | undefined = undefined;
 

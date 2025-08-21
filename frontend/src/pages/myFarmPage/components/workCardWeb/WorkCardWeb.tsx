@@ -1,19 +1,29 @@
 import WorkChip from '../workChip/WorkChip';
-import { WORK_CHIP_TYPES } from '@/types/workChip.type';
+import { type WorkChipType } from '@/types/workChip.type';
 import S from './WorkCardWeb.style';
 
 interface WorkCardWebProps {
+  id: number;
   cropName: string;
   workName: string;
   workTime: string;
-  isCompleted: boolean;
+  status: WorkChipType;
+  dateKey: string;
+  handleCheckButton: (
+    id: number,
+    status: WorkChipType,
+    dateKey: string
+  ) => void;
 }
 
 const WorkCardWeb = ({
+  id,
   cropName,
   workName,
   workTime,
-  isCompleted,
+  status,
+  dateKey,
+  handleCheckButton,
 }: WorkCardWebProps) => {
   return (
     <div css={S.WorkCardContainer}>
@@ -26,9 +36,8 @@ const WorkCardWeb = ({
         </div>
       </div>
       <WorkChip
-        chipType={
-          isCompleted ? WORK_CHIP_TYPES.COMPLETED : WORK_CHIP_TYPES.INCOMPLETED
-        }
+        chipType={status}
+        onClick={() => handleCheckButton(id, status, dateKey)}
       />
     </div>
   );

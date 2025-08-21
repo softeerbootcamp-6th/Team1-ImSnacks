@@ -12,9 +12,6 @@
 
 
 export class GetMemberAddressResponse {
-    'state'?: string;
-    'city'?: string;
-    'town'?: string;
     'address'?: string;
 
     static readonly discriminator: string | undefined = undefined;
@@ -22,24 +19,6 @@ export class GetMemberAddressResponse {
     static readonly mapping: {[index: string]: string} | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
-        {
-            "name": "state",
-            "baseName": "state",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "city",
-            "baseName": "city",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "town",
-            "baseName": "town",
-            "type": "string",
-            "format": ""
-        },
         {
             "name": "address",
             "baseName": "address",

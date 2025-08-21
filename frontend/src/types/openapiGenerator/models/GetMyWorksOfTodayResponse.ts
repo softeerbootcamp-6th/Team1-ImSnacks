@@ -18,6 +18,7 @@ export class GetMyWorksOfTodayResponse {
     'workTime'?: string;
     'startTime'?: string;
     'endTime'?: string;
+    'status'?: GetMyWorksOfTodayResponseStatusEnum;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -59,6 +60,12 @@ export class GetMyWorksOfTodayResponse {
             "baseName": "endTime",
             "type": "string",
             "format": ""
+        },
+        {
+            "name": "status",
+            "baseName": "status",
+            "type": "GetMyWorksOfTodayResponseStatusEnum",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
@@ -68,3 +75,10 @@ export class GetMyWorksOfTodayResponse {
     public constructor() {
     }
 }
+
+export const GetMyWorksOfTodayResponseStatusEnum = {
+  Completed: 'COMPLETED',
+  Incompleted: 'INCOMPLETED'
+} as const;
+export type GetMyWorksOfTodayResponseStatusEnum = typeof GetMyWorksOfTodayResponseStatusEnum[keyof typeof GetMyWorksOfTodayResponseStatusEnum];
+

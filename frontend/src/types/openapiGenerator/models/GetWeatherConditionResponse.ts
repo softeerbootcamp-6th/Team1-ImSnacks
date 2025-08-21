@@ -15,6 +15,7 @@ export class GetWeatherConditionResponse {
     'weatherCondition'?: string;
     'weatherKeyword'?: string;
     'temperature'?: number;
+    'memberName'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -38,6 +39,12 @@ export class GetWeatherConditionResponse {
             "baseName": "temperature",
             "type": "number",
             "format": "int32"
+        },
+        {
+            "name": "memberName",
+            "baseName": "memberName",
+            "type": "string",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {

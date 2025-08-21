@@ -5,6 +5,9 @@ import { Typography } from '@/styles/typography';
 import type { WeatherConditionsType } from '@/types/weather.types';
 import { css } from '@emotion/react';
 import S from './MobileHeader.styles';
+import IconCrossfade from '@/components/transition/IconCrossfade';
+import { useTimeStore } from '@/store/useTimeStore';
+import { formatCurrentTime } from '@/utils/formatTimeUtil';
 
 interface MobileHeaderProps {
   weatherCondition: WeatherConditionsType;
@@ -17,8 +20,7 @@ const MobileHeader = ({
   weatherKeyword,
   temperature,
 }: MobileHeaderProps) => {
-  const GlassIconComponent =
-    GLASS_MOBILE_ICON[weatherCondition as keyof typeof GLASS_MOBILE_ICON];
+  const { currentTime } = useTimeStore();
 
   return (
     <div css={S.MobileHeader}>
@@ -38,10 +40,33 @@ const MobileHeader = ({
             padding-bottom: ${Spacing.Spacing300};
           `}
         >
-          7월 23일, {weatherKeyword}
+          {formatCurrentTime(currentTime).date}, {weatherKeyword}
         </div>
       </div>
-      <GlassIconComponent width={110} height={88} css={S.MobileHeaderIcon} />
+      <IconCrossfade<WeatherConditionsType>
+        value={weatherCondition}
+        iconMap={GLASS_MOBILE_ICON}
+        width={110}
+        height={88}
+        containerCss={css`
+          width: 110px;
+          height: 88px;
+          animation: headline-bounce 2.3s ease-in-out infinite;
+            @keyframes headline-bounce {
+              0% {
+                transform: translateY(0);
+              }
+
+              40% {
+                transform: translateY(10px);
+              }
+
+              100% {
+                transform: translateY(0);
+              }
+        `}
+        iconCss={S.MobileHeaderIcon}
+      />
     </div>
   );
 };

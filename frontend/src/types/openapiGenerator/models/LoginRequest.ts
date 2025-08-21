@@ -12,8 +12,8 @@
 
 
 export class LoginRequest {
-    'identifier': string;
-    'password': string;
+    'identifier'?: string;
+    'password'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 

@@ -2,15 +2,31 @@ import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
 import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
 import S from './RegisterWorkContainer.style';
 import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
-import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
-import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
+import type {
+  MyCropResponse,
+  RecommendedWorksResponse,
+} from '@/types/openapiGenerator';
 
-const RegisterWorkContainer = () => {
-  const { recommendedWorks, myCrops, selectedCrop, handleCropClick } =
-    useRecommendedWorks();
+interface RegisterWorkContainerProps {
+  recommendedWorks: RecommendedWorksResponse[];
+  myCrops: MyCropResponse[];
+  selectedCrop?: MyCropResponse | null;
+  handleCropClick: (crop: MyCropResponse) => void;
+  handleCreateWork: (
+    work: RecommendedWorksResponse,
+    crop: MyCropResponse
+  ) => void;
+  setSelectedRecommendedWork: (work: RecommendedWorksResponse | null) => void;
+}
 
-  const { handleCreateWork } = useCreateWorkBlock();
-
+const RegisterWorkContainer = ({
+  recommendedWorks,
+  myCrops,
+  selectedCrop,
+  handleCropClick,
+  handleCreateWork,
+  setSelectedRecommendedWork,
+}: RegisterWorkContainerProps) => {
   return (
     <div css={S.RegisterWorkContainer}>
       <div css={S.TextBox}>
@@ -41,6 +57,7 @@ const RegisterWorkContainer = () => {
             <BtnCreateWork
               key={work.workId}
               work={work}
+              setSelectedRecommendedWork={setSelectedRecommendedWork}
               onClick={() => handleCreateWork(work, selectedCrop!)}
             />
           ))}

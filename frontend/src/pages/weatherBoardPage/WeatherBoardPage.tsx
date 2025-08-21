@@ -9,18 +9,29 @@ import WeatherBoardUV from './components/weatherBoardUV/WeatherBoardUV';
 import WeatherBoardDust from './components/weatherBoardDust/WeatherBoardDust';
 import WeatherBoardSunset from './components/weatherBoardSunset/WeatherBoardSunset';
 import { FlexStyles } from '@/styles/commonStyles';
+import { useEffect, useState } from 'react';
+import { getMemberAddress } from '@/apis/member.api';
 
 const WeatherBoardPage = () => {
-  const address = '충북 영동군 황간면 우천1길 50-42';
+  const [address, setAddress] = useState<string>('');
+
+  const fetchAddress = async () => {
+    try {
+      const res = await getMemberAddress();
+      if (res.data) {
+        setAddress(res.data.address ?? '');
+      }
+    } catch (error) {
+      console.error('주소를 가져오는 데 실패했습니다:', error);
+    }
+  };
+  useEffect(() => {
+    fetchAddress();
+  }, []);
+
   return (
     <div css={S.WeatherBoardPage}>
-      <div
-        css={css`
-          width: 100%;
-          text-align: start;
-          margin-bottom: 4px;
-        `}
-      >
+      <div css={S.MyFarmAddressWrapper}>
         <p css={S.MyFarmAddress}>{address}</p>
       </div>
 
@@ -30,14 +41,7 @@ const WeatherBoardPage = () => {
           ${S.WeatherBoardContent};
         `}
       >
-        <div
-          css={css`
-            ${FlexStyles.flexRow};
-            justify-content: space-between;
-            width: 100%;
-            height: 588px;
-          `}
-        >
+        <div css={S.WeatherBoardFirRow}>
           <div
             css={css`
               width: 990px;
@@ -45,46 +49,22 @@ const WeatherBoardPage = () => {
               gap: 24px;
             `}
           >
-            <div
-              css={css`
-                width: 100%;
-                height: 280px;
-              `}
-            >
+            <div css={S.WeatherBoardTemperatureWrapper}>
               <WeatherBoardTemperature />
             </div>
-            <div
-              css={css`
-                ${FlexStyles.flexRow};
-                justify-content: space-between;
-                height: 284px;
-                ${S.WeatherBoardContent}
-              `}
-            >
-              <WeatherBoardPrecipitation value={30} />
-              <WeatherBoardHumidity humidityValue={60} />
-              <WeatherBoardWind direction="남서풍" speed={10} degree={270} />
+            <div css={S.WeatherBoardSecRow}>
+              <WeatherBoardPrecipitation />
+              <WeatherBoardHumidity />
+              <WeatherBoardWind />
             </div>
           </div>
-          <div
-            css={css`
-              width: 314px;
-              height: 100%;
-            `}
-          >
+          <div css={S.WeatherBoardWeeklyWrapper}>
             <WeatherBoardWeekly />
           </div>
         </div>
-        <div
-          css={css`
-            ${FlexStyles.flexRow};
-            justify-content: space-between;
-            height: 205px;
-            ${S.WeatherBoardContent}
-          `}
-        >
+        <div css={S.WeatherBoardThirdRow}>
           <WeatherBoardUV />
-          <WeatherBoardDust fineDustValue={55} ultrafineDustValue={78} />
+          <WeatherBoardDust />
           <WeatherBoardSunset />
         </div>
       </div>
