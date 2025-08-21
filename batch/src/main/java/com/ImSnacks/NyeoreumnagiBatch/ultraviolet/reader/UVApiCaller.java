@@ -55,8 +55,8 @@ public class UVApiCaller {
     private UVReaderResponseDto getMockData(){
         UVReaderResponseDto.Item testItem = new UVReaderResponseDto.Item(
                 "testCode", "1234567890", "2025081300",
-                "1", "2", "1", "3",
-                "5", "7", "2", "1", "0", "0", "0", "0",
+                "0", "0", "0", "0",
+                "0", "0", "0", "0", "0", "0", "0", "0",
                 "0","0","0","0","0","0","0","0","0","0","0", "0", "0" ,""
         );
         UVReaderResponseDto.Items testItems = new UVReaderResponseDto.Items(List.of(testItem));
