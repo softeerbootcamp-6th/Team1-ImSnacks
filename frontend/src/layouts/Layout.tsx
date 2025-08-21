@@ -7,9 +7,11 @@ import { backgroundTheme } from '@/constants/backgroundTheme';
 import { useFadeTransition } from '@/hooks/useFadeTransition';
 import type { WeatherConditionsType } from '@/types/weather.types';
 import { useLocation } from 'react-router';
+import { useIsMobileStore } from '@/store/useIsMobileStore';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { weatherCondition } = useWeatherConditionStore();
+  const { isMobile } = useIsMobileStore();
   const location = useLocation();
   const isWeatherPage = location.pathname === '/weather-board';
 
@@ -56,7 +58,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           `}
         />
       )}
-      {window.location.pathname !== '/login' && (
+      {location.pathname !== '/login' && !isMobile && (
         <NavBar isWeatherPage={isWeatherPage} />
       )}
       <main

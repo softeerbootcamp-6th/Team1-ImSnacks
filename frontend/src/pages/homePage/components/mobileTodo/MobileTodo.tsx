@@ -55,26 +55,34 @@ const MobileTodo = () => {
     <div css={S.MobileTodo}>
       <h2>오늘 예정된 할 일이에요</h2>
       <div css={S.MobileTodoList}>
-        {todoList?.map((todo: GetMyWorksOfTodayResponse) => (
-          <MobileWorkCard
-            key={todo?.myWorkId}
-            workId={todo?.myWorkId}
-            cropName={todo?.myCropName ?? ''}
-            workName={todo?.myWorkName ?? ''}
-            workTime={todo?.workTime ?? ''}
-            status={
-              todo?.status ?? UpdateMyWorkStatusRequestStatusEnum.Incompleted
-            }
-            onClick={() => {
-              if (
-                typeof todo?.myWorkId === 'number' &&
-                typeof todo?.status === 'string'
-              ) {
-                handleCheckButton(todo.myWorkId, todo.status);
+        {todoList?.length === 0 ? (
+          <div css={S.EmptyTodoMessage}>
+            오늘은 할 일이 없어요!
+            <br />
+            데스크톱에서 작업을 추가해보세요!
+          </div>
+        ) : (
+          todoList?.map((todo: GetMyWorksOfTodayResponse) => (
+            <MobileWorkCard
+              key={todo?.myWorkId}
+              workId={todo?.myWorkId}
+              cropName={todo?.myCropName ?? ''}
+              workName={todo?.myWorkName ?? ''}
+              workTime={todo?.workTime ?? ''}
+              status={
+                todo?.status ?? UpdateMyWorkStatusRequestStatusEnum.Incompleted
               }
-            }}
-          />
-        ))}
+              onClick={() => {
+                if (
+                  typeof todo?.myWorkId === 'number' &&
+                  typeof todo?.status === 'string'
+                ) {
+                  handleCheckButton(todo.myWorkId, todo.status);
+                }
+              }}
+            />
+          ))
+        )}
       </div>
     </div>
   );
