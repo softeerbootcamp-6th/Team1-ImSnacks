@@ -1,6 +1,5 @@
 import { ColorPrimary } from '@/styles/colors';
 import { css } from '@emotion/react';
-import type { CSSProperties } from 'react';
 
 const spinKeyframes = `
   @keyframes spin {
