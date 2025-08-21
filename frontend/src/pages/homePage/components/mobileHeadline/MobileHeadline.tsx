@@ -31,7 +31,10 @@ const MobileHeadline = () => {
 
   return (
     <div css={S.MobileHeadline}>
-      <div css={S.MobileGreetingMessage}>좋은 아침이에요, {nickName}님!</div>
+      <div css={S.MobileGreetingMessage}>
+        {nickName}님! <br />
+        {briefingData?.welcomeMsg}
+      </div>
       <h2 css={S.WeatherRisk}>
         {briefingData?.hasWeatherRisk ? (
           <span>
