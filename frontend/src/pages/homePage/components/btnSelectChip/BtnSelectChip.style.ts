@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Assets, GrayScale } from '@/styles/colors';
+import { GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
@@ -20,8 +20,8 @@ const BtnSelectChipSizeStyle = {
 
 const BtnSelectChipStatusStyle = (theme: Theme) => ({
   Default: css`
-    background-color: ${Assets.Global.Button.Default};
-    color: ${Assets.Text.Button.SelectChip.Default};
+    background-color: ${theme.Assets.Global.Button.Default};
+    color: ${theme.Assets.Text.Button.SelectChip.Default};
   `,
   Pressed: css`
     background-color: ${theme.Assets.Global.Button.Pressed};
@@ -33,7 +33,7 @@ const BtnSelectChipStatusStyle = (theme: Theme) => ({
   `,
   Disabled: css`
     background-color: ${GrayScale.White};
-    color: ${Assets.Text.Button.SelectChip.Disabled};
+    color: ${theme.Assets.Text.Button.SelectChip.Disabled};
     cursor: default;
   `,
 });

@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
 import { BorderRadius } from '@/styles/borderRadius';
-import { Assets, ColorPrimary, GrayScale } from '@/styles/colors';
+import { Assets, GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
+import type { Theme } from '@emotion/react';
 
 const SizeSmall = css`
   min-width: 116px;
@@ -19,8 +20,8 @@ const BtnCreateWorkDefault = css`
   color: ${Assets.Text.Gnb.Default};
 `;
 
-const BtnCreateWorkHover = css`
-  background-color: ${ColorPrimary.B300};
+const BtnCreateWorkHover = (theme: Theme) => css`
+  background-color: ${theme.ColorPrimary.B300};
   color: ${GrayScale.White};
   ${SizeLarge}
 `;
@@ -54,16 +55,16 @@ const BtnCreateWorkBase = (isDragging: boolean = false) => css`
   }
 `;
 
-export const BtnCreateWork = (isDragging: boolean = false) => css`
+export const BtnCreateWork = (isDragging: boolean = false, theme: Theme) => css`
   ${BtnCreateWorkBase(isDragging)}
   ${BtnCreateWorkDefault}
 
   &:hover {
-    ${BtnCreateWorkHover}
+    ${BtnCreateWorkHover(theme)}
   }
 
   &:active {
-    ${BtnCreateWorkHover}
+    ${BtnCreateWorkHover(theme)}
   }
 
   &:disabled {
@@ -79,9 +80,9 @@ const BtnCreateWorkTooltip = css`
   gap: 4px;
 `;
 
-const BtnCreateWorkTooltipCount = css`
+const BtnCreateWorkTooltipCount = (theme: Theme) => css`
   ${Typography.Body_S_700}
-  background-color: ${ColorPrimary.B400};
+  background-color: ${theme.ColorPrimary.B400};
   border-radius: ${BorderRadius.Base.Round};
   box-sizing: border-box;
   padding: 4px 8px;

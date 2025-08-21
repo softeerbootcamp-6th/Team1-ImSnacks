@@ -7,12 +7,13 @@ export const createThemeAssets = (themeKey: keyof typeof ColorTheme): Theme => {
   return {
     ColorPrimary: {
       B700: theme.Pressed,
+      B400: theme.Pressed,
       B300: theme.Hover,
     },
     Assets: {
       Global: {
         Button: {
-          Default: GrayScale.G200,
+          Default: theme.Default,
           Pressed: theme.Pressed,
           Hover: theme.Hover,
           Disabled: GrayScale.G200,
