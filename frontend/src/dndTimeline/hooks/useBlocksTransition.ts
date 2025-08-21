@@ -30,12 +30,10 @@ export const useBlocksTransition = <T extends BlockType>(
           const fromBlock = fromMap.get(id);
           if (!fromBlock) return toBlock;
 
-          const fromX = fromBlock.position.x;
-          const fromY = fromBlock.position.y;
-          const fromW = fromBlock.size.width ?? 0;
-          const toX = toBlock.position.x;
-          const toY = toBlock.position.y;
-          const toW = toBlock.size.width ?? 0;
+          const { x: fromX, y: fromY } = fromBlock.position;
+          const fromW = fromBlock.size?.width ?? 0;
+          const { x: toX, y: toY } = toBlock.position;
+          const toW = toBlock.size?.width ?? 0;
 
           const x = fromX + (toX - fromX) * eased;
           const y = fromY + (toY - fromY) * eased;

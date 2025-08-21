@@ -13,13 +13,13 @@ import { getUnit } from '@/utils/getUnit';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/hooks/useContainer';
 import WorkContainerS from './WorkContainer.style';
-import useDragWorkBlock from '@/pages/homePage/hooks/useDragWorkBlock';
 import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
 import { useDragBlock } from '@/dndTimeline/hooks/useDragBlock';
 import DragContainer from '@/dndTimeline/components/DragContainer';
+import { useResizeBlock } from '@/dndTimeline/hooks/useResizeBlock';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -57,12 +57,7 @@ const WorkContainer = ({
     workBlocks,
   });
 
-  const { handleResize } = useDragWorkBlock(
-    workBlocks,
-    updateWorkBlocks,
-    containerRef as React.RefObject<HTMLDivElement>,
-    scrollOffset
-  ); //TODO: 전체 블록을 업데이트하는 게 아니라 블록 하나만 리사이즈 후 업데이트 필요
+  const { handleResize } = useResizeBlock(workBlocks, updateWorkBlocks);
 
   const { draggingBlock, dragPosition, dragOffset, handleStartDrag } =
     useDragBlock({
