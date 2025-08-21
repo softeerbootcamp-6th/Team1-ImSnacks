@@ -88,7 +88,7 @@ class ShortTermWeatherForecastTest {
                 .snow(0)
                 .precipitation(0)
                 .windSpeed(3)
-                .fcstTime(15)
+                .fcstTime(LocalDateTime.of(2025,8,31,15,0))
                 .skyStatus(1)
                 .build();
         when(time.getSunriseTime()).thenReturn(LocalTime.of(6,0));
@@ -109,7 +109,7 @@ class ShortTermWeatherForecastTest {
                 .snow(0)
                 .precipitation(0)
                 .windSpeed(3)
-                .fcstTime(15)
+                .fcstTime(LocalDateTime.of(2025,8,31,15,0))
                 .skyStatus(3)
                 .build();
         when(time.getSunriseTime()).thenReturn(LocalTime.of(6,0));
@@ -130,7 +130,7 @@ class ShortTermWeatherForecastTest {
                 .snow(0)
                 .precipitation(0)
                 .windSpeed(3)
-                .fcstTime(15)
+                .fcstTime(LocalDateTime.of(2025,8,31,15,0))
                 .skyStatus(4)
                 .build();
         when(time.getSunriseTime()).thenReturn(LocalTime.of(6,0));
@@ -151,7 +151,7 @@ class ShortTermWeatherForecastTest {
                 .snow(0)
                 .precipitation(0)
                 .windSpeed(3)
-                .fcstTime(20)
+                .fcstTime(LocalDateTime.of(2025,8,31,20,0))
                 .skyStatus(1)
                 .build();
         when(time.getSunriseTime()).thenReturn(LocalTime.of(6,0));
@@ -172,7 +172,7 @@ class ShortTermWeatherForecastTest {
                 .snow(0)
                 .precipitation(0)
                 .windSpeed(3)
-                .fcstTime(20)
+                .fcstTime(LocalDateTime.of(2025,8,31,20,0))
                 .skyStatus(3)
                 .build();
         when(time.getSunriseTime()).thenReturn(LocalTime.of(6,0));
@@ -193,7 +193,7 @@ class ShortTermWeatherForecastTest {
                 .snow(0)
                 .precipitation(0)
                 .windSpeed(3)
-                .fcstTime(20)
+                .fcstTime(LocalDateTime.of(2025,8,31,20,0))
                 .skyStatus(4)
                 .build();
         when(time.getSunriseTime()).thenReturn(LocalTime.of(6,0));

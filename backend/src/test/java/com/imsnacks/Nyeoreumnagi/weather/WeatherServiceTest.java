@@ -173,7 +173,7 @@ class WeatherServiceTest {
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);
 
-        when(forecast.getFcstTime()).thenReturn(LocalDateTime.now().getHour());
+        when(forecast.getFcstTime()).thenReturn(LocalDateTime.now());
         when(forecast.getWeatherCondition(sunriseSunSetTime)).thenReturn(WeatherCondition.SUNNY);
         when(forecast.getTemperature()).thenReturn(23);
         when(farmRepository.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
