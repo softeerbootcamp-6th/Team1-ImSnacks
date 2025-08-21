@@ -29,24 +29,17 @@ const WorkCardInfo = css`
   width: 100%;
 `;
 
-const WorkCardContentWrapper = (width: number) => css`
+const WorkCardContentWrapper = css`
   ${FlexStyles.flexRow};
   gap: ${Spacing.Spacing300};
   min-width: 0;
   width: 100%;
-  flex: 1 1 auto;
-  ${width &&
-  width < 130 &&
-  css`
-    word-break: break-all;
-  `}
 `;
 
 const WorkCardTitle = css`
   ${Typography.Body_S_400}
   color: ${Assets.Text.WorkCard.Default.Headline};
   display: block;
-  flex: 1 1 auto;
   min-width: 0;
   width: 100%;
   white-space: nowrap;
@@ -64,7 +57,6 @@ const WorkCardTime = css`
   ${Typography.Caption_S}
   color: ${Assets.Text.WorkCard.Default.Body};
   display: block;
-  flex: 1 1 auto;
   min-width: 0;
   width: 100%;
   white-space: nowrap;
