@@ -16,6 +16,7 @@ const MobileHeadline = css`
 
 const MobileGreetingMessage = css`
   ${Typography.Body_L_500}
+  word-break: keep-all;
 `;
 
 const WeatherRisk = css`
