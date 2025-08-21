@@ -1,6 +1,6 @@
 import type { CropNameType } from '@/types/crop.type';
 import type { GetMyWorksOfTodayResponse } from '@/types/openapiGenerator';
-import { sortWorkBlocks } from './sortWorkBlocks';
+import { sortWorkBlocks } from '@/pages/homePage/utils/work/sortWorkBlocks';
 
 const getInitialWorkBlocks = (
   todayWorkScheduleData: GetMyWorksOfTodayResponse[]

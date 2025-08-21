@@ -1,9 +1,12 @@
 import type { WorkBlockType } from '@/types/workCard.type';
 import type { RefObject } from 'react';
-import { findCollisionFreePosition } from '@/utils/collisionUtils';
-import isFullyOverlapped from './isFullyOverlapped';
-import { getTimeUpdatedBlock, getTimeUpdatedBlocks } from './updateBlockTime';
-import { sortWorkBlocks } from '@/pages/homePage/utils/sortWorkBlocks';
+import { findCollisionFreePosition } from '@/components/dnd/utils/collisionUtils';
+import isFullyOverlapped from '@/components/dnd/utils/isFullyOverlapped';
+import {
+  getTimeUpdatedBlock,
+  getTimeUpdatedBlocks,
+} from '@/pages/homePage/utils/work/updateBlockTime';
+import { sortWorkBlocks } from '@/pages/homePage/utils/work/sortWorkBlocks';
 
 interface ResolveCollisionParams {
   draggingBlock: WorkBlockType;

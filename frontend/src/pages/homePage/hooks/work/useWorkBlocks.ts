@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork } from '@/apis/myWork.api';
-import getInitialWorkBlocks from '@/pages/homePage/utils/getInitialWorkBlocks';
+import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
 
 const useWorkBlocks = () => {
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);

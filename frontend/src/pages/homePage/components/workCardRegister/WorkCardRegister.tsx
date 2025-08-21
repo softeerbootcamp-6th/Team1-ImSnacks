@@ -3,8 +3,8 @@ import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegister
 import useVisibility from '@/hooks/useVisibility';
 import { useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
-import { useChangeTimeByResize } from '@/pages/homePage/hooks/useChangeTimeByResize';
-import { useResizeCollision } from '@/hooks/useResizeCollision';
+import { useChangeTimeByResize } from '@/pages/homePage/hooks/work/useChangeTimeByResize';
+import { useResizeCollision } from '@/components/dnd/hooks/useResizeCollision';
 import { patchMyWorkTime } from '@/apis/myWork.api';
 
 interface WorkCardRegisterProps {

@@ -5,10 +5,10 @@ import type {
   MyCropResponse,
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
-import calculateTimeToPosition from '../utils/calculateTimeToPosition';
+import calculateTimeToPosition from '@/pages/homePage/utils/work/calculateTimeToPosition';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
-import { findCollisionFreePosition } from '@/utils/collisionUtils';
-import updateWorkTimeByPos from '@/utils/updateWorkTimeByPos';
+import { findCollisionFreePosition } from '@/components/dnd/utils/collisionUtils';
+import updateWorkTimeByPos from '@/pages/homePage/utils/work/updateWorkTimeByPos';
 import { postMyWork } from '@/apis/myWork.api';
 
 interface UseCreateWorkBlockReturn {

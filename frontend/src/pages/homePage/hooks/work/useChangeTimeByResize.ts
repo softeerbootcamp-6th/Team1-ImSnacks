@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
-import calculateTimeToPosition from '../utils/calculateTimeToPosition';
+import calculateTimeToPosition from '@/pages/homePage/utils/work/calculateTimeToPosition';
 
 interface UseResizeProps {
   onResize: (newBlock: WorkBlockType) => void;

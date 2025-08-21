@@ -1,5 +1,5 @@
 import { WORK_TIME_Y_COORDINATE_LIST } from '@/constants/workTimeCoordinate';
-import { hasCollision } from '@/utils/collisionUtils';
+import { hasCollision } from '@/components/dnd/utils/collisionUtils';
 import type { WorkBlockType } from '@/types/workCard.type';
 
 const isFullyOverlapped = (

@@ -4,8 +4,8 @@ import type { Position } from '@/types/position.type';
 import {
   findCollisionFreePosition,
   hasCollision,
-} from '@/utils/collisionUtils';
-import animateBlock from '@/utils/animateBlock';
+} from '@/components/dnd/utils/collisionUtils';
+import animateBlock from '@/components/dnd/utils/animateBlock';
 
 interface UseResizeCollisionProps {
   containerRef?: React.RefObject<HTMLDivElement | null>;

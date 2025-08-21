@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
-import useWorkBlocks from '@/pages/homePage/hooks/useWorkBlocks';
+import useWorkBlocks from '@/pages/homePage/hooks/work/useWorkBlocks';
 import MainGraph from '../mainGraph/MainGraph';
 import GraphMenu from '../graphMenu/GraphMenu';
 import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
@@ -13,11 +13,11 @@ import useContainer from '@/pages/homePage/hooks/useContainer';
 import WorkContainerS from './WorkContainer.style';
 import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
-import { useRecommendedWorks } from '../../hooks/useRecommendedWorks';
-import { useCreateWorkBlock } from '../../hooks/useCreateWorkBlock';
-import { useDragBlock } from '@/hooks/useDragBlock';
+import { useRecommendedWorks } from '../../hooks/work/useRecommendedWorks';
+import { useCreateWorkBlock } from '../../hooks/work/useCreateWorkBlock';
+import { useDragBlock } from '@/components/dnd/hooks/useDragBlock';
 import DragContainer from '@/components/dnd/dragContainer/DragContainer';
-import { useResizeBlock } from '@/hooks/useResizeBlock';
+import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
 import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
 
