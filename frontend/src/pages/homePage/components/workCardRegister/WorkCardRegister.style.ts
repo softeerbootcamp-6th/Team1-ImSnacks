@@ -4,6 +4,13 @@ import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import type { Size } from '@/types/size.type';
+import { FlexStyles } from '@/styles/commonStyles';
+
+const WorkCardToolTip = css`
+  ${FlexStyles.flexColumn};
+  gap: ${Spacing.Spacing100};
+  width: 100%;
+`;
 
 const WorkCardContainer = (size: Size) => css`
   position: absolute;
@@ -93,6 +100,7 @@ const WorkCardResizeHandleRight = css`
 
 export default {
   WorkCardContainer,
+  WorkCardToolTip,
   WorkCardDeleteButton,
   WorkCardResizeHandleLeft,
   WorkCardResizeHandleRight,

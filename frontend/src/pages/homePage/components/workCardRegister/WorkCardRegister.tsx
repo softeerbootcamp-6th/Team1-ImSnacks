@@ -6,6 +6,9 @@ import type { WorkBlockType } from '@/types/workCard.type';
 import { useChangeTimeByResize } from '@/pages/homePage/hooks/work/useChangeTimeByResize';
 import { useResizeCollision } from '@/components/dnd/hooks/useResizeCollision';
 import { patchMyWorkTime } from '@/apis/myWork.api';
+import ToolTip from '@/components/toolTip/ToolTip';
+import { FlexStyles } from '@/styles/commonStyles';
+import WorkCardContentS from '../workCardRegisterContent/WorkCardRegisterContent.style';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -67,58 +70,83 @@ const WorkCardRegister = ({
   };
 
   return (
-    <div
-      css={S.WorkCardContainer({ width: newWidth, height: block.size.height })}
-      onMouseDown={onMouseDown}
-      onMouseEnter={show}
-      onMouseLeave={hide}
-    >
-      {/* 왼쪽 리사이징 핸들 */}
-      {!isDragging && onResize && (
-        <div
-          css={S.WorkCardResizeHandleLeft}
-          onPointerDown={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleResizeStart(e, block, 'left');
-          }}
-          onPointerUp={handleResizeEnd}
+    <>
+      <div
+        css={S.WorkCardContainer({
+          width: newWidth,
+          height: block.size.height,
+        })}
+        onMouseDown={onMouseDown}
+        onMouseEnter={show}
+        onMouseLeave={hide}
+      >
+        {!isDragging && !isResizing && isVisible && newWidth < 160 && (
+          <ToolTip
+            direction={'Top'}
+            content={
+              <div css={S.WorkCardToolTip}>
+                <div css={FlexStyles.flexRow}>
+                  <div css={WorkCardContentS.WorkCardTitle}>
+                    {block.workName}
+                  </div>
+                  <div css={WorkCardContentS.WorkCardCropName}>
+                    {block.cropName}
+                  </div>
+                </div>
+                <div css={WorkCardContentS.WorkCardTime}>{block.workTime}</div>
+              </div>
+            }
+            type={'Default'}
+            offset={80}
+          />
+        )}
+        {/* 왼쪽 리사이징 핸들 */}
+        {!isDragging && onResize && (
+          <div
+            css={S.WorkCardResizeHandleLeft}
+            onPointerDown={e => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleResizeStart(e, block, 'left');
+            }}
+            onPointerUp={handleResizeEnd}
+          />
+        )}
+
+        {/* 오른쪽 리사이징 핸들 */}
+        {!isDragging && onResize && (
+          <div
+            css={S.WorkCardResizeHandleRight}
+            onPointerDown={e => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleResizeStart(e, block, 'right');
+            }}
+            onPointerUp={handleResizeEnd}
+          />
+        )}
+
+        <WorkCardRegisterContent
+          width={newWidth}
+          cropName={block.cropName}
+          workName={block.workName}
+          workTime={block.workTime}
         />
-      )}
 
-      {/* 오른쪽 리사이징 핸들 */}
-      {!isDragging && onResize && (
-        <div
-          css={S.WorkCardResizeHandleRight}
-          onPointerDown={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleResizeStart(e, block, 'right');
-          }}
-          onPointerUp={handleResizeEnd}
-        />
-      )}
-
-      <WorkCardRegisterContent
-        width={newWidth}
-        cropName={block.cropName}
-        workName={block.workName}
-        workTime={block.workTime}
-      />
-
-      {isVisible && !isResizing && !isDragging && (
-        <button
-          onClick={onDelete}
-          onPointerDown={e => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-          css={S.WorkCardDeleteButton}
-        >
-          ×
-        </button>
-      )}
-    </div>
+        {isVisible && !isResizing && !isDragging && (
+          <button
+            onClick={onDelete}
+            onPointerDown={e => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            css={S.WorkCardDeleteButton}
+          >
+            ×
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 
