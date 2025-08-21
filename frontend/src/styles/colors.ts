@@ -13,6 +13,25 @@ export const ColorPrimary = {
   B900: '#03254E',
 };
 
+export const ColorTheme = {
+  Hot: {
+    Pressed: '#ED473B',
+    Hover: '#FFD664',
+  },
+  Dark: {
+    Pressed: '#26374F',
+    Hover: '#91B2C2',
+  },
+  Night: {
+    Pressed: '#181324',
+    Hover: '#5A659D',
+  },
+  Default: {
+    Pressed: ColorPrimary.B700,
+    Hover: ColorPrimary.B300,
+  },
+};
+
 // Status Global Colors
 export const ColorStatus = {
   Global: {
