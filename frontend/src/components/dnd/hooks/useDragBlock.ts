@@ -137,50 +137,6 @@ export const useDragBlock = ({
     workBlocks,
   ]);
 
-  const handleEndResize = useCallback(
-    async (resizingBlock: WorkBlockType) => {
-      if (!resizingBlock) return;
-
-      const currentResizingBlock = resizingBlock;
-
-      // 상태 초기화
-      setDraggingBlock(null);
-      setPointerPosition(null);
-
-      //컨테이너 밖일 때 초기 위치로 복귀
-      if (
-        !isInBound(
-          currentResizingBlock.position,
-          currentResizingBlock,
-          scrollOffset,
-          containerRef.current,
-          { x: 0, y: getYCoordinate(1) }
-        )
-      ) {
-        const currentBlocks = getTimeUpdatedBlocks(
-          workBlocks,
-          currentResizingBlock
-        );
-
-        animateBlocksTransition(currentBlocks, workBlocks);
-        return;
-      }
-
-      // 충돌 해결 및 블록 정렬
-      const { updatedBlock, sortedBlocks, newBlocks } = resolveCollision({
-        draggingBlock: currentResizingBlock,
-        workBlocks,
-        containerRef,
-        scrollOffset,
-      });
-
-      animateBlocksTransition(newBlocks, sortedBlocks);
-
-      await updateBlockTimeOnServer(updatedBlock);
-    },
-    [animateBlocksTransition, containerRef, scrollOffset, workBlocks]
-  );
-
   useSetPointerEvents({
     onPointerMove: handlePointerMove,
     onPointerUp: handleEndDrag,
@@ -191,6 +147,5 @@ export const useDragBlock = ({
     pointerPosition,
     dragOffset,
     handleStartDrag,
-    handleEndResize,
   };
 };
