@@ -1,12 +1,12 @@
 import S from './WorkCardRegister.style';
 import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
 import useVisibility from '@/hooks/useVisibility';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useChangeTimeByResize } from '@/pages/homePage/hooks/work/useChangeTimeByResize';
 import { useResizeCollision } from '@/components/dnd/hooks/useResizeCollision';
 import { patchMyWorkTime } from '@/apis/myWork.api';
-import ToolTip from '@/components/toolTip/ToolTip';
+import { css } from '@emotion/react';
 
 interface WorkCardRegisterProps {
   isDragging?: boolean;
@@ -34,6 +34,25 @@ const WorkCardRegister = ({
   const { show, hide, isVisible } = useVisibility();
   const [newWidth, setNewWidth] = useState(block.size.width);
   const [isResizing, setIsResizing] = useState(false);
+  const [isToolTipVisible, setIsToolTipVisible] = useState(false);
+  const [isPassedTime, setIsPassedTime] = useState(block.position.x < 0);
+
+  useEffect(() => {
+    setIsToolTipVisible(
+      !isDragging &&
+        !isResizing &&
+        isVisible &&
+        (isPassedTime ? newWidth + block.position.x : newWidth) < 145
+    );
+    setIsPassedTime(block.position.x < 0);
+  }, [
+    isVisible,
+    isDragging,
+    isResizing,
+    newWidth,
+    isPassedTime,
+    block.position.x,
+  ]);
 
   const { handleResizeCollision } = useResizeCollision({
     containerRef,
@@ -78,7 +97,7 @@ const WorkCardRegister = ({
         onMouseEnter={show}
         onMouseLeave={hide}
       >
-        {!isDragging && !isResizing && isVisible && newWidth < 145 && (
+        {/* {isToolTipVisible && (
           <ToolTip
             direction={'Top'}
             content={
@@ -93,7 +112,7 @@ const WorkCardRegister = ({
             type={'Default'}
             offset={80}
           />
-        )}
+        )} */}
         {/* 왼쪽 리사이징 핸들 */}
         {!isDragging && onResize && (
           <div
@@ -119,13 +138,19 @@ const WorkCardRegister = ({
             onPointerUp={handleResizeEnd}
           />
         )}
-
-        <WorkCardRegisterContent
-          width={newWidth}
-          cropName={block.cropName}
-          workName={block.workName}
-          workTime={block.workTime}
-        />
+        <div
+          css={css`
+            margin-left: ${isPassedTime ? -block.position.x : 0}px;
+          `}
+        >
+          <WorkCardRegisterContent
+            width={isPassedTime ? newWidth + block.position.x : newWidth}
+            cropName={block.cropName}
+            workName={block.workName}
+            workTime={block.workTime}
+            isToolTipVisible={isToolTipVisible}
+          />
+        </div>
 
         {isVisible && !isResizing && !isDragging && (
           <button
