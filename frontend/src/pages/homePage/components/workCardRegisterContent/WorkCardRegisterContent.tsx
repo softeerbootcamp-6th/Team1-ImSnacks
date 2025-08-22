@@ -29,7 +29,7 @@ const WorkCardRegisterContent = ({
 
   return (
     <div css={S.WorkCardContent} ref={anchorRef}>
-      {width && width < 145 && isToolTipVisible && (
+      {width < 145 && isToolTipVisible && (
         <PortalToolTip
           anchorRef={anchorRef}
           direction={'Top'}
@@ -53,12 +53,12 @@ const WorkCardRegisterContent = ({
       <div css={S.WorkCardColorBar(cropName as CropNameType)} />
       <div css={S.WorkCardInfo}>
         <div css={S.WorkCardContentWrapper}>
-          {width && width > 80 && (
+          {width > 80 && (
             <div css={[S.WorkCardTitle, isCompleted && S.CompletedTextStyle]}>
               {workName}
             </div>
           )}
-          {width && width > 120 && (
+          {width > 120 && (
             <div
               css={[S.WorkCardCropName, isCompleted && S.CompletedTextStyle]}
             >
@@ -66,7 +66,7 @@ const WorkCardRegisterContent = ({
             </div>
           )}
         </div>
-        {width && width > 80 && (
+        {width > 80 && (
           <div css={[S.WorkCardTime, isCompleted && S.CompletedTextStyle]}>
             {workTime}
           </div>
