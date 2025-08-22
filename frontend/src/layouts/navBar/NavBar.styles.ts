@@ -4,7 +4,7 @@ import { Opacity } from '@/styles/colors';
 import { BackgroundBlur } from '@/styles/effects';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 
-const NavBarWrapper = (isWeatherPage: boolean) => css`
+const NavBarWrapper = (isWeatherPage: boolean, isVisible: boolean) => css`
   ${isWeatherPage
     ? css`
         ${customBorderGradientStyles.gradientBorderDark}
@@ -30,9 +30,14 @@ const NavBarWrapper = (isWeatherPage: boolean) => css`
   ${BackgroundBlur.BgBlur100}
   z-index: 1000;
   position: fixed;
+
   top: 56px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%)
+    ${isVisible ? 'translateY(0)' : 'translateY(-300%)'};
+
+  opacity: ${isVisible ? 1 : 0};
+  transition: transform 1s ease-in-out, opacity 0.3s ease-in-out;
 `;
 
 const LogoStyle = css`
