@@ -20,12 +20,9 @@ import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
 import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
 import { useTimeStore } from '@/store/useTimeStore';
-<<<<<<< HEAD
 import { formatRelativeTime } from '@/utils/formatTimeUtil';
-=======
 import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
->>>>>>> 215ececf94fdeb4815f1a482d08b9f3bb059217a
 
 const WorkContainer = ({
   weatherRiskData,
