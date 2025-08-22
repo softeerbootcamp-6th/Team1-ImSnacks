@@ -32,7 +32,7 @@ public class ShortTermWeatherForecast {
 
     @Id
     @Column(name = "fcst_time")
-    private int fcstTime;
+    private LocalDateTime fcstTime;
 
     @Column(nullable = false)
     private double precipitation;
@@ -64,7 +64,7 @@ public class ShortTermWeatherForecast {
         if(precipitation >= 30) return WeatherCondition.HEAVY_RAIN;
         if(precipitation > 0) return WeatherCondition.RAIN;
         if(windSpeed >= 14) return WeatherCondition.STRONG_WIND;
-        if(fcstTime >= times.getSunriseTime().getHour() && fcstTime < times.getSunSetTime().getHour()){
+        if(fcstTime.getHour() >= times.getSunriseTime().getHour() && fcstTime.getHour() < times.getSunSetTime().getHour()){
             if(temperature >= 33) return WeatherCondition.HEAT_WAVE;
             if(skyStatus == 1) return WeatherCondition.SUNNY;
             if(skyStatus == 3) return WeatherCondition.LESS_CLOUDY;
