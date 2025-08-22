@@ -31,7 +31,7 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
     @Override
     public ShortTermWeatherDto process(VilageFcstResponseDto response) throws Exception {
         log.info("processing vilage fcst response...");
-        //24시간 이내 정보만 filtering
+        //24시간 + 3시간 이내 정보만 filtering
         List<VilageFcstItemsDto> within24HoursWeatherInfo = response.getWeatherInfo().stream()
                 .filter(ForecastTimeUtils::isWithin24Hours)
                 .map(item -> {
@@ -75,8 +75,6 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
     }
 
     private ShortTermWeatherDto.WeatherForecastByTimeDto extractInfo(LocalDateTime fcstDateTime, List<VilageFcstItemsDto> weatherInfos) {
-        int fcstTime = ForecastTimeUtils.getIntegerFromAPITime(fcstDateTime);
-
         double precipitation = 0;
         double windSpeed = 0;
         int temperature = 0;
@@ -114,7 +112,7 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
             }
         }
 
-        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstTime, precipitation, temperature, humidity, windSpeed, snow, skyStatus, windDirection);
+        return new ShortTermWeatherDto.WeatherForecastByTimeDto(fcstDateTime, precipitation, temperature, humidity, windSpeed, snow, skyStatus, windDirection);
     }
 
     private double parseDoubleOrDefault(String value) {
