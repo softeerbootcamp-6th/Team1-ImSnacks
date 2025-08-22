@@ -36,7 +36,9 @@ const Headline = () => {
   return (
     <div css={S.Headline}>
       <div css={S.GreetingMessage}>
-        <div>좋은 아침이에요, {nickName}님!</div>
+        <div>
+          {nickName}님, {briefingData?.welcomeMsg}
+        </div>
 
         {briefingData?.hasWeatherRisk ? (
           <div css={S.WeatherRisk}>

@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, MouseEvent } from 'react';
+import type { ButtonHTMLAttributes, MouseEvent, DragEvent } from 'react';
 import S from './BtnCreateWork.style';
 import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 import useVisibility from '@/hooks/useVisibility';
@@ -7,7 +7,8 @@ import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
 import { css } from '@emotion/react';
 import { useTheme } from '@emotion/react';
 
-interface BtnCreateWorkProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface BtnCreateWorkProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onDragStart'> {
   work: RecommendedWorksResponse;
   isDragging?: boolean;
   setSelectedRecommendedWork: (work: RecommendedWorksResponse | null) => void;
@@ -31,6 +32,13 @@ const BtnCreateWork = ({
     }
   };
 
+  const handleDragStart = (e: DragEvent<HTMLButtonElement>) => {
+    e.dataTransfer.setData('application/json', JSON.stringify(work));
+    e.dataTransfer.effectAllowed = 'copy';
+
+    e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
+  };
+
   return (
     <div
       css={css`
@@ -49,6 +57,8 @@ const BtnCreateWork = ({
           hide();
           setSelectedRecommendedWork(null);
         }}
+        draggable={true}
+        onDragStart={handleDragStart}
       >
         {work.workName}
       </button>

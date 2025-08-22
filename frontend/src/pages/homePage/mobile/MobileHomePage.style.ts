@@ -7,7 +7,7 @@ import { css } from '@emotion/react';
 const MobileHomePage = css`
   ${FlexStyles.flexColumn};
   width: 100%;
-  margin-top: 87px;
+  margin-top: 67px;
   margin-bottom: 32px;
 `;
 

@@ -8,6 +8,7 @@ import type { CropNameType } from '@/types/crop.type';
 import { FlexStyles } from '@/styles/commonStyles';
 
 const WorkCardContent = css`
+  position: relative;
   display: flex;
   min-width: 0;
   flex-direction: row;
@@ -21,27 +22,30 @@ const WorkCardColorBar = (cropName: CropNameType) => css`
   border-radius: ${BorderRadius.Base.Hard};
 `;
 
-const WorkCardInfo = css`
+const WorkCardInfo = (width: number) => css`
   display: flex;
   flex-direction: column;
   gap: ${Spacing.Spacing100};
   min-width: 0;
   width: 100%;
+  width: ${width ? `${width}px` : '100%'};
 `;
 
-const WorkCardContentWrapper = css`
+const WorkCardContentWrapper = (width: number) => css`
   ${FlexStyles.flexRow};
   gap: ${Spacing.Spacing300};
   min-width: 0;
-  width: 100%;
+  width: ${width < 150 ? '100%' : '115px'};
+  margin-right: ${Spacing.Spacing100};
 `;
 
 const WorkCardTitle = css`
   ${Typography.Body_S_400}
   color: ${Assets.Text.WorkCard.Default.Headline};
   display: block;
+  flex: 1 1 auto;
   min-width: 0;
-  width: 100%;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -50,13 +54,19 @@ const WorkCardTitle = css`
 const WorkCardCropName = css`
   ${Typography.Caption_S}
   color: ${Assets.Text.WorkCard.Default.Headline};
-  min-width: 50px;
+  display: block;
+
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const WorkCardTime = css`
   ${Typography.Caption_S}
   color: ${Assets.Text.WorkCard.Default.Body};
   display: block;
+
   min-width: 0;
   width: 100%;
   white-space: nowrap;

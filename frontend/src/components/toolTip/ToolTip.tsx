@@ -4,7 +4,7 @@ import S from './ToolTip.style';
 import type { TooltipDirectionType, TooltipType } from '@/types/tooltip.type';
 import { useTheme } from '@emotion/react';
 
-interface ToolTipProps {
+export interface ToolTipProps {
   direction: TooltipDirectionType;
   content: ReactNode;
   type: TooltipType;

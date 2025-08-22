@@ -8,14 +8,12 @@ import {
 import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';
 import { useUserStore } from '@/store/useUserStore';
 import { useTimeStore } from '@/store/useTimeStore';
-import { useIsMobileStore } from '@/store/useIsMobileStore';
 
 export const useInitialAppData = () => {
   const location = useLocation();
   const { setWeatherCondition } = useWeatherConditionStore();
   const { setNickName } = useUserStore();
   const { currentTime, increaseTime } = useTimeStore();
-  const { setIsMobile } = useIsMobileStore();
 
   const fetchWeather = useCallback(async () => {
     try {
@@ -42,18 +40,7 @@ export const useInitialAppData = () => {
     if (location.pathname === '/login') return;
 
     fetchWeather();
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
-    setIsMobile(isMobile);
-  }, [
-    setWeatherCondition,
-    setNickName,
-    setIsMobile,
-    location.pathname,
-    fetchWeather,
-  ]);
+  }, [setWeatherCondition, setNickName, location.pathname, fetchWeather]);
 
   // currentTime이 정각이 될 때마다 실행
   useEffect(() => {

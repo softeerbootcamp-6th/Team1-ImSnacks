@@ -31,4 +31,17 @@ const ScrollContainer = css`
   }
 `;
 
-export default { ContainerWrapper, ScrollContainer, MaskGradientWrapper };
+const LastUpdateText = css`
+  position: absolute;
+  top: 20px;
+  left: 210px;
+  font-size: 12px;
+  color: ${GrayScale.G500};
+`;
+
+export default {
+  ContainerWrapper,
+  ScrollContainer,
+  MaskGradientWrapper,
+  LastUpdateText,
+};

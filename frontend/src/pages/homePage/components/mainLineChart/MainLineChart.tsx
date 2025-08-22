@@ -7,7 +7,7 @@ import {
   Tooltip,
   Area,
 } from 'recharts';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
 import { getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
@@ -28,8 +28,18 @@ const MainLineChart = ({
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
+  const [showChart, setShowChart] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowChart(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   if (!graphData || !graphData.valuePerTime) {
     return <div css={S.LoadingWrapper}>로딩 중...</div>;
+  }
+
+  if (!showChart) {
+    return <div css={S.LoadingWrapper}></div>;
   }
 
   const pointSpacing = 97;
@@ -110,7 +120,7 @@ const MainLineChart = ({
 
           {weatherRiskData.map((item, index) => (
             <Area
-              key={item.category}
+              key={item.startTime}
               type="monotone"
               dataKey={`areaValue_${index}`}
               stroke="transparent"
