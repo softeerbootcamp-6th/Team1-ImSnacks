@@ -47,6 +47,9 @@ const WorkCardRegister = ({
   useEffect(() => {
     if (block.id === resizingBlock?.id) {
       setNewWidth(resizingBlock.size.width);
+      setIsResizing(true);
+    } else {
+      setIsResizing(false);
     }
   }, [block.id, resizingBlock?.id, resizingBlock?.size.width]);
 
@@ -67,13 +70,18 @@ const WorkCardRegister = ({
     block.position.x,
   ]);
 
+  console.log('WorkCardRegister 렌더링:', block.id, 'isResizing:', isResizing);
+
   return (
     <>
       <div
-        css={S.WorkCardContainer({
-          width: newWidth,
-          height: block.size.height,
-        })}
+        css={S.WorkCardContainer(
+          {
+            width: newWidth,
+            height: block.size.height,
+          },
+          isResizing
+        )}
         onMouseDown={onMouseDown}
         onMouseEnter={show}
         onMouseLeave={hide}
@@ -81,7 +89,7 @@ const WorkCardRegister = ({
         {/* 왼쪽 리사이징 핸들 */}
         {!isDragging && (
           <div
-            css={S.WorkCardResizeHandleLeft}
+            css={S.WorkCardResizeHandleLeft(isResizing)}
             onPointerDown={e => {
               e.stopPropagation();
               e.preventDefault();
@@ -98,7 +106,7 @@ const WorkCardRegister = ({
         {/* 오른쪽 리사이징 핸들 */}
         {!isDragging && (
           <div
-            css={S.WorkCardResizeHandleRight}
+            css={S.WorkCardResizeHandleRight(isResizing)}
             onPointerDown={e => {
               e.stopPropagation();
               e.preventDefault();
