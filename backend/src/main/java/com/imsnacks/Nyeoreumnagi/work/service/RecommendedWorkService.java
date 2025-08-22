@@ -13,7 +13,10 @@ import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse;
 import com.imsnacks.Nyeoreumnagi.work.dto.response.RecommendWorksResponse.RecommendedWorksResponse;
 import com.imsnacks.Nyeoreumnagi.work.entity.LifeCycleAndRecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
+import com.imsnacks.Nyeoreumnagi.work.entity.RecommendedWork;
 import com.imsnacks.Nyeoreumnagi.work.exception.CropException;
+import com.imsnacks.Nyeoreumnagi.work.exception.WorkException;
+import com.imsnacks.Nyeoreumnagi.work.exception.WorkResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import com.imsnacks.Nyeoreumnagi.work.util.WorkScheduleCalculator;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +54,9 @@ public class RecommendedWorkService {
         List<MyCrop> myCropList = new ArrayList<>();
         if (myCropId == null) {
             myCropList = myCropRepository.findAllByMember_IdOrderById(memberId);
+            if(myCropList.isEmpty()){
+                throw new WorkException(WorkResponseStatus.MY_CROP_NOT_FOUND);
+            }
             myCropId = myCropList.get(0).getId();
         }
         MyCrop myCrop = myCropRepository.findById(myCropId).orElseThrow(() -> new CropException(MY_CROP_NOT_FOUND));
@@ -64,13 +70,16 @@ public class RecommendedWorkService {
 
         List<RecommendedWorksResponse> recommendedWorksResponse = new ArrayList<>();
 
-        lifeCycleAndRecommendedWorkRepository.findAllByLifeCycle_Id(nowLifeCycleId)
-                .stream().map(LifeCycleAndRecommendedWork::getRecommendedWork)
-                .forEach(recommendedWork -> {
-                    int neighborCount = (int) getNeighborCountForWork(memberId, recommendedWork.getId());
-                    recommendedWorksResponse.addAll(workScheduleCalculator.windowsForWork(recommendedWork, forecasts, neighborCount, now));
-                });
+        List<RecommendedWork> limitedWorks = lifeCycleAndRecommendedWorkRepository.findAllByLifeCycle_Id(nowLifeCycleId)
+                .stream()
+                .map(LifeCycleAndRecommendedWork::getRecommendedWork)
+                .limit(5)
+                .toList();
 
+        for (RecommendedWork recommendedWork : limitedWorks) {
+            int neighborCount = (int) getNeighborCountForWork(memberId, recommendedWork.getId());
+            recommendedWorksResponse.addAll(workScheduleCalculator.windowsForWork(recommendedWork, forecasts, neighborCount, now));
+        }
         List<RecommendWorksResponse.MyCropResponse> myCropResponses = myCropList.stream().map(my -> new RecommendWorksResponse.MyCropResponse(my.getId(), my.getCrop().getName())).toList();
         return new RecommendWorksResponse(recommendedWorksResponse, myCropResponses);
     }
@@ -84,7 +93,6 @@ public class RecommendedWorkService {
         double centerLat = loc.getY();
         double centerLon = loc.getX();
 
-        // k-익명 3 적용 예시
         return nearbyService.countNeighborsWithin5kmUsingFact(
                 workId, currentMemberId, centerLat, centerLon, true, 3
         );
