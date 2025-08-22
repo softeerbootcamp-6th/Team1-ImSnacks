@@ -22,7 +22,7 @@ public class SevenDayTemperatureReader implements ItemReader<SevenDayTemperature
     private final MidTempRegionCodeRepository midTempRegionCodeRepository;
     private static List<String> midTempRegionCodes = null;
     private final SevenDaysApiCaller apiCaller;
-    private static int index = 0;
+    private int index = 0;
     private final String baseDate;
 
     SevenDayTemperatureReader(@Value("#{jobParameters['base_date']}") String baseDate,
