@@ -1,3 +1,4 @@
+import { useIsMobileStore } from '@/store/useIsMobileStore';
 import S from './LoginPage.style';
 import { useLogin } from './hooks/useLogin';
 
@@ -11,11 +12,12 @@ const LoginPage = () => {
     handlePasswordChange,
     handleSubmit,
   } = useLogin();
+  const { isMobile } = useIsMobileStore();
 
   return (
     <>
       <div css={S.LoginContainer}>
-        <div css={S.LoginCard}>
+        <div css={S.LoginCard(isMobile)}>
           <div css={S.LoginHeader}>
             <h1 css={S.LoginTitle}>로그인</h1>
           </div>

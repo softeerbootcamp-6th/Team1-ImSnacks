@@ -6,14 +6,15 @@ const LoginContainer = css`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 20px;
 `;
 
-const LoginCard = css`
+const LoginCard = (isMobile: boolean) => css`
   background: white;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 400px;
+  width: ${isMobile ? '100%' : '400px'};
   box-sizing: border-box;
   overflow: hidden;
 `;
