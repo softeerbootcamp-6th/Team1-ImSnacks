@@ -28,7 +28,7 @@ public class UVReader implements ItemReader<UVReaderResponseDtoWithNxNy> {
     private final String baseDateTime;
 
     private static List<UniqueNxNy> areaCodes = null;
-    private static int areaCodesIndex = 0;
+    private int areaCodesIndex = 0;
 
     public UVReader(@Value("#{jobParameters['time']}") String baseDateTime,
                     UVApiCaller apiCaller,
