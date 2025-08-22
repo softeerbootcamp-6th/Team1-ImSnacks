@@ -50,11 +50,11 @@ export const useCreateWorkBlock = ({
           .set('millisecond', 0);
 
         const newStartTime = baseDateTime.add(timeByPosition, 'hour');
-        const newEndTime = newStartTime.add(1, 'hour'); // TODO: 2시간으로 변경
+        const newEndTime = newStartTime.add(1, 'hour').add(30, 'minute');
 
         // 위치와 크기 설정 - y는 getYCoordinate(1)을 사용하여 유효한 y 좌표 설정
         const position = { x: dropX, y: getYCoordinate(1) };
-        const width = X_PX_PER_HOUR * 1;
+        const width = X_PX_PER_HOUR * 1.5;
 
         // 임시 블록 생성하여 겹침 검사용으로 사용
         const tempBlock: WorkBlockType = {

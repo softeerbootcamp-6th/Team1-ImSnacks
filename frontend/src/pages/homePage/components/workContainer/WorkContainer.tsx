@@ -20,11 +20,8 @@ import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
 import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
 import { useTimeStore } from '@/store/useTimeStore';
-import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
-import RegisterWorkContainerS from '../registerWorkContainer/RegisterWorkContainer.style';
-import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
-import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
 import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
+import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -192,51 +189,15 @@ const WorkContainer = ({
           </DraggingItem>
         )}
       </DragContainer>
-      <div css={RegisterWorkContainerS.RegisterWorkContainer}>
-        <div css={RegisterWorkContainerS.TextBox}>
-          <div css={RegisterWorkContainerS.TextBoxTitle}>
-            작업 일정 추천하기
-          </div>
-          <div css={RegisterWorkContainerS.TextBoxDescription}>
-            과실이 크게 자라는 지금, 기상 상황에 따라 이런 작업을 추천 드려요!
-          </div>
-        </div>
-        <div css={RegisterWorkContainerS.BtnBox}>
-          <div css={RegisterWorkContainerS.BtnSelectChipContainer}>
-            {!myCrops.length && <div>작물을 추가해주세요.</div>}
-            {myCrops.map(crop => (
-              <BtnSelectChip
-                key={crop.myCropId}
-                size="Small"
-                text={crop.myCropName || ''}
-                status={
-                  selectedCrop?.myCropId === crop.myCropId
-                    ? BTN_SELECT_CHIP_STATUSES.PRESSED
-                    : BTN_SELECT_CHIP_STATUSES.DEFAULT
-                }
-                onClick={() => handleCropClick(crop)}
-              />
-            ))}
-          </div>
-          <div css={RegisterWorkContainerS.BtnCreateWorkContainer}>
-            {recommendedWorks.map(work => (
-              <BtnCreateWork
-                key={work.workId}
-                work={work}
-                setSelectedRecommendedWork={setSelectedRecommendedWork}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-      {/* <RegisterWorkContainer
+
+      <RegisterWorkContainer
         recommendedWorks={recommendedWorks}
         myCrops={myCrops}
         selectedCrop={selectedCrop}
         handleCropClick={handleCropClick}
         handleCreateWork={handleCreateWork}
         setSelectedRecommendedWork={setSelectedRecommendedWork}
-      /> */}
+      />
     </>
   );
 };
