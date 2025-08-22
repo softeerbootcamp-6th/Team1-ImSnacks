@@ -1,13 +1,13 @@
 import { createPortal } from 'react-dom';
 import { useEffect, useState } from 'react';
+import ToolTip from '../toolTip/ToolTip';
+import type { ToolTipProps } from '../toolTip/ToolTip';
 
-interface PortalComponentProps {
+interface PortalToolTipProps extends ToolTipProps {
   anchorRef: React.RefObject<HTMLElement | null>;
-  offset?: number;
-  children: React.ReactNode;
 }
 
-const PortalComponent = ({ anchorRef, children }: PortalComponentProps) => {
+const PortalToolTip = ({ anchorRef, ...props }: PortalToolTipProps) => {
   const [position, setPosition] = useState<{ x: number; y: number } | null>(
     null
   );
@@ -30,10 +30,10 @@ const PortalComponent = ({ anchorRef, children }: PortalComponentProps) => {
         pointerEvents: 'none',
       }}
     >
-      {children}
+      <ToolTip {...props} />
     </div>,
     document.body
   );
 };
 
-export default PortalComponent;
+export default PortalToolTip;
