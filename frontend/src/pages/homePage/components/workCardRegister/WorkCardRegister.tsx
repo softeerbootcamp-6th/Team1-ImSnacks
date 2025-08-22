@@ -124,11 +124,17 @@ const WorkCardRegister = ({
         )}
         <div
           css={css`
-            margin-left: ${isPassedTime ? -block.position.x : 0}px;
+            margin-left: ${isPassedTime && !isDragging
+              ? -block.position.x
+              : 0}px;
           `}
         >
           <WorkCardRegisterContent
-            width={isPassedTime ? newWidth + block.position.x : newWidth}
+            width={
+              isPassedTime && !isDragging
+                ? newWidth + block.position.x
+                : newWidth
+            }
             cropName={block.cropName}
             workName={block.workName}
             workTime={block.workTime}
