@@ -1,15 +1,21 @@
 import { type RefObject } from 'react';
 
+interface DragContainerProps {
+  containerRef: RefObject<HTMLDivElement | null>;
+  children: React.ReactNode;
+  onDrop?: (e: React.DragEvent) => void;
+  onDragOver?: (e: React.DragEvent) => void;
+}
+
 const DragContainer = ({
   containerRef,
   children,
+  onDrop,
+  onDragOver,
   ...props
-}: {
-  containerRef: RefObject<HTMLDivElement | null>;
-  children: React.ReactNode;
-}) => {
+}: DragContainerProps) => {
   return (
-    <div ref={containerRef} {...props}>
+    <div ref={containerRef} onDrop={onDrop} onDragOver={onDragOver} {...props}>
       {children}
     </div>
   );
