@@ -84,7 +84,16 @@ public class WeatherService {
         int nx = farm.getNx();
         int ny = farm.getNy();
 
-        List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nowPlus24 = now.plusHours(24);
+        List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
+                .stream()
+                .filter(weather -> {
+                    LocalDateTime fcstTime = weather.getFcstTime();
+                    return !fcstTime.isBefore(now)
+                            && fcstTime.isBefore(nowPlus24);
+                })
+                .toList();
         if (weatherInfos.isEmpty()) {
             throw new WeatherException(NO_WEATHER_LOCATION);
         }
@@ -127,8 +136,8 @@ public class WeatherService {
         int nowTime = LocalDateTime.now().getHour();
         ShortTermWeatherForecast weatherInfoNearest = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
                 .stream()
-                .filter(weather -> weather.getFcstTime() <= nowTime)
-                .max(Comparator.comparingInt(ShortTermWeatherForecast::getFcstTime))
+                .filter(weather -> weather.getFcstTime().getHour() <= nowTime)
+                .max(Comparator.comparingInt(weather -> weather.getFcstTime().getHour()))
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
 
         SunriseSunSetTime sunriseSunSetTime = dashboardTodayWeatherRepository.findSunRiseSetByNxAndNy(nx, ny).orElseThrow(() -> new WeatherException(NO_SUNRISE_SET));
@@ -306,7 +315,7 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        ShortTermWeatherForecast weatherInfo = shortTermWeatherForecastRepository.findTopByNxAndNyAndFcstTimeLessThanEqualOrderByFcstTimeDesc(nx, ny, LocalDateTime.now().getHour())
+        ShortTermWeatherForecast weatherInfo = shortTermWeatherForecastRepository.findTopByNxAndNyAndFcstTimeLessThanEqualOrderByFcstTimeDesc(nx, ny, LocalDateTime.now())
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
 
         List<GetWeatherStatusResponse> weatherStatus = new ArrayList<>();
@@ -370,7 +379,7 @@ public class WeatherService {
     private List<GetWeatherGraphResponse.ValuePerTime> extractWeatherGraphInfos(List<ShortTermWeatherForecast> forecasts, WeatherMetric metric, int currentHour24) {
         return forecasts.stream()
                 .map(f -> {
-                    String name = String.format("%02d", f.getFcstTime());
+                    String name = String.format("%02d", f.getFcstTime().getHour());
                     double value = getValue(f, metric);
                     return new GetWeatherGraphResponse.ValuePerTime(name, value);
                 })

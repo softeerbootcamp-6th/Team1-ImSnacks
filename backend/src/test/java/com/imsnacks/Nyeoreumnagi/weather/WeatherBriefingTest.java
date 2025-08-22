@@ -101,7 +101,6 @@ class WeatherBriefingTest {
         final var to = now.plusHours(2);
         final WeatherRisk r1 = WeatherRisk.builder()
                 .weatherRiskId(1L)
-                .fcstDate(BASE.toLocalDate())
                 .startTime(from.withMinute(55))
                 .endTime(to.withMinute(57))
                 .nx(11)
@@ -111,7 +110,6 @@ class WeatherBriefingTest {
                 .build();
         final WeatherRisk r2 = WeatherRisk.builder()
                 .weatherRiskId(1L)
-                .fcstDate(BASE.toLocalDate())
                 .startTime(from.withMinute(8))
                 .endTime(to.withMinute(8))
                 .nx(11)
