@@ -4,6 +4,7 @@ import com.ImSnacks.NyeoreumnagiBatch.common.params.JobParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -39,6 +40,19 @@ public class JobScheduler {
 
     @Qualifier("airQualityJob")
     private final Job airQualityJob;
+
+    @Qualifier("improvedWeatherJob")
+    private final Job improvedWeatherJob;
+
+    @Scheduled(cron="0 58 9,11 * * *", zone="Asia/Seoul")
+    public void runImprovedWeatherJob() throws Exception {
+//        JobParameters jobParameters = JobParams.getWeatherJobParam();
+        JobParametersBuilder paramsBuilder = new JobParametersBuilder();
+        paramsBuilder.addString("base_date", "20250822")
+                     .addString("base_time", "0800");
+        JobParameters jobParameters = paramsBuilder.toJobParameters();
+        jobLauncher.run(improvedWeatherJob, jobParameters);
+    }
 
     //2시부터 3시간 간격으로 15분마다 매일
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
