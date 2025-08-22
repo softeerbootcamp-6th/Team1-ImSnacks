@@ -32,7 +32,7 @@ export const useDragBlock = ({
   //마우스 위치와 블록 위치 차이
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
 
-  // 전이 애니메이션 훅 사용
+  // 블록 이동 애니메이션 훅
   const { animateBlocksTransition } =
     useBlocksTransition<WorkBlockType>(updateWorkBlocks);
 
