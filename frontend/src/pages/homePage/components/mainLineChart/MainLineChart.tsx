@@ -110,7 +110,7 @@ const MainLineChart = ({
 
           {weatherRiskData.map((item, index) => (
             <Area
-              key={item.category}
+              key={item.startTime}
               type="monotone"
               dataKey={`areaValue_${index}`}
               stroke="transparent"

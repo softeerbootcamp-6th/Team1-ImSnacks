@@ -10,11 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { LoginAccessTokenResponse } from '../models/LoginAccessTokenResponse';
 
-export class GetWeatherBriefingResponse {
-    'hasWeatherRisk'?: boolean;
-    'welcomeMsg'?: string;
-    'weatherMsg'?: string;
+export class CustomResponseBodyLoginAccessTokenResponse {
+    'code'?: number;
+    'msg'?: string;
+    'data'?: LoginAccessTokenResponse;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -22,26 +23,26 @@ export class GetWeatherBriefingResponse {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "hasWeatherRisk",
-            "baseName": "hasWeatherRisk",
-            "type": "boolean",
-            "format": ""
+            "name": "code",
+            "baseName": "code",
+            "type": "number",
+            "format": "int32"
         },
         {
-            "name": "welcomeMsg",
-            "baseName": "welcomeMsg",
+            "name": "msg",
+            "baseName": "msg",
             "type": "string",
             "format": ""
         },
         {
-            "name": "weatherMsg",
-            "baseName": "weatherMsg",
-            "type": "string",
+            "name": "data",
+            "baseName": "data",
+            "type": "LoginAccessTokenResponse",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return GetWeatherBriefingResponse.attributeTypeMap;
+        return CustomResponseBodyLoginAccessTokenResponse.attributeTypeMap;
     }
 
     public constructor() {

@@ -51,6 +51,7 @@ const WorkCardContainer = (size: Size) => css`
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   user-select: none;
+  overflow: visible;
 
   cursor: grab;
 

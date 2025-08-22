@@ -21,7 +21,7 @@ export const DAMAGE_GRAPHIC: Record<
   SUNBURN: SunBurn,
   FRUIT_DROP: FruitDrop,
   POOR_COLORING: PoorColoring,
-  WATER_DEFFICIENCY: WaterDefficiency,
+  WATER_DEFICIENCY: WaterDefficiency,
   BUGS: Bugs,
   GERMS: Germs,
 };
