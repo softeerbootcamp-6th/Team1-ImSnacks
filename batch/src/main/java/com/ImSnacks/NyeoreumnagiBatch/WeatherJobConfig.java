@@ -1,5 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch;
 
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayTemperatureProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayWeatherConditionProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDayTemperatureReader;
@@ -7,7 +8,9 @@ import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDa
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDayTemperatureWriter;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDayWeatherConditionWriter;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.ShadowTableInitTasklet;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.ImprovedWeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.NxNyPagingReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.WeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.WeatherWriter;
@@ -20,14 +23,23 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.web.reactive.function.client.WebClientException;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class WeatherJobConfig {
+    private final NxNyPagingReader nxNyPagingReader;
+    private final ImprovedWeatherProcessor improvedWeatherProcessor;
     private final WeatherReader weatherReader;
     private final WeatherWriter weatherWriter;
     private final WeatherProcessor weatherProcessor;
@@ -43,6 +55,14 @@ public class WeatherJobConfig {
         return new JobBuilder("weatherJob", jobRepository)
                 .start(shadowTableInitStep)
                 .next(weatherStep)
+                .build();
+    }
+
+    @Bean
+    public Job improvedWeatherJob(JobRepository jobRepository, Step improvedWeatherStep, Step shadowTableInitStep) {
+        return new JobBuilder("improvedWeatherJob", jobRepository)
+                .start(shadowTableInitStep)
+                .next(improvedWeatherStep)
                 .build();
     }
 
@@ -70,6 +90,28 @@ public class WeatherJobConfig {
                 .reader(weatherReader)
                 .processor(weatherProcessor)
                 .writer(weatherWriter)
+                .build();
+    }
+
+    @Bean
+    public Step improvedWeatherStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(10);
+        executor.setThreadNamePrefix("weather-");
+        executor.initialize();
+
+        return new StepBuilder("imrovedWeatherStep", jobRepository)
+                .<UniqueNxNy, ShortTermWeatherDto>chunk(20, transactionManager)
+                .reader(nxNyPagingReader.pagingReader())
+                .processor(improvedWeatherProcessor)
+                .writer(weatherWriter)
+                .faultTolerant()
+                .retryLimit(3)
+                .retry(WebClientException.class)
+                .skipLimit(10)
+                .skip(Exception.class)
+                .taskExecutor(executor)
                 .build();
     }
 
