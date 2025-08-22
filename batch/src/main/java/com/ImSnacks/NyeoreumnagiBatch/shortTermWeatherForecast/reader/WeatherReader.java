@@ -26,7 +26,7 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     private static List<NxNy>  locations = null;
 
     // thread-safe 필요
-    private static int index = 0;
+    private int index = 0;
 
     // serviceKey는 고정된 값이니, application.yaml에 두고 읽어온다.
     private final String baseDate;
