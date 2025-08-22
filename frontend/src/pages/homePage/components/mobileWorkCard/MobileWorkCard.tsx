@@ -34,6 +34,7 @@ const MobileWorkCard = ({
         workName={workName}
         workTime={workTime}
         status={status}
+        width={300}
       />
       <button onClick={props.onClick}>
         <IC24CheckIcon
