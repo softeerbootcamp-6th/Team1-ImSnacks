@@ -48,6 +48,8 @@ public class DailyHighReader implements ItemReader<DailyHighReaderResponseDto> {
                                     stw -> new NxNy(stw.getNx(), stw.getNy())
                             ));
         }
-        iterator = weatherInfos.entrySet().iterator();
+        if (iterator == null) {
+            iterator = weatherInfos.entrySet().iterator();
+        }
     }
 }

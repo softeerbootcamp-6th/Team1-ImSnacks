@@ -27,7 +27,7 @@ public class DailyTemperatureReader implements ItemReader<DailyTemperatureReader
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
 
     private static Map<NxNy, List<ShortTermWeatherForecast>> weatherInfos = null;
-    private Iterator<Map.Entry<NxNy, List<ShortTermWeatherForecast>>> iterator;
+    private Iterator<Map.Entry<NxNy, List<ShortTermWeatherForecast>>> iterator = null;
 
     @Override
     public DailyTemperatureReaderResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
@@ -48,6 +48,8 @@ public class DailyTemperatureReader implements ItemReader<DailyTemperatureReader
                             stw -> new NxNy(stw.getNx(), stw.getNy())
                     ));
         }
-        iterator = weatherInfos.entrySet().iterator();
+        if (iterator == null) {
+            iterator = weatherInfos.entrySet().iterator();
+        }
     }
 }
