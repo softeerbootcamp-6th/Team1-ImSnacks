@@ -27,7 +27,7 @@ public class DailyHighReader implements ItemReader<DailyHighReaderResponseDto> {
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
 
     private static Map<NxNy, List<ShortTermWeatherForecast>> weatherInfos = null;
-    private Iterator<Map.Entry<NxNy, List<ShortTermWeatherForecast>>> iterator;
+    private Iterator<Map.Entry<NxNy, List<ShortTermWeatherForecast>>> iterator = null;
 
     @Override
     public DailyHighReaderResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
