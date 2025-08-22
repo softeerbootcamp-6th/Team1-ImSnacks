@@ -27,7 +27,6 @@ public class WeatherRisk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long weatherRiskId;
-    private LocalDate fcstDate; //지워야 함
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     @Column(name = "nx")

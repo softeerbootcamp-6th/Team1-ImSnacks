@@ -104,7 +104,7 @@ public class JobScheduler {
     }
 
     //매일 새벽 0시 30분에 실행
-    @Scheduled(cron = "0 30 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul")
     public void runAirQualityJob() throws Exception {
         JobParameters params = JobParams.getDailyJobParam();
         jobLauncher.run(airQualityJob, params);
