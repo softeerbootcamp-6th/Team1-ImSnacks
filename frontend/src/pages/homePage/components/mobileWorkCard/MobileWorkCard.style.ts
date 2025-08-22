@@ -13,6 +13,8 @@ const MobileWorkCard = (status: WorkChipType) => css`
   border-radius: 8px;
   padding: ${Spacing.Spacing300};
   border: 1px solid ${GrayScale.G100};
+  width: 100%;
+  box-sizing: border-box;
 
   opacity: ${status === WORK_CHIP_TYPES.COMPLETED ? 0.4 : 1};
 `;
