@@ -6,6 +6,11 @@ import { useBlocksTransition } from './useBlocksTransition';
 import { resolveCollision } from '../utils/resolveCollision';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
+import {
+  snapPositionToGrid,
+  snapWidthToGrid,
+  snapToGrid,
+} from '@/utils/snapToGrid';
 
 interface UseResizeBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -76,17 +81,25 @@ export const useResizeBlock = ({
         newWidth = newRightEdge - newX;
       }
 
+      // 6px 그리드에 스냅
+      const snappedX = snapToGrid(newX);
+      const snappedWidth = snapWidthToGrid(newWidth);
+      const snappedPosition = snapPositionToGrid({
+        x: snappedX,
+        y: resizingBlock.position.y,
+      });
+
       const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
         resizingBlock.startTime,
         resizingBlock.endTime,
-        { x: newX, y: resizingBlock.position.y },
-        newWidth
+        snappedPosition,
+        snappedWidth
       );
 
       const updatedBlock = {
         ...resizingBlock,
-        size: { ...resizingBlock.size, width: newWidth },
-        position: { ...resizingBlock.position, x: newX },
+        size: { ...resizingBlock.size, width: snappedWidth },
+        position: { ...resizingBlock.position, x: snappedX },
         startTime: newStartTime,
         endTime: newEndTime,
         workTime: newWorkTime,
