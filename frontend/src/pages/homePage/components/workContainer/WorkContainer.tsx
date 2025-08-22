@@ -67,8 +67,6 @@ const WorkContainer = ({
     workBlocks,
   });
 
-  const { handleResize } = useResizeBlock(workBlocks, updateWorkBlocks);
-
   const { draggingBlock, pointerPosition, dragOffset, handleStartDrag } =
     useDragBlock({
       containerRef,
@@ -76,6 +74,13 @@ const WorkContainer = ({
       workBlocks,
       updateWorkBlocks,
     });
+
+  const { resizingBlock, handleResizeStart, handleResizeEnd } = useResizeBlock({
+    containerRef,
+    scrollOffset,
+    workBlocks,
+    updateWorkBlocks,
+  });
 
   // DragContainer에 드롭 처리
   const handleContainerDrop = async (e: React.DragEvent) => {
@@ -149,6 +154,7 @@ const WorkContainer = ({
 
             {workBlocks.map(block => {
               const { id, position } = block;
+              if (resizingBlock?.id === id) return;
 
               return (
                 <DraggableItem
@@ -159,11 +165,13 @@ const WorkContainer = ({
                 >
                   <WorkCardRegister
                     block={block}
+                    resizingBlock={resizingBlock}
                     isDragging={false}
                     onDelete={() => removeWorkBlock(id)}
-                    onResize={updatedBlock =>
-                      handleResize(updatedBlock.id, updatedBlock)
+                    handleResizeStart={(e, block, direction) =>
+                      handleResizeStart(e.nativeEvent, block, direction)
                     }
+                    handleResizeEnd={handleResizeEnd}
                     containerRef={containerRef}
                     scrollOffset={scrollOffset}
                     allBlocks={workBlocks}
@@ -190,6 +198,25 @@ const WorkContainer = ({
               containerRef={containerRef}
               scrollOffset={scrollOffset}
               allBlocks={workBlocks}
+              updateWorkBlocks={updateWorkBlocks}
+            />
+          </DraggingItem>
+        )}
+        {resizingBlock && (
+          <DraggingItem
+            position={{
+              x: resizingBlock.position.x,
+              y: resizingBlock.position.y,
+            }}
+          >
+            <WorkCardRegister
+              block={resizingBlock}
+              resizingBlock={resizingBlock}
+              isDragging={false}
+              containerRef={containerRef}
+              scrollOffset={scrollOffset}
+              allBlocks={workBlocks}
+              handleResizeEnd={handleResizeEnd}
               updateWorkBlocks={updateWorkBlocks}
             />
           </DraggingItem>
