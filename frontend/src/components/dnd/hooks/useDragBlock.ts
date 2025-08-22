@@ -121,7 +121,7 @@ export const useDragBlock = ({
 
     // 충돌 해결 및 블록 정렬
     const { updatedBlock, sortedBlocks, newBlocks } = resolveCollision({
-      draggingBlock: currentDraggingBlock,
+      activeBlock: currentDraggingBlock,
       workBlocks,
       containerRef,
       scrollOffset,

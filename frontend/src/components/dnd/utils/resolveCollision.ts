@@ -9,7 +9,7 @@ import {
 import { sortWorkBlocks } from '@/pages/homePage/utils/work/sortWorkBlocks';
 
 interface ResolveCollisionParams {
-  draggingBlock: WorkBlockType;
+  activeBlock: WorkBlockType;
   workBlocks: WorkBlockType[];
   containerRef: RefObject<HTMLDivElement | null>;
   scrollOffset: number;
@@ -22,27 +22,27 @@ interface ResolveCollisionResult {
 }
 
 export const resolveCollision = ({
-  draggingBlock,
+  activeBlock,
   workBlocks,
   containerRef,
   scrollOffset,
 }: ResolveCollisionParams): ResolveCollisionResult => {
   // 해당 x좌표와 valid한 y좌표 조합에 블록이 이미 존재하는지 확인
   // 블록이 이미 있다면 가능한 위치로 이동
-  const otherBlocks = workBlocks.filter(b => b.id !== draggingBlock.id);
+  const otherBlocks = workBlocks.filter(b => b.id !== activeBlock.id);
 
-  const newBlocks = getTimeUpdatedBlocks(workBlocks, draggingBlock);
+  const newBlocks = getTimeUpdatedBlocks(workBlocks, activeBlock);
 
-  if (isFullyOverlapped(draggingBlock, otherBlocks)) {
+  if (isFullyOverlapped(activeBlock, otherBlocks)) {
     const collisionFreePosition = findCollisionFreePosition(
-      draggingBlock,
+      activeBlock,
       otherBlocks,
       containerRef.current?.getBoundingClientRect() ?? new DOMRect(),
       scrollOffset
     );
 
-    const updatedBlock = getTimeUpdatedBlock(draggingBlock, {
-      ...draggingBlock,
+    const updatedBlock = getTimeUpdatedBlock(activeBlock, {
+      ...activeBlock,
       position: collisionFreePosition,
     });
 
@@ -54,5 +54,5 @@ export const resolveCollision = ({
   }
 
   const sortedBlocks = sortWorkBlocks(newBlocks);
-  return { updatedBlock: draggingBlock, sortedBlocks, newBlocks };
+  return { updatedBlock: activeBlock, sortedBlocks, newBlocks };
 };
