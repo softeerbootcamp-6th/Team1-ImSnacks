@@ -12,7 +12,6 @@ import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 Wo
 import useContainer from '@/pages/homePage/hooks/useContainer';
 import WorkContainerS from './WorkContainer.style';
 import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
-import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/work/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/work/useCreateWorkBlock';
 import { useDragBlock } from '@/components/dnd/hooks/useDragBlock';
@@ -21,6 +20,11 @@ import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
 import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
 import { useTimeStore } from '@/store/useTimeStore';
+import { BTN_SELECT_CHIP_STATUSES } from '@/types/btnSelectChip.type';
+import RegisterWorkContainerS from '../registerWorkContainer/RegisterWorkContainer.style';
+import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
+import BtnCreateWork from '../btnCreateWork/BtnCreateWork';
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -75,11 +79,41 @@ const WorkContainer = ({
       updateWorkBlocks,
     });
 
+  // DragContainer에 드롭 처리
+  const handleContainerDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+
+    try {
+      const workData = e.dataTransfer.getData('application/json');
+
+      if (!(workData && selectedCrop)) return;
+      const work: RecommendedWorksResponse = JSON.parse(workData);
+      const containerElement = containerRef?.current;
+
+      if (!containerElement) return;
+
+      const containerRect = containerElement.getBoundingClientRect();
+      const dropX = e.clientX - containerRect.left + scrollOffset;
+      // 새로운 작업 블록 생성 (x좌표 전달)
+      await handleCreateWork(work, selectedCrop, dropX);
+    } catch (error) {
+      console.error('드롭된 데이터 파싱 실패:', error);
+    }
+  };
+
+  // DragContainer에 드래그 오버 처리
+  const handleContainerDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
   return (
     <>
       <DragContainer
         containerRef={containerRef}
         css={WorkContainerS.ContainerWrapper}
+        onDrop={handleContainerDrop}
+        onDragOver={handleContainerDragOver}
       >
         <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
 
@@ -158,15 +192,51 @@ const WorkContainer = ({
           </DraggingItem>
         )}
       </DragContainer>
-
-      <RegisterWorkContainer
+      <div css={RegisterWorkContainerS.RegisterWorkContainer}>
+        <div css={RegisterWorkContainerS.TextBox}>
+          <div css={RegisterWorkContainerS.TextBoxTitle}>
+            작업 일정 추천하기
+          </div>
+          <div css={RegisterWorkContainerS.TextBoxDescription}>
+            과실이 크게 자라는 지금, 기상 상황에 따라 이런 작업을 추천 드려요!
+          </div>
+        </div>
+        <div css={RegisterWorkContainerS.BtnBox}>
+          <div css={RegisterWorkContainerS.BtnSelectChipContainer}>
+            {!myCrops.length && <div>작물을 추가해주세요.</div>}
+            {myCrops.map(crop => (
+              <BtnSelectChip
+                key={crop.myCropId}
+                size="Small"
+                text={crop.myCropName || ''}
+                status={
+                  selectedCrop?.myCropId === crop.myCropId
+                    ? BTN_SELECT_CHIP_STATUSES.PRESSED
+                    : BTN_SELECT_CHIP_STATUSES.DEFAULT
+                }
+                onClick={() => handleCropClick(crop)}
+              />
+            ))}
+          </div>
+          <div css={RegisterWorkContainerS.BtnCreateWorkContainer}>
+            {recommendedWorks.map(work => (
+              <BtnCreateWork
+                key={work.workId}
+                work={work}
+                setSelectedRecommendedWork={setSelectedRecommendedWork}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* <RegisterWorkContainer
         recommendedWorks={recommendedWorks}
         myCrops={myCrops}
         selectedCrop={selectedCrop}
         handleCropClick={handleCropClick}
         handleCreateWork={handleCreateWork}
         setSelectedRecommendedWork={setSelectedRecommendedWork}
-      />
+      /> */}
     </>
   );
 };

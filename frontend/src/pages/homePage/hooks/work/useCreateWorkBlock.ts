@@ -5,8 +5,7 @@ import type {
   MyCropResponse,
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
-import calculateTimeToPosition from '@/pages/homePage/utils/work/calculateTimeToPosition';
-import { getYCoordinate } from '@/constants/workTimeCoordinate';
+import { getYCoordinate, X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/components/dnd/utils/collisionUtils';
 import updateWorkTimeByPos from '@/pages/homePage/utils/work/updateWorkTimeByPos';
 import { postMyWork } from '@/apis/myWork.api';
@@ -14,7 +13,8 @@ import { postMyWork } from '@/apis/myWork.api';
 interface UseCreateWorkBlockReturn {
   handleCreateWork: (
     work: RecommendedWorksResponse,
-    selectedCrop: MyCropResponse
+    selectedCrop: MyCropResponse,
+    dropX?: number
   ) => Promise<void>;
 }
 
@@ -32,43 +32,42 @@ export const useCreateWorkBlock = ({
   workBlocks,
 }: UseCreateWorkBlockProps): UseCreateWorkBlockReturn => {
   const handleCreateWork = useCallback(
-    async (work: RecommendedWorksResponse, selectedCrop: MyCropResponse) => {
+    async (
+      work: RecommendedWorksResponse,
+      selectedCrop: MyCropResponse,
+      dropX?: number
+    ) => {
       try {
-        // 시작 시간과 종료 시간 계산
-
-        //TODO: scrollOffset에 따라 몇번째 recommendationDurations를 사용할지 결정
-        const recommendationStartTime = work.recommendationDurations?.[0]
-          ?.startTime
-          ? dayjs(work.recommendationDurations?.[0]?.startTime).set('minute', 0)
-          : dayjs().set('minute', 0);
-
-        const recommendationEndTime = recommendationStartTime.add(2, 'hour');
-
-        // 위치와 크기 계산
-        const { x, width } = calculateTimeToPosition(
-          recommendationStartTime.format('YYYY-MM-DDTHH:mm'),
-          recommendationEndTime.format('YYYY-MM-DDTHH:mm')
-        );
-
         // 컨테이너 정보 가져오기
         const containerRect = containerRef?.current?.getBoundingClientRect();
-        if (!containerRect) {
-          console.warn('Container rect not available');
-          return;
-        }
+        if (!containerRect || !dropX) return;
+
+        // x좌표를 시간으로 변환하여 시작 시간 계산
+        const timeByPosition = (dropX - scrollOffset) / X_PX_PER_HOUR;
+        const baseDateTime = dayjs()
+          .set('minute', 0)
+          .set('second', 0)
+          .set('millisecond', 0);
+
+        const newStartTime = baseDateTime.add(timeByPosition, 'hour');
+        const newEndTime = newStartTime.add(1, 'hour'); // TODO: 2시간으로 변경
+
+        // 위치와 크기 설정 - y는 getYCoordinate(1)을 사용하여 유효한 y 좌표 설정
+        const position = { x: dropX, y: getYCoordinate(1) };
+        const width = X_PX_PER_HOUR * 1;
 
         // 임시 블록 생성하여 겹침 검사용으로 사용
         const tempBlock: WorkBlockType = {
           id: dayjs().unix(),
-          position: { x, y: getYCoordinate(1) },
+          position,
           size: { width, height: 50 },
           cropName: selectedCrop.myCropName || '기본',
           workName: work.workName || '',
-          workTime: `${recommendationStartTime.format(
+          workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
             'HH:mm'
-          )} - ${recommendationEndTime.format('HH:mm')}`,
-          startTime: recommendationStartTime.format('YYYY-MM-DD HH:mm:ss'),
-          endTime: recommendationEndTime.format('YYYY-MM-DD HH:mm:ss'),
+          )}`,
+          startTime: newStartTime.format('YYYY-MM-DDTHH:mm:ss'),
+          endTime: newEndTime.format('YYYY-MM-DDTHH:mm:ss'),
         };
 
         // 충돌하지 않는 위치 찾기
@@ -79,7 +78,12 @@ export const useCreateWorkBlock = ({
           scrollOffset
         );
 
-        const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
+        // updateWorkTimeByPos 함수를 사용하여 최종 시간 계산
+        const {
+          newStartTime: finalStartTime,
+          newEndTime: finalEndTime,
+          newWorkTime,
+        } = updateWorkTimeByPos(
           tempBlock.startTime,
           tempBlock.endTime,
           collisionFreePosition
@@ -88,8 +92,8 @@ export const useCreateWorkBlock = ({
         // 최종 작업 블록 생성 및 시간 업데이트
         const newWorkBlock: WorkBlockType = {
           ...tempBlock,
-          startTime: newStartTime,
-          endTime: newEndTime,
+          startTime: finalStartTime,
+          endTime: finalEndTime,
           workTime: newWorkTime,
           position: collisionFreePosition,
         };
