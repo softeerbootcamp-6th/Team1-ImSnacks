@@ -2,6 +2,7 @@ import { useRoutes, Outlet } from 'react-router';
 import Layout from '@/layouts/Layout';
 import { lazy, Suspense } from 'react';
 import ProtectedRoute from '@/components/common/ProtectedRoute';
+import { CircularSpinner } from '@/components/common/CircularSpinner';
 
 const HomePage = lazy(() => import('@/pages/homePage/HomePage'));
 const MyFarmPage = lazy(() => import('@/pages/myFarmPage/MyFarmPage'));
@@ -17,21 +18,7 @@ export const Router = () => {
       path: '/',
       element: (
         <Layout>
-          <Suspense
-            fallback={
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '200px',
-                  fontSize: '16px',
-                }}
-              >
-                페이지를 불러오는 중...
-              </div>
-            }
-          >
+          <Suspense fallback={<CircularSpinner minHeight={900} />}>
             <Outlet />
           </Suspense>
         </Layout>
