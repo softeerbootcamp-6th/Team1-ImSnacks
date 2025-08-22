@@ -35,17 +35,20 @@ export const useResizeBlock = ({
     (e: PointerEvent) => {
       if (!containerRef.current) return { x: 0, y: 0 };
       const rect = containerRef.current.getBoundingClientRect();
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
     },
     [containerRef]
   );
 
   const handleResizeStart = useCallback(
-    (_e: PointerEvent, block: WorkBlockType, direction: 'left' | 'right') => {
+    (e: PointerEvent, block: WorkBlockType, direction: 'left' | 'right') => {
       setResizingBlock(block);
       setResizeDirection(direction);
     },
-    []
+    [getContainerCoords]
   );
 
   const handlePointerMove = useCallback(
@@ -61,13 +64,16 @@ export const useResizeBlock = ({
         // 오른쪽 핸들: width만 변경
         newWidth = Math.max(
           X_PX_PER_HOUR / 2,
-          containerCoords.x - resizingBlock.position.x
+          containerCoords.x + scrollOffset - resizingBlock.position.x
         );
       } else if (resizeDirection === 'left') {
         // 왼쪽 핸들: x좌표와 width 모두 변경
         const newRightEdge =
           resizingBlock.position.x + resizingBlock.size.width;
-        newX = Math.min(newRightEdge - X_PX_PER_HOUR / 2, containerCoords.x); // 최소 30분 유지
+        newX = Math.min(
+          newRightEdge - X_PX_PER_HOUR / 2,
+          containerCoords.x + scrollOffset
+        ); // 최소 30분 유지
         newWidth = newRightEdge - newX;
       }
 
@@ -98,7 +104,7 @@ export const useResizeBlock = ({
 
       setResizingBlock(updatedBlock);
     },
-    [resizingBlock, resizeDirection, getContainerCoords]
+    [resizingBlock, resizeDirection, getContainerCoords, scrollOffset]
   );
 
   const handleResizeEnd = useCallback(async () => {
