@@ -64,10 +64,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <main
         css={css`
           max-width: 1328px;
-          min-width: 1328px;
           position: relative;
           z-index: 1;
           width: 100%;
+
+          ${!isMobile && `min-width: 1328px;`}
         `}
       >
         {children}
