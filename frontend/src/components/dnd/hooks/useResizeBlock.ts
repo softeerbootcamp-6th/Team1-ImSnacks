@@ -4,9 +4,8 @@ import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import { useBlocksTransition } from './useBlocksTransition';
 import { resolveCollision } from '../utils/resolveCollision';
-import dayjs from 'dayjs';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
-import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimePx';
+import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 
 interface UseResizeBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -44,11 +43,11 @@ export const useResizeBlock = ({
   );
 
   const handleResizeStart = useCallback(
-    (e: PointerEvent, block: WorkBlockType, direction: 'left' | 'right') => {
+    (_e: PointerEvent, block: WorkBlockType, direction: 'left' | 'right') => {
       setResizingBlock(block);
       setResizeDirection(direction);
     },
-    [getContainerCoords]
+    []
   );
 
   const handlePointerMove = useCallback(
@@ -77,29 +76,20 @@ export const useResizeBlock = ({
         newWidth = newRightEdge - newX;
       }
 
-      // width에 따른 duration 계산
-      const durationHours = newWidth / X_PX_PER_HOUR;
-
-      // 현재 시간을 기준으로 x 좌표를 시간으로 변환
-      const baseDateTime = dayjs()
-        .set('minute', 0)
-        .set('second', 0)
-        .set('millisecond', 0);
-
-      const timeByPosition =
-        (newX - WORK_TIME_DEFAULT_X_COORDINATE) / X_PX_PER_HOUR;
-      const newStartTime = baseDateTime.add(timeByPosition, 'hour');
-      const newEndTime = newStartTime.add(durationHours, 'hour');
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
+        resizingBlock.startTime,
+        resizingBlock.endTime,
+        { x: newX, y: resizingBlock.position.y },
+        newWidth
+      );
 
       const updatedBlock = {
         ...resizingBlock,
         size: { ...resizingBlock.size, width: newWidth },
         position: { ...resizingBlock.position, x: newX },
-        startTime: newStartTime.format('YYYY-MM-DDTHH:mm'),
-        endTime: newEndTime.format('YYYY-MM-DDTHH:mm'),
-        workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
-          'HH:mm'
-        )}`,
+        startTime: newStartTime,
+        endTime: newEndTime,
+        workTime: newWorkTime,
       };
 
       setResizingBlock(updatedBlock);
@@ -119,7 +109,7 @@ export const useResizeBlock = ({
     );
 
     const { updatedBlock, sortedBlocks, newBlocks } = resolveCollision({
-      draggingBlock: currentBlock,
+      activeBlock: currentBlock,
       workBlocks: updatedBlocks,
       containerRef,
       scrollOffset,

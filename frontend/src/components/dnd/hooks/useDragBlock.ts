@@ -2,7 +2,7 @@ import { useState, useCallback, type RefObject } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import type { Position } from '@/types/position.type';
 import isInBound from '@/utils/isInBound';
-import updateWorkTimeByPos from '@/pages/homePage/utils/work/updateWorkTimeByPos';
+import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/components/dnd/hooks/useBlocksTransition';
 import { getTimeUpdatedBlocks } from '@/pages/homePage/utils/work/updateBlockTime';
@@ -74,7 +74,7 @@ export const useDragBlock = ({
         y: containerCoords.y - dragOffset.y,
       };
 
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
         draggingBlock.startTime,
         draggingBlock.endTime,
         newPosition
