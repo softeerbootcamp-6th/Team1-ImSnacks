@@ -12,7 +12,6 @@ import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 Wo
 import useContainer from '@/pages/homePage/hooks/useContainer';
 import S from './WorkContainer.style';
 import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
-import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/work/useRecommendedWorks';
 import { useCreateWorkBlock } from '../../hooks/work/useCreateWorkBlock';
 import { useDragBlock } from '@/components/dnd/hooks/useDragBlock';
@@ -21,7 +20,12 @@ import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
 import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
 import { useTimeStore } from '@/store/useTimeStore';
+<<<<<<< HEAD
 import { formatRelativeTime } from '@/utils/formatTimeUtil';
+=======
+import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
+import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
+>>>>>>> 215ececf94fdeb4815f1a482d08b9f3bb059217a
 
 const WorkContainer = ({
   weatherRiskData,
@@ -76,9 +80,42 @@ const WorkContainer = ({
       updateWorkBlocks,
     });
 
+  // DragContainer에 드롭 처리
+  const handleContainerDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+
+    try {
+      const workData = e.dataTransfer.getData('application/json');
+
+      if (!(workData && selectedCrop)) return;
+      const work: RecommendedWorksResponse = JSON.parse(workData);
+      const containerElement = containerRef?.current;
+
+      if (!containerElement) return;
+
+      const containerRect = containerElement.getBoundingClientRect();
+      const dropX = e.clientX - containerRect.left + scrollOffset;
+      // 새로운 작업 블록 생성 (x좌표 전달)
+      await handleCreateWork(work, selectedCrop, dropX);
+    } catch (error) {
+      console.error('드롭된 데이터 파싱 실패:', error);
+    }
+  };
+
+  // DragContainer에 드래그 오버 처리
+  const handleContainerDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
   return (
     <>
-      <DragContainer containerRef={containerRef} css={S.ContainerWrapper}>
+      <DragContainer
+        containerRef={containerRef}
+        css={S.ContainerWrapper}
+        onDrop={handleContainerDrop}
+        onDragOver={handleContainerDragOver}
+      >
         <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
         {graphData && !graphData?.isUpdated && (
           <p css={S.LastUpdateText}>

@@ -28,7 +28,7 @@ const WorkCell = ({ type, status }: WorkCellProps) => {
               fill={theme.ColorPrimary.B300}
             />
           </div>
-          <p>작업 일정을{'\n'}클릭 하세요</p>
+          <p>작업 일정을{'\n'}드래그 하세요</p>
         </div>
       )}
     </div>
