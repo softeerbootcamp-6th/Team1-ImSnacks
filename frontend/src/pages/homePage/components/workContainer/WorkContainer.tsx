@@ -10,7 +10,7 @@ import { generateYTicks } from '../../utils/lineChartUtil';
 import { getUnit } from '@/utils/getUnit';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/hooks/useContainer';
-import WorkContainerS from './WorkContainer.style';
+import S from './WorkContainer.style';
 import { useWeatherGraphQuery } from '../../hooks/useWeatherGraphQuery';
 import RegisterWorkContainer from '../registerWorkContainer/RegisterWorkContainer';
 import { useRecommendedWorks } from '../../hooks/work/useRecommendedWorks';
@@ -21,6 +21,7 @@ import { useResizeBlock } from '@/components/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/components/dnd/draggableItem/DraggableItem';
 import DraggingItem from '@/components/dnd/draggingItem/DraggingItem';
 import { useTimeStore } from '@/store/useTimeStore';
+import { formatRelativeTime } from '@/utils/formatTimeUtil';
 
 const WorkContainer = ({
   weatherRiskData,
@@ -77,12 +78,14 @@ const WorkContainer = ({
 
   return (
     <>
-      <DragContainer
-        containerRef={containerRef}
-        css={WorkContainerS.ContainerWrapper}
-      >
+      <DragContainer containerRef={containerRef} css={S.ContainerWrapper}>
         <GraphMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
-
+        {graphData && !graphData?.isUpdated && (
+          <p css={S.LastUpdateText}>
+            마지막 업데이트{' '}
+            {formatRelativeTime(graphData?.lastUpdateTime ?? '', currentTime)}
+          </p>
+        )}
         {graphData && (
           <div css={ChartS.FixedYAxisWrapper}>
             {getUnit(graphData.weatherMetric ?? 'PRECIPITATION')}
@@ -98,9 +101,9 @@ const WorkContainer = ({
             </div>
           </div>
         )}
-        <div css={WorkContainerS.MaskGradientWrapper}>
+        <div css={S.MaskGradientWrapper}>
           <div
-            css={WorkContainerS.ScrollContainer}
+            css={S.ScrollContainer}
             onScroll={e => {
               setScrollOffset(e.currentTarget.scrollLeft);
             }}
