@@ -84,7 +84,16 @@ public class WeatherService {
         int nx = farm.getNx();
         int ny = farm.getNy();
 
-        List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nowPlus24 = now.plusHours(24);
+        List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
+                .stream()
+                .filter(weather -> {
+                    LocalDateTime fcstTime = weather.getFcstTime();
+                    return !fcstTime.isBefore(now)
+                            && fcstTime.isBefore(nowPlus24);
+                })
+                .toList();
         if (weatherInfos.isEmpty()) {
             throw new WeatherException(NO_WEATHER_LOCATION);
         }
