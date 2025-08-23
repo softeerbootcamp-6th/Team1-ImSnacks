@@ -1,6 +1,7 @@
 import { useIsMobileStore } from '@/store/useIsMobileStore';
 import S from './LoginPage.style';
 import { useLogin } from './hooks/useLogin';
+import { css } from '@emotion/react';
 
 const LoginPage = () => {
   const {
@@ -17,6 +18,24 @@ const LoginPage = () => {
   return (
     <>
       <div css={S.LoginContainer}>
+        <div css={S.LogoWrapper}>
+          <img
+            src="src/assets/icons/flat/IC24Logo.svg"
+            alt="Login Icon"
+            width={64}
+            css={css`
+              margin-right: -8px;
+            `}
+          />
+          <img
+            src="src/assets/images/LogoText.svg"
+            alt="Login Logo"
+            width={200}
+            css={css`
+              margin-right: 16px;
+            `}
+          />
+        </div>
         <div css={S.LoginCard(isMobile)}>
           <div css={S.LoginHeader}>
             <h1 css={S.LoginTitle}>로그인</h1>
