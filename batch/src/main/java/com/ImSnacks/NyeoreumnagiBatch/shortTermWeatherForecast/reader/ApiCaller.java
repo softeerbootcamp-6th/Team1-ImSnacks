@@ -1,6 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -9,15 +10,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiRequestValues.*;
 
+@Slf4j
 @Component
 public class ApiCaller {
     @Value("${api.service.key}")
     private String serviceKey;
+    private RestClient restClient;
+
+    public ApiCaller() {
+        restClient = RestClient.create();
+    }
 
     public VilageFcstResponseDto call(String baseDate, String baseTime, int nx, int ny) {
-        RestClient restClient = RestClient.create();
         String uriString = buildUriString(baseDate, baseTime, nx, ny);
-
+        log.info("Call to {}", uriString);
         return restClient.get()
                 .uri(uriString)
                 .retrieve()

@@ -2,6 +2,7 @@ package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.PagingQueryProvider;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class NxNyPagingReader {
@@ -33,6 +35,7 @@ public class NxNyPagingReader {
     }
 
     public PagingQueryProvider createPagingQueryProvider() throws Exception {
+        log.info("Creating PagingQueryProvider for NxNyPagingReader");
         SqlPagingQueryProviderFactoryBean factory = new SqlPagingQueryProviderFactoryBean();
         factory.setDataSource(dataSource);
         factory.setSelectClause("SELECT nx, ny");

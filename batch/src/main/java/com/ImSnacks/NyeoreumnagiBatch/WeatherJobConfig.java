@@ -10,6 +10,7 @@ import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDa
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.ShadowTableInitTasklet;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.ImprovedWeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ImprovedWeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.NxNyPagingReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.WeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
@@ -39,6 +40,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class WeatherJobConfig {
     private final NxNyPagingReader nxNyPagingReader;
+    private final ImprovedWeatherReader improvedWeatherReader;
     private final ImprovedWeatherProcessor improvedWeatherProcessor;
     private final WeatherReader weatherReader;
     private final WeatherWriter weatherWriter;
@@ -60,6 +62,7 @@ public class WeatherJobConfig {
 
     @Bean
     public Job improvedWeatherJob(JobRepository jobRepository, Step improvedWeatherStep, Step shadowTableInitStep) {
+        log.info("Starting ImprovedWeatherJob");
         return new JobBuilder("improvedWeatherJob", jobRepository)
                 .start(shadowTableInitStep)
                 .next(improvedWeatherStep)
@@ -81,8 +84,6 @@ public class WeatherJobConfig {
                 .build();
     }
 
-
-
     @Bean
     public Step weatherStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("weatherStep", jobRepository)
@@ -95,6 +96,13 @@ public class WeatherJobConfig {
 
     @Bean
     public Step improvedWeatherStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
+        return new StepBuilder("improvedWeatherStep", jobRepository)
+                .<UniqueNxNy, ShortTermWeatherDto>chunk(20, transactionManager)
+                .reader(improvedWeatherReader)
+                .processor(improvedWeatherProcessor)
+                .writer(weatherWriter)
+                .build();
+        /*
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(10);
@@ -113,6 +121,7 @@ public class WeatherJobConfig {
                 .skip(Exception.class)
                 .taskExecutor(executor)
                 .build();
+                */
     }
 
     @Bean
