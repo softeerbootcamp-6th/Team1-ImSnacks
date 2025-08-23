@@ -8,7 +8,6 @@ import type {
 import { getYCoordinate, X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/components/dnd/utils/collisionUtils';
 import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
-import { postMyWork } from '@/apis/myWork.api';
 import { snapToGrid } from '@/utils/snapToGrid';
 
 interface UseCreateWorkBlockReturn {
@@ -22,7 +21,11 @@ interface UseCreateWorkBlockReturn {
 interface UseCreateWorkBlockProps {
   containerRef: React.RefObject<HTMLDivElement> | null;
   scrollOffset: number;
-  addWorkBlock: (workBlock: WorkBlockType) => void;
+  addWorkBlock: (
+    workBlock: WorkBlockType,
+    myCropId: number,
+    recommendedWorkId: number
+  ) => void;
   workBlocks: WorkBlockType[];
 }
 
@@ -96,17 +99,7 @@ export const useCreateWorkBlock = ({
           position: collisionFreePosition,
         };
 
-        // API 호출하여 새로운 작업 생성
-        const newWorkIdRes = await postMyWork({
-          startTime: newWorkBlock.startTime,
-          endTime: newWorkBlock.endTime,
-          myCropId: selectedCrop.myCropId,
-          recommendedWorkId: work.workId,
-        });
-
-        const newWorkId = newWorkIdRes.data.workId as number;
-
-        addWorkBlock({ ...newWorkBlock, id: newWorkId });
+        addWorkBlock(newWorkBlock, selectedCrop.myCropId!, work.workId!);
       } catch (error) {
         console.error('작업 블록 생성 실패:', error);
       }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
-import { getMyWorkOfToday, deleteMyWork } from '@/apis/myWork.api';
+import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
 
 const useWorkBlocks = () => {
@@ -18,8 +18,25 @@ const useWorkBlocks = () => {
     }
   }, []);
 
-  const addWorkBlock = (newWorkBlock: WorkBlockType) => {
-    setWorkBlocks(prev => [...prev, newWorkBlock]);
+  const addWorkBlock = async (
+    newWorkBlock: WorkBlockType,
+    myCropId: number,
+    recommendedWorkId: number
+  ) => {
+    try {
+      const newWorkIdRes = await postMyWork({
+        startTime: newWorkBlock.startTime,
+        endTime: newWorkBlock.endTime,
+        myCropId,
+        recommendedWorkId,
+      });
+
+      const newWorkId = newWorkIdRes.data.workId as number;
+
+      setWorkBlocks(prev => [...prev, { ...newWorkBlock, id: newWorkId }]);
+    } catch (error) {
+      console.error('작업 추가 실패', error);
+    }
   };
 
   const updateWorkBlocks = (updatedBlocks: WorkBlockType[]) => {
