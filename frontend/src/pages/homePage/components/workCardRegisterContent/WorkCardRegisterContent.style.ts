@@ -22,20 +22,18 @@ const WorkCardColorBar = (cropName: CropNameType) => css`
   border-radius: ${BorderRadius.Base.Hard};
 `;
 
-const WorkCardInfo = (width: number) => css`
+const WorkCardInfo = css`
   display: flex;
   flex-direction: column;
   gap: ${Spacing.Spacing100};
   min-width: 0;
-  width: 100%;
-  width: ${width ? `${width}px` : '100%'};
 `;
 
-const WorkCardContentWrapper = (width: number) => css`
+const WorkCardContentWrapper = css`
   ${FlexStyles.flexRow};
   gap: ${Spacing.Spacing300};
   min-width: 0;
-  width: ${width < 150 ? '100%' : '115px'};
+  width: 100%;
   margin-right: ${Spacing.Spacing100};
 `;
 
@@ -43,7 +41,6 @@ const WorkCardTitle = css`
   ${Typography.Body_S_400}
   color: ${Assets.Text.WorkCard.Default.Headline};
   display: block;
-  flex: 1 1 auto;
   min-width: 0;
 
   white-space: nowrap;
