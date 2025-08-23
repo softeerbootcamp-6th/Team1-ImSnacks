@@ -51,8 +51,8 @@ const WorkCardRegisterContent = ({
         />
       )}
       <div css={S.WorkCardColorBar(cropName as CropNameType)} />
-      <div css={S.WorkCardInfo(width)}>
-        <div css={S.WorkCardContentWrapper(width)}>
+      <div css={S.WorkCardInfo}>
+        <div css={S.WorkCardContentWrapper}>
           {width > 80 && (
             <div css={[S.WorkCardTitle, isCompleted && S.CompletedTextStyle]}>
               {workName}
