@@ -1,14 +1,15 @@
-import { useState, useCallback, type RefObject } from 'react';
+import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
+import updateBlockTimeOnServer from '@/pages/homePage/utils/work/updateBlockTimeOnServer';
+import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import type { WorkBlockType } from '@/types/workCard.type';
+import { useCallback, useState, type RefObject } from 'react';
 import type { Position } from '@/types/position.type';
 import isInBound from '@/utils/isInBound';
-import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/components/dnd/hooks/useBlocksTransition';
+import { resolveCollision } from '../utils/resolveCollision';
+import { snapPositionToGrid } from '@/utils/snapToGrid';
 import { getTimeUpdatedBlocks } from '@/pages/homePage/utils/work/updateBlockTime';
-import { resolveCollision } from '@/components/dnd/utils/resolveCollision';
-import updateBlockTimeOnServer from '@/pages/homePage/utils/work/updateBlockTimeOnServer';
-import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -74,15 +75,21 @@ export const useDragBlock = ({
         y: containerCoords.y - dragOffset.y,
       };
 
+      // 6px 그리드에 스냅 (y는 validY로 제한)
+      const snappedPosition = snapPositionToGrid({
+        x: newPosition.x,
+        y: newPosition.y,
+      });
+
       const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
         draggingBlock.startTime,
         draggingBlock.endTime,
-        newPosition
+        snappedPosition
       );
 
       setDraggingBlock({
         ...draggingBlock,
-        position: newPosition,
+        position: snappedPosition,
         startTime: newStartTime,
         endTime: newEndTime,
         workTime: newWorkTime,
