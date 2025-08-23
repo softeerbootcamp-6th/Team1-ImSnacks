@@ -171,6 +171,12 @@ const GlobalStyles = () => {
 
         ${resetCss}
 
+        body {
+          overscroll-behavior: none;
+
+          min-height: 100vh;
+        }
+
         * {
           font-family: 'SUITE Variable', sans-serif;
           -webkit-font-smoothing: antialiased;
