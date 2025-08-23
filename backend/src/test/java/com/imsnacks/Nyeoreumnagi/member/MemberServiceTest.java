@@ -51,6 +51,7 @@ class MemberServiceTest {
         lifeCycleResolver = mock(LifeCycleResolver.class);
         farmRepository = Mockito.mock(FarmRepository.class);
         farmService = Mockito.mock(FarmService.class);
+        memberRepository = Mockito.mock(MemberRepository.class);
 
         memberService = new MemberService(farmRepository, myCropRepository, lifeCycleRepository, memberRepository, farmService, lifeCycleResolver);
     }
