@@ -30,7 +30,7 @@ const WorkContainer = ({
   weatherRiskData: WeatherRiskDto[];
 }) => {
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
-    WEATHER_METRICS.PRECIPITATION
+    WEATHER_METRICS.TEMPERATURE
   );
 
   const { currentTime } = useTimeStore();
