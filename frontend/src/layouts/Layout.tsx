@@ -29,6 +29,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         min-height: 100vh;
         min-height: 100dvh;
         overflow: hidden;
+      ]
       `}
     >
       <div

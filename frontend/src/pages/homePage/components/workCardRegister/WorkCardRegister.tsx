@@ -70,8 +70,6 @@ const WorkCardRegister = ({
     block.position.x,
   ]);
 
-  console.log('WorkCardRegister 렌더링:', block.id, 'isResizing:', isResizing);
-
   return (
     <>
       <div
