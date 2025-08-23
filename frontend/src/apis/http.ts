@@ -4,9 +4,26 @@ import type { ApiRes } from './res';
 import { ApiError } from './ApiError';
 import { getAuthRefresh } from './auth.api';
 
+let isRefreshing = false;
+let refreshPromise: Promise<ApiRes<{ accessToken: string }>> | null = null;
+const requestQueue: Array<() => void> = [];
+
+const processQueue = () => {
+  while (requestQueue.length) {
+    const next = requestQueue.shift();
+    if (next) next();
+  }
+};
+
 const customFetch = async (url: string, options: RequestInit) => {
   if (!baseUrl) {
     throw new Error('Base URL is not defined');
+  }
+
+  if (isRefreshing) {
+    await new Promise<void>(resolve => {
+      requestQueue.push(resolve);
+    });
   }
 
   const accessToken = useTokenStore.getState().accessToken;
@@ -31,17 +48,36 @@ const customFetch = async (url: string, options: RequestInit) => {
       errorBody.code.toString().startsWith('100')
     ) {
       try {
-        console.log('Token refresh needed, error code:', errorBody.code);
-        const refreshRes = await getAuthRefresh();
-        console.log(refreshRes);
-        if (refreshRes.code === 200) {
-          useTokenStore.setState({ accessToken: refreshRes.data.accessToken });
-          // 새로운 토큰으로 기존 요청 재시도
+        if (!isRefreshing) {
+          isRefreshing = true;
+          refreshPromise = getAuthRefresh();
+          const refreshRes = await refreshPromise;
+          if (refreshRes.code === 200) {
+            useTokenStore.setState({
+              accessToken: refreshRes.data.accessToken,
+            });
+            isRefreshing = false;
+            refreshPromise = null;
+            processQueue(); // 대기 중인 요청 실행
+
+            return customFetch(url, options);
+          } else {
+            isRefreshing = false;
+            refreshPromise = null;
+            processQueue();
+            throw new Error('Token refresh failed');
+          }
+        } else if (refreshPromise) {
+          await refreshPromise;
+
           return customFetch(url, options);
         }
       } catch (error) {
-        console.error('Error refreshing token:', error);
+        isRefreshing = false;
+        refreshPromise = null;
+        processQueue();
         window.location.href = '/login'; // TODO 배포: 배포 시에는 주석 해제
+        throw error;
       }
     }
 
