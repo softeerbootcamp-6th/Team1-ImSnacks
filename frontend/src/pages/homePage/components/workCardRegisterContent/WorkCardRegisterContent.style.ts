@@ -22,14 +22,14 @@ const WorkCardColorBar = (cropName: CropNameType) => css`
   border-radius: ${BorderRadius.Base.Hard};
 `;
 
-const WorkCardInfo = (width: number) => css`
+const WorkCardInfo = css`
   display: flex;
   flex-direction: column;
   gap: ${Spacing.Spacing100};
   min-width: 0;
 `;
 
-const WorkCardContentWrapper = (width: number) => css`
+const WorkCardContentWrapper = css`
   ${FlexStyles.flexRow};
   gap: ${Spacing.Spacing300};
   min-width: 0;
