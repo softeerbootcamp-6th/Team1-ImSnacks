@@ -4,6 +4,7 @@ import com.ImSnacks.NyeoreumnagiBatch.air_quality.processor.dto.AirQualityRespon
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.UniqueNxNyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +13,12 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@StepScope
 public class AirQualityReader implements ItemReader<AirQualityResponse> {
     private final UniqueNxNyRepository uniqueNxNyRepository;
     private static List<String> stationNames = null;
     private final AirQualityApiCaller apiCaller;
-    private static int index = 0;
+    private int index = 0;
 
 
     @Override

@@ -79,6 +79,14 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
 
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
+        boolean stepSucceeded = stepExecution.getExitStatus().equals(ExitStatus.COMPLETED)
+                && stepExecution.getFailureExceptions().isEmpty();
+
+        if (!stepSucceeded) {
+            log.warn("afterStep: Step이 실패해서 후처리 작업을 SKIP합니다. 현재 상태: {}", stepExecution.getExitStatus());
+            return stepExecution.getExitStatus();
+        }
+
         log.info("afterStep: shadow 테이블 rename 작업 시작");
 
         try {
