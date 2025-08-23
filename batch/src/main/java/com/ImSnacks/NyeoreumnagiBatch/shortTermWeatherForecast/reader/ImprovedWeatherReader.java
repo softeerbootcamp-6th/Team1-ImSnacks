@@ -35,7 +35,7 @@ public class ImprovedWeatherReader implements ItemReader<UniqueNxNy> {
             locations = uniqueNxNyRepository.findAll().stream().toList();
         }
         if (cursor >= locations.size()) {
-            return null;
+            return null; // indicates that no location left.
         }
         UniqueNxNy loc = locations.get(cursor);
         cursor++;

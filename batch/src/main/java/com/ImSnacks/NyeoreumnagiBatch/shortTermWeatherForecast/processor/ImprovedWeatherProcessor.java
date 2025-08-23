@@ -2,7 +2,6 @@ package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiCaller;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.AsyncApiCaller;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.dto.ShortTermWeatherDto;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader;
+package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import io.netty.channel.ChannelOption;
@@ -14,7 +14,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import static com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiRequestValues.AUTH_KEY;
@@ -29,34 +28,17 @@ import static com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.Api
 
 @Slf4j
 @Component
-public class AsyncApiCaller {
+public class ImprovedApiCaller {
     @Value("${OPEN_API_KEY}")
     private String serviceKey;
 
-    private final WebClient webClient;
 
-    public AsyncApiCaller() {
+    public ImprovedApiCaller() {
         // configuration
-        HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                .responseTimeout(Duration.ofMillis(5000))
-                .doOnConnected(conn->
-                        conn.addHandlerLast(new ReadTimeoutHandler(5, TimeUnit.SECONDS))
-                                .addHandlerLast(new WriteTimeoutHandler(5, TimeUnit.SECONDS)));
-
-        this.webClient = WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .build();
     }
 
     public VilageFcstResponseDto call(String baseDate, String baseTime, int nx, int ny) {
-        String uriString = buildUriString(baseDate, baseTime, nx, ny);
         log.info("Calling web service at {}", uriString);
-        return webClient.get()
-                .uri(uriString)
-                .retrieve()
-                .bodyToMono(VilageFcstResponseDto.class)
-                .block(); // Processor 내에서 동기 처리를 위해 block()을 사용한다.
     }
 
 
