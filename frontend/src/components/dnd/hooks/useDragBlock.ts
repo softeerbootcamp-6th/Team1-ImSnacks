@@ -2,7 +2,7 @@ import { useState, useCallback, type RefObject } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import type { Position } from '@/types/position.type';
 import isInBound from '@/utils/isInBound';
-import updateWorkTimeByPos from '@/pages/homePage/utils/work/updateWorkTimeByPos';
+import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/components/dnd/hooks/useBlocksTransition';
 import { getTimeUpdatedBlocks } from '@/pages/homePage/utils/work/updateBlockTime';
@@ -27,12 +27,13 @@ export const useDragBlock = ({
     null
   );
   //렌더링 시에만 사용하는 위치, scrollOffset 보정 x
-  const [pointerPosition, setPointerPosition] = useState<Position | null>(null);
+  const [dragPointerPosition, setDragPointerPosition] =
+    useState<Position | null>(null);
 
   //마우스 위치와 블록 위치 차이
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
 
-  // 전이 애니메이션 훅 사용
+  // 블록 이동 애니메이션 훅
   const { animateBlocksTransition } =
     useBlocksTransition<WorkBlockType>(updateWorkBlocks);
 
@@ -56,7 +57,7 @@ export const useDragBlock = ({
       });
 
       setDraggingBlock(block);
-      setPointerPosition(containerCoords);
+      setDragPointerPosition(containerCoords);
     },
     [containerRef, getContainerCoords, scrollOffset]
   );
@@ -66,14 +67,14 @@ export const useDragBlock = ({
       if (!draggingBlock) return;
 
       const containerCoords = getContainerCoords(e);
-      setPointerPosition(containerCoords);
+      setDragPointerPosition(containerCoords);
 
       const newPosition = {
         x: containerCoords.x + scrollOffset - dragOffset.x,
         y: containerCoords.y - dragOffset.y,
       };
 
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
         draggingBlock.startTime,
         draggingBlock.endTime,
         newPosition
@@ -97,7 +98,7 @@ export const useDragBlock = ({
 
     // 상태 초기화
     setDraggingBlock(null);
-    setPointerPosition(null);
+    setDragPointerPosition(null);
 
     //컨테이너 밖일 때 초기 위치로 복귀
     if (
@@ -120,7 +121,7 @@ export const useDragBlock = ({
 
     // 충돌 해결 및 블록 정렬
     const { updatedBlock, sortedBlocks, newBlocks } = resolveCollision({
-      draggingBlock: currentDraggingBlock,
+      activeBlock: currentDraggingBlock,
       workBlocks,
       containerRef,
       scrollOffset,
@@ -144,7 +145,7 @@ export const useDragBlock = ({
 
   return {
     draggingBlock,
-    pointerPosition,
+    dragPointerPosition,
     dragOffset,
     handleStartDrag,
   };

@@ -7,7 +7,7 @@ import type {
 } from '@/types/openapiGenerator';
 import { getYCoordinate, X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/components/dnd/utils/collisionUtils';
-import updateWorkTimeByPos from '@/pages/homePage/utils/work/updateWorkTimeByPos';
+import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import { postMyWork } from '@/apis/myWork.api';
 
 interface UseCreateWorkBlockReturn {
@@ -83,7 +83,7 @@ export const useCreateWorkBlock = ({
           newStartTime: finalStartTime,
           newEndTime: finalEndTime,
           newWorkTime,
-        } = updateWorkTimeByPos(
+        } = updateWorkTime(
           tempBlock.startTime,
           tempBlock.endTime,
           collisionFreePosition
