@@ -28,7 +28,7 @@ const WeatherBoardUV = () => {
         <div
           css={css`
             ${FlexStyles.flexColumn};
-            margin-bottom: 18px;
+            margin-bottom: 12px;
           `}
         >
           <p>{uv.value}</p>
