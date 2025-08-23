@@ -30,7 +30,7 @@ const WorkCellStatusStyle = {
 };
 
 const baseStyle = css`
-  width: 92px;
+  width: 96px;
   height: 176px;
   transition: background-color 0.1s ease-in-out;
   position: relative;
