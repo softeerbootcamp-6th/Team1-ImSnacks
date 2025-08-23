@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
+import useBlocksTransition from '@/components/dnd/hooks/useBlocksTransition';
+import { sortWorkBlocks } from '../../utils/work/sortWorkBlocks';
 
 const useWorkBlocks = () => {
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
+
+  const { animateBlocksTransition } = useBlocksTransition(setWorkBlocks);
 
   useEffect(() => {
     const fetchMyWorkOfToday = async () => {
@@ -33,7 +37,10 @@ const useWorkBlocks = () => {
 
       const newWorkId = newWorkIdRes.data.workId as number;
 
-      setWorkBlocks(prev => [...prev, { ...newWorkBlock, id: newWorkId }]);
+      animateBlocksTransition(
+        workBlocks,
+        sortWorkBlocks([...workBlocks, { ...newWorkBlock, id: newWorkId }])
+      );
     } catch (error) {
       console.error('작업 추가 실패', error);
     }
@@ -48,7 +55,10 @@ const useWorkBlocks = () => {
       await deleteMyWork({
         myWorkId: Number(id),
       });
-      setWorkBlocks(prev => prev.filter(block => block.id !== Number(id)));
+      animateBlocksTransition(
+        workBlocks,
+        sortWorkBlocks(workBlocks.filter(block => block.id !== Number(id)))
+      );
     } catch (error) {
       console.error('작업 삭제 실패', error);
     }
