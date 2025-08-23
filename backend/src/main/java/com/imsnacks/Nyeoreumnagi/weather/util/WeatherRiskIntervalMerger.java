@@ -52,9 +52,10 @@ public class WeatherRiskIntervalMerger {
 
         LocalDateTime now = LocalDateTime.now();
         if(end.isBefore(now)) return;
-        if(start.isBefore(now)) start = now;
+        if(start.isAfter(now.plusDays(1).minusHours(1))) return;
 
-        if(end.isAfter(now.plusDays(1))) end = now.plusDays(1);
+        if(start.isBefore(now)) start = now;
+        if(end.isAfter(now.plusDays(1)) || end.getHour() == now.plusDays(1).getHour()) end = now.plusDays(1).minusHours(1);
 
         String s = String.format("%02d", start.getHour());
         String e = String.format("%02d", end.getHour());
