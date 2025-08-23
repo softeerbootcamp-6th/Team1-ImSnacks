@@ -55,14 +55,10 @@ const DragIcon = css`
   height: 24px;
 `;
 
-const workCell = (
-  type: WorkCellType,
-  status: WorkCellStatus,
-  isHovered: boolean
-) => css`
+const workCell = (type: WorkCellType, status: WorkCellStatus) => css`
   ${baseStyle}
   ${borderRadius[type]}
-  ${isHovered ? WorkCellStatusStyle.Hover : WorkCellStatusStyle[status]}
+  ${WorkCellStatusStyle[status]}
 
   &:active {
     ${WorkCellStatusStyle.Active}
