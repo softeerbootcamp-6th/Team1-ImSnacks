@@ -25,7 +25,7 @@ const LoginPage = () => {
           <form css={S.LoginForm} onSubmit={handleSubmit}>
             <div css={S.LoginInputGroup}>
               <label css={S.LoginLabel} htmlFor="identifier">
-                이메일
+                아이디
               </label>
               <input
                 id="identifier"
