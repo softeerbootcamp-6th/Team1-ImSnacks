@@ -54,7 +54,7 @@ public class WeatherRiskIntervalMerger {
         if(end.isBefore(now)) return;
         if(start.isBefore(now)) start = now;
 
-        if(end.isAfter(now)) end = now;
+        if(end.isAfter(now.plusDays(1))) end = now.plusDays(1);
 
         String s = String.format("%02d", start.getHour());
         String e = String.format("%02d", end.getHour());
