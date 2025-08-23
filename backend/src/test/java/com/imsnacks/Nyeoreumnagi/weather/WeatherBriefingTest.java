@@ -65,6 +65,8 @@ class WeatherBriefingTest {
     @Mock
     private Random random;
 
+    Briefing briefing;
+
     @Test
     void 멤버가_없는_경우_예외_발생() {
         final long memberId = 42L;
@@ -119,5 +121,20 @@ class WeatherBriefingTest {
                 .build();
         final int actual = Briefing.RISK_COMPARATOR.compare(r1, r2);
         assertThat(actual).isEqualTo(1);
+    }
+
+    @Test
+    void 기상정보가_다음날까지_걸쳐있는_경우() {
+        LocalDateTime testTime = LocalDateTime.of(2025, 8, 23, 18, 42);
+        WeatherRisk testRisk = WeatherRisk.builder()
+                .startTime(testTime.withHour(21))
+                .endTime(testTime.plusDays(1).withHour(14))
+                .name(WeatherRiskType.ABNORMAL_HEAT)
+                .jobExecutionId(1L)
+                .build();
+
+        String actual = briefing.buildWeatherMsg(testRisk);
+        String expected = "오후 9시부터 오후 2시까지 이상고온";
+        assertThat(actual).isEqualTo(expected);
     }
 }
