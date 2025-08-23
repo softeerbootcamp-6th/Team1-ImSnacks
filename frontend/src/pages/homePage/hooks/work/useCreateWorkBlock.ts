@@ -7,8 +7,9 @@ import type {
 } from '@/types/openapiGenerator';
 import { getYCoordinate, X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 import { findCollisionFreePosition } from '@/components/dnd/utils/collisionUtils';
-import updateWorkTimeByPos from '@/pages/homePage/utils/work/updateWorkTimeByPos';
+import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import { postMyWork } from '@/apis/myWork.api';
+import { snapToGrid } from '@/utils/snapToGrid';
 
 interface UseCreateWorkBlockReturn {
   handleCreateWork: (
@@ -42,19 +43,18 @@ export const useCreateWorkBlock = ({
         const containerRect = containerRef?.current?.getBoundingClientRect();
         if (!containerRect || !dropX) return;
 
-        // x좌표를 시간으로 변환하여 시작 시간 계산
-        const timeByPosition = (dropX - scrollOffset) / X_PX_PER_HOUR;
-        const baseDateTime = dayjs()
-          .set('minute', 0)
-          .set('second', 0)
-          .set('millisecond', 0);
-
-        const newStartTime = baseDateTime.add(timeByPosition, 'hour');
-        const newEndTime = newStartTime.add(1, 'hour').add(30, 'minute');
+        // dropX를 10분 단위로 스냅
+        const snappedDropX = snapToGrid(dropX);
 
         // 위치와 크기 설정 - y는 getYCoordinate(1)을 사용하여 유효한 y 좌표 설정
-        const position = { x: dropX, y: getYCoordinate(1) };
+        const position = { x: snappedDropX, y: getYCoordinate(1) };
         const width = X_PX_PER_HOUR * 1.5;
+
+        const {
+          newStartTime: tempStartTime,
+          newEndTime: tempEndTime,
+          newWorkTime: tempWorkTime,
+        } = updateWorkTime('', '', position, width);
 
         // 임시 블록 생성하여 겹침 검사용으로 사용
         const tempBlock: WorkBlockType = {
@@ -63,11 +63,9 @@ export const useCreateWorkBlock = ({
           size: { width, height: 50 },
           cropName: selectedCrop.myCropName || '기본',
           workName: work.workName || '',
-          workTime: `${newStartTime.format('HH:mm')} - ${newEndTime.format(
-            'HH:mm'
-          )}`,
-          startTime: newStartTime.format('YYYY-MM-DDTHH:mm:ss'),
-          endTime: newEndTime.format('YYYY-MM-DDTHH:mm:ss'),
+          workTime: tempWorkTime,
+          startTime: tempStartTime,
+          endTime: tempEndTime,
         };
 
         // 충돌하지 않는 위치 찾기
@@ -78,12 +76,12 @@ export const useCreateWorkBlock = ({
           scrollOffset
         );
 
-        // updateWorkTimeByPos 함수를 사용하여 최종 시간 계산
+        // updateWorkTime 함수를 사용하여 최종 시간 계산
         const {
           newStartTime: finalStartTime,
           newEndTime: finalEndTime,
           newWorkTime,
-        } = updateWorkTimeByPos(
+        } = updateWorkTime(
           tempBlock.startTime,
           tempBlock.endTime,
           collisionFreePosition

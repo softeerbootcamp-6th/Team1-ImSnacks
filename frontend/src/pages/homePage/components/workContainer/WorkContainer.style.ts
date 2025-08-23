@@ -36,7 +36,8 @@ const LastUpdateText = css`
   top: 20px;
   left: 210px;
   font-size: 12px;
-  color: ${GrayScale.G500};
+  color: ${GrayScale.G300};
+  opacity: 0.8;
 `;
 
 export default {
