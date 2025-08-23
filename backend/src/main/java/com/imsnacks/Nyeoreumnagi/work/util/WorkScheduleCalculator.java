@@ -29,9 +29,8 @@ public class WorkScheduleCalculator {
             LocalDateTime requestDateTime
     ) {
         List<ShortTermWeatherForecast> sortedForecasts = forecasts.stream()
-                .filter(forecast -> forecast.getFcstTime().isAfter(requestDateTime.minusHours(1)) && forecast.getFcstTime().isBefore(requestDateTime.minusHours(1).plusDays(1)))
+                .filter(forecast -> forecast.getFcstTime().isAfter(requestDateTime.minusHours(1)) && forecast.getFcstTime().isBefore(requestDateTime.minusHours(2).plusDays(1)))
                 .sorted(Comparator.comparing(ShortTermWeatherForecast::getFcstTime))
-                .filter(f -> f.getFcstTime().isAfter(requestDateTime))
                 .toList();
 
         List<RecommendWorksResponse.RecommendationDurations> durations =
