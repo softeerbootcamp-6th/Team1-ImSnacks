@@ -26,7 +26,7 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     private static List<NxNy>  locations = null;
 
     // thread-safe 필요
-    private static int index = 0;
+    private int index = 0;
 
     // serviceKey는 고정된 값이니, application.yaml에 두고 읽어온다.
     private final String baseDate;
@@ -65,7 +65,7 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
             return dto;
         } catch (Exception e) {
             log.error("API 호출 중 오류!", e);
-            throw e;
+            return getDefaultData();
         }
     }
 
@@ -80,4 +80,40 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
 
     }
 
+    private VilageFcstResponseDto getDefaultData() {
+        List<VilageFcstResponseDto.Item> itemList = List.of(
+                createItem("PCP", baseDate, baseTime, baseDate, baseTime, "1.1mm")
+        );
+        VilageFcstResponseDto.Items items = new VilageFcstResponseDto.Items();
+        items.setItem(itemList);
+
+        VilageFcstResponseDto.Body body = new VilageFcstResponseDto.Body();
+        body.setItems(items);
+
+        VilageFcstResponseDto.Header header = new VilageFcstResponseDto.Header();
+        header.setResultCode("00");
+        header.setResultMsg("OK");
+
+        VilageFcstResponseDto.Response response = new VilageFcstResponseDto.Response();
+        response.setHeader(header);
+        response.setBody(body);
+
+        VilageFcstResponseDto VilageFcstResponseDto = new VilageFcstResponseDto();
+        VilageFcstResponseDto.setResponse(response);
+
+        return VilageFcstResponseDto;
+    }
+
+    private VilageFcstResponseDto.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
+        VilageFcstResponseDto.Item item = new VilageFcstResponseDto.Item();
+        item.setCategory(category);
+        item.setBaseDate(baseDate);
+        item.setBaseTime(baseTime);
+        item.setFcstDate(fcstDate);
+        item.setFcstTime(fcstTime);
+        item.setFcstValue(value);
+        item.setNx(0);
+        item.setNy(0);
+        return item;
+    }
 }
