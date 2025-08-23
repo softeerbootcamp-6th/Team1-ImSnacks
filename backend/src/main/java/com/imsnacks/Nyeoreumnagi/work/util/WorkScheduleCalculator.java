@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -19,7 +18,7 @@ public class WorkScheduleCalculator {
     private static final double STRONG_WIND = 14.0;
     private static final double RAIN_MM = 0.1;
 
-    private static final int COOLDOWN_GAP_HOURS = 5;
+    private static final int COOLDOWN_GAP_HOURS = 4;
     private static final int MINIMUM_WORK_DURATION = 2;
     private static final int MAXIMUM_WORK_DURATION = 4;
 
@@ -29,13 +28,14 @@ public class WorkScheduleCalculator {
             int neighborCount,
             LocalDateTime requestDateTime
     ) {
-        LocalDateTime from = requestDateTime.truncatedTo(ChronoUnit.HOURS);
         List<ShortTermWeatherForecast> sortedForecasts = forecasts.stream()
-                .sorted(Comparator.comparing(f -> toDateTimeWithRoll(from, f)))
+                .filter(forecast -> forecast.getFcstTime().isAfter(requestDateTime.minusHours(1)) && forecast.getFcstTime().isBefore(requestDateTime.minusHours(1).plusDays(1)))
+                .sorted(Comparator.comparing(ShortTermWeatherForecast::getFcstTime))
+                .filter(f -> f.getFcstTime().isAfter(requestDateTime))
                 .toList();
 
         List<RecommendWorksResponse.RecommendationDurations> durations =
-                calculateDurations(work, sortedForecasts, from);
+                calculateDurations(work, sortedForecasts);
 
         List<RecommendWorksResponse.RecommendedWorksResponse> result = new ArrayList<>();
         result.add(new RecommendWorksResponse.RecommendedWorksResponse(
@@ -49,8 +49,7 @@ public class WorkScheduleCalculator {
 
     private List<RecommendWorksResponse.RecommendationDurations> calculateDurations(
             RecommendedWork work,
-            List<ShortTermWeatherForecast> forecasts,
-            LocalDateTime from
+            List<ShortTermWeatherForecast> forecasts
     ) {
         List<RecommendWorksResponse.RecommendationDurations> durations = new ArrayList<>();
         LocalDateTime windowStart = null;
@@ -58,7 +57,7 @@ public class WorkScheduleCalculator {
         LocalDateTime cooldownUntil = null;
 
         for (ShortTermWeatherForecast f : forecasts) {
-            LocalDateTime currentTime = toDateTimeWithRoll(from, f);
+            LocalDateTime currentTime = f.getFcstTime();
 
             if (cooldownUntil != null && !currentTime.isBefore(cooldownUntil)) {
                 cooldownUntil = null;
@@ -138,16 +137,5 @@ public class WorkScheduleCalculator {
                 !(w.isHighHumidity() && isHighHumidity) &&
                 !(w.isLowHumidity() && isLowHumidity) &&
                 !(w.isStrongWind() && isStrongWind);
-    }
-
-    private LocalDateTime toDateTimeWithRoll(LocalDateTime from, ShortTermWeatherForecast f) {
-        int hour = f.getFcstTime().getHour();
-        LocalDateTime dt = from.toLocalDate().atTime(hour, 0);
-
-        if (dt.isBefore(from)) {
-            dt = dt.plusDays(1);
-        }
-
-        return dt;
     }
 }
