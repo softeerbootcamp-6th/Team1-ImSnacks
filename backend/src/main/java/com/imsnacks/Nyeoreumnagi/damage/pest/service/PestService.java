@@ -8,7 +8,7 @@ import com.imsnacks.Nyeoreumnagi.damage.pest.entity.PestRisk;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
@@ -23,11 +23,9 @@ import com.imsnacks.Nyeoreumnagi.work.exception.CropResponseStatus;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor

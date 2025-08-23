@@ -9,7 +9,7 @@ import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.HumidityLevel;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.RainLevel;
 import com.imsnacks.Nyeoreumnagi.damage.pest.service.WeatherConditionCode.TemperatureLevel;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
@@ -99,8 +99,8 @@ public class PestServiceTest {
         int nx = 60;
         int ny = 120;
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
-        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
-        final Farm farm = new Farm(myId, "", "", "", "", point, nx, ny, "regioncode", null);
+        org.locationtech.jts.geom.Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(myId, "경기도", "성남시", "분당구", "정자1동 123-45", point, nx, ny, "regioncode", null);
         Member other = new Member(77L, "", "", "", "", null, farm);
         MyCrop myCrop = new MyCrop(1L, null, other, null);
 
@@ -122,7 +122,7 @@ public class PestServiceTest {
         int ny = 120;
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
         Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
-        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
+        final Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -185,7 +185,7 @@ public class PestServiceTest {
         int ny = 120;
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
         Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
-        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
+        final Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -248,8 +248,8 @@ public class PestServiceTest {
         int nx = 60;
         int ny = 120;
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
-        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
-        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
+        org.locationtech.jts.geom.Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        final Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 
@@ -311,8 +311,8 @@ public class PestServiceTest {
         int nx = 60;
         int ny = 120;
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
-        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
-        final Farm farm = new Farm(memberId, "", "", "", "", point, nx, ny, "regioncode", null);
+        Point point = geometryFactory.createPoint(new Coordinate(nx, ny));
+        final Farm farm = new Farm(memberId, "경기도", "성남시", "분당구", "정자1동 123-45", point, nx, ny, "regioncode", null);
         final Member member = new Member(memberId, "", "", "", "", null, farm);
         when(farmRepo.findByMember_Id(memberId)).thenReturn(Optional.of(farm));
 

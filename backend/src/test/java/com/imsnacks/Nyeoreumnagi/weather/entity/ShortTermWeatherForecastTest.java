@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;

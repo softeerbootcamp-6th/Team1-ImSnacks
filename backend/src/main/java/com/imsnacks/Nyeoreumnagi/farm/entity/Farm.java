@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,21 +50,23 @@ public class Farm {
         String city,
         String town,
         String address,
-        Double latitude,
         Double longitude,
+        Double latitude,
         Integer nx,
         Integer ny,
         String midTempRegionCode,
         Member member
     ){
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
+        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+
         return new Farm(
                 null,
                 state,
                 city,
                 town,
                 address,
-                latitude,
-                longitude,
+                point,
                 nx,
                 ny,
                 midTempRegionCode,

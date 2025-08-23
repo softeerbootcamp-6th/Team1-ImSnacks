@@ -7,6 +7,7 @@ import com.imsnacks.Nyeoreumnagi.farm.service.FarmService;
 import com.imsnacks.Nyeoreumnagi.member.dto.SignupRequest;
 import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMemberAddressResponse;
 import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
+import com.imsnacks.Nyeoreumnagi.member.dto.response.GetMyCropsResponse;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
@@ -37,6 +38,9 @@ public class MemberService {
     private final LifeCycleRepository lifeCycleRepository;
     private final MemberRepository memberRepository;
     private final FarmService farmService;
+    private final LifeCycleResolver lifeCycleResolver;
+
+    private static final ZoneId ZONE = ZoneId.of("Asia/Seoul");
 
     public GetMemberAddressResponse getMemberAddress(Long memberId){
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));

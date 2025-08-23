@@ -1,9 +1,7 @@
 package com.imsnacks.Nyeoreumnagi.weather;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherCondition;
-import com.imsnacks.Nyeoreumnagi.common.enums.WeatherMetric;
 import com.imsnacks.Nyeoreumnagi.farm.entity.Farm;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
@@ -35,7 +33,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -167,7 +164,8 @@ class WeatherServiceTest {
         // given
         long memberId = 1L;
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
-        Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+        org.locationtech.jts.geom.Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+
         final Farm farm = new Farm(memberId, "", "", "", "", point, 60, 120, "regioncode", null);
 
         ShortTermWeatherForecast forecast = mock(ShortTermWeatherForecast.class);
@@ -196,6 +194,7 @@ class WeatherServiceTest {
         // given: member, farm, sunrise/sunset mock
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID 4326
         Point point = geometryFactory.createPoint(new Coordinate(127.12, 36.12));
+
         final Farm farm = new Farm(memberId, "", "", "", "", point, 60, 120, "regioncode", null);
 
         SunriseSunSetTime sunriseSunSetTime = mock(SunriseSunSetTime.class);

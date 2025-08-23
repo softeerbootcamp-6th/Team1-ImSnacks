@@ -3,6 +3,7 @@ package com.imsnacks.Nyeoreumnagi.farm.entity;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.geo.Point;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -26,8 +27,8 @@ class FarmTest {
                 city,
                 town,
                 address,
-                latitude,
                 longitude,
+                latitude,
                 nx,
                 ny,
                 midTempRegionCode,
@@ -38,8 +39,8 @@ class FarmTest {
         assertThat(farm.getCity()).isEqualTo(city);
         assertThat(farm.getTown()).isEqualTo(town);
         assertThat(farm.getAddress()).isEqualTo(address);
-        assertThat(farm.getLatitude()).isEqualTo(latitude);
-        assertThat(farm.getLongitude()).isEqualTo(longitude);
+        assertThat(farm.getLocation().getY()).isEqualTo(latitude);
+        assertThat(farm.getLocation().getX()).isEqualTo(longitude);
         assertThat(farm.getNx()).isEqualTo(nx);
         assertThat(farm.getNy()).isEqualTo(ny);
         assertThat(farm.getMidTempRegionCode()).isEqualTo(midTempRegionCode);

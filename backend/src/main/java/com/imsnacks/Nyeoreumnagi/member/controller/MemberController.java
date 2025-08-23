@@ -52,14 +52,4 @@ public class MemberController {
     public ResponseEntity<CustomResponseBody<List<GetMyCropsResponse>>> getMyCrops(@PreAuthorize Long memberId){
         return ResponseUtil.success(memberService.getMyCrops(memberId));
     }
-
-    @Operation(summary = "회원 가입")
-    @ApiResponse(responseCode = "200", description = "회원 가입 성공")
-    @ApiResponse(responseCode = "400", description = "회원 가입 실패")
-    @PostMapping("/registration")
-    public ResponseEntity<CustomResponseBody<Void>> registerMember(@RequestBody SignupRequest request){
-        request.validate();
-        memberService.registerMember(request);
-        return ResponseUtil.success();
-    }
 }
