@@ -36,7 +36,7 @@ const WorkCardToolTipTime = css`
   color: ${Assets.Text.WorkCard.Default.Body};
 `;
 
-const WorkCardContainer = (size: Size) => css`
+const WorkCardContainer = (size: Size, isResizing?: boolean) => css`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -44,8 +44,8 @@ const WorkCardContainer = (size: Size) => css`
   gap: ${Spacing.Spacing300};
   padding: ${Spacing.Spacing200} ${Spacing.Spacing300};
   border-radius: ${BorderRadius.Base.S_Hard};
-  background-color: ${GrayScale.White};
-  border: 1px solid ${GrayScale.G200};
+  background-color: ${isResizing ? GrayScale.G100 : GrayScale.White};
+  border: 1px solid ${isResizing ? GrayScale.G300 : GrayScale.G200};
   width: ${size.width ? `${size.width}px` : 'auto'};
   height: ${size.height ? `${size.height}px` : 'auto'};
 
@@ -53,14 +53,15 @@ const WorkCardContainer = (size: Size) => css`
   user-select: none;
   overflow: visible;
 
-  cursor: grab;
+  cursor: ${isResizing ? 'ew-resize' : 'grab'};
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   &:active {
-    cursor: grabbing;
+    cursor: ${isResizing ? 'ew-resize' : 'grabbing'};
   }
 `;
 
@@ -89,20 +90,20 @@ const WorkCardDeleteButton = css`
   }
 `;
 
-const WorkCardResizeHandle = css`
+const WorkCardResizeHandle = (isResizing?: boolean) => css`
   position: absolute;
   top: 0;
   bottom: 0;
   width: 8px;
-  background-color: transparent;
+  background-color: ${isResizing ? GrayScale.G300 : 'transparent'};
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${GrayScale.G300};
+    background-color: ${isResizing ? GrayScale.G300 : GrayScale.G300};
   }
 
   &:active {
-    background-color: ${GrayScale.G400};
+    background-color: ${isResizing ? GrayScale.G300 : GrayScale.G400};
   }
 
   touch-action: none;
@@ -111,14 +112,14 @@ const WorkCardResizeHandle = css`
   cursor: ew-resize;
 `;
 
-const WorkCardResizeHandleLeft = css`
-  ${WorkCardResizeHandle}
+const WorkCardResizeHandleLeft = (isResizing?: boolean) => css`
+  ${WorkCardResizeHandle(isResizing)}
   left: 0;
   border-radius: ${BorderRadius.Base.S_Hard} 0 0 ${BorderRadius.Base.S_Hard};
 `;
 
-const WorkCardResizeHandleRight = css`
-  ${WorkCardResizeHandle}
+const WorkCardResizeHandleRight = (isResizing?: boolean) => css`
+  ${WorkCardResizeHandle(isResizing)}
   right: 0;
   border-radius: 0 ${BorderRadius.Base.S_Hard} ${BorderRadius.Base.S_Hard} 0;
 `;
