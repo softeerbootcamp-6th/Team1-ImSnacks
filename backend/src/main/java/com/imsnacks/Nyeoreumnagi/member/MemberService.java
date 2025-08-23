@@ -38,9 +38,6 @@ public class MemberService {
     private final LifeCycleRepository lifeCycleRepository;
     private final MemberRepository memberRepository;
     private final FarmService farmService;
-    private final LifeCycleResolver lifeCycleResolver;
-
-    private static final ZoneId ZONE = ZoneId.of("Asia/Seoul");
 
     public GetMemberAddressResponse getMemberAddress(Long memberId){
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));

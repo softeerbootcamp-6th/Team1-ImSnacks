@@ -19,8 +19,6 @@ import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherGraphResponse;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherStatusResponse;
 import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWindInfoResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardWeatherForecast;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.*;
-import com.imsnacks.Nyeoreumnagi.weather.entity.DashboardWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.SevenDayWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.ShortTermWeatherForecast;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
@@ -36,8 +34,6 @@ import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.Precipitation
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.SunriseSunSetTime;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.UVInfo;
 import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.WindInfo;
-import com.imsnacks.Nyeoreumnagi.weather.repository.*;
-import com.imsnacks.Nyeoreumnagi.weather.service.projection_entity.*;
 import com.imsnacks.Nyeoreumnagi.weather.util.WeatherRiskIntervalMerger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -324,21 +320,9 @@ public class WeatherService {
         final int nx = farm.getNx();
         final int ny = farm.getNy();
 
-        List<DashboardWeatherForecast> weathers = dashboardWeatherForecastRepository.findByNxAndNy(nx, ny);
-        Integer maxTemperature = weathers.stream()
-                .map(DashboardWeatherForecast::getTemperature)
-                .max(Comparator.comparingInt(Integer::intValue))
-                .orElseThrow(() -> new WeatherException(NO_TEMPERATURE_INFO));
-        Integer minTemperature = weathers.stream()
-                .map(DashboardWeatherForecast::getTemperature)
-                .min(Comparator.comparingInt(Integer::intValue))
-                .orElseThrow(() -> new WeatherException(NO_TEMPERATURE_INFO));
         ShortTermWeatherForecast weatherInfo = shortTermWeatherForecastRepository.findTopByNxAndNyAndFcstTimeLessThanEqualOrderByFcstTimeDesc(nx, ny, LocalDateTime.now())
                 .orElseThrow(() -> new WeatherException(NO_WEATHER_VALUE));
 
-        List<GetTemperatureResponse.TemperaturePerTime> temperaturePerTimes = weathers.stream()
-                .map(GetTemperatureResponse.TemperaturePerTime::from)
-                .toList();
         List<GetWeatherStatusResponse> weatherStatus = new ArrayList<>();
         weatherStatus.add(new GetWeatherStatusResponse(PRECIPITATION.getMetricName(), (int) weatherInfo.getPrecipitation(), PRECIPITATION.toString()));
         weatherStatus.add(new GetWeatherStatusResponse(TEMPERATURE.getMetricName(), weatherInfo.getTemperature(), TEMPERATURE.toString()));
@@ -357,7 +341,6 @@ public class WeatherService {
                 throw new WeatherException(NO_TEMPERATURE_INFO);
             }
         }
-        return new GetTemperatureResponse(maxTemperature, minTemperature, temperaturePerTimes);
     }
 
     private void validatePrecipitationInfo(PrecipitationInfo precipitationInfo) {
