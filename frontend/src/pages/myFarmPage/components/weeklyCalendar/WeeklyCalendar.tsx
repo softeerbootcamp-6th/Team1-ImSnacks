@@ -4,6 +4,7 @@ import S from './WeeklyCalendar.style';
 import WorkCardWeb from '../workCardWeb/WorkCardWeb';
 import type { WorkCardData } from '@/types/openapiGenerator';
 import { WORK_CHIP_TYPES, type WorkChipType } from '@/types/workChip.type';
+import { useTheme } from '@emotion/react';
 
 interface WeeklyCalendarProps {
   weekDates: Date[];
@@ -24,6 +25,7 @@ const WeeklyCalendar = ({
   hasMoreWorks,
   handleCheckButton,
 }: WeeklyCalendarProps) => {
+  const theme = useTheme();
   return (
     <>
       <div css={S.WeeklyCalendar(hasMoreWorks, isExpanded)}>
@@ -38,7 +40,7 @@ const WeeklyCalendar = ({
               <div key={index} css={S.DateContainer}>
                 <div css={S.DateInfoContainer}>
                   <div css={S.DayNameContainer(dayName)}>{dayName}</div>
-                  <div css={S.DateNumberContainer(dayName, isToday)}>
+                  <div css={S.DateNumberContainer(dayName, isToday, theme)}>
                     {dayjs(date).date()}
                   </div>
                 </div>

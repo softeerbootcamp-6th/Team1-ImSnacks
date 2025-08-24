@@ -61,7 +61,6 @@ const WorkSchedule = () => {
             border-radius: ${BorderRadius.Base.S_Hard};
             padding: ${Spacing.Spacing200} ${Spacing.Spacing300};
             margin: ${Spacing.Spacing800} auto;
-            width: 150px;
           `}
         >
           {isExpanded ? '접기' : '더보기'}
