@@ -23,6 +23,9 @@ const RegisterWorkContainer = css`
 const TextBoxTitle = css`
   ${Typography.Subtitle_700}
   color: ${Assets.Text.Global.Headline};
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;
 
 const TextBoxDescription = css`
@@ -61,6 +64,14 @@ const BtnCreateWorkContainer = css`
   height: 52px;
 `;
 
+const IconContainer = css`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
 export default {
   RegisterWorkContainer,
   TextBoxTitle,
@@ -69,4 +80,5 @@ export default {
   BtnBox,
   BtnSelectChipContainer,
   BtnCreateWorkContainer,
+  IconContainer,
 };

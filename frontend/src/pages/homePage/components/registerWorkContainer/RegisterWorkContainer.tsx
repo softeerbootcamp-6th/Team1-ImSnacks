@@ -6,6 +6,11 @@ import type {
   MyCropResponse,
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
+import PortalToolTip from '@/components/common/PortalToolTip';
+import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
+import { IC24InfoIcon } from '@/assets/icons/flat';
+import useVisibility from '@/hooks/useVisibility';
+import { useRef } from 'react';
 
 interface RegisterWorkContainerProps {
   recommendedWorks: RecommendedWorksResponse[];
@@ -27,10 +32,13 @@ const RegisterWorkContainer = ({
   handleCreateWork,
   setSelectedRecommendedWork,
 }: RegisterWorkContainerProps) => {
+  const { isVisible, show, hide } = useVisibility();
+  const iconRef = useRef<HTMLDivElement>(null);
+
   return (
     <div css={S.RegisterWorkContainer}>
       <div css={S.TextBox}>
-        <div css={S.TextBoxTitle}>작업 일정 추천하기</div>
+        <div css={S.TextBoxTitle}>작업 일정 추천하기 </div>
         <div css={S.TextBoxDescription}>
           과실이 크게 자라는 지금, 기상 상황에 따라 이런 작업을 추천 드려요!
         </div>
@@ -51,6 +59,27 @@ const RegisterWorkContainer = ({
               onClick={() => handleCropClick(crop)}
             />
           ))}
+          <div
+            css={S.IconContainer}
+            ref={iconRef}
+            onMouseEnter={show}
+            onMouseLeave={hide}
+          >
+            <IC24InfoIcon width={24} height={24} />
+            {isVisible && (
+              <PortalToolTip
+                anchorRef={iconRef}
+                direction={TOOLTIP_DIRECTIONS.RIGHT}
+                content={
+                  <div>
+                    작물을 선택하고 추천 작업 일정을 드래그하여 추가할 수
+                    있습니다.
+                  </div>
+                }
+                type={TOOLTIP_TYPES.DEFAULT}
+              />
+            )}
+          </div>
         </div>
         <div css={S.BtnCreateWorkContainer}>
           {recommendedWorks.map(work => (
