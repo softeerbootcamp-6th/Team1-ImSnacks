@@ -75,8 +75,5 @@ export const sortWorkBlocks = (workBlocks: WorkBlockType[]) => {
     });
   }
 
-  const { updateMaxLayerFromWorkBlocks } = useMaxLayerStore.getState();
-  updateMaxLayerFromWorkBlocks(blocks);
-
   return blocks;
 };
