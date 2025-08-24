@@ -52,18 +52,19 @@ const MobileHeader = ({
           width: 110px;
           height: 88px;
           animation: headline-bounce 2.3s ease-in-out infinite;
-            @keyframes headline-bounce {
-              0% {
-                transform: translateY(0);
-              }
+          @keyframes headline-bounce {
+            0% {
+              transform: translateY(0);
+            }
 
-              40% {
-                transform: translateY(10px);
-              }
+            40% {
+              transform: translateY(10px);
+            }
 
-              100% {
-                transform: translateY(0);
-              }
+            100% {
+              transform: translateY(0);
+            }
+          }
         `}
         iconCss={S.MobileHeaderIcon}
       />
