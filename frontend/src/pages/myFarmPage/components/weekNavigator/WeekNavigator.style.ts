@@ -24,7 +24,7 @@ const onMoveButton = css`
 
   cursor: pointer;
   padding: ${Spacing.Spacing100};
-  border-radius: ${BorderRadius.Base.Hard};
+  border-radius: ${BorderRadius.Base.S_Hard};
   transition: background-color 0.2s ease;
 
   display: flex;
