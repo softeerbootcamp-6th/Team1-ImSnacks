@@ -6,10 +6,11 @@ import type {
   MyCropResponse,
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
-import ToolTip from '@/components/toolTip/ToolTip';
+import PortalToolTip from '@/components/common/PortalToolTip';
 import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
 import { IC24InfoIcon } from '@/assets/icons/flat';
 import useVisibility from '@/hooks/useVisibility';
+import { useRef } from 'react';
 
 interface RegisterWorkContainerProps {
   recommendedWorks: RecommendedWorksResponse[];
@@ -32,6 +33,7 @@ const RegisterWorkContainer = ({
   setSelectedRecommendedWork,
 }: RegisterWorkContainerProps) => {
   const { isVisible, show, hide } = useVisibility();
+  const iconRef = useRef<HTMLDivElement>(null);
 
   return (
     <div css={S.RegisterWorkContainer}>
@@ -57,10 +59,16 @@ const RegisterWorkContainer = ({
               onClick={() => handleCropClick(crop)}
             />
           ))}
-          <div css={S.IconContainer} onMouseEnter={show} onMouseLeave={hide}>
+          <div
+            css={S.IconContainer}
+            ref={iconRef}
+            onMouseEnter={show}
+            onMouseLeave={hide}
+          >
             <IC24InfoIcon width={24} height={24} />
             {isVisible && (
-              <ToolTip
+              <PortalToolTip
+                anchorRef={iconRef}
                 direction={TOOLTIP_DIRECTIONS.RIGHT}
                 content={
                   <div>
