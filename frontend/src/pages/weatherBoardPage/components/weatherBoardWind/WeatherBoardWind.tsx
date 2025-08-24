@@ -7,9 +7,10 @@ import { Suspense, useState, useEffect } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherWind } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 
 const WeatherBoardWind = () => {
-  const Content = () => {
+  const WindContent = () => {
     const { data: windData } = useSuspenseQuery({
       queryKey: ['weather', 'wind'],
       queryFn: async (): Promise<GetWindInfoResponse> => {
@@ -22,8 +23,9 @@ const WeatherBoardWind = () => {
     useEffect(() => {
       setTimeout(() => setIsAnimating(true), 100);
     }, []);
+
     return (
-      <>
+      <div css={S.WeatherBoardWindContentWrapper}>
         <span css={Typography.Body_S_400}>N</span>
         <div css={S.WeatherBoardWindContent}>
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
@@ -51,15 +53,17 @@ const WeatherBoardWind = () => {
         <p>
           {windData.direction} • {windData.speed}m/s
         </p>
-      </>
+      </div>
     );
   };
 
   return (
     <div css={S.WeatherBoardWind}>
-      <Suspense fallback={<CircularSpinner minHeight={180} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="풍속">
+        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+          <WindContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };
