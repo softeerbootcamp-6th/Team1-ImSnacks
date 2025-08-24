@@ -13,19 +13,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@RequiredArgsConstructor
 @StepScope
 @Component
 public class ImprovedWeatherProcessor implements ItemProcessor<UniqueNxNy, ShortTermWeatherDto> {
 
+    @Autowired
     private final WeatherProcessor processor;
-    //private final AsyncApiCaller apiCaller;
     @Autowired
     private final ApiCaller apiCaller;
+    @Autowired
+    private final ImprovedApiCaller improvedApiCaller;
     @Value("#{jobParameters['base_date']}")
     private String baseDate;
     @Value("#{jobParameters['base_time']}")
     private String baseTime;
+
+    public ImprovedWeatherProcessor(WeatherProcessor processor, ApiCaller apiCaller, ImprovedApiCaller improvedApiCaller) {
+        this.processor = processor;
+        this.apiCaller = apiCaller;
+        this.improvedApiCaller = improvedApiCaller;
+    }
 
     @Override
     public ShortTermWeatherDto process(UniqueNxNy loc) throws Exception {
@@ -34,7 +41,7 @@ public class ImprovedWeatherProcessor implements ItemProcessor<UniqueNxNy, Short
 
         log.info("Processing nx={}, ny={} with Thread: {}", nx, ny, Thread.currentThread().getName());
 
-        VilageFcstResponseDto response = apiCaller.call(baseDate, baseTime, nx, ny);
+        VilageFcstResponseDto response = improvedApiCaller.call(baseDate, baseTime, nx, ny);
         if (response == null || response.getWeatherInfo() == null || response.getWeatherInfo().isEmpty()) {
             log.warn("API response is empty for nx={}, ny={}", loc.getId().getNx(), loc.getId().getNy());
             return null; // Writer로 전달하지 않고 건너뜀
