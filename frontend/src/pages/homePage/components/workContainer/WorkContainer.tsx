@@ -150,6 +150,7 @@ const WorkContainer = ({
             <MainGraph
               graphData={graphData}
               weatherRiskData={weatherRiskData}
+              isError={!!error}
             />
 
             {workBlocks.map(block => {

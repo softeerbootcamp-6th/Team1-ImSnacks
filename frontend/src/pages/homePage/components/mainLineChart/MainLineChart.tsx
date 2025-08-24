@@ -18,13 +18,16 @@ import type {
   GetWeatherGraphResponse,
   WeatherRiskDto,
 } from '@/types/openapiGenerator';
+import { CircularSpinner } from '@/components/common/CircularSpinner';
 
 const MainLineChart = ({
   graphData,
   weatherRiskData,
+  isError = false,
 }: {
   graphData?: GetWeatherGraphResponse;
   weatherRiskData: WeatherRiskDto[];
+  isError?: boolean;
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
@@ -34,8 +37,16 @@ const MainLineChart = ({
     return () => clearTimeout(timer);
   }, []);
 
+  if (isError) {
+    return <div css={S.LoadingWrapper}>데이터를 불러오는데 실패했습니다</div>;
+  }
+
   if (!graphData || !graphData.valuePerTime) {
-    return <div css={S.LoadingWrapper}>로딩 중...</div>;
+    return (
+      <div css={S.LoadingWrapper}>
+        <CircularSpinner />
+      </div>
+    );
   }
 
   if (!showChart) {
