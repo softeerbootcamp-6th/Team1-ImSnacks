@@ -40,7 +40,8 @@ export const useInitialAppData = () => {
     if (location.pathname === '/login') return;
 
     fetchWeather();
-  }, [setWeatherCondition, setNickName, location.pathname, fetchWeather]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setWeatherCondition, setNickName, fetchWeather]);
 
   // currentTime이 정각이 될 때마다 실행
   useEffect(() => {
