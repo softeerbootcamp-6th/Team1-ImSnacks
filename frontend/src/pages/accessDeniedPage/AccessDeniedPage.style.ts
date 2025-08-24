@@ -1,5 +1,6 @@
-import { ColorStatus, GrayScale } from '@/styles/colors';
+import { Assets, ColorStatus, GrayScale } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
+import type { Theme } from '@emotion/react';
 import { css } from '@emotion/react';
 
 const Container = css`
@@ -7,7 +8,7 @@ const Container = css`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 0 20px;
 `;
 
 const Content = css`
@@ -38,6 +39,25 @@ const SubMessage = css`
   ${Typography.Caption};
   color: ${GrayScale.G600};
   line-height: 1.4;
+  margin-bottom: 24px;
+`;
+
+const LinkButton = (theme: Theme) => css`
+  display: inline-block;
+  background-color: ${theme.ColorPrimary.B700};
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${Assets.Global.Button.Hover};
+  }
+  &:active {
+    background-color: ${theme.ColorPrimary.B300};
+  }
 `;
 
 export default {
@@ -46,4 +66,5 @@ export default {
   Title,
   Message,
   SubMessage,
+  LinkButton,
 };
