@@ -18,18 +18,17 @@ const WeeklyNavigator = css`
   border-radius: ${BorderRadius.Base.Hard};
 `;
 
-const onNextWeekButton = (isCurrentWeek: boolean) => css`
+const onNextWeekButton = css`
   background: none;
   border: none;
 
-  cursor: ${isCurrentWeek ? 'not-allowed' : 'pointer'};
-  opacity: ${isCurrentWeek ? 0.2 : 1};
+  cursor: pointer;
   padding: ${Spacing.Spacing100};
   border-radius: ${BorderRadius.Base.Hard};
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${isCurrentWeek ? 'transparent' : Opacity.White.W200};
+    background-color: ${Opacity.White.W200};
   }
 `;
 

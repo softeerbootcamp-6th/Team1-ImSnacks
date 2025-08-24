@@ -24,11 +24,7 @@ const WeekNavigator = ({
         <IC24NonArrowLeftIcon width={26} height={26} color={GrayScale.G50} />
       </button>
       <span>{weekLabel}</span>
-      <button
-        onClick={onNextWeek}
-        disabled={isCurrentWeek}
-        css={S.onNextWeekButton(isCurrentWeek)}
-      >
+      <button onClick={onNextWeek} css={S.onNextWeekButton}>
         <IC24NonArrowRightIcon width={26} height={26} color={GrayScale.G50} />
       </button>
     </div>
