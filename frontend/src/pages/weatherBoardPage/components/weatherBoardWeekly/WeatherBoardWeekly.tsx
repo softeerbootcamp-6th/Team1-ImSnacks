@@ -5,9 +5,10 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import type { GetSevenDaysForecastResponse } from '@/types/openapiGenerator';
 import { getWeatherSevenDays } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 
 const WeatherBoardWeekly = () => {
-  const Content = () => {
+  const SevenDaysContent = () => {
     const { data: weeklyWeatherData } = useSuspenseQuery({
       queryKey: ['weather', 'weekly'],
       queryFn: async (): Promise<GetSevenDaysForecastResponse[]> => {
@@ -34,13 +35,14 @@ const WeatherBoardWeekly = () => {
 
   return (
     <div css={S.WeatherBoardWeekly}>
-      <div css={S.WeeklyTitleWrapper}>
-        <h3 css={S.WeeklyTitle}>7일 간의 날씨 예보</h3>
-      </div>
-
-      <Suspense fallback={<CircularSpinner minHeight={200} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="7일 간의 날씨 예보">
+        <Suspense fallback={<CircularSpinner minHeight={200} />}>
+          <div css={S.WeeklyTitleWrapper}>
+            <h3 css={S.WeeklyTitle}>7일 간의 날씨 예보</h3>
+          </div>
+          <SevenDaysContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };
