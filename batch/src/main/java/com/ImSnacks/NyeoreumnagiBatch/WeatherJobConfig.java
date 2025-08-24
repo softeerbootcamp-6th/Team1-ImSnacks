@@ -1,6 +1,7 @@
 package com.ImSnacks.NyeoreumnagiBatch;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.SevenDayWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayTemperatureProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayWeatherConditionProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader.SevenDayTemperatureReader;
@@ -26,9 +27,13 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.List;
+
 @Slf4j
+@EnableRetry
 @Configuration
 @RequiredArgsConstructor
 public class WeatherJobConfig {
@@ -138,10 +143,13 @@ public class WeatherJobConfig {
     @Bean
     public Step sevenDayTemperatureStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("sevenDayTemperatureStep", jobRepository)
-                .<SevenDayTemperatureForecastResponseDto, SevenDayTemperatureForecastDto>chunk(10, transactionManager)
+                .<SevenDayTemperatureForecastResponseDto, List<SevenDayWeatherForecast>>chunk(10, transactionManager)
                 .reader(sevenDayTemperatureReader)
                 .processor(sevenDayTemperatureProcessor)
                 .writer(sevenDayTemperatureWriter)
+                .faultTolerant()
+                .skip(NullPointerException.class)
+                .skipLimit(50)
                 .build();
     }
 }

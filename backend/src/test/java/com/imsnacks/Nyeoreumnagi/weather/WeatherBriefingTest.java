@@ -1,46 +1,32 @@
 package com.imsnacks.Nyeoreumnagi.weather;
 
 import com.imsnacks.Nyeoreumnagi.common.enums.WeatherRiskType;
-import com.imsnacks.Nyeoreumnagi.member.entity.Farm;
 import com.imsnacks.Nyeoreumnagi.member.entity.Member;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberException;
 import com.imsnacks.Nyeoreumnagi.member.exception.MemberResponseStatus;
 import com.imsnacks.Nyeoreumnagi.member.repository.FarmRepository;
 import com.imsnacks.Nyeoreumnagi.member.repository.MemberRepository;
-import com.imsnacks.Nyeoreumnagi.weather.dto.response.GetWeatherBriefingResponse;
 import com.imsnacks.Nyeoreumnagi.weather.entity.WeatherRisk;
 import com.imsnacks.Nyeoreumnagi.weather.repository.DashboardTodayWeatherRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.ShortTermWeatherForecastRepository;
 import com.imsnacks.Nyeoreumnagi.weather.repository.WeatherRiskRepository;
 import com.imsnacks.Nyeoreumnagi.weather.service.Briefing;
 import com.imsnacks.Nyeoreumnagi.weather.service.WeatherService;
-import com.imsnacks.Nyeoreumnagi.work.entity.Crop;
-import com.imsnacks.Nyeoreumnagi.work.entity.MyCrop;
 import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -64,6 +50,8 @@ class WeatherBriefingTest {
     private DashboardTodayWeatherRepository dashboardTodayWeatherRepository;
     @Mock
     private Random random;
+
+    Briefing briefing;
 
     @Test
     void 멤버가_없는_경우_예외_발생() {
@@ -120,4 +108,35 @@ class WeatherBriefingTest {
         final int actual = Briefing.RISK_COMPARATOR.compare(r1, r2);
         assertThat(actual).isEqualTo(1);
     }
+
+    @Test
+    void 기상정보가_다음날까지_걸쳐있는_경우() {
+        LocalDateTime testTime = LocalDateTime.of(2025, 8, 23, 18, 42);
+        WeatherRisk testRisk = WeatherRisk.builder()
+                .startTime(testTime.withHour(21))
+                .endTime(testTime.plusDays(1).withHour(14))
+                .name(WeatherRiskType.ABNORMAL_HEAT)
+                .jobExecutionId(1L)
+                .build();
+
+        String actual = briefing.buildWeatherMsg(testTime, testRisk);
+        String expected = "오후 9시부터 오후 2시까지 이상고온";
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void 기상정보가_현시각_이전에_시작한_경우() {
+        LocalDateTime testTime = LocalDateTime.of(2025, 8, 23, 18, 42);
+        WeatherRisk testRisk = WeatherRisk.builder()
+                .startTime(testTime.withHour(15))
+                .endTime(testTime.plusDays(1).withHour(14))
+                .name(WeatherRiskType.ABNORMAL_HEAT)
+                .jobExecutionId(1L)
+                .build();
+
+        String actual = briefing.buildWeatherMsg(testTime, testRisk);
+        String expected = "오후 6시부터 오후 2시까지 이상고온";
+        assertThat(actual).isEqualTo(expected);
+    }
+
 }

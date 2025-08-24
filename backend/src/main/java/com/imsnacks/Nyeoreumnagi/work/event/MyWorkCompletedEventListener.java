@@ -25,6 +25,7 @@ public class MyWorkCompletedEventListener {
                 event.date(),
                 event.workId(),
                 geohash,
+                event.workStatus().toString(),
                 event.memberId()
         );
     }

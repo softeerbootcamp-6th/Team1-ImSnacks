@@ -25,7 +25,7 @@ public enum WeatherCondition {
     }
 
     public static WeatherCondition fromApiString(String apiValue) {
-        if (apiValue == null) return null;
+        if (apiValue == null) return SUNNY;
 
         if (apiValue.equals("맑음")) {
             return SUNNY;
