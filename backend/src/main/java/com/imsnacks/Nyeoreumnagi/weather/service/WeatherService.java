@@ -42,7 +42,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -221,7 +220,7 @@ public class WeatherService {
         }
         return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
                 forecast.getDayOfWeek(LocalDate.now()),
-                forecast.getWeatherCondition(),
+                forecast.getWeatherCondition() == null ? WeatherCondition.SUNNY : forecast.getWeatherCondition(),
                 forecast.getMaxTemperature(),
                 forecast.getMinTemperature()
         )).toList();
