@@ -176,22 +176,22 @@ public class MyWorkService {
     }
 
     @Transactional
-    public void updateMyWorkStatus(UpdateMyWorkStatusRequest request, long memberId){
+    public void updateMyWorkStatus(UpdateMyWorkStatusRequest request, long memberId) {
         Farm farm = farmRepository.findByMember_Id(memberId).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
         MyWork myWork = myWorkRepository.findById(request.myWorkId()).orElseThrow(() -> new WorkException(MY_WORK_NOT_FOUND));
 
-        if(!myWork.getMember().getId().equals(memberId)){
+        if (!myWork.getMember().getId().equals(memberId)) {
             throw new WorkException(MY_WORK_NOT_FOUND);
         }
 
-        if (request.status().equals(COMPLETED)) {
-            publisher.publishEvent(new MyWorkCompletedEvent(myWork.getMember().getId(),
-                    myWork.getRecommendedWork().getId(),
-                    farm.getLocation().getY(),
-                    farm.getLocation().getX(),
-                    LocalDate.now()));
-
-        }
         myWork.setWorkStatus(request.status());
+
+        publisher.publishEvent(new MyWorkCompletedEvent(myWork.getMember().getId(),
+                myWork.getRecommendedWork().getId(),
+                farm.getLocation().getY(),
+                farm.getLocation().getX(),
+                myWork.getWorkStatus(),
+                LocalDate.now()));
+
     }
 }
