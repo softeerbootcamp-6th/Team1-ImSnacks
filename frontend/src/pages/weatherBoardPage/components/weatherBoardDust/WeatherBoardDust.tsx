@@ -1,4 +1,4 @@
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import {
   getFineDustLevelAndColor,
   getUltraDustLevelAndColor,
@@ -109,7 +109,11 @@ const WeatherBoardDust = () => {
   return (
     <div css={S.WeatherBoardDust}>
       <WeatherErrorBoundary title="미세먼지">
-        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
           <DustContent />
         </Suspense>
       </WeatherErrorBoundary>

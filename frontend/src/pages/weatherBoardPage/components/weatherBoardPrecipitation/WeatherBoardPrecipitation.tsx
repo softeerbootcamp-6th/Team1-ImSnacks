@@ -6,6 +6,7 @@ import { getWeatherPrecipitation } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
+import { ColorPrimary } from '@/styles/colors';
 
 const PrecipitationContent = () => {
   const { data: maxPrecipitation } = useWeatherQuery(
@@ -41,7 +42,11 @@ const WeatherBoardPrecipitation = () => {
   return (
     <div css={S.WeatherBoardPrecipitation}>
       <WeatherErrorBoundary title="습도">
-        <Suspense fallback={<CircularSpinner minHeight={200} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={200} color={ColorPrimary.B700} />
+          }
+        >
           <PrecipitationContent />
         </Suspense>
       </WeatherErrorBoundary>

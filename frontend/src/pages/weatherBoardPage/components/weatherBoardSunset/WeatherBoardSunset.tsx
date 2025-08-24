@@ -1,4 +1,4 @@
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import S from './WeatherBoardSunset.style';
 import { SunEffect } from '@/assets/icons/flat';
 import { useSunsetAnimation } from '@/pages/weatherBoardPage/hooks/useSunsetAnimation';
@@ -87,7 +87,11 @@ const WeatherBoardSunset = () => {
   return (
     <div css={S.WeatherBoardSunset}>
       <WeatherErrorBoundary title="일출/일몰">
-        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
           <h3 css={S.WeatherBoardSunsetTitle}>일출/일몰</h3>
           <SunsetContent />
         </Suspense>

@@ -80,7 +80,11 @@ const WeatherBoardHumidity = () => {
   return (
     <div css={S.WeatherBoardHumidity}>
       <WeatherErrorBoundary title="습도">
-        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
           <HumidityContent />
         </Suspense>
       </WeatherErrorBoundary>

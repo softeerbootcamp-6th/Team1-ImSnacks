@@ -6,7 +6,7 @@ import S from './WeatherBoardTemperature.style';
 import type { GetTemperatureResponse } from '@/types/openapiGenerator';
 import { getWeatherTemperature } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 import { Suspense } from 'react';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
@@ -93,7 +93,11 @@ const WeatherBoardTemperature = () => {
   return (
     <div css={S.WeatherBoardTemperature}>
       <WeatherErrorBoundary title="기온">
-        <Suspense fallback={<CircularSpinner minHeight={300} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={300} color={ColorPrimary.B700} />
+          }
+        >
           <TemperatureContent />
         </Suspense>
       </WeatherErrorBoundary>
