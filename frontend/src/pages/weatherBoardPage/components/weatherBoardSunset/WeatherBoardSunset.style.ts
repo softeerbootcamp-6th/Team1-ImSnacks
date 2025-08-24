@@ -8,8 +8,12 @@ const WeatherBoardSunset = css`
   position: relative;
   ${FlexStyles.flexColumn}
   justify-content: flex-end;
-  padding-bottom: 12px;
   box-sizing: border-box;
+`;
+
+const WeatherBoardSunsetContentWrapper = css`
+  padding-bottom: 12px;
+  ${FlexStyles.flexColumn}
 `;
 
 const WeatherBoardSunsetTitle = css`
@@ -58,6 +62,7 @@ const WeatherBoardSunsetTime = css`
 
 export default {
   WeatherBoardSunset,
+  WeatherBoardSunsetContentWrapper,
   WeatherBoardSunsetTitle,
   WeatherBoardSunsetContent,
   WeatherBoardSunsetSvg,

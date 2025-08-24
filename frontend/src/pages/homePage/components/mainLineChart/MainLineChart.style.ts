@@ -68,6 +68,8 @@ const LoadingWrapper = css`
   justify-content: center;
   align-items: center;
   height: 373px;
+  color: ${Assets.Text.Global.Clear};
+  ${Typography.Body_S_400};
 `;
 
 export default {

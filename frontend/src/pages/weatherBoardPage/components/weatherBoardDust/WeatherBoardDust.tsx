@@ -8,20 +8,21 @@ import { useDustAnimation } from '../../hooks/useDustAnimation';
 import S from './WeatherBoardDust.style';
 import type { GetAirQualityResponse } from '@/types/openapiGenerator';
 import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherAirQuality } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const WeatherBoardDust = () => {
-  const Content = () => {
-    const { data: airQualityData } = useSuspenseQuery({
-      queryKey: ['weather', 'dust'],
-      queryFn: async (): Promise<GetAirQualityResponse> => {
+  const DustContent = () => {
+    const { data: airQualityData } = useWeatherQuery(
+      ['weather', 'dust'],
+      async (): Promise<GetAirQualityResponse> => {
         const res = await getWeatherAirQuality();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-    });
+      }
+    );
+
     const { level: pmValueLevel, color: pmValueColor } =
       getFineDustLevelAndColor(airQualityData.pm10Value || 0);
     const { level: pm25ValueLevel, color: pm25ValueColor } =
@@ -107,9 +108,11 @@ const WeatherBoardDust = () => {
 
   return (
     <div css={S.WeatherBoardDust}>
-      <Suspense fallback={<CircularSpinner minHeight={180} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="미세먼지">
+        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+          <DustContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };

@@ -1,12 +1,17 @@
 import { ColorPrimary, ColorStatus, GrayScale } from '@/styles/colors';
+import { FlexStyles } from '@/styles/commonStyles';
 import { css } from '@emotion/react';
 
 const LoginContainer = css`
-  display: flex;
+  ${FlexStyles.flexColumn}
   justify-content: center;
-  align-items: center;
   min-height: 100vh;
   padding: 20px;
+`;
+
+const LogoWrapper = css`
+  ${FlexStyles.flexRow}
+  margin-bottom: 32px;
 `;
 
 const LoginCard = (isMobile: boolean) => css`
@@ -104,6 +109,7 @@ const LoginSubmitButton = css`
 
 export default {
   LoginContainer,
+  LogoWrapper,
   LoginCard,
   LoginHeader,
   LoginTitle,

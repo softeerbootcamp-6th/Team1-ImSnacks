@@ -19,6 +19,8 @@ const WeatherBoardPrecipitationTitle = css`
 `;
 
 const WeatherBoardPrecipitationSvg = css`
+  margin-top: auto;
+  width: 100%;
   animation: fillUp 1s ease-out;
   clip-path: inset(100% 0 0 0);
   animation-fill-mode: forwards;

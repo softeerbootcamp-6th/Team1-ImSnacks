@@ -3,20 +3,21 @@ import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { getHumidityPath } from '../../utils/humidityUtil';
 import S from './WeatherBoardHumidity.style';
 import { Suspense, useEffect, useRef } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { GetHumidityResponse } from '@/types/openapiGenerator';
 import { getWeatherHumidity } from '@/apis/weather.api';
+import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const WeatherBoardHumidity = () => {
-  const Content = () => {
-    const { data: humidityValue } = useSuspenseQuery({
-      queryKey: ['weather', 'humidity'],
-      queryFn: async (): Promise<GetHumidityResponse> => {
+  const HumidityContent = () => {
+    const { data: humidityValue } = useWeatherQuery(
+      ['weather', 'humidity'],
+      async (): Promise<GetHumidityResponse> => {
         const res = await getWeatherHumidity();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-    });
+      }
+    );
+
     const humidityPath = getHumidityPath(humidityValue.value ?? 0);
     const pathRef = useRef<SVGPathElement | null>(null);
     useEffect(() => {
@@ -78,9 +79,11 @@ const WeatherBoardHumidity = () => {
   };
   return (
     <div css={S.WeatherBoardHumidity}>
-      <Suspense fallback={<CircularSpinner minHeight={180} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="습도">
+        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+          <HumidityContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };

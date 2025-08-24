@@ -12,7 +12,7 @@ export const useSunsetAnimation = ({
   endTime: string;
 }) => {
   const radius = 121;
-  const durationMs = 1500;
+  const durationMs = 4000;
 
   // 접근성: 모션 최소화
   const prefersReduced = useMemo(() => {

@@ -10,15 +10,18 @@ const MainGraph = memo(
   ({
     graphData,
     weatherRiskData,
+    isError = false,
   }: {
     graphData?: GetWeatherGraphResponse;
     weatherRiskData: WeatherRiskDto[];
+    isError?: boolean;
   }) => {
     return (
       <div css={S.MainGraph}>
         <MainLineChart
           graphData={graphData as GetWeatherGraphResponse}
           weatherRiskData={weatherRiskData}
+          isError={isError}
         />
       </div>
     );

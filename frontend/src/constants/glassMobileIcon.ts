@@ -25,5 +25,5 @@ export const GLASS_MOBILE_ICON: Record<
   LESS_CLOUDY: LessCloudyMobileIcon,
   NIGHT: NightMobileIcon,
   RAIN: RainMobileIcon,
-  HEAT_WAVE: RainMobileIcon,
+  HEAT_WAVE: SunnyMobileIcon,
 };
