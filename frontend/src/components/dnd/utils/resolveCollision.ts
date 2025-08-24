@@ -7,6 +7,10 @@ import {
   getTimeUpdatedBlocks,
 } from '@/pages/homePage/utils/work/updateBlockTime';
 import { sortWorkBlocks } from '@/pages/homePage/utils/work/sortWorkBlocks';
+import {
+  WORK_BLOCK_Y_COORDINATE_GAP,
+  getGlobalMaxLayer,
+} from '@/constants/workTimeCoordinate';
 
 interface ResolveCollisionParams {
   activeBlock: WorkBlockType;
@@ -33,17 +37,26 @@ export const resolveCollision = ({
 
   const newBlocks = getTimeUpdatedBlocks(workBlocks, activeBlock);
 
-  if (isFullyOverlapped(activeBlock, otherBlocks)) {
-    const collisionFreePosition = findCollisionFreePosition(
-      activeBlock,
-      otherBlocks,
-      containerRef.current?.getBoundingClientRect() ?? new DOMRect(),
-      scrollOffset
-    );
+  // 전역 변수에서 최대 레이어 가져오기
+  const maxLayer = getGlobalMaxLayer();
+
+  if (isFullyOverlapped(activeBlock, otherBlocks, maxLayer)) {
+    // const collisionFreePosition = findCollisionFreePosition(
+    //   activeBlock,
+    //   otherBlocks,
+    //   containerRef.current?.getBoundingClientRect() ?? new DOMRect(),
+    //   scrollOffset
+    // );
+
+    // 현재 블록이 가득차있는 블록이면 y좌표를 증가하여 생성
+    const newPosition = {
+      x: activeBlock.position.x,
+      y: activeBlock.position.y + WORK_BLOCK_Y_COORDINATE_GAP * (maxLayer - 1),
+    };
 
     const updatedBlock = getTimeUpdatedBlock(activeBlock, {
       ...activeBlock,
-      position: collisionFreePosition,
+      position: newPosition,
     });
 
     const sortedBlocks = sortWorkBlocks(
@@ -53,6 +66,6 @@ export const resolveCollision = ({
     return { updatedBlock, sortedBlocks, newBlocks };
   }
 
-  const sortedBlocks = sortWorkBlocks(newBlocks);
+  const { blocks: sortedBlocks } = sortWorkBlocks(newBlocks);
   return { updatedBlock: activeBlock, sortedBlocks, newBlocks };
 };

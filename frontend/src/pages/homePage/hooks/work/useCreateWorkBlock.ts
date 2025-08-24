@@ -6,7 +6,6 @@ import type {
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
 import { getYCoordinate, X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
-import { findCollisionFreePosition } from '@/components/dnd/utils/collisionUtils';
 import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import { snapToGrid } from '@/utils/snapToGrid';
 
@@ -31,9 +30,7 @@ interface UseCreateWorkBlockProps {
 
 export const useCreateWorkBlock = ({
   containerRef,
-  scrollOffset,
   addWorkBlock,
-  workBlocks,
 }: UseCreateWorkBlockProps): UseCreateWorkBlockReturn => {
   const handleCreateWork = useCallback(
     async (
@@ -72,23 +69,20 @@ export const useCreateWorkBlock = ({
         };
 
         // 충돌하지 않는 위치 찾기
-        const collisionFreePosition = findCollisionFreePosition(
-          tempBlock,
-          workBlocks,
-          containerRect,
-          scrollOffset
-        );
+        // const collisionFreePosition = findCollisionFreePosition(
+        //   tempBlock,
+        //   workBlocks,
+        //   containerRect,
+        //   scrollOffset
+        // );
+        //현재 x좌표와 현존하는 가능한 y좌표들이 모두 가득차있으면 y좌표를 증가하여 생성
 
         // updateWorkTime 함수를 사용하여 최종 시간 계산
         const {
           newStartTime: finalStartTime,
           newEndTime: finalEndTime,
           newWorkTime,
-        } = updateWorkTime(
-          tempBlock.startTime,
-          tempBlock.endTime,
-          collisionFreePosition
-        );
+        } = updateWorkTime(tempBlock.startTime, tempBlock.endTime, position);
 
         // 최종 작업 블록 생성 및 시간 업데이트
         const newWorkBlock: WorkBlockType = {
@@ -96,7 +90,7 @@ export const useCreateWorkBlock = ({
           startTime: finalStartTime,
           endTime: finalEndTime,
           workTime: newWorkTime,
-          position: collisionFreePosition,
+          position,
         };
 
         addWorkBlock(newWorkBlock, selectedCrop.myCropId!, work.workId!);
@@ -104,7 +98,7 @@ export const useCreateWorkBlock = ({
         console.error('작업 블록 생성 실패:', error);
       }
     },
-    [addWorkBlock, workBlocks, containerRef, scrollOffset]
+    [addWorkBlock, containerRef]
   );
 
   return {
