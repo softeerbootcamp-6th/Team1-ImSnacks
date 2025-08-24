@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.integration.async.AsyncItemProcessor;
@@ -16,10 +17,11 @@ import org.springframework.batch.integration.async.AsyncItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Slf4j
 @Configuration
@@ -35,7 +37,8 @@ public class AsyncWeatherJobConfig {
     public Job asyncWeatherJob(JobRepository jobRepository, Step shadowTableInitStep, Step asyncWeatherStep) {
         var builder = new JobBuilder("asyncWeatherJob", jobRepository)
                 .start(shadowTableInitStep)
-                .next(asyncWeatherStep);
+                .next(asyncWeatherStep)
+                .incrementer(new RunIdIncrementer());
         return builder.build();
     }
 
@@ -45,7 +48,8 @@ public class AsyncWeatherJobConfig {
                 .<UniqueNxNy, Future<ShortTermWeatherDto>>chunk(100, transactionManager)
                 .reader(reader)
                 .processor(asyncItemProcessor())
-                .writer(asyncItemWriter());
+                .writer(asyncItemWriter())
+                .listener(writer);
         return builder.build();
     }
 
@@ -59,7 +63,8 @@ public class AsyncWeatherJobConfig {
     public AsyncItemProcessor<UniqueNxNy, ShortTermWeatherDto> asyncItemProcessor() {
         var asyncProcessor = new AsyncItemProcessor<UniqueNxNy, ShortTermWeatherDto>();
         asyncProcessor.setDelegate(processor);
-        asyncProcessor.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        //asyncProcessor.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        asyncProcessor.setTaskExecutor(asyncWeatherProcessorExecutor());
         return asyncProcessor;
     }
 
@@ -69,4 +74,18 @@ public class AsyncWeatherJobConfig {
         asyncItemWriter.setDelegate(writer);
         return asyncItemWriter;
     }
+
+    @Bean
+    public ThreadPoolTaskExecutor asyncWeatherProcessorExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setThreadNamePrefix("AsyncWeatherProcessor");
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(10);
+        //executor.setQueueCapacity(1000);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.initialize();
+
+        return executor;
+    }
+
 }
