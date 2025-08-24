@@ -19,7 +19,6 @@ const WorkCellsContainer = memo(
     selectedRecommendedWork: RecommendedWorksResponse | null;
     workBlocks: WorkBlockType[];
   }) => {
-    // Zustand store에서 최대 레이어 가져오기
     const { maxLayer } = useMaxLayerStore();
 
     // 동적 높이 설정

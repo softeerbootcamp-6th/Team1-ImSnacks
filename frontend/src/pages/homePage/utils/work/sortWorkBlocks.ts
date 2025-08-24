@@ -12,7 +12,7 @@ export const sortWorkBlocks = (workBlocks: WorkBlockType[]) => {
     (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf()
   );
 
-  // 2. 레이어별 작업 저장 (동적으로 확장)
+  // 2. 레이어별 작업 저장
   const layers: { [layer: number]: WorkBlockType[] } = {};
   const blocks: WorkBlockType[] = [];
 
@@ -75,7 +75,6 @@ export const sortWorkBlocks = (workBlocks: WorkBlockType[]) => {
     });
   }
 
-  // Zustand store에 maxLayer 업데이트
   const { updateMaxLayerFromWorkBlocks } = useMaxLayerStore.getState();
   updateMaxLayerFromWorkBlocks(blocks);
 
