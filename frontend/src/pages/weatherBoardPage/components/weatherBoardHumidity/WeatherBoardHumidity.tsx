@@ -17,7 +17,15 @@ const WeatherBoardHumidity = () => {
         return res.data;
       },
       staleTime: 24 * 60 * 60 * 1000,
+      retry: failureCount => {
+        return failureCount < 2;
+      },
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      gcTime: 1000,
     });
+
     const humidityPath = getHumidityPath(humidityValue.value ?? 0);
     const pathRef = useRef<SVGPathElement | null>(null);
     useEffect(() => {

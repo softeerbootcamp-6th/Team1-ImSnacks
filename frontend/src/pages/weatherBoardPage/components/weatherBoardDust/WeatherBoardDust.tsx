@@ -22,7 +22,15 @@ const WeatherBoardDust = () => {
         return res.data;
       },
       staleTime: 24 * 60 * 60 * 1000,
+      retry: failureCount => {
+        return failureCount < 2;
+      },
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      gcTime: 1000,
     });
+
     const { level: pmValueLevel, color: pmValueColor } =
       getFineDustLevelAndColor(airQualityData.pm10Value || 0);
     const { level: pm25ValueLevel, color: pm25ValueColor } =
