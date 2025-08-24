@@ -1,7 +1,7 @@
 import { useIsMobileStore } from '@/store/useIsMobileStore';
 import S from './LoginPage.style';
 import { useLogin } from './hooks/useLogin';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
 const LoginPage = () => {
   const {
@@ -14,6 +14,7 @@ const LoginPage = () => {
     handleSubmit,
   } = useLogin();
   const { isMobile } = useIsMobileStore();
+  const theme = useTheme();
 
   return (
     <>
@@ -52,7 +53,7 @@ const LoginPage = () => {
                 value={identifier}
                 onChange={e => handleIdentifierChange(e.target.value)}
                 placeholder="아이디를 입력하세요"
-                css={S.LoginInput}
+                css={S.LoginInput(theme.ColorPrimary.B300)}
                 required
               />
             </div>
@@ -67,7 +68,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={e => handlePasswordChange(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                css={S.LoginInput}
+                css={S.LoginInput(theme.ColorPrimary.B300)}
                 required
               />
             </div>
@@ -77,7 +78,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              css={S.LoginSubmitButton}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
             >
               {isLoading ? '로그인 중...' : '로그인'}
             </button>
