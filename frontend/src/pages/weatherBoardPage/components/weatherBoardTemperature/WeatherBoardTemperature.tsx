@@ -4,30 +4,22 @@ import { getTemperatureColor } from '../../utils/temperatureUtil';
 import TemperatureDot from '../temperatureDot/TemperatureDot';
 import S from './WeatherBoardTemperature.style';
 import type { GetTemperatureResponse } from '@/types/openapiGenerator';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherTemperature } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import { GrayScale } from '@/styles/colors';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 import { Suspense } from 'react';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 
 const WeatherBoardTemperature = () => {
   const TemperatureContent = () => {
-    const { data: temperatureData } = useSuspenseQuery({
-      queryKey: ['weather', 'temperature'],
-      queryFn: async (): Promise<GetTemperatureResponse> => {
+    const { data: temperatureData } = useWeatherQuery(
+      ['weather', 'temperature'],
+      async (): Promise<GetTemperatureResponse> => {
         const res = await getWeatherTemperature();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-      retry: failureCount => {
-        return failureCount < 2;
-      },
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      gcTime: 1000,
-    });
+      }
+    );
 
     const temperatureGradient = (
       <defs>

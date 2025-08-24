@@ -8,28 +8,20 @@ import { useDustAnimation } from '../../hooks/useDustAnimation';
 import S from './WeatherBoardDust.style';
 import type { GetAirQualityResponse } from '@/types/openapiGenerator';
 import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherAirQuality } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const WeatherBoardDust = () => {
   const DustContent = () => {
-    const { data: airQualityData } = useSuspenseQuery({
-      queryKey: ['weather', 'dust'],
-      queryFn: async (): Promise<GetAirQualityResponse> => {
+    const { data: airQualityData } = useWeatherQuery(
+      ['weather', 'dust'],
+      async (): Promise<GetAirQualityResponse> => {
         const res = await getWeatherAirQuality();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-      retry: failureCount => {
-        return failureCount < 2;
-      },
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      gcTime: 1000,
-    });
+      }
+    );
 
     const { level: pmValueLevel, color: pmValueColor } =
       getFineDustLevelAndColor(airQualityData.pm10Value || 0);

@@ -2,28 +2,19 @@ import type { GetDailyMaxPrecipitationResponse } from '@/types/openapiGenerator'
 import { usePrecipitationSvg } from '../../hooks/usePrecipitationSvg';
 import S from './WeatherBoardPrecipitation.style';
 import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherPrecipitation } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const PrecipitationContent = () => {
-  const { data: maxPrecipitation } = useSuspenseQuery({
-    queryKey: ['weather', 'precipitation'],
-    queryFn: async (): Promise<GetDailyMaxPrecipitationResponse> => {
+  const { data: maxPrecipitation } = useWeatherQuery(
+    ['weather', 'precipitation'],
+    async (): Promise<GetDailyMaxPrecipitationResponse> => {
       const res = await getWeatherPrecipitation();
       return res.data;
-    },
-
-    staleTime: 24 * 60 * 60 * 1000,
-    retry: failureCount => {
-      return failureCount < 2;
-    },
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: true,
-    gcTime: 1000,
-  });
+    }
+  );
 
   const { svgElement } = usePrecipitationSvg({
     value: maxPrecipitation?.value ?? 0,

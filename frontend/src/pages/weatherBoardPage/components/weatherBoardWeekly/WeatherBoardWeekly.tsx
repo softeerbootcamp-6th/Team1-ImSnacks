@@ -1,29 +1,21 @@
 import S from './WeatherBoardWeekly.style';
 import WeeklyContent from '../weeklyContent/WeeklyContent';
 import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import type { GetSevenDaysForecastResponse } from '@/types/openapiGenerator';
 import { getWeatherSevenDays } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const WeatherBoardWeekly = () => {
   const SevenDaysContent = () => {
-    const { data: weeklyWeatherData } = useSuspenseQuery({
-      queryKey: ['weather', 'weekly'],
-      queryFn: async (): Promise<GetSevenDaysForecastResponse[]> => {
+    const { data: weeklyWeatherData } = useWeatherQuery(
+      ['weather', 'weekly'],
+      async (): Promise<GetSevenDaysForecastResponse[]> => {
         const res = await getWeatherSevenDays();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-      retry: failureCount => {
-        return failureCount < 2;
-      },
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      gcTime: 1000,
-    });
+      }
+    );
 
     return (
       <div css={S.WeeklyContentContainer}>

@@ -4,28 +4,20 @@ import { WindArrow } from '@/assets/icons/flat';
 import { GrayScale } from '@/styles/colors';
 import type { GetWindInfoResponse } from '@/types/openapiGenerator';
 import { Suspense, useState, useEffect } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherWind } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const WeatherBoardWind = () => {
   const WindContent = () => {
-    const { data: windData } = useSuspenseQuery({
-      queryKey: ['weather', 'wind'],
-      queryFn: async (): Promise<GetWindInfoResponse> => {
+    const { data: windData } = useWeatherQuery(
+      ['weather', 'wind'],
+      async (): Promise<GetWindInfoResponse> => {
         const res = await getWeatherWind();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-      retry: failureCount => {
-        return failureCount < 2;
-      },
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      gcTime: 1000,
-    });
+      }
+    );
 
     const [isAnimating, setIsAnimating] = useState(false);
     useEffect(() => {

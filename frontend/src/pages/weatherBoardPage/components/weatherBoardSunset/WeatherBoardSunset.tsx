@@ -4,28 +4,20 @@ import { SunEffect } from '@/assets/icons/flat';
 import { useSunsetAnimation } from '@/pages/weatherBoardPage/hooks/useSunsetAnimation';
 import type { GetSunRiseSetTimeResponse } from '@/types/openapiGenerator';
 import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherSunset } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const WeatherBoardSunset = () => {
   const SunsetContent = () => {
-    const { data: sunsetData } = useSuspenseQuery({
-      queryKey: ['weather', 'sunset'],
-      queryFn: async (): Promise<GetSunRiseSetTimeResponse> => {
+    const { data: sunsetData } = useWeatherQuery(
+      ['weather', 'sunset'],
+      async (): Promise<GetSunRiseSetTimeResponse> => {
         const res = await getWeatherSunset();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-      retry: failureCount => {
-        return failureCount < 2;
-      },
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      gcTime: 1000,
-    });
+      }
+    );
 
     const {
       progress,
