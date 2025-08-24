@@ -11,9 +11,10 @@ import { Suspense } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherAirQuality } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 
 const WeatherBoardDust = () => {
-  const Content = () => {
+  const DustContent = () => {
     const { data: airQualityData } = useSuspenseQuery({
       queryKey: ['weather', 'dust'],
       queryFn: async (): Promise<GetAirQualityResponse> => {
@@ -107,9 +108,11 @@ const WeatherBoardDust = () => {
 
   return (
     <div css={S.WeatherBoardDust}>
-      <Suspense fallback={<CircularSpinner minHeight={180} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="미세먼지">
+        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+          <DustContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };
