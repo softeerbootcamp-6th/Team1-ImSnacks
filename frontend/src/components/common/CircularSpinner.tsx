@@ -1,4 +1,3 @@
-import { ColorPrimary } from '@/styles/colors';
 import { css, useTheme } from '@emotion/react';
 
 const spinKeyframes = `
