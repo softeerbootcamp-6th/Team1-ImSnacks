@@ -16,12 +16,11 @@ import java.util.List;
 @Slf4j
 @Component
 @StepScope
-// TODO DB구간 나눠서 구간별로 나누어 읽어오기
-public class ImprovedWeatherReader implements ItemReader<UniqueNxNy> {
+public class UniqueNxNyReader implements ItemReader<UniqueNxNy> {
     private List<UniqueNxNy> locations;
     private int cursor;
 
-    public ImprovedWeatherReader(UniqueNxNyRepository uniqueNxNyRepository) {
+    public UniqueNxNyReader(UniqueNxNyRepository uniqueNxNyRepository) {
         this.cursor = 0;
         this.locations = uniqueNxNyRepository.findAll();
     }

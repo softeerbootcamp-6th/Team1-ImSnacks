@@ -10,7 +10,7 @@ import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer.SevenDa
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.ShadowTableInitTasklet;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.ImprovedWeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ImprovedWeatherReader;
+import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.UniqueNxNyReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.NxNyPagingReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.WeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
@@ -24,23 +24,16 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.reactive.function.client.WebClientException;
-
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class WeatherJobConfig {
     private final NxNyPagingReader nxNyPagingReader;
-    private final ImprovedWeatherReader improvedWeatherReader;
+    private final UniqueNxNyReader uniqueNxNyReader;
     private final ImprovedWeatherProcessor improvedWeatherProcessor;
     private final WeatherReader weatherReader;
     private final WeatherWriter weatherWriter;
@@ -98,7 +91,7 @@ public class WeatherJobConfig {
     public Step improvedWeatherStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
         return new StepBuilder("improvedWeatherStep", jobRepository)
                 .<UniqueNxNy, ShortTermWeatherDto>chunk(20, transactionManager)
-                .reader(improvedWeatherReader)
+                .reader(uniqueNxNyReader)
                 .processor(improvedWeatherProcessor)
                 .writer(weatherWriter)
                 .build();
