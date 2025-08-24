@@ -61,9 +61,13 @@ public final class Briefing {
         else return GOOD_EVENING_NO_RISK;
     }
 
-    public static String buildWeatherMsg(final WeatherRisk risk) {
-        final String from = getClockHourAsString(risk.getStartTime()); // <오전/오후> <1-12>시
-        final String to = getClockHourAsString(risk.getEndTime());
+    public static String buildWeatherMsg(LocalDateTime now, WeatherRisk risk) {
+        LocalDateTime start = risk.getStartTime();
+        LocalDateTime end = risk.getEndTime();
+        boolean isBeforeNow = start.isBefore(now);
+
+        final String from = getClockHourAsString(isBeforeNow ? now : start);
+        final String to = getClockHourAsString(end);
 
         final StringBuilder sb = new StringBuilder();
         sb.append(from).append(FROM_KOR).append(SPACE);

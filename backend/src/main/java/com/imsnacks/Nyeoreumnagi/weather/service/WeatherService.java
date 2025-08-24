@@ -169,7 +169,7 @@ public class WeatherService {
             return new GetWeatherBriefingResponse(false, briefing.buildNoRiskWelcomeMsg(now.getHour()), briefing.buildNoRiskWeatherMsg(memberId, now.getHour()));
         }
 
-        return new GetWeatherBriefingResponse(true, briefing.buildWelcomeMsg(now.getHour()), briefing.buildWeatherMsg(filteredRisk.get(0)));
+        return new GetWeatherBriefingResponse(true, briefing.buildWelcomeMsg(now.getHour()), briefing.buildWeatherMsg(now, filteredRisk.get(0)));
     }
 
     public GetSunRiseSetTimeResponse getSunRiseSetTime(final Long memberId) {
