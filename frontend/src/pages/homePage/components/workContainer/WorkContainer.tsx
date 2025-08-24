@@ -140,9 +140,9 @@ const WorkContainer = ({
             </div>
           </div>
         )}
-        <div css={S.MaskGradientWrapper}>
+        <div css={S.RightMaskGradientWrapper(scrollOffset)}>
           <div
-            css={S.ScrollContainer}
+            css={[S.ScrollContainer, S.LeftMaskGradientWrapper(scrollOffset)]}
             onScroll={e => {
               setScrollOffset(e.currentTarget.scrollLeft);
             }}

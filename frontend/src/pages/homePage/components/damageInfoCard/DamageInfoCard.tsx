@@ -4,9 +4,7 @@ import {
 } from '@/types/btnSelectChip.type';
 import BtnSelectChip from '../btnSelectChip/BtnSelectChip';
 import S from './DamageInfoCard.style';
-import { css } from '@emotion/react';
-import { Typography } from '@/styles/typography';
-import { Assets, ColorStatus } from '@/styles/colors';
+import { ColorStatus } from '@/styles/colors';
 import type { MyCropCard } from '@/types/openapiGenerator';
 
 interface DamageInfoCardProps {
@@ -17,6 +15,14 @@ interface DamageInfoCardProps {
   setSelectedPestCrop?: (crop: MyCropCard | null) => void;
 }
 
+const CaptionIcon = () => {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <circle cx="6" cy="6" r="6" fill={ColorStatus.Global.Red} />
+    </svg>
+  );
+};
+
 const DamageInfoCard = ({
   isWeatherVisible,
   content,
@@ -26,26 +32,9 @@ const DamageInfoCard = ({
 }: DamageInfoCardProps) => {
   return (
     <div css={S.DamageInfoCard}>
-      <h2
-        css={css`
-          ${Typography.Body_L_700};
-          color: ${Assets.Text.Global.Headline};
-        `}
-      >
-        {content}
-      </h2>
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        `}
-      >
-        {isWeatherVisible && (
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <circle cx="6" cy="6" r="6" fill={ColorStatus.Global.Red} />
-          </svg>
-        )}
+      <h2 css={S.DamageInfoCardTitle}>{content}</h2>
+      <div css={S.DamagaMyCropsContainer}>
+        {isWeatherVisible && <CaptionIcon />}
         {cropList.map(crop => (
           <BtnSelectChip
             key={crop.myCropName}
@@ -63,6 +52,9 @@ const DamageInfoCard = ({
             }}
           />
         ))}
+        {isWeatherVisible && (
+          <h2 css={S.DamageInfoCardContent}>에게 주의가 필요해요.</h2>
+        )}
       </div>
     </div>
   );

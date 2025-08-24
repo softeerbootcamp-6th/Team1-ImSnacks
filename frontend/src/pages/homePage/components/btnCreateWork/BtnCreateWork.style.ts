@@ -5,14 +5,9 @@ import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import type { Theme } from '@emotion/react';
 
-const SizeSmall = css`
+const BtnSize = css`
   min-width: 116px;
   height: 44px;
-`;
-
-const SizeLarge = css`
-  min-width: 146px;
-  height: 52px;
 `;
 
 const BtnCreateWorkDefault = css`
@@ -23,7 +18,8 @@ const BtnCreateWorkDefault = css`
 const BtnCreateWorkHover = (theme: Theme) => css`
   background-color: ${theme.ColorPrimary.B300};
   color: ${GrayScale.White};
-  ${SizeLarge}
+  transform: scale(1.1);
+  ${Typography.Body_M_400}
 `;
 
 const BtnCreateWorkDisabled = css`
@@ -36,7 +32,7 @@ const BtnCreateWorkDisabled = css`
 
 const BtnCreateWorkBase = (isDragging: boolean = false) => css`
   ${Typography.Body_S_400}
-  ${SizeSmall}
+  ${BtnSize}
   border-radius: ${BorderRadius.Base.S_Hard};
   padding: ${Spacing.Spacing300} 10px;
   display: flex;

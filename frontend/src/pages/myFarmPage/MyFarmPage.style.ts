@@ -11,6 +11,7 @@ const MyFarmPageWrapper = css`
 const MyFarmPageContentWrapper = css`
   padding: ${Spacing.Spacing1100} 0;
   gap: ${Spacing.Spacing1100};
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

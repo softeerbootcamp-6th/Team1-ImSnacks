@@ -7,8 +7,12 @@ const ContainerWrapper = css`
   position: relative;
 `;
 
-const MaskGradientWrapper = css`
-  ${gradientMask('Right', 30)}
+const RightMaskGradientWrapper = (scrollOffset: number) => css`
+  ${scrollOffset < 1000 && gradientMask('Right', 30)}
+`;
+
+const LeftMaskGradientWrapper = (scrollOffset: number) => css`
+  ${scrollOffset > 0 && gradientMask('Left', 30)}
 `;
 
 const ScrollContainer = css`
@@ -43,6 +47,7 @@ const LastUpdateText = css`
 export default {
   ContainerWrapper,
   ScrollContainer,
-  MaskGradientWrapper,
+  RightMaskGradientWrapper,
+  LeftMaskGradientWrapper,
   LastUpdateText,
 };

@@ -18,7 +18,6 @@ const WorkSchedule = () => {
     handleNextWeek,
     weekLabel,
     monthLabel,
-    isCurrentWeek,
   } = useWeeklyWorkSchedule();
 
   const {
@@ -39,7 +38,6 @@ const WorkSchedule = () => {
             weekLabel={weekLabel}
             onPreviousWeek={() => handlePreviousWeek(1)}
             onNextWeek={() => handleNextWeek(1)}
-            isCurrentWeek={isCurrentWeek}
           />
         </div>
         <WeeklyCalendar
@@ -61,7 +59,6 @@ const WorkSchedule = () => {
             border-radius: ${BorderRadius.Base.S_Hard};
             padding: ${Spacing.Spacing200} ${Spacing.Spacing300};
             margin: ${Spacing.Spacing800} auto;
-            width: 150px;
           `}
         >
           {isExpanded ? '접기' : '더보기'}
