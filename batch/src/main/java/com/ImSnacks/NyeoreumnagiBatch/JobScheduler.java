@@ -44,14 +44,23 @@ public class JobScheduler {
     @Qualifier("improvedWeatherJob")
     private final Job improvedWeatherJob;
 
+    @Qualifier("asyncWeatherJob")
+    private final Job asyncWeatherJob;
+
     @Scheduled(cron="0 33 9,11,18,20,21,23 * * *", zone="Asia/Seoul")
     public void runImprovedWeatherJob() throws Exception {
         JobParameters params = JobParams.getWeatherJobParam();
         jobLauncher.run(improvedWeatherJob, params);
     }
 
-    //2시부터 3시간 간격으로 15분마다 매일
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
+    public void runAsyncWeatherJob() throws Exception {
+        JobParameters params = JobParams.getWeatherJobParam();
+        jobLauncher.run(asyncWeatherJob, params);
+    }
+
+    //2시부터 3시간 간격으로 15분마다 매일
+    //@Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
     public void runWeatherJob() throws Exception {
         JobParameters params = JobParams.getWeatherJobParam();
         jobLauncher.run(weatherJob, params);
