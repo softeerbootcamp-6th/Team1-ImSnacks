@@ -7,9 +7,9 @@ import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
 import type { WorkBlockType } from '@/types/workCard.type';
 import {
   BASE_TIME_Y_COORDINATE,
-  WORK_BLOCK_HEIGHT,
-  getGlobalMaxLayer,
+  getYCoordinate,
 } from '@/constants/workTimeCoordinate';
+import useMaxLayerStore from '@/store/useMaxLayerStore';
 
 const WorkCellsContainer = memo(
   ({
@@ -19,20 +19,22 @@ const WorkCellsContainer = memo(
     selectedRecommendedWork: RecommendedWorksResponse | null;
     workBlocks: WorkBlockType[];
   }) => {
-    // 전역 변수에서 최대 레이어를 가져와서 동적 높이 설정
-    const dynamicHeight = useMemo(() => {
+    // Zustand store에서 최대 레이어 가져오기
+    const { maxLayer } = useMaxLayerStore();
+
+    // 동적 높이 설정
+    const workCellsContainerHeight = useMemo(() => {
       if (workBlocks.length === 0) return 176; // 기본 높이
 
-      const maxLayer = getGlobalMaxLayer();
-      const maxY = BASE_TIME_Y_COORDINATE + (maxLayer - 1) * WORK_BLOCK_HEIGHT;
+      const maxY = getYCoordinate(maxLayer + 1) - BASE_TIME_Y_COORDINATE;
 
       // 최소 높이 176px 보장
       return Math.max(maxY, 176);
-    }, [workBlocks]);
+    }, [workBlocks, maxLayer]);
 
     return (
       <>
-        <div css={S.WorkCellsContainerWrapper(dynamicHeight)}>
+        <div css={S.WorkCellsContainerWrapper(workCellsContainerHeight)}>
           <WorkActiveToolTip
             selectedRecommendedWork={selectedRecommendedWork}
           />

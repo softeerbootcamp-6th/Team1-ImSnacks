@@ -10,6 +10,7 @@ const WorkCellsContainerWrapper = (height: number) => css`
   height: ${height + 15}px;
   padding: 16px 12px 16px ${WORK_TIME_DEFAULT_X_COORDINATE}px;
   position: relative;
+  transition: height 0.1s ease-in-out;
 `;
 
 export default { WorkCellsContainerWrapper };
