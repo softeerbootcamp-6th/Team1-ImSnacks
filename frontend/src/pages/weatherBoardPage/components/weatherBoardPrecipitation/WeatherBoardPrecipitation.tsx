@@ -31,15 +31,7 @@ const PrecipitationContent = () => {
       </div>
 
       {svgElement && (
-        <div
-          style={{
-            marginTop: 'auto',
-            width: '100%',
-          }}
-          css={S.WeatherBoardPrecipitationSvg}
-        >
-          {svgElement}
-        </div>
+        <div css={S.WeatherBoardPrecipitationSvg}>{svgElement}</div>
       )}
     </>
   );
