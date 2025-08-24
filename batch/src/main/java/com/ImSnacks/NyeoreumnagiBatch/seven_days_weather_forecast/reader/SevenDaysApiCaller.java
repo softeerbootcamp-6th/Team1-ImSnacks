@@ -2,9 +2,12 @@ package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.reader;
 
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayWeatherForecastResponseDto;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,6 +25,11 @@ public class SevenDaysApiCaller {
     @Value("${api.seven-days-weather-service.key}")
     private String midRangeServiceKey;
 
+    @Retryable(
+            maxAttempts = 3,
+            value = JsonParseException.class,
+            backoff = @Backoff(delay = 2000, multiplier = 2)
+    )
     public SevenDayWeatherForecastResponseDto callMidRangeWeatherCondition(String baseDate, String regId) throws IOException, InterruptedException {
         String uriString = buildMidRangeWeatherUriString(baseDate, regId, true);
 
@@ -42,6 +50,7 @@ public class SevenDaysApiCaller {
         String uriString = buildMidRangeWeatherUriString(baseDate, regId, false);
 
         HttpClient client = HttpClient.newHttpClient();
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(java.net.URI.create(uriString))
                 .header("Content-type", "application/json")
@@ -52,7 +61,7 @@ public class SevenDaysApiCaller {
         return new ObjectMapper().readValue(response.body(), SevenDayTemperatureForecastResponseDto.class);
     }
 
-    public String buildMidRangeWeatherUriString(String baseDate, String regId, boolean isMidLandFcst) {
+    private String buildMidRangeWeatherUriString(String baseDate, String regId, boolean isMidLandFcst) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(MID_RANGE_WEATHER_URI.toString());
         String path = isMidLandFcst ? "/getMidLandFcst" : "/getMidTa";
         UriComponents uri = builder

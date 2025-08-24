@@ -1,7 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.writer;
 
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.SevenDayWeatherForecast;
-import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastDto;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.repository.SevenDayWeatherForecastRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +8,11 @@ import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Component
-public class SevenDayTemperatureWriter implements ItemWriter<SevenDayTemperatureForecastDto> {
+public class SevenDayTemperatureWriter implements ItemWriter<List<SevenDayWeatherForecast>> {
     private final SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository;
 
     public SevenDayTemperatureWriter(SevenDayWeatherForecastRepository sevenDayWeatherForecastRepository) {
@@ -23,17 +21,13 @@ public class SevenDayTemperatureWriter implements ItemWriter<SevenDayTemperature
 
     @Override
     @Transactional
-    public void write(Chunk<? extends SevenDayTemperatureForecastDto> chunk) throws Exception {
-        log.info("SevenDayTemperatureWriter Chunk size: {}", chunk.size());
-        List<SevenDayWeatherForecast> sevenDayWeatherForecasts = new ArrayList<>();
+    public void write(Chunk<? extends List<SevenDayWeatherForecast>> chunk) {
+        log.info("SevenDayTemperatureWriter writing {} chunks.", chunk.size());
 
-        chunk.getItems().forEach(item -> sevenDayWeatherForecasts.addAll(item.byDayDto().stream().map(dto -> new SevenDayWeatherForecast(
-                dto.regionCode(),
-                dto.date(),
-                dto.maxTemperature(),
-                dto.minTemperature(),
-                null
-        )).toList()));
-        sevenDayWeatherForecastRepository.saveAll(sevenDayWeatherForecasts);
+        List<SevenDayWeatherForecast> flattenedList = chunk.getItems().stream()
+                .flatMap(List::stream)
+                .toList();
+
+        sevenDayWeatherForecastRepository.saveAll(flattenedList);
     }
 }

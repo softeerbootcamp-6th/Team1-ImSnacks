@@ -1,6 +1,6 @@
 package com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor;
 
-import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastDto;
+import com.ImSnacks.NyeoreumnagiBatch.common.entity.SevenDayWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.dto.SevenDayTemperatureForecastResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @Component
 @StepScope
-public class SevenDayTemperatureProcessor implements ItemProcessor<SevenDayTemperatureForecastResponseDto, SevenDayTemperatureForecastDto> {
+public class SevenDayTemperatureProcessor implements ItemProcessor<SevenDayTemperatureForecastResponseDto, List<SevenDayWeatherForecast>> {
     private final String baseDate;
 
     SevenDayTemperatureProcessor(@Value("#{jobParameters['base_date']}") String baseDate) {
@@ -24,20 +24,22 @@ public class SevenDayTemperatureProcessor implements ItemProcessor<SevenDayTempe
     }
 
     @Override
-    public SevenDayTemperatureForecastDto process(SevenDayTemperatureForecastResponseDto dto) throws Exception {
-        log.info("Processing SevenDay Weather Forecast Data");
+    public List<SevenDayWeatherForecast> process(SevenDayTemperatureForecastResponseDto dto) throws Exception {
+        log.info("Processing SevenDay Weather Forecast Data into Entity List");
         SevenDayTemperatureForecastResponseDto.Item sevenDayTemperatureInfo = dto.getSevenDayTemperatureInfo();
-        List<SevenDayTemperatureForecastDto.ByDayDto> byDayDtoList = new ArrayList<>();
+        List<SevenDayWeatherForecast> forecastList = new ArrayList<>();
+        LocalDate startDate = LocalDate.parse(baseDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
 
         for (int i = 4; i <= 10; i++) {
-            LocalDate date = LocalDate.parse(baseDate, DateTimeFormatter.ofPattern("yyyyMMdd")).plusDays(i);
-            byDayDtoList.add(new SevenDayTemperatureForecastDto.ByDayDto(
+            LocalDate forecastDate = startDate.plusDays(i);
+            forecastList.add(new SevenDayWeatherForecast(
                     sevenDayTemperatureInfo.regId(),
-                    date,
+                    forecastDate,
                     sevenDayTemperatureInfo.getNextDayTemperatureStatus(i).getSecond(),
-                    sevenDayTemperatureInfo.getNextDayTemperatureStatus(i).getFirst()
+                    sevenDayTemperatureInfo.getNextDayTemperatureStatus(i).getFirst(),
+                    null
             ));
         }
-        return new SevenDayTemperatureForecastDto(byDayDtoList);
+        return forecastList;
     }
 }
