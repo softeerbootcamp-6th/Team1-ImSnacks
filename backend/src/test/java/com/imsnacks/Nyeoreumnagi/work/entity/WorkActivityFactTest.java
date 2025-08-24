@@ -16,14 +16,16 @@ class WorkActivityFactTest {
         LocalDate day = LocalDate.of(2023, 10, 26);
         Long workId = 123L;
         String tile = "Sample Tile";
+        WorkStatus workStatus = WorkStatus.COMPLETED;
         Long memberId = 456L;
 
-        WorkActivityFact result = WorkActivityFact.of(day, workId, tile, memberId);
+        WorkActivityFact result = WorkActivityFact.of(day, workId, tile, workStatus, memberId);
 
         assertThat(result).isNotNull();
         assertThat(result.getId().getWorkId()).isEqualTo(workId);
         assertThat(result.getId().getDay()).isEqualTo(day);
         assertThat(result.getId().getTile()).isEqualTo(tile);
+        assertThat(result.getWorkStatus()).isEqualTo(workStatus);
         assertThat(result.getId().getMemberId()).isEqualTo(memberId);
     }
 }
