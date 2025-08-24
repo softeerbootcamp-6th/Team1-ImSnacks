@@ -18,7 +18,6 @@ const WorkSchedule = () => {
     handleNextWeek,
     weekLabel,
     monthLabel,
-    isCurrentWeek,
   } = useWeeklyWorkSchedule();
 
   const {
@@ -39,7 +38,6 @@ const WorkSchedule = () => {
             weekLabel={weekLabel}
             onPreviousWeek={() => handlePreviousWeek(1)}
             onNextWeek={() => handleNextWeek(1)}
-            isCurrentWeek={isCurrentWeek}
           />
         </div>
         <WeeklyCalendar

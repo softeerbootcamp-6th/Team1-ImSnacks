@@ -1,4 +1,4 @@
-import { GrayScale, Opacity } from '@/styles/colors';
+import { Opacity } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { css } from '@emotion/react';
@@ -18,7 +18,7 @@ const WeeklyNavigator = css`
   border-radius: ${BorderRadius.Base.Hard};
 `;
 
-const onNextWeekButton = css`
+const onMoveButton = css`
   background: none;
   border: none;
 
@@ -27,19 +27,9 @@ const onNextWeekButton = css`
   border-radius: ${BorderRadius.Base.Hard};
   transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: ${Opacity.White.W200};
-  }
-`;
-
-const onPreviousWeekButton = css`
-  background: none;
-  border: none;
-  color: ${GrayScale.White};
-  cursor: pointer;
-  padding: ${Spacing.Spacing100};
-  border-radius: ${BorderRadius.Base.Hard};
-  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: ${Opacity.White.W200};
@@ -48,6 +38,5 @@ const onPreviousWeekButton = css`
 
 export default {
   WeeklyNavigator,
-  onNextWeekButton,
-  onPreviousWeekButton,
+  onMoveButton,
 };
