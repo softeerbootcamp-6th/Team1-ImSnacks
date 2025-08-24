@@ -6,9 +6,10 @@ import { Suspense, useEffect, useRef } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { GetHumidityResponse } from '@/types/openapiGenerator';
 import { getWeatherHumidity } from '@/apis/weather.api';
+import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 
 const WeatherBoardHumidity = () => {
-  const Content = () => {
+  const HumidityContent = () => {
     const { data: humidityValue } = useSuspenseQuery({
       queryKey: ['weather', 'humidity'],
       queryFn: async (): Promise<GetHumidityResponse> => {
@@ -78,9 +79,11 @@ const WeatherBoardHumidity = () => {
   };
   return (
     <div css={S.WeatherBoardHumidity}>
-      <Suspense fallback={<CircularSpinner minHeight={180} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="습도">
+        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+          <HumidityContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };
