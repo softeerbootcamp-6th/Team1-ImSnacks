@@ -9,9 +9,10 @@ import { getWeatherUV } from '@/apis/weather.api';
 import { GetUVInfoResponse } from '@/types/openapiGenerator';
 import { getUVLevelAndColor } from '../../utils/uvUtil';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 
 const WeatherBoardUV = () => {
-  const Content = () => {
+  const UVContent = () => {
     const { data: uv } = useSuspenseQuery({
       queryKey: ['weather', 'uv'],
       queryFn: async (): Promise<GetUVInfoResponse> => {
@@ -24,7 +25,7 @@ const WeatherBoardUV = () => {
     const { level, color } = getUVLevelAndColor(uv.value ?? 0);
 
     return (
-      <>
+      <div css={S.WeatherBoardUVContentWrapper}>
         <div
           css={css`
             ${FlexStyles.flexColumn};
@@ -69,19 +70,21 @@ const WeatherBoardUV = () => {
           <span css={S.WeatherBoardUVTime}>{uv.startTime}</span>
           <span css={S.WeatherBoardUVTime}>{uv.endTime}</span>
         </div>
-      </>
+      </div>
     );
   };
 
   return (
     <div css={S.WeatherBoardUV}>
-      <h3 css={S.WeatherBoardUVTitle}>자외선</h3>
-
-      <div css={S.WeatherBoardUVContent}>
+      <WeatherErrorBoundary title="자외선">
         <Suspense fallback={<CircularSpinner minHeight={180} />}>
-          <Content />
+          <h3 css={S.WeatherBoardUVTitle}>자외선</h3>
+
+          <div css={S.WeatherBoardUVContent}>
+            <UVContent />
+          </div>
         </Suspense>
-      </div>
+      </WeatherErrorBoundary>
     </div>
   );
 };
