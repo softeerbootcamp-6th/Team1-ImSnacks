@@ -10,7 +10,6 @@ interface MaxLayerState {
   updateMaxLayerFromWorkBlocks: (
     workBlocks: { position: { y: number } }[]
   ) => void;
-  incrementMaxLayer: () => void;
 }
 
 const useMaxLayerStore = create<MaxLayerState>(set => ({
@@ -29,7 +28,6 @@ const useMaxLayerStore = create<MaxLayerState>(set => ({
 
     set({ maxLayer: newMaxLayer });
   },
-  incrementMaxLayer: () => set(state => ({ maxLayer: state.maxLayer + 1 })),
 }));
 
 export default useMaxLayerStore;

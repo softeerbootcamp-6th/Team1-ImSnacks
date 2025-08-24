@@ -32,7 +32,6 @@ export const resolveCollision = ({
 
   const newBlocks = getTimeUpdatedBlocks(workBlocks, activeBlock);
 
-  // Zustand store에서 최대 레이어 가져오기
   const { maxLayer } = useMaxLayerStore.getState();
 
   if (isFullyOverlapped(activeBlock, otherBlocks, maxLayer)) {

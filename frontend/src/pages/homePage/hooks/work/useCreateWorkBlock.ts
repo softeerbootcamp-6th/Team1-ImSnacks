@@ -68,15 +68,6 @@ export const useCreateWorkBlock = ({
           endTime: tempEndTime,
         };
 
-        // 충돌하지 않는 위치 찾기
-        // const collisionFreePosition = findCollisionFreePosition(
-        //   tempBlock,
-        //   workBlocks,
-        //   containerRect,
-        //   scrollOffset
-        // );
-        //현재 x좌표와 현존하는 가능한 y좌표들이 모두 가득차있으면 y좌표를 증가하여 생성
-
         // updateWorkTime 함수를 사용하여 최종 시간 계산
         const {
           newStartTime: finalStartTime,

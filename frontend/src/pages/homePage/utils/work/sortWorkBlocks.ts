@@ -16,8 +16,7 @@ export const sortWorkBlocks = (workBlocks: WorkBlockType[]) => {
   const layers: { [layer: number]: WorkBlockType[] } = {};
   const blocks: WorkBlockType[] = [];
 
-  // 현재 maxLayer 가져오기
-  let currentMaxLayer = useMaxLayerStore.getState().maxLayer;
+  let currentMaxLayer = 1;
 
   for (const work of sortedWorks) {
     const { x, width } = calculateTimeToPosition(
@@ -74,6 +73,8 @@ export const sortWorkBlocks = (workBlocks: WorkBlockType[]) => {
       size: { width, height: 52 },
     });
   }
+
+  useMaxLayerStore.setState({ maxLayer: currentMaxLayer });
 
   return blocks;
 };
