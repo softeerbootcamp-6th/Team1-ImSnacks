@@ -3,7 +3,6 @@ package com.imsnacks.Nyeoreumnagi.work.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Immutable;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
@@ -25,8 +24,11 @@ public class WorkActivityFact {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public static WorkActivityFact of(LocalDate day, Long workId, String tile, Long memberId) {
-        return new WorkActivityFact(new Key(day, workId, tile, memberId), null);
+    @Enumerated(EnumType.STRING)
+    private WorkStatus workStatus;
+
+    public static WorkActivityFact of(LocalDate day, Long workId, String tile, WorkStatus workStatus, Long memberId) {
+        return new WorkActivityFact(new Key(day, workId, tile, memberId), null, workStatus);
     }
 
     @Embeddable

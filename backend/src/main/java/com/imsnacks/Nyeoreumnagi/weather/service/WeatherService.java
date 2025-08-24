@@ -85,13 +85,17 @@ public class WeatherService {
         int ny = farm.getNy();
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime nowPlus24 = now.plusHours(24);
         List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
                 .stream()
                 .filter(weather -> {
                     LocalDateTime fcstTime = weather.getFcstTime();
-                    return !fcstTime.isBefore(now)
-                            && fcstTime.isBefore(nowPlus24);
+                    LocalDate fcstDate = fcstTime.toLocalDate();
+                    LocalDate nowDate = now.toLocalDate();
+
+                    if(fcstDate.isEqual(nowDate)){
+                        return fcstTime.getHour() >= now.getHour();
+                    }
+                    return fcstTime.getHour() < now.getHour();
                 })
                 .toList();
         if (weatherInfos.isEmpty()) {
@@ -216,7 +220,7 @@ public class WeatherService {
         }
         return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
                 forecast.getDayOfWeek(LocalDate.now()),
-                forecast.getWeatherCondition(),
+                forecast.getWeatherCondition() == null ? WeatherCondition.SUNNY : forecast.getWeatherCondition(),
                 forecast.getMaxTemperature(),
                 forecast.getMinTemperature()
         )).toList();

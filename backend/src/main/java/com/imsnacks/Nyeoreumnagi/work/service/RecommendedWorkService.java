@@ -85,10 +85,9 @@ public class RecommendedWorkService {
     }
 
     private long getNeighborCountForWork(long currentMemberId, long workId) {
-        // 내 기준점: 내 농장 위치
         Point loc = farmRepository.findByMember_Id(currentMemberId)
                 .orElseThrow()
-                .getLocation(); // x=lon, y=lat
+                .getLocation();
 
         double centerLat = loc.getY();
         double centerLon = loc.getX();
