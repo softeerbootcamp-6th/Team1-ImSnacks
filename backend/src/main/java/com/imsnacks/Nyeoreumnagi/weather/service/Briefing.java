@@ -64,9 +64,8 @@ public final class Briefing {
     public static String buildWeatherMsg(LocalDateTime now, WeatherRisk risk) {
         LocalDateTime start = risk.getStartTime();
         LocalDateTime end = risk.getEndTime();
-        boolean isBeforeNow = start.isBefore(now);
 
-        final String from = getClockHourAsString(isBeforeNow ? now : start);
+        final String from = getClockHourAsString(start.isBefore(now) ? now : start);
         final String to = getClockHourAsString(end);
 
         final StringBuilder sb = new StringBuilder();
