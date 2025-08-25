@@ -2,7 +2,6 @@ package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiRequestValues;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @Slf4j
 @EnableRetry
@@ -39,34 +37,26 @@ public class ImprovedApiCaller {
 
     @Retryable(
             maxAttempts = 3,
-            value = IOException.class,
+            value = Exception.class,
             backoff = @Backoff(delay = 2000, multiplier = 2)
     )
-    public VilageFcstResponseDto call(String baseDate, String baseTime, int nx, int ny) {
+    public VilageFcstResponseDto call(String baseDate, String baseTime, int nx, int ny) throws IOException, InterruptedException {
         URI uri = buildUri(baseDate, baseTime, nx, ny);
-        log.info("Calling web service at {}", uri.toString());
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(uri)
                 .version(HttpClient.Version.HTTP_1_1)
                 .timeout(Duration.of(30, ChronoUnit.SECONDS))
                 .GET().build();
-        try {
-            HttpResponse<String> res = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
-            VilageFcstResponseDto data = new ObjectMapper()
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
-                    .readValue(res.body(), VilageFcstResponseDto.class);
-            return data;
-        } catch (Exception e) {
-            log.info("An exception has occurred");
-            return null;
-        }
 
+        HttpResponse<String> res = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
+        VilageFcstResponseDto data = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
+                .readValue(res.body(), VilageFcstResponseDto.class);
+        return data;
     }
 
-
-
-    private java.net.URI buildUri(String baseDate, String baseTime, int nx, int ny) {
+    private URI buildUri(String baseDate, String baseTime, int nx, int ny) {
         return UriComponentsBuilder.fromUriString(ApiRequestValues.URI.toString())
                 .queryParam(ApiRequestValues.AUTH_KEY.toString(), serviceKey)
                 .queryParam(ApiRequestValues.NUM_OF_ROWS.toString(), 1000)
@@ -79,42 +69,5 @@ public class ImprovedApiCaller {
                 .encode()
                 .build()
                 .toUri();
-    }
-
-    private VilageFcstResponseDto getDefaultData(String baseDate, String baseTime, int nx, int ny) {
-        List<VilageFcstResponseDto.Item> itemList = List.of(
-                createItem("PCP", baseDate, baseTime, baseDate, baseTime, "강수없음")
-        );
-        VilageFcstResponseDto.Items items = new VilageFcstResponseDto.Items();
-        items.setItem(itemList);
-
-        VilageFcstResponseDto.Body body = new VilageFcstResponseDto.Body();
-        body.setItems(items);
-
-        VilageFcstResponseDto.Header header = new VilageFcstResponseDto.Header();
-        header.setResultCode("00");
-        header.setResultMsg("OK");
-
-        VilageFcstResponseDto.Response response = new VilageFcstResponseDto.Response();
-        response.setHeader(header);
-        response.setBody(body);
-
-        VilageFcstResponseDto VilageFcstResponseDto = new VilageFcstResponseDto();
-        VilageFcstResponseDto.setResponse(response);
-
-        return VilageFcstResponseDto;
-    }
-
-    private VilageFcstResponseDto.Item createItem(String category, String baseDate, String baseTime, String fcstDate, String fcstTime, String value) {
-        VilageFcstResponseDto.Item item = new VilageFcstResponseDto.Item();
-        item.setCategory(category);
-        item.setBaseDate(baseDate);
-        item.setBaseTime(baseTime);
-        item.setFcstDate(fcstDate);
-        item.setFcstTime(fcstTime);
-        item.setFcstValue(value);
-        item.setNx(0);
-        item.setNy(0);
-        return item;
     }
 }
