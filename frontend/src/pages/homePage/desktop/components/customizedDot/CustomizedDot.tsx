@@ -1,6 +1,7 @@
 import { GrayScale } from '@/styles/colors';
 import type { WeatherRiskDto } from '@/types/openapiGenerator';
 import { useTheme } from '@emotion/react';
+import { useEffect } from 'react';
 
 const DOT_SIZE = 18;
 const DOT_RADIUS = 7;
@@ -10,21 +11,24 @@ const LINE_WIDTH = 2;
 const LINE_VERTICAL_OFFSET = 7;
 const LINE_HORIZONTAL_OFFSET = 1;
 
-// CustomizedDot 컴포넌트
 const CustomizedDot = ({
-  cx,
-  cy,
+  cx = 0,
+  cy = 0,
+  index,
   payload,
   weatherRiskData,
   wrapperMargin,
   chartHeight,
+  onLayout,
 }: {
-  cx: number;
-  cy: number;
+  cx?: number;
+  cy?: number;
+  index?: number;
   payload?: { name: string; value: number };
   weatherRiskData: WeatherRiskDto[];
   wrapperMargin: { top: number; bottom: number; left: number; right: number };
   chartHeight: number;
+  onLayout?: (name: string, index: number, cx: number, cy: number) => void;
 }) => {
   const theme = useTheme();
   // 차트의 실제 높이 계산 (전체 높이 - 상단 마진 - 하단 마진)
@@ -40,6 +44,18 @@ const CustomizedDot = ({
       riskData =>
         riskData.startTime === payload.name || riskData.endTime === payload.name
     );
+
+  useEffect(() => {
+    if (
+      onLayout &&
+      payload?.name != null &&
+      typeof index === 'number' &&
+      typeof cx === 'number' &&
+      typeof cy === 'number'
+    ) {
+      onLayout(String(payload.name), index, cx, cy);
+    }
+  }, [onLayout, payload?.name, index, cx, cy]);
 
   return (
     <>
