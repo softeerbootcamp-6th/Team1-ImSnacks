@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { ColorPrimary } from '@/styles/colors';
-import { calculateHeightRatio } from '../utils/precipitationUtil';
+import { calculateHeightRatio } from './precipitationUtil';
 
 interface PrecipitationSvgData {
   totalHeight: number;
@@ -12,7 +12,7 @@ interface PrecipitationSvgData {
   svgElement: ReactElement | null;
 }
 
-export const usePrecipitationSvg = ({
+export const getPrecipitationSvgUtil = ({
   value,
 }: {
   value: number;

@@ -1,5 +1,5 @@
 import type { GetDailyMaxPrecipitationResponse } from '@/types/openapiGenerator';
-import { usePrecipitationSvg } from '../../hooks/usePrecipitationSvg';
+import { getPrecipitationSvgUtil } from '../../utils/getPrecipitationSvgUtil';
 import S from './WeatherBoardPrecipitation.style';
 import { Suspense, useState } from 'react';
 import { getWeatherPrecipitation } from '@/apis/weather.api';
@@ -17,7 +17,7 @@ const PrecipitationContent = () => {
     }
   );
 
-  const { svgElement } = usePrecipitationSvg({
+  const { svgElement } = getPrecipitationSvgUtil({
     value: maxPrecipitation?.value ?? 0,
   });
 
