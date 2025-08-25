@@ -1,7 +1,7 @@
 import type { WeatherMetrics } from '@/types/weather.types';
 import GraphMenuTab from '../graphMenuTab/GraphMenuTab';
 import S from './GraphMenu.style';
-import { GRAPH_MENU_LIST } from '@/constants/graphMenu';
+import { GRAPH_MENU_LIST } from '@/constants/menuItems';
 
 interface GraphMenuProps {
   currentTab: WeatherMetrics;

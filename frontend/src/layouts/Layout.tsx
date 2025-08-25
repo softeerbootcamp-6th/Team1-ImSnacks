@@ -3,7 +3,7 @@ import { gradientStyles } from '@/styles/gradientStyles';
 import { css } from '@emotion/react';
 import NavBar from './navBar/NavBar';
 import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';
-import { backgroundTheme } from '@/constants/backgroundTheme';
+import { backgroundTheme } from '@/styles/backgroundTheme';
 import { useFadeTransition } from '@/hooks/useFadeTransition';
 import type { WeatherConditionsType } from '@/types/weather.types';
 import { useLocation } from 'react-router';

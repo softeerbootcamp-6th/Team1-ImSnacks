@@ -1,4 +1,4 @@
-import { FLAT_ICON } from '@/constants/flatIcons';
+import { FLAT_ICON } from '@/constants/iconElements/flatIcons';
 import { Typography } from '@/styles/typography';
 import { getTemperatureColor } from '../../utils/temperatureUtil';
 import { FlexStyles } from '@/styles/flexStyles';

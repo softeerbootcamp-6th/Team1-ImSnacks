@@ -1,4 +1,4 @@
-import { GLASS_MOBILE_ICON } from '@/constants/glassMobileIcon';
+import { GLASS_MOBILE_ICON } from '@/constants/iconElements/glassMobileIcon';
 import { GrayScale } from '@/styles/colors';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';

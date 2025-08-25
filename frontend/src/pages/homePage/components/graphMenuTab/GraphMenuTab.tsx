@@ -1,4 +1,4 @@
-import { FLAT_ICON } from '@/constants/flatIcons';
+import { FLAT_ICON } from '@/constants/iconElements/flatIcons';
 import S from './GraphMenuTab.style';
 import type { WeatherMetrics } from '@/types/weather.types';
 import { useTheme } from '@emotion/react';

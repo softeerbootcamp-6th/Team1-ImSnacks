@@ -1,5 +1,5 @@
 import S from './MobileCurrentWeatherContent.style';
-import { FLAT_ICON } from '@/constants/flatIcons';
+import { FLAT_ICON } from '@/constants/iconElements/flatIcons';
 import type {
   GetWeatherGraphResponseWeatherMetricEnum,
   GetWeatherStatusResponse,

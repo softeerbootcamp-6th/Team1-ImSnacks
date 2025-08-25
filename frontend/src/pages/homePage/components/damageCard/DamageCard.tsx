@@ -1,4 +1,4 @@
-import { DAMAGE_GRAPHIC } from '@/constants/damageGraphic';
+import { DAMAGE_GRAPHIC } from '@/constants/iconElements/damageGraphic';
 import type { PestDamagesType, WeatherDamagesType } from '@/types/damage.type';
 import S from './DamageCard.style';
 

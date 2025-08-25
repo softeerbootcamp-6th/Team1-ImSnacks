@@ -18,3 +18,9 @@ export const GRAPH_MENU_LIST = [
     weatherMetric: WEATHER_METRICS.WIND_SPEED,
   },
 ];
+
+export const NAV_ITEMS = [
+  { title: '홈', path: '/' },
+  { title: '날씨 정보', path: '/weather-board' },
+  { title: '내 농장', path: '/my-farm' },
+];

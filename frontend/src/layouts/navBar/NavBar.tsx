@@ -1,14 +1,9 @@
-const NAV_ITEMS = [
-  { title: '홈', path: '/' },
-  { title: '날씨 정보', path: '/weather-board' },
-  { title: '내 농장', path: '/my-farm' },
-];
-
 import { Link, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 import S from './NavBar.styles';
 import Tab from './tab/Tab';
 import { IC24LogoIcon } from '@/assets/icons/flat';
+import { NAV_ITEMS } from '@/constants/menuItems';
 
 const NavBar = ({ isWeatherPage }: { isWeatherPage: boolean }) => {
   const location = useLocation();

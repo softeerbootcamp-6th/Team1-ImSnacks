@@ -1,6 +1,6 @@
 import { getSubjectParticle } from '@/utils/koreanParticleUtil';
 import S from './Headline.style';
-import { GLASS_ICON } from '@/constants/glassIcon';
+import { GLASS_ICON } from '@/constants/iconElements/glassIcon';
 import { css } from '@emotion/react';
 import { useUserStore } from '@/store/useUserStore';
 import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';

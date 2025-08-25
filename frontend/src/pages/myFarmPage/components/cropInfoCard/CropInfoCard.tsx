@@ -1,5 +1,5 @@
 import S from './CropInfoCard.style';
-import { CROP_ICONS } from '@/constants/cropIcons';
+import { CROP_ICONS } from '@/constants/iconElements/cropIcons';
 import type { CropNameType } from '@/types/crop.type';
 import CropGrowthChip from '../cropGrowthChip/CropGrowthChip';
 import { GetMyCropsResponse } from '@/types/openapiGenerator';
