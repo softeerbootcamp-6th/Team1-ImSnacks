@@ -10,7 +10,10 @@ public class VilageFcstResponseDto {
     private Response response;
 
     public List<Item> getWeatherInfo(){
-        return response.getBody().getItems().getItem();
+        if(response != null && response.getBody() != null && response.getBody().getItems() != null && response.getBody().getItems().getItem() != null){
+            return response.getBody().getItems().getItem();
+        }
+        return null;
     }
 
     @Setter
