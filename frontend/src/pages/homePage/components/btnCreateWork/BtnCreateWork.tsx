@@ -74,6 +74,7 @@ const BtnCreateWork = ({
           }
           direction={TOOLTIP_DIRECTIONS.TOP}
           type={TOOLTIP_TYPES.NEIGHBOR}
+          offset={65}
         />
       )}
     </div>

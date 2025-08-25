@@ -6,13 +6,14 @@ import type { Theme } from '@emotion/react';
 export const WorkActiveToolTipContainer = (
   x: number,
   width: number,
-  theme: Theme
+  theme: Theme,
+  workCellsContainerHeight: number
 ) => css`
   position: absolute;
   top: 16px;
   left: ${x}px;
   width: ${width}px;
-  height: 176px;
+  height: ${workCellsContainerHeight + 16}px;
   background-color: ${Opacity.White.W400};
   z-index: 1000;
   backdrop-filter: blur(4px);

@@ -36,6 +36,7 @@ const WorkCellsContainer = memo(
         <div css={S.WorkCellsContainerWrapper(workCellsContainerHeight)}>
           <WorkActiveToolTip
             selectedRecommendedWork={selectedRecommendedWork}
+            workCellsContainerHeight={workCellsContainerHeight}
           />
           <WorkCell
             type={WORK_CELL_TYPES.START}

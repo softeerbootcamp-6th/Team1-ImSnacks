@@ -18,7 +18,10 @@ const BtnCreateWorkDefault = css`
 const BtnCreateWorkHover = (theme: Theme) => css`
   background-color: ${theme.ColorPrimary.B300};
   color: ${GrayScale.White};
-  transform: scale(1.1);
+  transform: scale(1.1) translateY(-2px);
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
   ${Typography.Body_M_400}
 `;
 
@@ -38,8 +41,7 @@ const BtnCreateWorkBase = (isDragging: boolean = false) => css`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 0.5px solid ${GrayScale.G300};
-  transition: all 0.1s ease-in-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: ${isDragging ? 'grabbing' : 'grab'};
   user-select: none;
   opacity: ${isDragging ? 0.7 : 1};

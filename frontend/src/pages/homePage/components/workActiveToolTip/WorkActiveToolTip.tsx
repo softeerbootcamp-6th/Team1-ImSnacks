@@ -5,8 +5,10 @@ import { useTheme } from '@emotion/react';
 
 const WorkActiveToolTip = ({
   selectedRecommendedWork,
+  workCellsContainerHeight,
 }: {
   selectedRecommendedWork: RecommendedWorksResponse | null;
+  workCellsContainerHeight: number;
 }) => {
   const theme = useTheme();
 
@@ -22,7 +24,12 @@ const WorkActiveToolTip = ({
         return (
           <div
             key={`${duration.startTime}-${duration.endTime}`}
-            css={S.WorkActiveToolTipContainer(x, width, theme)}
+            css={S.WorkActiveToolTipContainer(
+              x,
+              width,
+              theme,
+              workCellsContainerHeight
+            )}
           >
             <div css={S.WorkActiveToolTipText(theme)}>
               {duration.recommendation}

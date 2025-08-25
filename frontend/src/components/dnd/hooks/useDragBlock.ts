@@ -117,8 +117,7 @@ export const useDragBlock = ({
         scrollOffset,
         containerRef.current,
         { x: 0, y: getYCoordinate(1) },
-        { x: 0, y: 10 },
-        { left: false, right: true, top: true, bottom: true }
+        { x: 0, y: 10 }
       )
     ) {
       const currentBlocks = getTimeUpdatedBlocks(
