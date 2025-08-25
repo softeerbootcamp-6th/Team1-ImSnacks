@@ -183,6 +183,7 @@ const WorkContainer = ({
             })}
             <WorkCellsContainer
               selectedRecommendedWork={selectedRecommendedWork}
+              workBlocks={workBlocks}
             />
           </div>
         </div>
