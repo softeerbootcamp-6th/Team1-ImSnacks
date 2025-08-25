@@ -1,4 +1,4 @@
-import convertHexToRGBA from '@/utils/converHexToRGBA';
+import convertHexToRGBA from '@/utils/converHexToRGBAUtil';
 
 // Primary Colors - Blue Palette
 export const ColorPrimary = {

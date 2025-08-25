@@ -1,15 +1,15 @@
 import { Suspense } from 'react';
 import { css } from '@emotion/react';
 import S from './WeatherBoardUV.style';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { Typography } from '@/styles/typography';
 import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { getWeatherUV } from '@/apis/weather.api';
 import { GetUVInfoResponse } from '@/types/openapiGenerator';
 import { getUVLevelAndColor } from '../../utils/uvUtil';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
-import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
-import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
 
 const WeatherBoardUV = () => {
   const UVContent = () => {

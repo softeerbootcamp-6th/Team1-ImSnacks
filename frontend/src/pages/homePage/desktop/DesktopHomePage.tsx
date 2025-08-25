@@ -1,7 +1,7 @@
-import Headline from '../components/headline/Headline';
+import Headline from './components/headline/Headline';
 import S from './DesktopHomePage.style';
-import WorkContainer from '../components/workContainer/WorkContainer';
-import DamagePests from '../components/damagePests/DamagePests';
+import WorkContainer from './components/workContainer/WorkContainer';
+import DamagePests from './components/damagePests/DamagePests';
 import type { WeatherRiskDto } from '@/types/openapiGenerator';
 import { getWeatherRisk } from '@/apis/weather.api';
 import { useCallback, useEffect, useState } from 'react';

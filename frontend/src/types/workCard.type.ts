@@ -1,4 +1,4 @@
-import type { BlockType } from '@/types/blockType.type';
+import type { BlockType } from '@/lib/dnd/types/blockType.type';
 
 export interface WorkBlockType extends BlockType {
   cropName: string;

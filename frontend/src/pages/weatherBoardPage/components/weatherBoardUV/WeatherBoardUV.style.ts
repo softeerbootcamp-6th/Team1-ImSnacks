@@ -1,10 +1,11 @@
 import { GrayScale } from '@/styles/colors';
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
 const WeatherBoardUV = css`
-  ${CommonStyles.weatherBoardContainer}
+  ${S.WeatherBoardContainer}
   position: relative;
   box-sizing: border-box;
 `;

@@ -1,4 +1,4 @@
-import HTTP from './http';
+import HTTP from './shared/HTTP';
 import { LoginRequest, LoginResponse } from '@/types/openapiGenerator';
 
 export const postLogin = (body: LoginRequest) =>

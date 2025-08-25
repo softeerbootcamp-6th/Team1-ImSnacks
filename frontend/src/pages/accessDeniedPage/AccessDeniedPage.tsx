@@ -1,6 +1,6 @@
 import { useWeatherConditionStore } from '@/store/useWeatherConditionStore';
 import S from './AccessDeniedPage.style';
-import { backgroundTheme } from '@/constants/backgroundTheme';
+import { backgroundTheme } from '@/styles/weatherTheme';
 import { Link } from 'react-router';
 import { useTheme } from '@emotion/react';
 

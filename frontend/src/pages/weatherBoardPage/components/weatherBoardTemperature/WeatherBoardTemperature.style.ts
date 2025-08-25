@@ -1,8 +1,8 @@
-import { CommonStyles } from '@/styles/commonStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { css } from '@emotion/react';
 
 const WeatherBoardTemperature = css`
-  ${CommonStyles.weatherBoardContainer}
+  ${S.WeatherBoardContainer}
   position: relative;
   padding: 8px 0;
   box-sizing: border-box;

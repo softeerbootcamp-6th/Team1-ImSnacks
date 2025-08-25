@@ -1,8 +1,9 @@
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { css } from '@emotion/react';
 
 const WeatherBoardPrecipitation = css`
-  ${CommonStyles.weatherBoardContainer}
+  ${S.WeatherBoardContainer}
   padding: 10px;
   ${FlexStyles.flexColumn}
   justify-content: flex-end;

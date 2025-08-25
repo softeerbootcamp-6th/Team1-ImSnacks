@@ -4,8 +4,8 @@ import S from './WeatherBoardPrecipitation.style';
 import { Suspense, useState } from 'react';
 import { getWeatherPrecipitation } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
-import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
-import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
 import { ColorPrimary } from '@/styles/colors';
 
 const PrecipitationContent = () => {

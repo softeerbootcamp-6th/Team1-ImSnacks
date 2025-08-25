@@ -5,8 +5,8 @@ import S from './WeatherBoardHumidity.style';
 import { Suspense, useEffect, useRef } from 'react';
 import { GetHumidityResponse } from '@/types/openapiGenerator';
 import { getWeatherHumidity } from '@/apis/weather.api';
-import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
-import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
 
 const WeatherBoardHumidity = () => {
   const HumidityContent = () => {

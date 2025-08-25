@@ -8,7 +8,7 @@ import WeatherBoardWind from './components/weatherBoardWind/WeatherBoardWind';
 import WeatherBoardUV from './components/weatherBoardUV/WeatherBoardUV';
 import WeatherBoardDust from './components/weatherBoardDust/WeatherBoardDust';
 import WeatherBoardSunset from './components/weatherBoardSunset/WeatherBoardSunset';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { useEffect, useState } from 'react';
 import { getMemberAddress } from '@/apis/member.api';
 import { useIsMobileStore } from '@/store/useIsMobileStore';
@@ -40,17 +40,12 @@ const WeatherBoardPage = () => {
         <p css={S.MyFarmAddress}>{address}</p>
       </div>
 
-      <div
-        css={css`
-          ${FlexStyles.flexColumn};
-          ${S.WeatherBoardContent};
-        `}
-      >
+      <div css={[FlexStyles.flexColumn, S.WeatherBoardContent]}>
         <div css={S.WeatherBoardFirRow}>
           <div
             css={css`
-              width: 990px;
               ${FlexStyles.flexColumn};
+              width: 990px;
               gap: 24px;
             `}
           >

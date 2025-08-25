@@ -6,8 +6,8 @@ import type { GetSunRiseSetTimeResponse } from '@/types/openapiGenerator';
 import { Suspense } from 'react';
 import { getWeatherSunset } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
-import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
-import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
 
 const WeatherBoardSunset = () => {
   const SunsetContent = () => {

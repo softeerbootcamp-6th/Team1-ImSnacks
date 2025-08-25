@@ -1,7 +1,7 @@
 import { useRoutes, Outlet } from 'react-router';
 import Layout from '@/layouts/Layout';
 import { lazy, Suspense } from 'react';
-import ProtectedRoute from '@/components/common/ProtectedRoute';
+import ProtectedRoute from '@/routes/guards/ProtectedRoute';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 
 const HomePage = lazy(() => import('@/pages/homePage/HomePage'));

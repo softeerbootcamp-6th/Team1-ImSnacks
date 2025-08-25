@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { getMyWorkOfWeekly, patchMyWorkStatus } from '@/apis/myWork.api';
-import { groupDataRecordStructure } from '@/utils/groupDataRecord';
+import { groupDataRecordStructure } from '@/utils/groupDataRecordUtil';
 import {
   UpdateMyWorkStatusRequestStatusEnum,
   type WorkCardData,

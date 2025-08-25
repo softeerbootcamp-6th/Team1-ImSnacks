@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { postLogin } from '@/apis/auth.api';
 import { useTokenStore } from '@/store/useTokenStore';
 import { useUserStore } from '@/store/useUserStore';
-import { ApiError } from '@/apis/ApiError';
+import { ApiError } from '@/apis/shared/ApiError';
 
 interface UseLoginReturn {
   identifier: string;

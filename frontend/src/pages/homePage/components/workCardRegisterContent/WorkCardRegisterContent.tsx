@@ -1,8 +1,8 @@
 import S from './WorkCardRegisterContent.style';
 import type { CropNameType } from '@/types/crop.type';
 import { WORK_CHIP_TYPES, type WorkChipType } from '@/types/workChip.type';
-import WorkCardRegisterS from '../workCardRegister/WorkCardRegister.style';
-import PortalToolTip from '@/components/common/PortalToolTip';
+import WorkCardRegisterS from '../../desktop/components/workCardRegister/WorkCardRegister.style';
+import PortalToolTip from '@/components/portalToolTip/PortalToolTip';
 import { useRef } from 'react';
 
 interface WorkCardRegisterProps {
