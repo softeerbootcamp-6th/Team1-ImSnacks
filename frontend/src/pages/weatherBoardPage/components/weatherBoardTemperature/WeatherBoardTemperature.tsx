@@ -9,7 +9,7 @@ import { CircularSpinner } from '@/components/common/CircularSpinner';
 import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 import { Suspense } from 'react';
-import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
 
 const WeatherBoardTemperature = () => {
   const TemperatureContent = () => {

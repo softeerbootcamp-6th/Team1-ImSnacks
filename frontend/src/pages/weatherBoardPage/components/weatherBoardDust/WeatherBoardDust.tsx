@@ -10,7 +10,7 @@ import type { GetAirQualityResponse } from '@/types/openapiGenerator';
 import { Suspense } from 'react';
 import { getWeatherAirQuality } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
-import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
 import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 
 const WeatherBoardDust = () => {

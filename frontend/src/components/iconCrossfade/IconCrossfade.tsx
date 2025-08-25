@@ -11,7 +11,7 @@ interface IconCrossfadeProps<T> {
   iconCss?: SerializedStyles;
 }
 
-function IconCrossfade<T>({
+const IconCrossfade = <T,>({
   value,
   iconMap,
   width,
@@ -19,7 +19,7 @@ function IconCrossfade<T>({
   durationMs = 800,
   containerCss,
   iconCss,
-}: IconCrossfadeProps<T>) {
+}: IconCrossfadeProps<T>) => {
   const {
     prev,
     isFading,
@@ -58,6 +58,6 @@ function IconCrossfade<T>({
       )}
     </div>
   );
-}
+};
 
 export default IconCrossfade;

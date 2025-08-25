@@ -5,7 +5,7 @@ import { Typography } from '@/styles/typography';
 import type { WeatherConditionsType } from '@/types/weather.types';
 import { css } from '@emotion/react';
 import S from './MobileHeader.styles';
-import IconCrossfade from '@/components/transition/IconCrossfade';
+import IconCrossfade from '@/components/iconCrossfade/IconCrossfade';
 import { useTimeStore } from '@/store/useTimeStore';
 import { formatCurrentTime } from '@/utils/formatTimeUtil';
 

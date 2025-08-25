@@ -6,7 +6,7 @@ import type {
   MyCropResponse,
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
-import PortalToolTip from '@/components/common/PortalToolTip';
+import PortalToolTip from '@/components/portalToolTip/PortalToolTip';
 import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
 import { IC24InfoIcon } from '@/assets/icons/flat';
 import useVisibility from '@/hooks/useVisibility';

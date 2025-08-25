@@ -9,7 +9,7 @@ import { GetWeatherBriefingResponse } from '@/types/openapiGenerator';
 import { useEffect, useState } from 'react';
 import { getWeatherBriefing } from '@/apis/weather.api';
 import { formatCurrentTime } from '@/utils/formatTimeUtil';
-import IconCrossfade from '@/components/transition/IconCrossfade';
+import IconCrossfade from '@/components/iconCrossfade/IconCrossfade';
 import type { WeatherConditionsType } from '@/types/weather.types';
 
 const Headline = () => {

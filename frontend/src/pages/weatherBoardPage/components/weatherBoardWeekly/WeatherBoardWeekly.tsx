@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import type { GetSevenDaysForecastResponse } from '@/types/openapiGenerator';
 import { getWeatherSevenDays } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
-import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
 import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
 import { ColorPrimary } from '@/styles/colors';
 
