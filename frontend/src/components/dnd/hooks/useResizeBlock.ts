@@ -11,6 +11,7 @@ import {
   snapWidthToGrid,
   snapToGrid,
 } from '@/utils/snapToGrid';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface UseResizeBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -31,6 +32,8 @@ export const useResizeBlock = ({
   const [resizeDirection, setResizeDirection] = useState<
     'left' | 'right' | null
   >(null);
+
+  const queryClient = useQueryClient();
 
   const { animateBlocksTransition } =
     useBlocksTransition<WorkBlockType>(updateWorkBlocks);
@@ -130,13 +133,14 @@ export const useResizeBlock = ({
 
     animateBlocksTransition(newBlocks, sortedBlocks);
 
-    await updateBlockTimeOnServer(updatedBlock);
+    await updateBlockTimeOnServer(updatedBlock, queryClient);
   }, [
-    animateBlocksTransition,
+    resizingBlock,
+    workBlocks,
     containerRef,
     scrollOffset,
-    workBlocks,
-    resizingBlock,
+    animateBlocksTransition,
+    queryClient,
   ]);
 
   useSetPointerEvents({
