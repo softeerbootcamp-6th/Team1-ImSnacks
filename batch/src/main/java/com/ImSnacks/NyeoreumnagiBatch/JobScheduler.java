@@ -40,17 +40,8 @@ public class JobScheduler {
     @Qualifier("airQualityJob")
     private final Job airQualityJob;
 
-    @Qualifier("improvedWeatherJob")
-    private final Job improvedWeatherJob;
-
     @Qualifier("asyncWeatherJob")
     private final Job asyncWeatherJob;
-
-   // @Scheduled(cron="0 33 9,11,18,20,21,23 * * *", zone="Asia/Seoul")
-    public void runImprovedWeatherJob() throws Exception {
-        JobParameters params = JobParams.getWeatherJobParam();
-        jobLauncher.run(improvedWeatherJob, params);
-    }
 
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
     public void runAsyncWeatherJob() throws Exception {
