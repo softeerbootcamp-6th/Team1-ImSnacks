@@ -13,12 +13,7 @@ const useWorkBlocks = () => {
 
   const { animateBlocksTransition } = useBlocksTransition(setWorkBlocks);
 
-  const {
-    data: initialWorkBlocks,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['myWorkOfToday'],
     queryFn: async () => {
       const res = await getMyWorkOfToday(false);
@@ -30,12 +25,12 @@ const useWorkBlocks = () => {
   const prevWorkBlocksRef = useRef<WorkBlockType[]>([]);
 
   useEffect(() => {
-    if (initialWorkBlocks) {
-      const sortedBlocks = sortWorkBlocks(initialWorkBlocks);
+    if (data) {
+      const sortedBlocks = sortWorkBlocks(data);
       animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
       prevWorkBlocksRef.current = sortedBlocks;
     }
-  }, [initialWorkBlocks, animateBlocksTransition]);
+  }, [data, animateBlocksTransition]);
 
   useEffect(() => {
     if (currentTime.minute() === 0) {
@@ -87,8 +82,6 @@ const useWorkBlocks = () => {
 
   return {
     workBlocks,
-    isLoading,
-    error,
     addWorkBlock,
     updateWorkBlocks,
     removeWorkBlock,
