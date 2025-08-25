@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import type { Position } from '@/types/position.type';
+import type { Position } from '@/lib/dnd/types/position.type';
 
 const DraggableItem = ({
   position,

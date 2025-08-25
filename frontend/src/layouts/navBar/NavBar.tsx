@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 import S from './NavBar.styles';
-import Tab from './tab/Tab';
+import Tab from '../../components/tab/Tab';
 import { IC24LogoIcon } from '@/assets/icons/flat';
 import { NAV_ITEMS } from '@/constants/menuItems';
 

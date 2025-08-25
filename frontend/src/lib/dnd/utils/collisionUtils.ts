@@ -1,5 +1,5 @@
-import type { Position } from '@/types/position.type';
-import type { Size } from '@/types/size.type';
+import type { Position } from '@/lib/dnd/types/position.type';
+import type { Size } from '@/lib/dnd/types/size.type';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 

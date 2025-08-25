@@ -1,5 +1,5 @@
 import { Router } from './routes/Router';
-import GlobalStyles from './styles/GlobalStyles';
+import GlobalStyles from './layouts/GlobalStyles';
 import { useWeatherConditionStore } from './store/useWeatherConditionStore';
 import { ThemeProvider } from '@emotion/react';
 import { createThemeAssets } from './styles/createThemeAssets';

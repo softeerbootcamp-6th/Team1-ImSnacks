@@ -2,7 +2,7 @@ import type {
   GetWeatherRiskCardListResponse,
   MyCropCard,
 } from '@/types/openapiGenerator';
-import { useClickOutside } from '@/hooks/handleClickOutside';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import { useEffect, useState } from 'react';
 
 interface UseDamagePestsUIProps {

@@ -1,5 +1,5 @@
 import type { WorkBlockType } from '@/types/workCard.type';
-import type { Position } from '@/types/position.type';
+import type { Position } from '@/lib/dnd/types/position.type';
 import { findCollisionFreePosition } from '@/lib/dnd/utils/collisionUtils';
 import animateBlock from '@/lib/dnd/utils/animateBlock';
 

@@ -3,7 +3,7 @@ import updateBlockTimeOnServer from '@/pages/homePage/utils/work/updateBlockTime
 import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
-import type { Position } from '@/types/position.type';
+import type { Position } from '@/lib/dnd/types/position.type';
 import isInBound from '@/utils/isInBound';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/lib/dnd/hooks/useBlocksTransition';
