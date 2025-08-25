@@ -1,5 +1,5 @@
 import S from './WorkCardRegister.style';
-import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
+import WorkCardRegisterContent from '../../../components/workCardRegisterContent/WorkCardRegisterContent';
 import useVisibility from '@/hooks/useVisibility';
 import { useEffect, useState } from 'react';
 import type { WorkBlockType } from '@/types/workCard.type';

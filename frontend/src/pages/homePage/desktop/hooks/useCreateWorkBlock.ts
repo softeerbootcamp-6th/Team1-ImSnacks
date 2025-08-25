@@ -6,7 +6,7 @@ import type {
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
 import { getYCoordinate, X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
-import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
+import updateWorkTime from '@/pages/homePage/desktop/utils/work/updateWorkTime';
 import { snapToGrid } from '@/lib/dnd/utils/snapToGrid';
 
 interface UseCreateWorkBlockReturn {
