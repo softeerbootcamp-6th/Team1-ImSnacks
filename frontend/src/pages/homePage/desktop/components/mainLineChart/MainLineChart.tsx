@@ -81,7 +81,6 @@ const MainLineChart = ({
 
   return (
     <div css={S.MainLineChart}>
-      {/* <div css={S.LineChartScrollWrapper}> */}
       <div css={S.LineChartInnerWrapper(chartWidth)} ref={chartRef}>
         <ComposedChart
           width={chartWidth}
@@ -166,7 +165,6 @@ const MainLineChart = ({
         ))}
       </div>
     </div>
-    // </div>
   );
 };
 
