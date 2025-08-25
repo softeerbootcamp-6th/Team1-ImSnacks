@@ -1,5 +1,5 @@
 import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
-import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
+import updateWorkTimeByPos from '@/pages/homePage/desktop/utils/updateWorkTimeByPosUtil';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import type { Position } from '@/lib/dnd/types/position.type';
@@ -8,7 +8,7 @@ import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/lib/dnd/hooks/useBlocksTransition';
 import { resolveCollision } from '@/lib/dnd/utils/collisionUtils';
 import { snapPositionToGrid } from '@/lib/dnd/utils/snapToGridUtil';
-import { getTimeUpdatedBlocks } from '@/pages/homePage/desktop/utils/updateBlockTime';
+import { getTimeUpdatedBlocks } from '@/pages/homePage/desktop/utils/updateBlockTimeUtil';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -82,7 +82,7 @@ export const useDragBlock = ({
         y: newPosition.y,
       });
 
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
         draggingBlock.startTime,
         draggingBlock.endTime,
         snappedPosition

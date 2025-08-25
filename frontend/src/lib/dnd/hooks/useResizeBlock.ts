@@ -4,7 +4,7 @@ import { useCallback, useState, type RefObject } from 'react';
 import { useBlocksTransition } from './useBlocksTransition';
 import { resolveCollision } from '@/lib/dnd/utils/collisionUtils';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
-import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
+import updateWorkTimeByPos from '@/pages/homePage/desktop/utils/updateWorkTimeByPosUtil';
 import {
   snapPositionToGrid,
   snapWidthToGrid,
@@ -90,7 +90,7 @@ export const useResizeBlock = ({
         y: resizingBlock.position.y,
       });
 
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
         resizingBlock.startTime,
         resizingBlock.endTime,
         snappedPosition,

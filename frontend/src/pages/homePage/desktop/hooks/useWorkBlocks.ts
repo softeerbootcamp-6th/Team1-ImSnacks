@@ -7,9 +7,9 @@ import {
   postMyWork,
   patchMyWorkTime,
 } from '@/apis/myWork.api';
-import getInitialWorkBlocks from '@/pages/homePage/desktop/utils/getInitialWorkBlocks';
+import getInitialWorkBlocks from '@/pages/homePage/desktop/utils/getInitialWorkBlocksUtil';
 import useBlocksTransition from '@/lib/dnd/hooks/useBlocksTransition';
-import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/sortWorkBlocks';
+import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/sortWorkBlocksUtil';
 import { useTimeStore } from '@/store/useTimeStore';
 
 const QUERY_KEY = ['myWorkOfToday'];

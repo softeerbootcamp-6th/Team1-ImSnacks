@@ -3,7 +3,7 @@ import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimeCoordinate';
 import type { Position } from '@/lib/dnd/types/position.type';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 
-const updateWorkTime = (
+const updateWorkTimeByPos = (
   startTime: string,
   endTime: string,
   position: Position,
@@ -42,4 +42,4 @@ const updateWorkTime = (
   };
 };
 
-export default updateWorkTime;
+export default updateWorkTimeByPos;

@@ -1,11 +1,11 @@
 import type { WorkBlockType } from '@/types/workCard.type';
-import updateWorkTime from './updateWorkTime';
+import updateWorkTimeByPos from './updateWorkTimeByPosUtil';
 
 export const getTimeUpdatedBlock = (
   block: WorkBlockType,
   currentBlock: WorkBlockType
 ) => {
-  const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
+  const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
     currentBlock.startTime,
     currentBlock.endTime,
     currentBlock.position
