@@ -1,60 +1,22 @@
 import S from './WeatherRiskText.style';
-import type {
-  GetWeatherGraphResponse,
-  WeatherRiskDto,
-} from '@/types/openapiGenerator';
 
 interface WeatherRiskTextProps {
-  riskData: WeatherRiskDto;
-  graphData: GetWeatherGraphResponse;
+  category: string;
   index: number;
-  pointSpacing: number;
+  startX: number;
+  endX: number;
 }
 
 const WeatherRiskText = ({
-  riskData,
-  graphData,
+  category,
   index,
-  pointSpacing,
+  startX,
+  endX,
 }: WeatherRiskTextProps) => {
-  const { category, startTime, endTime } = riskData;
-
-  if (!graphData?.valuePerTime || graphData.valuePerTime.length === 0) {
-    return null;
-  }
-
-  const getCenterX = (startTime: string, endTime?: string) => {
-    if (!graphData.valuePerTime) {
-      return 0;
-    }
-
-    const startIndex = graphData.valuePerTime.findIndex(
-      item => item.name === startTime
-    );
-    const endIndex = endTime
-      ? graphData.valuePerTime.findIndex(item => item.name === endTime)
-      : startIndex;
-
-    // startIndex가 -1인 경우 (찾을 수 없는 경우) 처리
-    if (startIndex === -1) {
-      return 0;
-    }
-
-    // 중간 위치
-    const centerIndex = (startIndex + endIndex) / 2;
-
-    const centerX = 12 + centerIndex * pointSpacing;
-
-    return centerX;
-  };
-
   return (
     <div
-      key={`category_${index}`}
-      css={S.WeatherRiskText(
-        getCenterX(startTime ?? '', endTime ?? ''),
-        category ?? ''
-      )}
+      key={`${category}_${index}`}
+      css={S.WeatherRiskText((startX + endX) / 2)}
     >
       {category}
     </div>
