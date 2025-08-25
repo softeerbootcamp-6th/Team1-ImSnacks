@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
@@ -10,8 +10,16 @@ import { useTimeStore } from '@/store/useTimeStore';
 const useWorkBlocks = () => {
   const { currentTime } = useTimeStore();
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
+  const queryClient = useQueryClient();
+  const { animateBlocksTransition: originalAnimateBlocksTransition } =
+    useBlocksTransition(setWorkBlocks);
 
-  const { animateBlocksTransition } = useBlocksTransition(setWorkBlocks);
+  const animateBlocksTransition = useCallback(
+    (prevBlocks: WorkBlockType[], nextBlocks: WorkBlockType[]) => {
+      originalAnimateBlocksTransition(prevBlocks, nextBlocks);
+    },
+    [originalAnimateBlocksTransition]
+  );
 
   const { data, refetch } = useQuery({
     queryKey: ['myWorkOfToday'],
@@ -23,10 +31,17 @@ const useWorkBlocks = () => {
   });
 
   const prevWorkBlocksRef = useRef<WorkBlockType[]>([]);
+  const skipAnimationRef = useRef(false);
 
   useEffect(() => {
     if (data) {
       const sortedBlocks = sortWorkBlocks(data);
+      if (skipAnimationRef.current) {
+        setWorkBlocks(sortedBlocks);
+        prevWorkBlocksRef.current = sortedBlocks;
+        skipAnimationRef.current = false;
+        return;
+      }
       animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
       prevWorkBlocksRef.current = sortedBlocks;
     }
@@ -52,11 +67,15 @@ const useWorkBlocks = () => {
       });
 
       const newWorkId = newWorkIdRes.data.workId as number;
-
+      skipAnimationRef.current = true;
       animateBlocksTransition(
         workBlocks,
         sortWorkBlocks([...workBlocks, { ...newWorkBlock, id: newWorkId }])
       );
+
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
+      }, 250);
     } catch (error) {
       console.error('작업 추가 실패', error);
     }
@@ -64,6 +83,7 @@ const useWorkBlocks = () => {
 
   const updateWorkBlocks = (updatedBlocks: WorkBlockType[]) => {
     setWorkBlocks(updatedBlocks);
+    skipAnimationRef.current = true;
   };
 
   const removeWorkBlock = async (id: number | string) => {
@@ -71,10 +91,15 @@ const useWorkBlocks = () => {
       await deleteMyWork({
         myWorkId: Number(id),
       });
+      skipAnimationRef.current = true;
       animateBlocksTransition(
         workBlocks,
         sortWorkBlocks(workBlocks.filter(block => block.id !== Number(id)))
       );
+
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
+      }, 250);
     } catch (error) {
       console.error('작업 삭제 실패', error);
     }
