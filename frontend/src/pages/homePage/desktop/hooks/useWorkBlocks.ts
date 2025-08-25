@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
-import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
+import {
+  getMyWorkOfToday,
+  deleteMyWork,
+  postMyWork,
+  patchMyWorkTime,
+} from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/desktop/utils/getInitialWorkBlocks';
 import useBlocksTransition from '@/lib/dnd/hooks/useBlocksTransition';
 import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/sortWorkBlocks';
@@ -77,6 +82,21 @@ const useWorkBlocks = () => {
     }
   };
 
+  const updateWorkBlockTimeOnServer = async (updatedBlock: WorkBlockType) => {
+    try {
+      await patchMyWorkTime({
+        myWorkId: updatedBlock.id,
+        startTime: updatedBlock.startTime,
+        endTime: updatedBlock.endTime,
+      });
+    } catch (error) {
+      console.error('작업 시간 업데이트 실패:', error);
+    }
+    setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
+    }, 1000);
+  };
+
   const updateWorkBlocks = (updatedBlocks: WorkBlockType[]) => {
     setWorkBlocks(updatedBlocks);
     skipAnimationRef.current = true;
@@ -108,6 +128,7 @@ const useWorkBlocks = () => {
     addWorkBlock,
     updateWorkBlocks,
     removeWorkBlock,
+    updateWorkBlockTimeOnServer,
   };
 };
 

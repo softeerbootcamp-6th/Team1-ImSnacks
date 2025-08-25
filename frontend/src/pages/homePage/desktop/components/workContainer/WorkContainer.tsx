@@ -47,8 +47,13 @@ const WorkContainer = ({
     }
   }, [currentTime, refetch]);
 
-  const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
-    useWorkBlocks();
+  const {
+    workBlocks,
+    updateWorkBlocks,
+    removeWorkBlock,
+    addWorkBlock,
+    updateWorkBlockTimeOnServer,
+  } = useWorkBlocks();
 
   const { containerRef, scrollOffset, setScrollOffset } = useContainer();
 
@@ -74,6 +79,7 @@ const WorkContainer = ({
       scrollOffset,
       workBlocks,
       updateWorkBlocks,
+      updateWorkBlockTimeOnServer,
     });
 
   const { resizingBlock, handleResizeStart, handleResizeEnd } = useResizeBlock({
@@ -81,6 +87,7 @@ const WorkContainer = ({
     scrollOffset,
     workBlocks,
     updateWorkBlocks,
+    updateWorkBlockTimeOnServer,
   });
 
   // DragContainer에 드롭 처리

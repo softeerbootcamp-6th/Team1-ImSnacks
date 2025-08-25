@@ -1,5 +1,4 @@
 import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
-import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/updateBlockTimeOnServer';
 import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
@@ -10,12 +9,12 @@ import { useBlocksTransition } from '@/lib/dnd/hooks/useBlocksTransition';
 import { resolveCollision } from '@/lib/dnd/utils/collisionUtils';
 import { snapPositionToGrid } from '@/lib/dnd/utils/snapToGridUtil';
 import { getTimeUpdatedBlocks } from '@/pages/homePage/desktop/utils/updateBlockTime';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
   scrollOffset: number;
   workBlocks: WorkBlockType[];
+  updateWorkBlockTimeOnServer: (updatedBlock: WorkBlockType) => void;
   updateWorkBlocks: (blocks: WorkBlockType[]) => void;
 }
 
@@ -23,6 +22,7 @@ export const useDragBlock = ({
   containerRef,
   scrollOffset,
   workBlocks,
+  updateWorkBlockTimeOnServer,
   updateWorkBlocks,
 }: UseDragBlockProps) => {
   const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
@@ -38,8 +38,6 @@ export const useDragBlock = ({
   // 블록 이동 애니메이션 훅
   const { animateBlocksTransition } =
     useBlocksTransition<WorkBlockType>(updateWorkBlocks);
-
-  const queryClient = useQueryClient();
 
   const getContainerCoords = useCallback(
     (e: PointerEvent) => {
@@ -101,7 +99,7 @@ export const useDragBlock = ({
     [draggingBlock, dragOffset, getContainerCoords, scrollOffset]
   );
 
-  const handleEndDrag = useCallback(async () => {
+  const handleEndDrag = useCallback(() => {
     if (!draggingBlock) return;
 
     const currentDraggingBlock = draggingBlock;
@@ -139,13 +137,13 @@ export const useDragBlock = ({
 
     animateBlocksTransition(newBlocks, sortedBlocks);
 
-    await updateBlockTimeOnServer(updatedBlock, queryClient);
+    updateWorkBlockTimeOnServer(updatedBlock);
   }, [
     animateBlocksTransition,
     containerRef,
     draggingBlock,
-    queryClient,
     scrollOffset,
+    updateWorkBlockTimeOnServer,
     workBlocks,
   ]);
 
