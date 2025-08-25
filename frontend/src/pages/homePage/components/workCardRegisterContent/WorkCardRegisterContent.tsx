@@ -46,8 +46,8 @@ const WorkCardRegisterContent = ({
               <div css={WorkCardRegisterS.WorkCardToolTipTime}>{workTime}</div>
             </div>
           }
-          type={'Default'}
-          offset={80}
+          type="Default"
+          offset={100}
         />
       )}
       <div css={S.WorkCardColorBar(cropName as CropNameType)} />

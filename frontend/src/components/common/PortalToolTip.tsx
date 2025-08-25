@@ -16,7 +16,10 @@ const PortalToolTip = ({ anchorRef, ...props }: PortalToolTipProps) => {
     const element = anchorRef.current;
     if (!element) return;
     const rect = element.getBoundingClientRect();
-    setPosition({ x: rect.left + rect.width / 2, y: rect.top });
+    setPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
   }, [anchorRef]);
 
   return createPortal(
@@ -25,7 +28,6 @@ const PortalToolTip = ({ anchorRef, ...props }: PortalToolTipProps) => {
         position: 'fixed',
         left: position?.x,
         top: position?.y,
-        transform: 'translate(-50%, -100%)',
         zIndex: 9999,
         pointerEvents: 'none',
       }}
