@@ -9,7 +9,8 @@ import useMaxLayerStore from '@/store/useMaxLayerStore';
 export const sortWorkBlocks = (workBlocks: WorkBlockType[]) => {
   // 1. 시작 시간 기준 정렬
   const sortedWorks = [...workBlocks].sort(
-    (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf()
+    (a, b) =>
+      dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf() || a.id - b.id
   );
 
   // 2. 레이어별 작업 저장
