@@ -37,11 +37,11 @@ public class ImprovedApiCaller {
 
     }
 
-//    @Retryable(
-//            maxAttempts = 3,
-//            value = IOException.class,
-//            backoff = @Backoff(delay = 2000, multiplier = 2)
-//    )
+    @Retryable(
+            maxAttempts = 3,
+            value = IOException.class,
+            backoff = @Backoff(delay = 2000, multiplier = 2)
+    )
     public VilageFcstResponseDto call(String baseDate, String baseTime, int nx, int ny) {
         URI uri = buildUri(baseDate, baseTime, nx, ny);
         log.info("Calling web service at {}", uri.toString());
@@ -58,14 +58,13 @@ public class ImprovedApiCaller {
                     .readValue(res.body(), VilageFcstResponseDto.class);
             return data;
         } catch (Exception e) {
-            // TODO 모든 예외에 기본 데이터 반환으로 대응하는 상태.
-            // TODO 재시도 기능 도입하기.
-            // TODO 실패하면 큐에 담아두고 다시 시도하기.
             log.info("An exception has occurred");
-            return getDefaultData(baseDate, baseTime, nx, ny);
+            return null;
         }
 
     }
+
+
 
     private java.net.URI buildUri(String baseDate, String baseTime, int nx, int ny) {
         return UriComponentsBuilder.fromUriString(ApiRequestValues.URI.toString())
