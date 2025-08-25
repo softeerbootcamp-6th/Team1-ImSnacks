@@ -2,13 +2,18 @@ package com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor;
 
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.ApiRequestValues;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -18,6 +23,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Slf4j
+@EnableRetry
 @Component
 public class ImprovedApiCaller {
     @Value("${OPEN_API_KEY}")
@@ -31,6 +37,11 @@ public class ImprovedApiCaller {
 
     }
 
+//    @Retryable(
+//            maxAttempts = 3,
+//            value = IOException.class,
+//            backoff = @Backoff(delay = 2000, multiplier = 2)
+//    )
     public VilageFcstResponseDto call(String baseDate, String baseTime, int nx, int ny) {
         URI uri = buildUri(baseDate, baseTime, nx, ny);
         log.info("Calling web service at {}", uri.toString());
