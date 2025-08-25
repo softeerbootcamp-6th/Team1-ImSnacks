@@ -10,6 +10,7 @@ import { useBlocksTransition } from '@/components/dnd/hooks/useBlocksTransition'
 import { resolveCollision } from '../utils/resolveCollision';
 import { snapPositionToGrid } from '@/utils/snapToGrid';
 import { getTimeUpdatedBlocks } from '@/pages/homePage/utils/work/updateBlockTime';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -37,6 +38,8 @@ export const useDragBlock = ({
   // 블록 이동 애니메이션 훅
   const { animateBlocksTransition } =
     useBlocksTransition<WorkBlockType>(updateWorkBlocks);
+
+  const queryClient = useQueryClient();
 
   const getContainerCoords = useCallback(
     (e: PointerEvent) => {
@@ -103,7 +106,6 @@ export const useDragBlock = ({
 
     const currentDraggingBlock = draggingBlock;
 
-    // 상태 초기화
     setDraggingBlock(null);
     setDragPointerPosition(null);
 
@@ -138,11 +140,12 @@ export const useDragBlock = ({
 
     animateBlocksTransition(newBlocks, sortedBlocks);
 
-    await updateBlockTimeOnServer(updatedBlock);
+    await updateBlockTimeOnServer(updatedBlock, queryClient);
   }, [
     animateBlocksTransition,
     containerRef,
     draggingBlock,
+    queryClient,
     scrollOffset,
     workBlocks,
   ]);
