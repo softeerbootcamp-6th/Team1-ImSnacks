@@ -1,26 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
 import useBlocksTransition from '@/components/dnd/hooks/useBlocksTransition';
 import { sortWorkBlocks } from '../../utils/work/sortWorkBlocks';
+import { useTimeStore } from '@/store/useTimeStore';
 
 const useWorkBlocks = () => {
+  const { currentTime } = useTimeStore();
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
 
   const { animateBlocksTransition } = useBlocksTransition(setWorkBlocks);
 
-  useEffect(() => {
-    const fetchMyWorkOfToday = async () => {
+  const { data, refetch } = useQuery({
+    queryKey: ['myWorkOfToday'],
+    queryFn: async () => {
       const res = await getMyWorkOfToday(false);
-      setWorkBlocks(getInitialWorkBlocks(res.data));
-    };
-    try {
-      fetchMyWorkOfToday();
-    } catch (error) {
-      console.error('오늘 내 농작업 일정 조회 실패', error);
+      return getInitialWorkBlocks(res.data);
+    },
+    staleTime: 55 * 60 * 1000,
+  });
+
+  const prevWorkBlocksRef = useRef<WorkBlockType[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const sortedBlocks = sortWorkBlocks(data);
+      animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
+      prevWorkBlocksRef.current = sortedBlocks;
     }
-  }, []);
+  }, [data, animateBlocksTransition]);
+
+  useEffect(() => {
+    if (currentTime.minute() === 0) {
+      refetch();
+    }
+  }, [currentTime, refetch]);
 
   const addWorkBlock = async (
     newWorkBlock: WorkBlockType,

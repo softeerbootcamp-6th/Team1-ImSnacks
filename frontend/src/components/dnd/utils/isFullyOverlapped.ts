@@ -1,10 +1,11 @@
-import { WORK_TIME_Y_COORDINATE_LIST } from '@/constants/workTimeCoordinate';
+import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { hasCollision } from '@/components/dnd/utils/collisionUtils';
 import type { WorkBlockType } from '@/types/workCard.type';
 
 const isFullyOverlapped = (
   currentDraggingBlock: WorkBlockType,
-  otherBlocks: WorkBlockType[]
+  otherBlocks: WorkBlockType[],
+  maxLayer: number
 ) => {
   const collidesAtY = (y: number) =>
     otherBlocks.some(otherBlock =>
@@ -17,7 +18,12 @@ const isFullyOverlapped = (
       )
     );
 
-  return WORK_TIME_Y_COORDINATE_LIST.every(y => collidesAtY(y));
+  // 동적으로 y좌표 생성 (1부터 maxLayer까지)
+  const dynamicYCoordinates = Array.from({ length: maxLayer }, (_, index) =>
+    getYCoordinate(index + 1)
+  );
+
+  return dynamicYCoordinates.every(y => collidesAtY(y));
 };
 
 export default isFullyOverlapped;
