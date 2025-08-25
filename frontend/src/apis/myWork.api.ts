@@ -1,4 +1,4 @@
-import HTTP from './http';
+import HTTP from './shared/HTTP';
 import type {
   RegisterMyWorkRequest,
   RegisterMyWorkResponse,

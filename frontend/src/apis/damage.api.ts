@@ -2,7 +2,7 @@ import type {
   GetPestCardListResponse,
   GetWeatherRiskCardListResponse,
 } from '@/types/openapiGenerator';
-import HTTP from './http';
+import HTTP from './shared/HTTP';
 
 export const getWeatherDamage = () =>
   HTTP.get<GetWeatherRiskCardListResponse>('/damage/weather');

@@ -1,4 +1,4 @@
-import HTTP from './http';
+import HTTP from './shared/HTTP';
 import { RecommendWorksResponse } from '@/types/openapiGenerator';
 
 export const getRecommendedWorks = (myCropId?: number) =>
