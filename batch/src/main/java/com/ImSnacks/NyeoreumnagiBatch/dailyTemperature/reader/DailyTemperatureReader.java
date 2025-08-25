@@ -6,6 +6,7 @@ import com.ImSnacks.NyeoreumnagiBatch.common.entity.ShortTermWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.common.repository.ShortTermWeatherForecastRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
@@ -20,12 +21,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@StepScope
 public class DailyTemperatureReader implements ItemReader<DailyTemperatureReaderResponseDto> {
 
     private final ShortTermWeatherForecastRepository shortTermWeatherForecastRepository;
 
     private static Map<NxNy, List<ShortTermWeatherForecast>> weatherInfos = null;
-    private static Iterator<Map.Entry<NxNy, List<ShortTermWeatherForecast>>> iterator;
+    private Iterator<Map.Entry<NxNy, List<ShortTermWeatherForecast>>> iterator = null;
 
     @Override
     public DailyTemperatureReaderResponseDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
@@ -45,6 +47,8 @@ public class DailyTemperatureReader implements ItemReader<DailyTemperatureReader
                     .collect(Collectors.groupingBy(
                             stw -> new NxNy(stw.getNx(), stw.getNy())
                     ));
+        }
+        if (iterator == null) {
             iterator = weatherInfos.entrySet().iterator();
         }
     }

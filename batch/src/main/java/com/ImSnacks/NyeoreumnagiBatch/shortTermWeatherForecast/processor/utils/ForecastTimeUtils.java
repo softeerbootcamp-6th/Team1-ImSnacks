@@ -16,7 +16,7 @@ public class ForecastTimeUtils {
 
         long secondsDiff = ChronoUnit.SECONDS.between(baseDateTime, fcstDateTime);
 
-        return secondsDiff >= 0 && secondsDiff <= (24+3) * 60 * 60;
+        return secondsDiff >= 0 && secondsDiff <= (24*2) * 60 * 60;
     }
 
     public static boolean isWithin24Hours(VilageFcstResponseDto.Item item) {

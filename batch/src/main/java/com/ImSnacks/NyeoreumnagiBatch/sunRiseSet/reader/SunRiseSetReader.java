@@ -27,7 +27,7 @@ public class SunRiseSetReader implements ItemReader<SunRiseSetReaderResponseDtoW
     private final String locdate;
 
     private static List<UniqueNxNy> location = null;
-    private static int locationIndex = 0;
+    private int locationIndex = 0;
 
     public SunRiseSetReader(@Value("#{jobParameters['locdate']}") String locdate,
                     SunRiseSetApiCaller apiCaller,

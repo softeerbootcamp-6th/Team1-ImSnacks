@@ -30,7 +30,6 @@ public class NearbyAggregationService {
 
         Set<String> tiles = GeoUtil.tilesForRadiusKm(centerLat, centerLon, 5.0);
 
-
         List<Long> candidateIds = factRepo.findCandidateMemberIds(workId, currentMemberId, d0, d1, d2, tiles);
 
         if (candidateIds.isEmpty()) return 0;
@@ -40,8 +39,8 @@ public class NearbyAggregationService {
 
         long count = locRows.stream()
                 .map(r -> new MemberLoc(((Number) r[0]).longValue(),
-                        ((Number) r[1]).doubleValue(), // lat
-                        ((Number) r[2]).doubleValue()  // lon
+                        ((Number) r[2]).doubleValue(), // lat
+                        ((Number) r[1]).doubleValue()  // lon
                 ))
                 .filter(loc -> haversineMeters(centerLat, centerLon, loc.lat(), loc.lon()) <= 5000.0)
                 .map(MemberLoc::memberId).distinct().count();

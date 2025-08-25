@@ -31,7 +31,7 @@ public class WeatherProcessor implements ItemProcessor<VilageFcstResponseDto, Sh
     @Override
     public ShortTermWeatherDto process(VilageFcstResponseDto response) throws Exception {
         log.info("processing vilage fcst response...");
-        //24시간 + 3시간 이내 정보만 filtering
+        //48시간 이내 정보만 filtering
         List<VilageFcstItemsDto> within24HoursWeatherInfo = response.getWeatherInfo().stream()
                 .filter(ForecastTimeUtils::isWithin24Hours)
                 .map(item -> {

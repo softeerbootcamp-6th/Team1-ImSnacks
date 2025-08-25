@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//TODO 아직 오류에 대한 예외처리는 하지 않음. -> Job은 예외를 외부로 던지면 안 됨. Job은 수행 중 발생한 오류를 JobRepository에 보고할 의무를 진다.
-//TODO Batch Job 예외 처리 찾아보기
 @Slf4j
 @Component
 @StepScope // job parameters 주입을 위해 빈 생성 시점을 step 생성 시점으로 미룬다.
@@ -26,7 +24,7 @@ public class WeatherReader implements ItemReader<VilageFcstResponseDto> {
     private static List<NxNy>  locations = null;
 
     // thread-safe 필요
-    private static int index = 0;
+    private int index = 0;
 
     // serviceKey는 고정된 값이니, application.yaml에 두고 읽어온다.
     private final String baseDate;

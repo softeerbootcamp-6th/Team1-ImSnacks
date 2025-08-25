@@ -42,6 +42,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -85,13 +86,14 @@ public class WeatherService {
         int ny = farm.getNy();
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime nowPlus24 = now.plusHours(24);
+        LocalDateTime start = now.truncatedTo(ChronoUnit.HOURS);
+        LocalDateTime end = start.plusHours(23);
+
         List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
                 .stream()
                 .filter(weather -> {
                     LocalDateTime fcstTime = weather.getFcstTime();
-                    return !fcstTime.isBefore(now)
-                            && fcstTime.isBefore(nowPlus24);
+                    return !fcstTime.isBefore(start) && !fcstTime.isAfter(end);
                 })
                 .toList();
         if (weatherInfos.isEmpty()) {
@@ -169,7 +171,7 @@ public class WeatherService {
             return new GetWeatherBriefingResponse(false, briefing.buildNoRiskWelcomeMsg(now.getHour()), briefing.buildNoRiskWeatherMsg(memberId, now.getHour()));
         }
 
-        return new GetWeatherBriefingResponse(true, briefing.buildWelcomeMsg(now.getHour()), briefing.buildWeatherMsg(filteredRisk.get(0)));
+        return new GetWeatherBriefingResponse(true, briefing.buildWelcomeMsg(now.getHour()), briefing.buildWeatherMsg(now, filteredRisk.get(0)));
     }
 
     public GetSunRiseSetTimeResponse getSunRiseSetTime(final Long memberId) {
@@ -216,7 +218,7 @@ public class WeatherService {
         }
         return sevenDayWeatherForecasts.stream().map(forecast -> new GetSevenDaysForecastResponse(
                 forecast.getDayOfWeek(LocalDate.now()),
-                forecast.getWeatherCondition(),
+                forecast.getWeatherCondition() == null ? WeatherCondition.SUNNY : forecast.getWeatherCondition(),
                 forecast.getMaxTemperature(),
                 forecast.getMinTemperature()
         )).toList();

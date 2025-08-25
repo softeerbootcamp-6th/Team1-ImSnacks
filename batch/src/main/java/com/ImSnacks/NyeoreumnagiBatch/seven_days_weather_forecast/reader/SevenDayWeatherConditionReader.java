@@ -21,7 +21,7 @@ public class SevenDayWeatherConditionReader implements ItemReader<SevenDayWeathe
     private final UniqueNxNyRepository uniqueNxNyRepository;
     private static List<String> regCodes = null;
     private final SevenDaysApiCaller apiCaller;
-    private static int index = 0;
+    private int index = 0;
     private final String baseDate;
 
     SevenDayWeatherConditionReader(@Value("#{jobParameters['base_date']}") String baseDate,
