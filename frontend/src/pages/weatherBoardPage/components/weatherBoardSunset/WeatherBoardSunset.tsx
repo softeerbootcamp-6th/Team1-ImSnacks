@@ -70,7 +70,9 @@ const WeatherBoardSunset = () => {
             {shouldShowSun && (
               <g transform={`translate(${sunX}, ${sunY})`}>
                 <foreignObject x="-16" y="-16" width="32" height="32">
-                  <SunEffect width={32} height={32} />
+                  <div css={S.WeatherBoardSunsetSvgWrapper}>
+                    <SunEffect width={32} height={32} />
+                  </div>
                 </foreignObject>
               </g>
             )}
