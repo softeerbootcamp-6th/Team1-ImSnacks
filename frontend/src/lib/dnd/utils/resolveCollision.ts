@@ -1,6 +1,6 @@
 import type { WorkBlockType } from '@/types/workCard.type';
 import type { RefObject } from 'react';
-import isFullyOverlapped from '@/components/dnd/utils/isFullyOverlapped';
+import isFullyOverlapped from '@/lib/dnd/utils/isFullyOverlapped';
 import {
   getTimeUpdatedBlock,
   getTimeUpdatedBlocks,

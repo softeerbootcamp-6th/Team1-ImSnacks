@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
-import useBlocksTransition from '@/components/dnd/hooks/useBlocksTransition';
+import useBlocksTransition from '@/lib/dnd/hooks/useBlocksTransition';
 import { sortWorkBlocks } from '../../utils/work/sortWorkBlocks';
 import { useTimeStore } from '@/store/useTimeStore';
 

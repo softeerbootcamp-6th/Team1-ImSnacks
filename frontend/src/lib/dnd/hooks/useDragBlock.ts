@@ -6,7 +6,7 @@ import { useCallback, useState, type RefObject } from 'react';
 import type { Position } from '@/types/position.type';
 import isInBound from '@/utils/isInBound';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
-import { useBlocksTransition } from '@/components/dnd/hooks/useBlocksTransition';
+import { useBlocksTransition } from '@/lib/dnd/hooks/useBlocksTransition';
 import { resolveCollision } from '../utils/resolveCollision';
 import { snapPositionToGrid } from '@/utils/snapToGrid';
 import { getTimeUpdatedBlocks } from '@/pages/homePage/utils/work/updateBlockTime';
