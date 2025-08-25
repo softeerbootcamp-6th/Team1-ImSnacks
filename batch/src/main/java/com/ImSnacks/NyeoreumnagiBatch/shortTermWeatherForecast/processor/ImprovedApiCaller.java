@@ -73,7 +73,7 @@ public class ImprovedApiCaller {
 
     private VilageFcstResponseDto getDefaultData(String baseDate, String baseTime, int nx, int ny) {
         List<VilageFcstResponseDto.Item> itemList = List.of(
-                createItem("PCP", baseDate, baseTime, baseDate, baseTime, "1.1mm")
+                createItem("PCP", baseDate, baseTime, baseDate, baseTime, "강수없음")
         );
         VilageFcstResponseDto.Items items = new VilageFcstResponseDto.Items();
         items.setItem(itemList);
