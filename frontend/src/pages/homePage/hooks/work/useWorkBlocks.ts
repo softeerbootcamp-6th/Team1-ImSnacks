@@ -26,17 +26,16 @@ const useWorkBlocks = () => {
   const skipAnimationRef = useRef(false);
 
   useEffect(() => {
-    if (data) {
-      const sortedBlocks = sortWorkBlocks(data);
-      if (skipAnimationRef.current) {
-        setWorkBlocks(sortedBlocks);
-        prevWorkBlocksRef.current = sortedBlocks;
-        skipAnimationRef.current = false;
-        return;
-      }
-      animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
+    if (!data) return;
+    const sortedBlocks = sortWorkBlocks(data);
+    if (skipAnimationRef.current) {
+      setWorkBlocks(sortedBlocks);
       prevWorkBlocksRef.current = sortedBlocks;
+      skipAnimationRef.current = false;
+      return;
     }
+    animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
+    prevWorkBlocksRef.current = sortedBlocks;
   }, [data, animateBlocksTransition]);
 
   useEffect(() => {
