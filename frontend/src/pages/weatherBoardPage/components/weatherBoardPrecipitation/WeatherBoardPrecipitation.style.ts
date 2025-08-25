@@ -35,8 +35,37 @@ const WeatherBoardPrecipitationSvg = css`
   }
 `;
 
+const WaveShake = css`
+  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  /* hover 시에만 애니메이션 적용 */
+`;
+
+const WaveShakeActive = css`
+  animation: waveShake 1.2s linear infinite;
+  @keyframes waveShake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-8px);
+    }
+    50% {
+      transform: translateX(0px);
+    }
+    75% {
+      transform: translateX(8px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+`;
+
 export default {
   WeatherBoardPrecipitation,
   WeatherBoardPrecipitationTitle,
   WeatherBoardPrecipitationSvg,
+  WaveShake,
+  WaveShakeActive,
 };
