@@ -1,7 +1,7 @@
 import type { WorkBlockType } from '@/types/workCard.type';
 import dayjs from 'dayjs';
 import calculateTimeToPosition from './calculateTimeToPosition';
-import isTimeOverlapping from '@/lib/dnd/utils/isTimeOverlapping';
+import isTimeOverlapping from '@/lib/dnd/utils/isTimeOverlappingUtil';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import type { CropNameType } from '@/types/crop.type';
 import useMaxLayerStore from '@/store/useMaxLayerStore';

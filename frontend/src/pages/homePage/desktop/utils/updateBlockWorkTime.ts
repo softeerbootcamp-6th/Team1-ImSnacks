@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import type { WorkBlockType } from '@/types/workCard.type';
-import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimePx';
+import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimeCoordinate';
 
 const updateBlockWorkTime = (
   block: WorkBlockType,

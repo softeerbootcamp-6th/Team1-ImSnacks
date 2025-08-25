@@ -3,14 +3,14 @@ import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/updateBlockT
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import { useBlocksTransition } from './useBlocksTransition';
-import { resolveCollision } from '../utils/resolveCollision';
+import { resolveCollision } from '@/lib/dnd/utils/collisionUtils';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
 import {
   snapPositionToGrid,
   snapWidthToGrid,
   snapToGrid,
-} from '@/lib/dnd/utils/snapToGrid';
+} from '@/lib/dnd/utils/snapToGridUtil';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface UseResizeBlockProps {

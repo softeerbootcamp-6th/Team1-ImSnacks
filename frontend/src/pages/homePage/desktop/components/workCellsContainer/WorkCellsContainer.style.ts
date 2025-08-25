@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimePx';
+import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimeCoordinate';
 
 const WorkCellsContainerWrapper = (height: number) => css`
   display: flex;

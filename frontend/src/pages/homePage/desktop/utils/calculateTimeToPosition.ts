@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimePx';
+import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimeCoordinate';
 
 // 시간을 픽셀 위치로 변환하는 함수
 const calculateTimeToPosition = (startTime: string, endTime: string) => {

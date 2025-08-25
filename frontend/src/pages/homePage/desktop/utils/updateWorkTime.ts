@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimePx';
+import { WORK_TIME_DEFAULT_X_COORDINATE } from '@/constants/workTimeCoordinate';
 import type { Position } from '@/lib/dnd/types/position.type';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
 

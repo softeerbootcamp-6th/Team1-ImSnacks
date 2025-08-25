@@ -1,7 +1,15 @@
 import type { Position } from '@/lib/dnd/types/position.type';
 import type { Size } from '@/lib/dnd/types/size.type';
 import type { WorkBlockType } from '@/types/workCard.type';
+import type { RefObject } from 'react';
+import isFullyOverlapped from '@/lib/dnd/utils/isFullyOverlappedUtil';
+import {
+  getTimeUpdatedBlock,
+  getTimeUpdatedBlocks,
+} from '@/pages/homePage/desktop/utils/updateBlockTime';
+import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/sortWorkBlocks';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
+import useMaxLayerStore from '@/store/useMaxLayerStore';
 
 // 충돌 감지 함수
 export const hasCollision = (
@@ -34,52 +42,50 @@ export const hasCollisionWithOthers = (
   });
 };
 
-// 컨테이너 경계 내부인지 확인하는 함수
-export const isWithinBounds = (
-  position: Position,
-  size: Size,
-  containerRect: DOMRect,
-  scrollOffset: number
-): boolean => {
-  return (
-    position.x >= 0 + scrollOffset &&
-    position.y >= 0 &&
-    position.x + size.width <= containerRect.width + scrollOffset &&
-    position.y + size.height <= containerRect.height
-  );
-};
+interface ResolveCollisionParams {
+  activeBlock: WorkBlockType;
+  workBlocks: WorkBlockType[];
+  containerRef: RefObject<HTMLDivElement | null>;
+  scrollOffset: number;
+}
 
-// 충돌하지 않는 위치를 찾는 함수
-export const findCollisionFreePosition = (
-  draggedBlock: WorkBlockType,
-  otherBlocks: WorkBlockType[],
-  containerRect: DOMRect,
-  scrollOffset: number
-): Position => {
-  const { position, size } = draggedBlock;
-  let offset = 0;
-  const maxAttempts = 500;
-  const yLayers = [1, 2, 3].map(layer => getYCoordinate(layer));
+interface ResolveCollisionResult {
+  updatedBlock: WorkBlockType;
+  sortedBlocks: WorkBlockType[];
+  newBlocks: WorkBlockType[];
+}
 
-  for (let attempts = 0; attempts < maxAttempts; attempts++) {
-    // y좌표는 3단계로 고정되어 있고 x좌표만 이동, y좌표 위에서부터 아래로 탐색
-    for (const y of yLayers) {
-      for (const dir of [offset, -offset]) {
-        const testPosition = { x: position.x + dir, y };
+export const resolveCollision = ({
+  activeBlock,
+  workBlocks,
+}: ResolveCollisionParams): ResolveCollisionResult => {
+  // 해당 x좌표와 valid한 y좌표 조합에 블록이 이미 존재하는지 확인
+  // 블록이 이미 있다면 y좌표를 증가하여 생성
+  const otherBlocks = workBlocks.filter(b => b.id !== activeBlock.id);
 
-        if (!isWithinBounds(testPosition, size, containerRect, scrollOffset)) {
-          continue;
-        }
+  const newBlocks = getTimeUpdatedBlocks(workBlocks, activeBlock);
 
-        const collision = otherBlocks.some(block =>
-          hasCollision({ ...draggedBlock, position: testPosition }, block)
-        );
+  const { maxLayer } = useMaxLayerStore.getState();
 
-        if (!collision) return testPosition;
-      }
-    }
-    offset += 10;
+  if (isFullyOverlapped(activeBlock, otherBlocks, maxLayer)) {
+    // 현재 블록이 가득차있는 블록이면 y좌표를 증가하여 생성
+    const newPosition = {
+      x: activeBlock.position.x,
+      y: getYCoordinate(maxLayer),
+    };
+
+    const updatedBlock = getTimeUpdatedBlock(activeBlock, {
+      ...activeBlock,
+      position: newPosition,
+    });
+
+    const sortedBlocks = sortWorkBlocks(
+      getTimeUpdatedBlocks(workBlocks, updatedBlock)
+    );
+
+    return { updatedBlock, sortedBlocks, newBlocks };
   }
-  console.error('작업을 추가할 수 있는 위치가 없습니다!');
-  throw new Error('작업을 추가할 수 있는 위치가 없습니다!');
+
+  const sortedBlocks = sortWorkBlocks(newBlocks);
+  return { updatedBlock: activeBlock, sortedBlocks, newBlocks };
 };
