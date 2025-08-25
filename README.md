@@ -100,7 +100,8 @@ https://github.com/user-attachments/assets/d624b7ef-f87e-41ef-af6a-9e3922af33e7
 ---
 
 ## 7. 인프라 구조도
-<img width="1590" height="1320" alt="Cloud Architecture" src="https://github.com/user-attachments/assets/e8c04f6b-7052-45cd-a464-d5a045f51204" />
+<img width="1608" height="1320" alt="Cloud Architecture" src="https://github.com/user-attachments/assets/242ef2ec-93a9-4b1b-a7cf-910ed4fde225" />
+
 
 ---
 ## 8. ERD
