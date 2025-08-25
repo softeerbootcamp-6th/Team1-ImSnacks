@@ -3,7 +3,7 @@ import GlobalStyles from './layouts/GlobalStyles';
 import { useWeatherConditionStore } from './store/useWeatherConditionStore';
 import { ThemeProvider } from '@emotion/react';
 import { createThemeAssets } from './styles/createThemeAssets';
-import { weatherToTheme } from './utils/weatherToTheme';
+import { weatherToTheme } from './styles/weatherTheme';
 import { useInitialAppData } from './hooks/useInitialAppData';
 import { useIsMobileStore } from './store/useIsMobileStore';
 import { useEffect } from 'react';

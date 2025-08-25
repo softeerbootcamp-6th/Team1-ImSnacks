@@ -8,6 +8,8 @@ const WEATHER_UNIT = {
   [WEATHER_METRICS.WIND_SPEED]: 'm/s',
 };
 
-export const getUnit = (metric: GetWeatherGraphResponseWeatherMetricEnum) => {
+export const getWeatherUnit = (
+  metric: GetWeatherGraphResponseWeatherMetricEnum
+) => {
   return WEATHER_UNIT[metric] || '';
 };

@@ -2,7 +2,7 @@ import ToolTip from '@/components/toolTip/ToolTip';
 import { Typography } from '@/styles/typography';
 import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
 import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
-import { getUnit } from '@/utils/getUnit';
+import { getWeatherUnit } from '@/utils/getWeatherUnitUtil';
 import { css, useTheme } from '@emotion/react';
 
 const CustomTooltip = ({
@@ -46,7 +46,7 @@ const CustomTooltip = ({
               color: ${theme.Assets.Text.ToolTip.Default};
             `}
           >
-            {`${label ?? ''}:00 | ${payload[0]?.value ?? 0}${getUnit(
+            {`${label ?? ''}:00 | ${payload[0]?.value ?? 0}${getWeatherUnit(
               graphData.weatherMetric
             )}`}
           </div>

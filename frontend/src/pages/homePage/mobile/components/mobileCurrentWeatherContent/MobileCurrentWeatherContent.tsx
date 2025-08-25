@@ -4,7 +4,7 @@ import type {
   GetWeatherGraphResponseWeatherMetricEnum,
   GetWeatherStatusResponse,
 } from '@/types/openapiGenerator';
-import { getUnit } from '@/utils/getUnit';
+import { getWeatherUnit } from '@/utils/getWeatherUnitUtil';
 
 const MobileCurrentWeatherContent = ({
   metric,
@@ -19,7 +19,9 @@ const MobileCurrentWeatherContent = ({
         <h3>{metric}</h3>
         <p>
           {value}{' '}
-          {getUnit(metricType as GetWeatherGraphResponseWeatherMetricEnum)}
+          {getWeatherUnit(
+            metricType as GetWeatherGraphResponseWeatherMetricEnum
+          )}
         </p>
       </div>
 

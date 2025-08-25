@@ -7,7 +7,7 @@ import GraphMenu from '../graphMenu/GraphMenu';
 import { WEATHER_METRICS, type WeatherMetrics } from '@/types/weather.types';
 import { WeatherRiskDto } from '@/types/openapiGenerator';
 import { generateYTicks } from '../../utils/lineChartUtil';
-import { getUnit } from '@/utils/getUnit';
+import { getWeatherUnit } from '@/utils/getWeatherUnitUtil';
 import ChartS from '../mainLineChart/MainLineChart.style'; // TODO: 나중에 WorkContainer 스타일 정의 및 변경
 import useContainer from '@/pages/homePage/hooks/useContainer';
 import S from './WorkContainer.style';
@@ -127,7 +127,7 @@ const WorkContainer = ({
         )}
         {graphData && (
           <div css={ChartS.FixedYAxisWrapper}>
-            {getUnit(graphData.weatherMetric ?? 'PRECIPITATION')}
+            {getWeatherUnit(graphData.weatherMetric ?? 'PRECIPITATION')}
             <div css={ChartS.YAxis}>
               {generateYTicks({
                 min: graphData.min ?? 0,

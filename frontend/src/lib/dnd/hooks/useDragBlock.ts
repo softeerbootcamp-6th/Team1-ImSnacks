@@ -4,11 +4,11 @@ import updateWorkTime from '@/pages/homePage/utils/work/updateWorkTime';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import type { Position } from '@/lib/dnd/types/position.type';
-import isInBound from '@/utils/isInBound';
+import isInBound from '@/lib/dnd/utils/isInBound';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/lib/dnd/hooks/useBlocksTransition';
 import { resolveCollision } from '../utils/resolveCollision';
-import { snapPositionToGrid } from '@/utils/snapToGrid';
+import { snapPositionToGrid } from '@/lib/dnd/utils/snapToGrid';
 import { getTimeUpdatedBlocks } from '@/pages/homePage/utils/work/updateBlockTime';
 import { useQueryClient } from '@tanstack/react-query';
 

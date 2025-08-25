@@ -2,11 +2,11 @@ import {
   WEATHER_CONDITIONS,
   type WeatherConditionsType,
 } from '@/types/weather.types';
-import MobileHeader from '../components/mobileHeader/MobileHeader';
+import MobileHeader from './components/mobileHeader/MobileHeader';
 import S from './MobileHomePage.style';
-import MobileHeadline from '../components/mobileHeadline/MobileHeadline';
-import MobileCurrentWeather from '../components/mobileCurrentWeather/MobileCurrentWeather';
-import MobileTodo from '../components/mobileTodo/MobileTodo';
+import MobileHeadline from './components/mobileHeadline/MobileHeadline';
+import MobileCurrentWeather from './components/mobileCurrentWeather/MobileCurrentWeather';
+import MobileTodo from './components/mobileTodo/MobileTodo';
 import { useEffect, useState } from 'react';
 import { getWeatherNow } from '@/apis/weather.api';
 import type { GetWeatherConditionResponse } from '@/types/openapiGenerator';

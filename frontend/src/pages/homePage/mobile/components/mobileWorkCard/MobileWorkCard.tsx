@@ -1,5 +1,5 @@
 import S from './MobileWorkCard.style';
-import WorkCardRegisterContent from '../workCardRegisterContent/WorkCardRegisterContent';
+import WorkCardRegisterContent from '../../../components/workCardRegisterContent/WorkCardRegisterContent';
 import { IC24CheckIcon } from '@/assets/icons/flat';
 import { GrayScale } from '@/styles/colors';
 import type { ButtonHTMLAttributes } from 'react';

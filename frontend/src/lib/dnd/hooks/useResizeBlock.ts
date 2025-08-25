@@ -10,7 +10,7 @@ import {
   snapPositionToGrid,
   snapWidthToGrid,
   snapToGrid,
-} from '@/utils/snapToGrid';
+} from '@/lib/dnd/utils/snapToGrid';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface UseResizeBlockProps {
