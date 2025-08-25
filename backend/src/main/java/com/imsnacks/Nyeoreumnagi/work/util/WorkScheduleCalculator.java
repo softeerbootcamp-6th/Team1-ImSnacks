@@ -16,7 +16,7 @@ public class WorkScheduleCalculator {
     private static final int HIGH_HUMIDITY = 80;
     private static final int LOW_HUMIDITY = 30;
     private static final double STRONG_WIND = 14.0;
-    private static final double RAIN_MM = 0.1;
+    private static final double RAIN_MM = 3;
 
     private static final int COOLDOWN_GAP_HOURS = 4;
     private static final int MINIMUM_WORK_DURATION = 2;
