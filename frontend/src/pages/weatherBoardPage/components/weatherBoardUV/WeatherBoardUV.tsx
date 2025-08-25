@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import S from './WeatherBoardUV.style';
 import { FlexStyles } from '@/styles/commonStyles';
 import { Typography } from '@/styles/typography';
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { getWeatherUV } from '@/apis/weather.api';
 import { GetUVInfoResponse } from '@/types/openapiGenerator';
 import { getUVLevelAndColor } from '../../utils/uvUtil';
@@ -76,7 +76,11 @@ const WeatherBoardUV = () => {
   return (
     <div css={S.WeatherBoardUV}>
       <WeatherErrorBoundary title="자외선">
-        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
           <h3 css={S.WeatherBoardUVTitle}>자외선</h3>
 
           <div css={S.WeatherBoardUVContent}>

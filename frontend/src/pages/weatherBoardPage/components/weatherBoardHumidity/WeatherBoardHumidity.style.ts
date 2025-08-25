@@ -27,9 +27,19 @@ const HumidityRangeText = css`
   color: ${GrayScale.G800};
 `;
 
+const HumidityIconWrapper = css`
+  position: absolute;
+  top: 2px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
 export default {
   WeatherBoardHumidity,
   WeatherBoardTitleWrapper,
   HumidityRangeTextWrapper,
   HumidityRangeText,
+  HumidityIconWrapper,
 };

@@ -18,11 +18,18 @@ const DustSection = css`
   height: 100%;
 `;
 
-const DustChartWrapper = css`
+const DustChartRow = css`
   ${FlexStyles.flexRow};
   justify-content: flex-end;
   width: 100%;
   position: relative;
+`;
+
+const DustChartWrapper = css`
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const DustValueWrapper = css`
@@ -43,6 +50,7 @@ const DustUnit = css`
 export default {
   WeatherBoardDust,
   DustSection,
+  DustChartRow,
   DustChartWrapper,
   DustValueWrapper,
   DustValue,

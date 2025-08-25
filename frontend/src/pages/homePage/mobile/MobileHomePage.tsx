@@ -10,10 +10,12 @@ import MobileTodo from '../components/mobileTodo/MobileTodo';
 import { useEffect, useState } from 'react';
 import { getWeatherNow } from '@/apis/weather.api';
 import type { GetWeatherConditionResponse } from '@/types/openapiGenerator';
+import { CircularSpinner } from '@/components/common/CircularSpinner';
 
 const MobileHomePage = () => {
   const [weatherSummary, setWeatherSummary] =
     useState<GetWeatherConditionResponse>();
+  const [loading, setLoading] = useState(true);
 
   const fetchWeather = async () => {
     try {
@@ -23,6 +25,8 @@ const MobileHomePage = () => {
       }
     } catch (error) {
       console.error('Error fetching weather data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,14 +36,18 @@ const MobileHomePage = () => {
 
   return (
     <div css={S.MobileHomePage}>
-      <MobileHeader
-        weatherCondition={
-          (weatherSummary?.weatherCondition as WeatherConditionsType) ??
-          WEATHER_CONDITIONS.SUNNY
-        }
-        weatherKeyword={weatherSummary?.weatherKeyword ?? '맑음'}
-        temperature={weatherSummary?.temperature ?? 25}
-      />
+      {loading ? (
+        <CircularSpinner />
+      ) : (
+        <MobileHeader
+          weatherCondition={
+            (weatherSummary?.weatherCondition as WeatherConditionsType) ??
+            WEATHER_CONDITIONS.SUNNY
+          }
+          weatherKeyword={weatherSummary?.weatherKeyword ?? '맑음'}
+          temperature={weatherSummary?.temperature ?? 25}
+        />
+      )}
       <div css={S.MobileHomeContentWrapper}>
         <MobileHeadline />
         <MobileCurrentWeather />

@@ -6,6 +6,7 @@ import { getWeatherSevenDays } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
+import { ColorPrimary } from '@/styles/colors';
 
 const WeatherBoardWeekly = () => {
   const SevenDaysContent = () => {
@@ -35,7 +36,11 @@ const WeatherBoardWeekly = () => {
   return (
     <div css={S.WeatherBoardWeekly}>
       <WeatherErrorBoundary title="7일 간의 날씨 예보">
-        <Suspense fallback={<CircularSpinner minHeight={200} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={200} color={ColorPrimary.B700} />
+          }
+        >
           <div css={S.WeeklyTitleWrapper}>
             <h3 css={S.WeeklyTitle}>7일 간의 날씨 예보</h3>
           </div>

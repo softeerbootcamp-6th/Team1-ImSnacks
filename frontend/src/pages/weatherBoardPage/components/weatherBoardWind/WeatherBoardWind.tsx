@@ -1,7 +1,7 @@
 import S from './WeatherBoardWind.style';
 import { Typography } from '@/styles/typography';
 import { WindArrow } from '@/assets/icons/flat';
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import type { GetWindInfoResponse } from '@/types/openapiGenerator';
 import { Suspense, useState, useEffect } from 'react';
 import { getWeatherWind } from '@/apis/weather.api';
@@ -60,7 +60,11 @@ const WeatherBoardWind = () => {
   return (
     <div css={S.WeatherBoardWind}>
       <WeatherErrorBoundary title="풍속">
-        <Suspense fallback={<CircularSpinner minHeight={180} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
           <WindContent />
         </Suspense>
       </WeatherErrorBoundary>

@@ -1,5 +1,6 @@
 import { Assets, ColorStatus, GrayScale } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
+import type { Theme } from '@emotion/react';
 import { css } from '@emotion/react';
 
 const Container = css`
@@ -7,7 +8,7 @@ const Container = css`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 0 20px;
 `;
 
 const Content = css`
@@ -41,9 +42,9 @@ const Message = css`
   word-break: keep-all;
 `;
 
-const LinkButton = css`
+const LinkButton = (theme: Theme) => css`
   display: inline-block;
-  background-color: ${Assets.Text.Button.SelectChip.Disabled};
+  background-color: ${theme.ColorPrimary.B700};
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
@@ -55,7 +56,7 @@ const LinkButton = css`
     background-color: ${Assets.Global.Button.Hover};
   }
   &:active {
-    background-color: ${Assets.Global.Button.Default};
+    background-color: ${theme.ColorPrimary.B300};
   }
 `;
 

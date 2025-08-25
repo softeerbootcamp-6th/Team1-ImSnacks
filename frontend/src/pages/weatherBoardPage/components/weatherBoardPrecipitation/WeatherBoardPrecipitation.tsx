@@ -1,11 +1,12 @@
 import type { GetDailyMaxPrecipitationResponse } from '@/types/openapiGenerator';
 import { usePrecipitationSvg } from '../../hooks/usePrecipitationSvg';
 import S from './WeatherBoardPrecipitation.style';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { getWeatherPrecipitation } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
 import WeatherErrorBoundary from '@/components/common/WeatherErrorBoundary';
 import { useWeatherQuery } from '@/pages/homePage/hooks/useWeatherQuery';
+import { ColorPrimary } from '@/styles/colors';
 
 const PrecipitationContent = () => {
   const { data: maxPrecipitation } = useWeatherQuery(
@@ -20,6 +21,8 @@ const PrecipitationContent = () => {
     value: maxPrecipitation?.value ?? 0,
   });
 
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <>
       <div css={S.WeatherBoardPrecipitationTitle}>
@@ -31,7 +34,15 @@ const PrecipitationContent = () => {
       </div>
 
       {svgElement && (
-        <div css={S.WeatherBoardPrecipitationSvg}>{svgElement}</div>
+        <div
+          css={S.WeatherBoardPrecipitationSvg}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <div css={[S.WaveShake, isHovered && S.WaveShakeActive]}>
+            {svgElement}
+          </div>
+        </div>
       )}
     </>
   );
@@ -41,7 +52,11 @@ const WeatherBoardPrecipitation = () => {
   return (
     <div css={S.WeatherBoardPrecipitation}>
       <WeatherErrorBoundary title="습도">
-        <Suspense fallback={<CircularSpinner minHeight={200} />}>
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={200} color={ColorPrimary.B700} />
+          }
+        >
           <PrecipitationContent />
         </Suspense>
       </WeatherErrorBoundary>
