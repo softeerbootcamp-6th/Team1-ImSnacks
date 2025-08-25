@@ -20,7 +20,7 @@ const DraggableItem = ({
         top: 0;
         transform: translate3d(${position.x}px, ${position.y}px, 0);
 
-        opacity: ${isDragging ? 0.5 : 1};
+        opacity: ${isDragging ? 0 : 1};
         pointer-events: auto;
         z-index: 1000;
       `}
