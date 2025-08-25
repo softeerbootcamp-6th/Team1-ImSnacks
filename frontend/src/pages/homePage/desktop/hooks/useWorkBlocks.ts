@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
 import {
@@ -12,14 +12,20 @@ import useBlocksTransition from '@/lib/dnd/hooks/useBlocksTransition';
 import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/sortWorkBlocks';
 import { useTimeStore } from '@/store/useTimeStore';
 
+const QUERY_KEY = ['myWorkOfToday'];
+const ANIMATION_DELAY = 1000;
+
 const useWorkBlocks = () => {
   const { currentTime } = useTimeStore();
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
   const queryClient = useQueryClient();
   const { animateBlocksTransition } = useBlocksTransition(setWorkBlocks);
 
+  const prevWorkBlocksRef = useRef<WorkBlockType[]>([]);
+  const skipAnimationRef = useRef(false);
+
   const { data, refetch } = useQuery({
-    queryKey: ['myWorkOfToday'],
+    queryKey: QUERY_KEY,
     queryFn: async () => {
       const res = await getMyWorkOfToday(false);
       return getInitialWorkBlocks(res.data);
@@ -27,101 +33,109 @@ const useWorkBlocks = () => {
     staleTime: 55 * 60 * 1000,
   });
 
-  const prevWorkBlocksRef = useRef<WorkBlockType[]>([]);
-  const skipAnimationRef = useRef(false);
+  const invalidateMyWorkQuery = useCallback(() => {
+    skipAnimationRef.current = true;
+    setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+    }, ANIMATION_DELAY);
+  }, [queryClient]);
+
+  const updateBlocksWithAnimation = useCallback(
+    (newBlocks: WorkBlockType[]) => {
+      const sorted = sortWorkBlocks(newBlocks);
+      animateBlocksTransition(workBlocks, sorted);
+    },
+    [animateBlocksTransition, workBlocks]
+  );
 
   useEffect(() => {
     if (!data) return;
+
     const sortedBlocks = sortWorkBlocks(data);
     if (skipAnimationRef.current) {
       setWorkBlocks(sortedBlocks);
       prevWorkBlocksRef.current = sortedBlocks;
       skipAnimationRef.current = false;
-      return;
+    } else {
+      animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
+      prevWorkBlocksRef.current = sortedBlocks;
     }
-    animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
-    prevWorkBlocksRef.current = sortedBlocks;
   }, [data, animateBlocksTransition]);
 
-  useEffect(() => {
+  const refetchOnTime = useCallback(() => {
     if (currentTime.minute() === 0) {
-      // refetch 시에는 애니메이션 허용
       skipAnimationRef.current = false;
       refetch();
     }
   }, [currentTime, refetch]);
 
-  const addWorkBlock = async (
-    newWorkBlock: WorkBlockType,
-    myCropId: number,
-    recommendedWorkId: number
-  ) => {
-    try {
-      const newWorkIdRes = await postMyWork({
-        startTime: newWorkBlock.startTime,
-        endTime: newWorkBlock.endTime,
-        myCropId,
-        recommendedWorkId,
-      });
+  useEffect(() => {
+    refetchOnTime();
+  }, [refetchOnTime]);
 
-      const newWorkId = newWorkIdRes.data.workId as number;
+  const addWorkBlock = useCallback(
+    async (
+      newWorkBlock: WorkBlockType,
+      myCropId: number,
+      recommendedWorkId: number
+    ) => {
+      try {
+        const { data } = await postMyWork({
+          startTime: newWorkBlock.startTime,
+          endTime: newWorkBlock.endTime,
+          myCropId,
+          recommendedWorkId,
+        });
 
-      animateBlocksTransition(
-        workBlocks,
-        sortWorkBlocks([...workBlocks, { ...newWorkBlock, id: newWorkId }])
-      );
+        const newWorkId = data.workId as number;
+        updateBlocksWithAnimation([
+          ...workBlocks,
+          { ...newWorkBlock, id: newWorkId },
+        ]);
 
-      //캐싱 무효화 후 refetch 시 애니메이션 적용 x
-      skipAnimationRef.current = true;
+        invalidateMyWorkQuery();
+      } catch (error) {
+        console.error('작업 추가 실패:', error);
+      }
+    },
+    [workBlocks, updateBlocksWithAnimation, invalidateMyWorkQuery]
+  );
 
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
-      }, 1000);
-    } catch (error) {
-      console.error('작업 추가 실패', error);
-    }
-  };
+  const updateWorkBlockTimeOnServer = useCallback(
+    async (updatedBlock: WorkBlockType) => {
+      try {
+        await patchMyWorkTime({
+          myWorkId: updatedBlock.id,
+          startTime: updatedBlock.startTime,
+          endTime: updatedBlock.endTime,
+        });
+        invalidateMyWorkQuery();
+      } catch (error) {
+        console.error('작업 시간 업데이트 실패:', error);
+      }
+    },
+    [invalidateMyWorkQuery]
+  );
 
-  const updateWorkBlockTimeOnServer = async (updatedBlock: WorkBlockType) => {
-    try {
-      await patchMyWorkTime({
-        myWorkId: updatedBlock.id,
-        startTime: updatedBlock.startTime,
-        endTime: updatedBlock.endTime,
-      });
-    } catch (error) {
-      console.error('작업 시간 업데이트 실패:', error);
-    }
-    setTimeout(() => {
-      queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
-    }, 1000);
-  };
-
-  const updateWorkBlocks = (updatedBlocks: WorkBlockType[]) => {
+  const updateWorkBlocks = useCallback((updatedBlocks: WorkBlockType[]) => {
     setWorkBlocks(updatedBlocks);
     skipAnimationRef.current = true;
-  };
+  }, []);
 
-  const removeWorkBlock = async (id: number | string) => {
-    try {
-      await deleteMyWork({
-        myWorkId: Number(id),
-      });
-
-      animateBlocksTransition(
-        workBlocks,
-        sortWorkBlocks(workBlocks.filter(block => block.id !== Number(id)))
-      );
-
-      //캐싱 무효화 후 refetch 시 애니메이션 적용 x
-      skipAnimationRef.current = true;
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
-      }, 1000);
-    } catch (error) {
-      console.error('작업 삭제 실패', error);
-    }
-  };
+  const removeWorkBlock = useCallback(
+    async (id: number | string) => {
+      try {
+        await deleteMyWork({ myWorkId: Number(id) });
+        updateBlocksWithAnimation(
+          workBlocks.filter(block => block.id !== Number(id))
+        );
+        invalidateMyWorkQuery();
+      } catch (error) {
+        console.error('작업 삭제 실패:', error);
+      }
+    },
+    [workBlocks, updateBlocksWithAnimation, invalidateMyWorkQuery]
+  );
 
   return {
     workBlocks,
