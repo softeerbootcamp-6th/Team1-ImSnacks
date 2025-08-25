@@ -42,6 +42,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -85,17 +86,14 @@ public class WeatherService {
         int ny = farm.getNy();
 
         LocalDateTime now = LocalDateTime.now();
+        LocalDateTime start = now.truncatedTo(ChronoUnit.HOURS);
+        LocalDateTime end = start.plusHours(23);
+
         List<ShortTermWeatherForecast> weatherInfos = shortTermWeatherForecastRepository.findAllByNxAndNy(nx, ny)
                 .stream()
                 .filter(weather -> {
                     LocalDateTime fcstTime = weather.getFcstTime();
-                    LocalDate fcstDate = fcstTime.toLocalDate();
-                    LocalDate nowDate = now.toLocalDate();
-
-                    if(fcstDate.isEqual(nowDate)){
-                        return fcstTime.getHour() >= now.getHour();
-                    }
-                    return fcstTime.getHour() < now.getHour();
+                    return !fcstTime.isBefore(start) && !fcstTime.isAfter(end);
                 })
                 .toList();
         if (weatherInfos.isEmpty()) {
