@@ -1,9 +1,10 @@
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
 const WeatherBoardDust = css`
-  ${CommonStyles.weatherBoardContainer};
+  ${S.WeatherBoardContainer};
   ${FlexStyles.flexRow};
   justify-content: space-between;
   padding: 16px 20px;

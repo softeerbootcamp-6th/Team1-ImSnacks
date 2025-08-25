@@ -1,9 +1,10 @@
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { css } from '@emotion/react';
 import { getArrowPosition } from '../../utils/windUtil';
 
 const WeatherBoardWind = css`
-  ${CommonStyles.weatherBoardContainer}
+  ${S.WeatherBoardContainer}
   ${FlexStyles.flexColumn}
   box-sizing: border-box;
 `;

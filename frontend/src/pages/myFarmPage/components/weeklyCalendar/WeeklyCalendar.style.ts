@@ -4,7 +4,7 @@ import { GrayScale, ColorStatus, ColorPrimary, Opacity } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { gradientMask } from '@/styles/gradientMask';
 
 const getDayColor = (dayName: string, isToday = false) => {

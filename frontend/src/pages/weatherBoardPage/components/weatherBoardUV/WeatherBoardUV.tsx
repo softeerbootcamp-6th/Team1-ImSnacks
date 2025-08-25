@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { css } from '@emotion/react';
 import S from './WeatherBoardUV.style';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { Typography } from '@/styles/typography';
 import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { getWeatherUV } from '@/apis/weather.api';

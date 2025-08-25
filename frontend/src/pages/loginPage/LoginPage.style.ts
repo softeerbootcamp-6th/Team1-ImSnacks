@@ -1,5 +1,5 @@
 import { ColorStatus, GrayScale } from '@/styles/colors';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { css } from '@emotion/react';
 
 const LoginContainer = css`

@@ -4,7 +4,7 @@ import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import type { Size } from '@/types/size.type';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { Assets } from '@/styles/colors';
 
 const WorkCardToolTip = css`

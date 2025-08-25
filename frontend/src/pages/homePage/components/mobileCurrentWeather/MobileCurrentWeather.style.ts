@@ -1,5 +1,5 @@
 import { GrayScale, Opacity } from '@/styles/colors';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
 import { Spacing } from '@/styles/spacing';
 import { css } from '@emotion/react';

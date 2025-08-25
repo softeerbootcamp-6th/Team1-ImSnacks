@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { Typography } from '@/styles/typography';
 import { GrayScale } from '@/styles/colors';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 
 interface WeatherErrorBoundaryProps {
   title?: string;
