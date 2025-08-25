@@ -50,7 +50,7 @@ public class ImprovedApiCaller {
             // TODO 모든 예외에 기본 데이터 반환으로 대응하는 상태.
             // TODO 재시도 기능 도입하기.
             // TODO 실패하면 큐에 담아두고 다시 시도하기.
-            log.info("An exception has occured");
+            log.info("An exception has occurred");
             return getDefaultData(baseDate, baseTime, nx, ny);
         }
 
@@ -70,23 +70,6 @@ public class ImprovedApiCaller {
                 .build()
                 .toUri();
     }
-
-//    private String buildUriString(String baseDate, String baseTime, int nx, int ny) {
-//        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(URI.toString());
-//        //TODO 상수값 정적 변수로 만들기
-//        UriComponents uri = builder
-//                .queryParam(AUTH_KEY.toString(), serviceKey)
-//                .queryParam(NUM_OF_ROWS.toString(), 1000)
-//                .queryParam(PAGE_NO.toString(), 1)
-//                .queryParam(DATA_TYPE.toString(), "JSON")
-//                .queryParam(BASE_DATE.toString(), baseDate)
-//                .queryParam(BASE_TIME.toString(), baseTime)
-//                .queryParam(NX.toString(), nx)
-//                .queryParam(NY.toString(), ny)
-//                .build();
-//        String uriString =  uri.encode().toUriString();
-//        return uriString;
-//    }
 
     private VilageFcstResponseDto getDefaultData(String baseDate, String baseTime, int nx, int ny) {
         List<VilageFcstResponseDto.Item> itemList = List.of(

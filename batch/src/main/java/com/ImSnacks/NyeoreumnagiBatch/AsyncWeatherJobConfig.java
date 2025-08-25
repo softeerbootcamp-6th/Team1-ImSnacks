@@ -63,7 +63,6 @@ public class AsyncWeatherJobConfig {
     public AsyncItemProcessor<UniqueNxNy, ShortTermWeatherDto> asyncItemProcessor() {
         var asyncProcessor = new AsyncItemProcessor<UniqueNxNy, ShortTermWeatherDto>();
         asyncProcessor.setDelegate(processor);
-        //asyncProcessor.setTaskExecutor(new SimpleAsyncTaskExecutor());
         asyncProcessor.setTaskExecutor(asyncWeatherProcessorExecutor());
         return asyncProcessor;
     }
