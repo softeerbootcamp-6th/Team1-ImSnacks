@@ -37,6 +37,8 @@ api:
     key: ${MID_RANGE_WEATHER_API_KEY}
   air-quality-service:
     key : ${AIR_QUALITY_KEY}
+  tomorrow:
+    key : ${TOMORROW_API_KEY}
 
 
 ---
