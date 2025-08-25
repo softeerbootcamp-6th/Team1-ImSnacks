@@ -1,11 +1,11 @@
 import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
-import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/work/updateBlockTimeOnServer';
+import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/updateBlockTimeOnServer';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import { useBlocksTransition } from './useBlocksTransition';
 import { resolveCollision } from '../utils/resolveCollision';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
-import updateWorkTime from '@/pages/homePage/desktop/utils/work/updateWorkTime';
+import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
 import {
   snapPositionToGrid,
   snapWidthToGrid,

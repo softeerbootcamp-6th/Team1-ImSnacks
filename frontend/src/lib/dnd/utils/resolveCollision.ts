@@ -4,8 +4,8 @@ import isFullyOverlapped from '@/lib/dnd/utils/isFullyOverlapped';
 import {
   getTimeUpdatedBlock,
   getTimeUpdatedBlocks,
-} from '@/pages/homePage/desktop/utils/work/updateBlockTime';
-import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/work/sortWorkBlocks';
+} from '@/pages/homePage/desktop/utils/updateBlockTime';
+import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/sortWorkBlocks';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import useMaxLayerStore from '@/store/useMaxLayerStore';
 

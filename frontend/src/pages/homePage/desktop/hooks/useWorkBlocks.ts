@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
-import getInitialWorkBlocks from '@/pages/homePage/desktop/utils/work/getInitialWorkBlocks';
+import getInitialWorkBlocks from '@/pages/homePage/desktop/utils/getInitialWorkBlocks';
 import useBlocksTransition from '@/lib/dnd/hooks/useBlocksTransition';
-import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/work/sortWorkBlocks';
+import { sortWorkBlocks } from '@/pages/homePage/desktop/utils/sortWorkBlocks';
 import { useTimeStore } from '@/store/useTimeStore';
 
 const useWorkBlocks = () => {

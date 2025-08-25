@@ -1,5 +1,5 @@
 import type { RecommendedWorksResponse } from '@/types/openapiGenerator';
-import calculateTimeToPosition from '../../utils/work/calculateTimeToPosition';
+import calculateTimeToPosition from '../../utils/calculateTimeToPosition';
 import * as S from './WorkActiveToolTip.style';
 import { useTheme } from '@emotion/react';
 

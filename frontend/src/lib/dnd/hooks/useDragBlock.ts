@@ -1,6 +1,6 @@
 import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
-import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/work/updateBlockTimeOnServer';
-import updateWorkTime from '@/pages/homePage/desktop/utils/work/updateWorkTime';
+import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/updateBlockTimeOnServer';
+import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import type { Position } from '@/lib/dnd/types/position.type';
@@ -9,7 +9,7 @@ import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/lib/dnd/hooks/useBlocksTransition';
 import { resolveCollision } from '../utils/resolveCollision';
 import { snapPositionToGrid } from '@/lib/dnd/utils/snapToGrid';
-import { getTimeUpdatedBlocks } from '@/pages/homePage/desktop/utils/work/updateBlockTime';
+import { getTimeUpdatedBlocks } from '@/pages/homePage/desktop/utils/updateBlockTime';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface UseDragBlockProps {
