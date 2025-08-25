@@ -3,6 +3,8 @@ import { Typography } from '@/styles/typography';
 import { getTemperatureColor } from '../../utils/temperatureUtil';
 import { FlexStyles } from '@/styles/commonStyles';
 import type { TemperaturePerTime } from '@/types/openapiGenerator/models/all';
+import { css } from '@emotion/react';
+import { useState } from 'react';
 
 const TemperatureDot = ({
   cx,
@@ -22,8 +24,20 @@ const TemperatureDot = ({
     ? FLAT_ICON[payload.weatherType as keyof typeof FLAT_ICON]
     : null;
 
+  const [hovered, setHovered] = useState(false);
+  const scale = hovered ? 1.2 : 1;
   return (
-    <>
+    <g
+      pointerEvents="all"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      css={css`
+        transform: translate(${cx}px, ${cy}px) scale(${scale})
+          translate(${-cx}px, ${-cy}px);
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      `}
+      onMouseDown={e => e.preventDefault()}
+    >
       {payload && FlatIconComponent && (
         <foreignObject x={cx - 17} y={cy - 50} width={40} height={66}>
           <div css={FlexStyles.flexColumn}>
@@ -48,7 +62,7 @@ const TemperatureDot = ({
           fill={dotColor}
         />
       </svg>
-    </>
+    </g>
   );
 };
 
