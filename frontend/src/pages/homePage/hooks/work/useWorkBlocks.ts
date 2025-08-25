@@ -72,7 +72,7 @@ const useWorkBlocks = () => {
 
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
-      }, 250);
+      }, 1000);
     } catch (error) {
       console.error('작업 추가 실패', error);
     }
@@ -98,7 +98,7 @@ const useWorkBlocks = () => {
       skipAnimationRef.current = true;
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
-      }, 250);
+      }, 1000);
     } catch (error) {
       console.error('작업 삭제 실패', error);
     }

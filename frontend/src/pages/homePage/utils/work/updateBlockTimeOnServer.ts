@@ -17,7 +17,7 @@ const updateBlockTimeOnServer = async (
   }
   setTimeout(() => {
     queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
-  }, 250);
+  }, 1000);
 };
 
 export default updateBlockTimeOnServer;
