@@ -7,7 +7,7 @@ import {
   Tooltip,
   Area,
 } from 'recharts';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
 import { getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
@@ -37,9 +37,45 @@ const MainLineChart = ({
     return () => clearTimeout(timer);
   }, []);
 
-  if (isError) {
-    return <div css={S.LoadingWrapper}>데이터를 불러오는데 실패했습니다</div>;
-  }
+  const dotPosRef = useRef<
+    Record<string, { x: number; y: number; index: number }>
+  >({});
+
+  const [dotPos, setDotPos] = useState<
+    Record<string, { x: number; y: number; index: number }>
+  >({});
+
+  // 중복 커밋 방지
+  const [coordsCommitted, setCoordsCommitted] = useState(false);
+
+  // dot 한 개의 좌표를 ref에 수집 (렌더마다 최신값으로 덮어씀)
+  const captureDot = useCallback(
+    (name: string, index: number, cx: number, cy: number) => {
+      if (name != null && typeof cx === 'number' && typeof cy === 'number') {
+        dotPosRef.current[String(name)] = { x: cx, y: cy, index };
+      }
+    },
+    []
+  );
+
+  // 라인 애니메이션이 끝났을 때, ref → state로 "한 번만" 커밋
+  const handleLineAnimEnd = useCallback(() => {
+    if (coordsCommitted) return;
+    setDotPos({ ...dotPosRef.current });
+    setCoordsCommitted(true);
+  }, [coordsCommitted]);
+
+  // 데이터가 바뀌면 리셋(다시 수집)
+  useEffect(() => {
+    dotPosRef.current = {};
+    setDotPos({});
+    setCoordsCommitted(false);
+  }, [graphData]);
+
+  const getDotX = useCallback(
+    (time?: string) => (time ? dotPos[String(time)]?.x ?? null : null),
+    [dotPos]
+  );
 
   if (!graphData || !graphData.valuePerTime) {
     return (
@@ -48,7 +84,11 @@ const MainLineChart = ({
       </div>
     );
   }
+  const processedData = getProcessedData(graphData, weatherRiskData ?? []);
 
+  if (isError) {
+    return <div css={S.LoadingWrapper}>데이터를 불러오는데 실패했습니다</div>;
+  }
   if (!showChart) {
     return <div css={S.LoadingWrapper}></div>;
   }
@@ -68,8 +108,6 @@ const MainLineChart = ({
       </linearGradient>
     </defs>
   );
-
-  const processedData = getProcessedData(graphData, weatherRiskData ?? []);
 
   const WRAPPER_MARGIN = {
     top: 53,
@@ -142,10 +180,10 @@ const MainLineChart = ({
             dataKey="value"
             stroke={GrayScale.White}
             strokeWidth={4}
+            onAnimationEnd={handleLineAnimEnd}
             dot={
               <CustomizedDot
-                cx={0}
-                cy={0}
+                onLayout={captureDot}
                 weatherRiskData={weatherRiskData}
                 wrapperMargin={WRAPPER_MARGIN}
                 chartHeight={CHART_HEIGHT}
@@ -154,15 +192,20 @@ const MainLineChart = ({
           />
         </ComposedChart>
 
-        {weatherRiskData.map((riskData, index) => (
-          <WeatherRiskText
-            key={`weatherRisk_${index}`}
-            riskData={riskData}
-            graphData={graphData}
-            index={index}
-            pointSpacing={pointSpacing}
-          />
-        ))}
+        {weatherRiskData.map((riskData, index) => {
+          const startX = getDotX(riskData.startTime);
+          const endX = getDotX(riskData.endTime);
+          if (startX === null || endX === null) return null; // 값 생기면 다음 렌더에서 나타남
+          return (
+            <WeatherRiskText
+              key={`weatherRisk_${index}`}
+              category={riskData.category!}
+              index={index}
+              startX={startX}
+              endX={endX}
+            />
+          );
+        })}
       </div>
     </div>
   );
