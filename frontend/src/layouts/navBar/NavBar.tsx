@@ -4,34 +4,33 @@ import S from './NavBar.styles';
 import Tab from '../../components/tab/Tab';
 import { IC24LogoIcon } from '@/assets/icons/flat';
 import { NAV_ITEMS } from '@/constants/menuItems';
+import useThrottle from '@/hooks/useThrottle';
 
 const NavBar = ({ isWeatherPage }: { isWeatherPage: boolean }) => {
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  const handleScroll = useThrottle(() => {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      // 아래로 스크롤하고 100px 이상 스크롤했을 때 navBar 숨김
+      setIsVisible(false);
+    } else if (currentScrollY < lastScrollY) {
+      setIsVisible(true);
+    }
+
+    setLastScrollY(currentScrollY);
+  }, 16);
+
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // 스크롤 방향 감지
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // 아래로 스크롤하고 100px 이상 스크롤했을 때 navBar 숨김
-        setIsVisible(false);
-      } else if (currentScrollY < lastScrollY) {
-        // 위로 스크롤할 때 navBar 표시
-        setIsVisible(true);
-      }
-
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY]);
+  }, [handleScroll]);
 
   return (
     <nav css={S.NavBarWrapper(isWeatherPage, isVisible)}>
