@@ -7,7 +7,7 @@ import {
   Tooltip,
   Area,
 } from 'recharts';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Assets, GrayScale, Opacity } from '@/styles/colors';
 import { getProcessedData } from '../../utils/lineChartUtil';
 import S from './MainLineChart.style';
@@ -19,6 +19,7 @@ import type {
   WeatherRiskDto,
 } from '@/types/openapiGenerator';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import { useMainLineChartCoords } from '../../hooks/useMainLineChartCoords';
 
 const MainLineChart = ({
   graphData,
@@ -37,44 +38,8 @@ const MainLineChart = ({
     return () => clearTimeout(timer);
   }, []);
 
-  const dotPosRef = useRef<
-    Record<string, { x: number; y: number; index: number }>
-  >({});
-
-  const [dotPos, setDotPos] = useState<
-    Record<string, { x: number; y: number; index: number }>
-  >({});
-
-  // 중복 커밋 방지
-  const [coordsCommitted, setCoordsCommitted] = useState(false);
-
-  // dot 한 개의 좌표를 ref에 수집 (렌더마다 최신값으로 덮어씀)
-  const captureDot = useCallback(
-    (name: string, index: number, cx: number, cy: number) => {
-      if (name != null && typeof cx === 'number' && typeof cy === 'number') {
-        dotPosRef.current[String(name)] = { x: cx, y: cy, index };
-      }
-    },
-    []
-  );
-
-  // 라인 애니메이션이 끝났을 때, ref → state로 "한 번만" 커밋
-  const handleLineAnimEnd = useCallback(() => {
-    if (coordsCommitted) return;
-    setDotPos({ ...dotPosRef.current });
-    setCoordsCommitted(true);
-  }, [coordsCommitted]);
-
-  // 데이터가 바뀌면 리셋(다시 수집)
-  useEffect(() => {
-    dotPosRef.current = {};
-    setDotPos({});
-    setCoordsCommitted(false);
-  }, [graphData]);
-
-  const getDotX = useCallback(
-    (time?: string) => (time ? dotPos[String(time)]?.x ?? null : null),
-    [dotPos]
+  const { captureDot, handleLineAnimEnd, getDotX } = useMainLineChartCoords(
+    graphData!
   );
 
   if (!graphData || !graphData.valuePerTime) {
@@ -193,8 +158,8 @@ const MainLineChart = ({
         </ComposedChart>
 
         {weatherRiskData.map((riskData, index) => {
-          const startX = getDotX(riskData.startTime);
-          const endX = getDotX(riskData.endTime);
+          const startX = getDotX(riskData.startTime!);
+          const endX = getDotX(riskData.endTime!);
           if (startX === null || endX === null) return null; // 값 생기면 다음 렌더에서 나타남
           return (
             <WeatherRiskText
