@@ -1,6 +1,5 @@
 package com.ImSnacks.NyeoreumnagiBatch;
 
-import com.ImSnacks.NyeoreumnagiBatch.common.entity.UniqueNxNy;
 import com.ImSnacks.NyeoreumnagiBatch.common.entity.SevenDayWeatherForecast;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayTemperatureProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.seven_days_weather_forecast.processor.SevenDayWeatherConditionProcessor;
@@ -12,7 +11,6 @@ import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.ShadowTableInitTa
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.ImprovedWeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.processor.WeatherProcessor;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.UniqueNxNyReader;
-import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.NxNyPagingReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.WeatherReader;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.reader.dto.VilageFcstResponseDto;
 import com.ImSnacks.NyeoreumnagiBatch.shortTermWeatherForecast.writer.WeatherWriter;
