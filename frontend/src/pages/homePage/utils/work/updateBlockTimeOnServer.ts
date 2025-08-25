@@ -1,7 +1,11 @@
 import { patchMyWorkTime } from '@/apis/myWork.api';
 import type { WorkBlockType } from '@/types/workCard.type';
+import { QueryClient } from '@tanstack/react-query';
 
-const updateBlockTimeOnServer = async (updatedBlock: WorkBlockType) => {
+const updateBlockTimeOnServer = async (
+  updatedBlock: WorkBlockType,
+  queryClient: QueryClient
+) => {
   try {
     await patchMyWorkTime({
       myWorkId: updatedBlock.id,
@@ -11,6 +15,9 @@ const updateBlockTimeOnServer = async (updatedBlock: WorkBlockType) => {
   } catch (error) {
     console.error('작업 시간 업데이트 실패:', error);
   }
+  setTimeout(() => {
+    queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
+  }, 1000);
 };
 
 export default updateBlockTimeOnServer;

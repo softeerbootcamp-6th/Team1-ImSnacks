@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
 import getInitialWorkBlocks from '@/pages/homePage/utils/work/getInitialWorkBlocks';
@@ -10,7 +10,7 @@ import { useTimeStore } from '@/store/useTimeStore';
 const useWorkBlocks = () => {
   const { currentTime } = useTimeStore();
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
-
+  const queryClient = useQueryClient();
   const { animateBlocksTransition } = useBlocksTransition(setWorkBlocks);
 
   const { data, refetch } = useQuery({
@@ -23,17 +23,25 @@ const useWorkBlocks = () => {
   });
 
   const prevWorkBlocksRef = useRef<WorkBlockType[]>([]);
+  const skipAnimationRef = useRef(false);
 
   useEffect(() => {
-    if (data) {
-      const sortedBlocks = sortWorkBlocks(data);
-      animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
+    if (!data) return;
+    const sortedBlocks = sortWorkBlocks(data);
+    if (skipAnimationRef.current) {
+      setWorkBlocks(sortedBlocks);
       prevWorkBlocksRef.current = sortedBlocks;
+      skipAnimationRef.current = false;
+      return;
     }
+    animateBlocksTransition(prevWorkBlocksRef.current, sortedBlocks);
+    prevWorkBlocksRef.current = sortedBlocks;
   }, [data, animateBlocksTransition]);
 
   useEffect(() => {
     if (currentTime.minute() === 0) {
+      // refetch 시에는 애니메이션 허용
+      skipAnimationRef.current = false;
       refetch();
     }
   }, [currentTime, refetch]);
@@ -57,6 +65,13 @@ const useWorkBlocks = () => {
         workBlocks,
         sortWorkBlocks([...workBlocks, { ...newWorkBlock, id: newWorkId }])
       );
+
+      //캐싱 무효화 후 refetch 시 애니메이션 적용 x
+      skipAnimationRef.current = true;
+
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
+      }, 1000);
     } catch (error) {
       console.error('작업 추가 실패', error);
     }
@@ -64,6 +79,7 @@ const useWorkBlocks = () => {
 
   const updateWorkBlocks = (updatedBlocks: WorkBlockType[]) => {
     setWorkBlocks(updatedBlocks);
+    skipAnimationRef.current = true;
   };
 
   const removeWorkBlock = async (id: number | string) => {
@@ -71,10 +87,17 @@ const useWorkBlocks = () => {
       await deleteMyWork({
         myWorkId: Number(id),
       });
+
       animateBlocksTransition(
         workBlocks,
         sortWorkBlocks(workBlocks.filter(block => block.id !== Number(id)))
       );
+
+      //캐싱 무효화 후 refetch 시 애니메이션 적용 x
+      skipAnimationRef.current = true;
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
+      }, 1000);
     } catch (error) {
       console.error('작업 삭제 실패', error);
     }

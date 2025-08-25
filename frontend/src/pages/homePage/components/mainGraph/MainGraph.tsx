@@ -17,7 +17,7 @@ const MainGraph = memo(
     isError?: boolean;
   }) => {
     return (
-      <div css={S.MainGraph}>
+      <div css={S.MainGraph} onMouseDown={e => e.preventDefault()}>
         <MainLineChart
           graphData={graphData as GetWeatherGraphResponse}
           weatherRiskData={weatherRiskData}

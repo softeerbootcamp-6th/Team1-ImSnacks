@@ -41,7 +41,7 @@ const MobileWorkCard = ({
           width={24}
           height={24}
           fill={isCompleted ? theme.ColorPrimary.B700 : 'none'}
-          color={isCompleted ? GrayScale.White : GrayScale.G300}
+          color={isCompleted ? GrayScale.White : GrayScale.G400}
         />
       </button>
     </div>

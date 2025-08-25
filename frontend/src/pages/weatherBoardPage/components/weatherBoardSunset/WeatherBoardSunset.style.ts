@@ -32,6 +32,15 @@ const WeatherBoardSunsetContent = css`
   margin-bottom: 6px;
 `;
 
+const WeatherBoardSunsetSvgWrapper = css`
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.2);
+  }
+`;
+
 const WeatherBoardSunsetSvg = css`
   z-index: 2;
   overflow: visible;
@@ -65,6 +74,7 @@ export default {
   WeatherBoardSunsetContentWrapper,
   WeatherBoardSunsetTitle,
   WeatherBoardSunsetContent,
+  WeatherBoardSunsetSvgWrapper,
   WeatherBoardSunsetSvg,
   WeatherBoardSunsetBaseLine,
   WeatherBoardSunsetTimeWrapper,

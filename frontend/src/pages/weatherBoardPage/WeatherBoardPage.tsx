@@ -11,8 +11,10 @@ import WeatherBoardSunset from './components/weatherBoardSunset/WeatherBoardSuns
 import { FlexStyles } from '@/styles/commonStyles';
 import { useEffect, useState } from 'react';
 import { getMemberAddress } from '@/apis/member.api';
+import { useIsMobileStore } from '@/store/useIsMobileStore';
 
 const WeatherBoardPage = () => {
+  const { isMobile } = useIsMobileStore();
   const [address, setAddress] = useState<string>('');
 
   const fetchAddress = async () => {
@@ -25,9 +27,12 @@ const WeatherBoardPage = () => {
       console.error('주소를 가져오는 데 실패했습니다:', error);
     }
   };
+
   useEffect(() => {
-    fetchAddress();
-  }, []);
+    if (!isMobile) {
+      fetchAddress();
+    }
+  }, [isMobile]);
 
   return (
     <div css={S.WeatherBoardPage}>
