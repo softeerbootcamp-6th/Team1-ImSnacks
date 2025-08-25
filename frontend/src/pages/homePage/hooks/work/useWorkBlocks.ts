@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { getMyWorkOfToday, deleteMyWork, postMyWork } from '@/apis/myWork.api';
@@ -11,15 +11,7 @@ const useWorkBlocks = () => {
   const { currentTime } = useTimeStore();
   const [workBlocks, setWorkBlocks] = useState<WorkBlockType[]>([]);
   const queryClient = useQueryClient();
-  const { animateBlocksTransition: originalAnimateBlocksTransition } =
-    useBlocksTransition(setWorkBlocks);
-
-  const animateBlocksTransition = useCallback(
-    (prevBlocks: WorkBlockType[], nextBlocks: WorkBlockType[]) => {
-      originalAnimateBlocksTransition(prevBlocks, nextBlocks);
-    },
-    [originalAnimateBlocksTransition]
-  );
+  const { animateBlocksTransition } = useBlocksTransition(setWorkBlocks);
 
   const { data, refetch } = useQuery({
     queryKey: ['myWorkOfToday'],
@@ -49,6 +41,8 @@ const useWorkBlocks = () => {
 
   useEffect(() => {
     if (currentTime.minute() === 0) {
+      // refetch 시에는 애니메이션 허용
+      skipAnimationRef.current = false;
       refetch();
     }
   }, [currentTime, refetch]);
@@ -67,11 +61,14 @@ const useWorkBlocks = () => {
       });
 
       const newWorkId = newWorkIdRes.data.workId as number;
-      skipAnimationRef.current = true;
+
       animateBlocksTransition(
         workBlocks,
         sortWorkBlocks([...workBlocks, { ...newWorkBlock, id: newWorkId }])
       );
+
+      //캐싱 무효화 후 refetch 시 애니메이션 적용 x
+      skipAnimationRef.current = true;
 
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
@@ -91,12 +88,14 @@ const useWorkBlocks = () => {
       await deleteMyWork({
         myWorkId: Number(id),
       });
-      skipAnimationRef.current = true;
+
       animateBlocksTransition(
         workBlocks,
         sortWorkBlocks(workBlocks.filter(block => block.id !== Number(id)))
       );
 
+      //캐싱 무효화 후 refetch 시 애니메이션 적용 x
+      skipAnimationRef.current = true;
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['myWorkOfToday'] });
       }, 250);
