@@ -37,7 +37,6 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class WeatherJobConfig {
-    private final NxNyPagingReader nxNyPagingReader;
     private final UniqueNxNyReader uniqueNxNyReader;
     private final ImprovedWeatherProcessor improvedWeatherProcessor;
     private final WeatherReader weatherReader;
@@ -55,15 +54,6 @@ public class WeatherJobConfig {
         return new JobBuilder("weatherJob", jobRepository)
                 .start(shadowTableInitStep)
                 .next(weatherStep)
-                .build();
-    }
-
-    @Bean
-    public Job improvedWeatherJob(JobRepository jobRepository, Step improvedWeatherStep, Step shadowTableInitStep) {
-        log.info("Starting ImprovedWeatherJob");
-        return new JobBuilder("improvedWeatherJob", jobRepository)
-                .start(shadowTableInitStep)
-                .next(improvedWeatherStep)
                 .build();
     }
 
@@ -90,36 +80,6 @@ public class WeatherJobConfig {
                 .processor(weatherProcessor)
                 .writer(weatherWriter)
                 .build();
-    }
-
-    @Bean
-    public Step improvedWeatherStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
-        return new StepBuilder("improvedWeatherStep", jobRepository)
-                .<UniqueNxNy, ShortTermWeatherDto>chunk(20, transactionManager)
-                .reader(uniqueNxNyReader)
-                .processor(improvedWeatherProcessor)
-                .writer(weatherWriter)
-                .build();
-        /*
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(10);
-        executor.setThreadNamePrefix("weather-");
-        executor.initialize();
-
-        return new StepBuilder("imrovedWeatherStep", jobRepository)
-                .<UniqueNxNy, ShortTermWeatherDto>chunk(20, transactionManager)
-                .reader(nxNyPagingReader.pagingReader())
-                .processor(improvedWeatherProcessor)
-                .writer(weatherWriter)
-                .faultTolerant()
-                .retryLimit(3)
-                .retry(WebClientException.class)
-                .skipLimit(10)
-                .skip(Exception.class)
-                .taskExecutor(executor)
-                .build();
-                */
     }
 
     @Bean
