@@ -100,14 +100,6 @@ const LoginPage = () => {
               onClick={handleTestLogin2}
               css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
             >
-              {isLoading ? '로그인 중...' : '청주 농부 계정 로그인'}
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={handleTestLogin2}
-              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
-            >
               {isLoading ? '로그인 중...' : '이천1 농부 계정 로그인'}
             </button>
             <button
@@ -117,6 +109,14 @@ const LoginPage = () => {
               css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
             >
               {isLoading ? '로그인 중...' : '이천2 농부 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleTestLogin2}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '청주 농부 계정 로그인'}
             </button>
             <button
               type="button"
