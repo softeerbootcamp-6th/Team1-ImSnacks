@@ -7,6 +7,7 @@ const LoginContainer = css`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 0 20px;
 `;
 
 const LogoWrapper = css`
