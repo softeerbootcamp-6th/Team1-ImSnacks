@@ -114,7 +114,7 @@ const DamagePests = () => {
             <div css={S.DamageCardRowWrapper}>
               {pestRisks?.map((item, index) => (
                 <div
-                  key={item.name}
+                  key={item.pestRiskId}
                   css={css`
                     position: absolute;
                     top: 0;
