@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,6 +91,17 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
         }
 
         log.info("afterStep: shadow 테이블 rename 작업 시작");
+
+        String nowFcstTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHH00"));
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+        String sql = "INSERT INTO short_term_weather_forecast_shadow ( " +
+                "fcst_time, nx, ny, humidity, precipitation, sky_status, snow, temperature, update_at, wind_speed, wind_direction " +
+                ") SELECT fcst_time, nx, ny, humidity, precipitation, sky_status, snow, temperature, ?, wind_speed, wind_direction " +
+                "FROM short_term_weather_forecast " +
+                "WHERE fcst_time = ?";
+
+        jdbcTemplate.update(sql, now, nowFcstTime);
 
         try {
             jdbcTemplate.execute("DROP TABLE IF EXISTS short_term_weather_forecast_backup");
