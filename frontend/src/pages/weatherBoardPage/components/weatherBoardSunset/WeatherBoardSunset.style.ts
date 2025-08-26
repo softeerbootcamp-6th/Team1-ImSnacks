@@ -1,0 +1,83 @@
+import { GrayScale } from '@/styles/colors';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
+import { Typography } from '@/styles/typography';
+import { css } from '@emotion/react';
+
+const WeatherBoardSunset = css`
+  ${S.WeatherBoardContainer}
+  position: relative;
+  ${FlexStyles.flexColumn}
+  justify-content: flex-end;
+  box-sizing: border-box;
+`;
+
+const WeatherBoardSunsetContentWrapper = css`
+  padding-bottom: 12px;
+  ${FlexStyles.flexColumn}
+`;
+
+const WeatherBoardSunsetTitle = css`
+  position: absolute;
+  top: 16px;
+  left: 20px;
+`;
+
+const WeatherBoardSunsetContent = css`
+  position: relative;
+  width: 100%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 6px;
+`;
+
+const WeatherBoardSunsetSvgWrapper = css`
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.2);
+  }
+`;
+
+const WeatherBoardSunsetSvg = css`
+  z-index: 2;
+  overflow: visible;
+  width: 242px;
+  height: 121px;
+`;
+
+const WeatherBoardSunsetBaseLine = css`
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 1px;
+  background: ${GrayScale.G900};
+  z-index: 1;
+`;
+
+const WeatherBoardSunsetTimeWrapper = css`
+  ${FlexStyles.flexRow};
+  justify-content: space-between;
+  width: 282px;
+`;
+
+const WeatherBoardSunsetTime = css`
+  ${Typography.Body_S_400};
+  color: ${GrayScale.White};
+`;
+
+export default {
+  WeatherBoardSunset,
+  WeatherBoardSunsetContentWrapper,
+  WeatherBoardSunsetTitle,
+  WeatherBoardSunsetContent,
+  WeatherBoardSunsetSvgWrapper,
+  WeatherBoardSunsetSvg,
+  WeatherBoardSunsetBaseLine,
+  WeatherBoardSunsetTimeWrapper,
+  WeatherBoardSunsetTime,
+};

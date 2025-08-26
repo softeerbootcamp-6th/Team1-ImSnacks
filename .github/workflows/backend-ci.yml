@@ -1,0 +1,63 @@
+name: backend-ci.yml
+
+# on:
+#   pull_request_target: # pull_request:
+#     branches: [ "be" ] # 브랜치 이름 변경
+# permissions: write-all
+
+on:
+  pull_request:
+    branches: [ "be" ]
+
+permissions:
+  contents: read  # 코드 읽기 권한만 (보안 최소화)
+  pull-requests: write  # PR 코멘트 작성
+  checks: write  # 필요시 체크 상태 업데이트
+
+jobs:
+  setting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17 for x64
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+          architecture: x64
+
+      - name: Set up properties
+        run: |
+          cd backend/src/main
+          mkdir -p resources
+          cd resources
+          touch application.properties
+          echo "${{ secrets.APPLICATION }}" > application.properties
+          cat application.properties
+        shell: bash
+
+      - name: Grant execute permission for gradlew
+        run: |
+          echo "----- workdir -----"
+          ls -al .
+          cd backend
+          chmod +x gradlew
+          echo "----- /backend -----"
+          ls -al .
+
+      - name: Test with Gradle
+        working-directory: backend
+        run: ./gradlew clean test
+
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.2
+        with:
+          title: 📝 Test Coverage Report
+          paths: ${{ github.workspace }}/backend/build/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}
+          min-coverage-overall: 20
+          min-coverage-changed-files: 20
+          update-comment: true
+          continue-on-error: true

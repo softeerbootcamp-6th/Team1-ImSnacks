@@ -1,0 +1,117 @@
+name: Move issue to "Under Review" on PR creation
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  move-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move linked issue to Under Review column in ProjectV2
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}
+          script: |
+            const issueRegex = /(?:close|closes|fixes|resolves)\s+#(\d+)/gi;
+            const prBody = context.payload.pull_request.body || "";
+            const matches = [...prBody.matchAll(issueRegex)];
+            if (matches.length === 0) return;
+
+            const issueNumber = parseInt(matches[0][1]);
+
+            const projectNumber = 15;
+            const organization = context.repo.owner;
+
+            // GraphQL 클라이언트 호출
+            const result = await github.graphql(`
+              query($org: String!, $projNum: Int!, $issueNumber: Int!, $repo: String!) {
+                organization(login: $org) {
+                  projectV2(number: $projNum) {
+                    id
+                    fields(first: 20) {
+                      nodes {
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                repository(owner: $org, name: $repo) {
+                  issue(number: $issueNumber) {
+                    id
+                    projectItems(first: 10) {
+                      nodes {
+                        id
+                        project {
+                          number
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `, {
+              org: organization,
+              projNum: projectNumber,
+              issueNumber: issueNumber,
+              repo: context.repo.repo
+            });
+
+            const projectId = result.organization.projectV2.id;
+            const issueId = result.repository.issue.id;
+
+            const item = result.repository.issue.projectItems.nodes.find(
+              (node) => node.project.number === projectNumber
+            );
+            const itemId = item?.id;
+
+            const field = result.organization.projectV2.fields.nodes.find(
+              (field) => field.name === "Status"
+            );
+
+            if (!field) {
+              core.setFailed("Status 필드를 찾을 수 없습니다.");
+              return;
+            }
+
+            const underReviewOption = field.options.find(
+              (opt) => opt.name.toLowerCase() === "under review"
+            );
+
+            if (!underReviewOption) {
+              core.setFailed('"Under Review" 옵션을 찾을 수 없습니다.');
+              return;
+            }
+
+            await github.graphql(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(
+                  input: {
+                    projectId: $projectId
+                    itemId: $itemId
+                    fieldId: $fieldId
+                    value: {
+                      singleSelectOptionId: $optionId
+                    }
+                  }
+                ) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId: projectId,
+              itemId: itemId,
+              fieldId: field.id,
+              optionId: underReviewOption.id
+            });
+
+            console.log(`이슈 #${issueNumber}의 Status를 "Under Review"로 변경했습니다.`);

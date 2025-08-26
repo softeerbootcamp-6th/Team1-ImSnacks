@@ -1,0 +1,61 @@
+import ToolTip from '@/components/toolTip/ToolTip';
+import { Typography } from '@/styles/typography';
+import type { GetWeatherGraphResponse } from '@/types/openapiGenerator';
+import { TOOLTIP_DIRECTIONS, TOOLTIP_TYPES } from '@/types/tooltip.type';
+import { getWeatherUnit } from '@/utils/getWeatherUnitUtil';
+import { css, useTheme } from '@emotion/react';
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+  graphData,
+}: {
+  active?: boolean;
+  payload?: Array<{ value: number; name: string }>;
+  label?: string;
+  graphData: GetWeatherGraphResponse;
+}) => {
+  const theme = useTheme();
+  if (
+    !active ||
+    !payload ||
+    payload.length === 0 ||
+    !graphData?.weatherMetric
+  ) {
+    return null;
+  }
+
+  return (
+    <div
+      css={css`
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 9999;
+      `}
+    >
+      <ToolTip
+        direction={TOOLTIP_DIRECTIONS.TOP}
+        content={
+          <div
+            css={css`
+              ${Typography.Caption};
+              color: ${theme.Assets.Text.ToolTip.Default};
+            `}
+          >
+            {`${label ?? ''}:00 | ${payload[0]?.value ?? 0}${getWeatherUnit(
+              graphData.weatherMetric
+            )}`}
+          </div>
+        }
+        type={TOOLTIP_TYPES.DEFAULT}
+        isAbsolute={false}
+      />
+    </div>
+  );
+};
+
+export default CustomTooltip;

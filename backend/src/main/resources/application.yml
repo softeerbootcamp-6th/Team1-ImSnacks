@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    active: local
+
+  application:
+    name: Nyeoreumnagi
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:mysql://localhost:${RDS_PORT}/${RDS_DATABASE}?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        highlight_sql: true
+    show-sql: true
+
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://${RDS_ENDPOINT}:${RDS_PORT}/${RDS_DATABASE}?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+---
+
+springdoc:
+  override-with-generic-response: false
+  swagger-ui:
+    url: https://api.nyeoreumnagi.site/v3/api-docs
+    tryItOutEnabled: true
+    server-url: https://api.nyeoreumnagi.site
+
+secret:
+  jwt-secret-key: ${JWT_SECRET_KEY}
+  jwt-expired-in:
+    access-token: ${ACCESS_TOKEN_EXPIRED_IN}

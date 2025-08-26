@@ -1,0 +1,26 @@
+export const WEATHER_METRICS = {
+  PRECIPITATION: 'PRECIPITATION',
+  TEMPERATURE: 'TEMPERATURE',
+  HUMIDITY: 'HUMIDITY',
+  WIND_SPEED: 'WIND_SPEED',
+} as const;
+
+export type WeatherMetrics =
+  (typeof WEATHER_METRICS)[keyof typeof WEATHER_METRICS];
+
+export const WEATHER_CONDITIONS = {
+  SUNNY: 'SUNNY',
+  LESS_CLOUDY: 'LESS_CLOUDY',
+  CLOUDY: 'CLOUDY',
+  STRONG_WIND: 'STRONG_WIND',
+  THUNDER: 'THUNDER',
+  RAIN: 'RAIN',
+  HEAVY_RAIN: 'HEAVY_RAIN',
+  SNOW: 'SNOW',
+  NIGHT: 'NIGHT',
+  CLOUDY_NIGHT: 'CLOUDY_NIGHT',
+  HEAT_WAVE: 'HEAT_WAVE',
+} as const;
+
+export type WeatherConditionsType =
+  (typeof WEATHER_CONDITIONS)[keyof typeof WEATHER_CONDITIONS];

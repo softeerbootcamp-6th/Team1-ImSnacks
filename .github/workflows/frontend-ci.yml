@@ -1,0 +1,59 @@
+name: Run build test and comment on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [fe]
+
+jobs:
+  build-and-comment:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    if: ${{ startsWith(github.head_ref, 'feat/fe') || startsWith(github.head_ref, 'fix/fe') || startsWith(github.head_ref, 'refactor/fe') }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: pnpm install
+
+      - name: Build FE
+        id: build
+        working-directory: ./frontend
+        run: |
+          set +e
+          pnpm run build
+          echo "status=$?" >> $GITHUB_OUTPUT
+          set -e
+
+      - name: Comment build result on PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const status = "${{ steps.build.outputs.status }}";
+            const comment = status === "0"
+              ? "✅ 빌드 테스트 성공!"
+              : "❌ 빌드 테스트 실패 😭";
+
+             await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.payload.pull_request.number,
+              body: comment
+            });

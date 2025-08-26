@@ -1,0 +1,87 @@
+import { css } from '@emotion/react';
+import { Assets, ColorStatus } from '@/styles/colors';
+import { BorderRadius } from '@/styles/borderRadius';
+import { Spacing } from '@/styles/spacing';
+import { Typography } from '@/styles/typography';
+import { CROP_NAME } from '@/constants/cropName';
+import type { CropNameType } from '@/types/crop.type';
+import { FlexStyles } from '@/styles/flexStyles';
+
+const WorkCardContent = css`
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: row;
+  gap: ${Spacing.Spacing300};
+`;
+
+const WorkCardColorBar = (cropName: CropNameType) => css`
+  min-width: 4px;
+  height: 42px;
+  background-color: ${ColorStatus.Crops[CROP_NAME[cropName]]};
+  border-radius: ${BorderRadius.Base.Hard};
+`;
+
+const WorkCardInfo = css`
+  display: flex;
+  flex-direction: column;
+  gap: ${Spacing.Spacing100};
+  min-width: 0;
+`;
+
+const WorkCardContentWrapper = css`
+  ${FlexStyles.flexRow};
+  gap: ${Spacing.Spacing300};
+  min-width: 0;
+  width: 100%;
+  margin-right: ${Spacing.Spacing100};
+`;
+
+const WorkCardTitle = css`
+  ${Typography.Body_S_400}
+  color: ${Assets.Text.WorkCard.Default.Headline};
+  display: block;
+  min-width: 0;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const WorkCardCropName = css`
+  ${Typography.Caption_S}
+  color: ${Assets.Text.WorkCard.Default.Headline};
+  display: block;
+
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const WorkCardTime = css`
+  ${Typography.Caption_S}
+  color: ${Assets.Text.WorkCard.Default.Body};
+  display: block;
+
+  min-width: 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const CompletedTextStyle = css`
+  text-decoration-line: line-through;
+`;
+
+export default {
+  WorkCardContent,
+  WorkCardColorBar,
+  WorkCardContentWrapper,
+  WorkCardInfo,
+  WorkCardTitle,
+  WorkCardCropName,
+  WorkCardTime,
+  CompletedTextStyle,
+};
