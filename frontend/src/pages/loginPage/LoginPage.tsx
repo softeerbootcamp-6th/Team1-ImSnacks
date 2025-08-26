@@ -5,6 +5,34 @@ import { css, useTheme } from '@emotion/react';
 import loginLogoUrl from '@/assets/icons/flat/IC24Logo.svg';
 import logoTextUrl from '@/assets/images/LogoText.svg';
 
+const TEST_LOGIN_LIST = [
+  {
+    id: 'user070',
+    pw: 'encodedPw70',
+    label: '양재 농부 도시농부의 꿈',
+  },
+  {
+    id: 'user067',
+    pw: 'encodedPw67',
+    label: '이천 농부1 밭두렁 아이돌',
+  },
+  {
+    id: 'user068',
+    pw: 'encodedPw68',
+    label: '이천 농부2 땅의 파수꾼',
+  },
+  {
+    id: 'user069',
+    pw: 'encodedPw69',
+    label: '청주 농부 바람의 언덕',
+  },
+  {
+    id: 'user001',
+    pw: 'encodedPw1',
+    label: '수원 농부 농부킹',
+  },
+];
+
 const LoginPage = () => {
   const {
     identifier,
@@ -85,52 +113,17 @@ const LoginPage = () => {
             >
               {isLoading ? '로그인 중...' : '로그인'}
             </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleTestLogin('user070', 'encodedPw70')}
-              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
-            >
-              {isLoading
-                ? '로그인 중...'
-                : '양재 농부 도시농부의 꿈 계정 로그인'}
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleTestLogin('user067', 'encodedPw67')}
-              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
-            >
-              {isLoading
-                ? '로그인 중...'
-                : '이천 농부1 밭두렁 아이돌 계정 로그인'}
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleTestLogin('user068', 'encodedPw68')}
-              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
-            >
-              {isLoading
-                ? '로그인 중...'
-                : '이천 농부2 땅의 파수꾼 계정 로그인'}
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleTestLogin('user069', 'encodedPw69')}
-              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
-            >
-              {isLoading ? '로그인 중...' : '청주 농부 바람의 언덕 계정 로그인'}
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleTestLogin('user001', 'encodedPw1')}
-              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
-            >
-              {isLoading ? '로그인 중...' : '수원 농부 농부킹 계정 로그인'}
-            </button>
+            {TEST_LOGIN_LIST.map(({ id, pw, label }) => (
+              <button
+                key={id}
+                type="button"
+                disabled={isLoading}
+                onClick={() => handleTestLogin(id, pw)}
+                css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+              >
+                {isLoading ? '로그인 중...' : label + ' 계정 로그인'}
+              </button>
+            ))}
           </form>
         </div>
       </div>
