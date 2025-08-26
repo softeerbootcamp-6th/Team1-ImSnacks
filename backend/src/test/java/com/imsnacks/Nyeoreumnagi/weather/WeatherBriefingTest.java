@@ -120,7 +120,7 @@ class WeatherBriefingTest {
                 .build();
 
         String actual = briefing.buildWeatherMsg(testTime, testRisk);
-        String expected = "오후 9시부터 오후 2시까지 이상고온";
+        String expected = "오후 9시부터 내일 오후 2시까지 이상고온";
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -135,8 +135,22 @@ class WeatherBriefingTest {
                 .build();
 
         String actual = briefing.buildWeatherMsg(testTime, testRisk);
-        String expected = "오후 6시부터 오후 2시까지 이상고온";
+        String expected = "오후 6시부터 내일 오후 2시까지 이상고온";
         assertThat(actual).isEqualTo(expected);
     }
 
+    @Test
+    void 기상정보가_내일_시작한_경우() {
+        LocalDateTime testTime = LocalDateTime.of(2025, 8, 23, 18, 42);
+        WeatherRisk testRisk = WeatherRisk.builder()
+                .startTime(testTime.plusDays(1).withHour(12))
+                .endTime(testTime.plusDays(1).withHour(14))
+                .name(WeatherRiskType.ABNORMAL_HEAT)
+                .jobExecutionId(1L)
+                .build();
+
+        String actual = briefing.buildWeatherMsg(testTime, testRisk);
+        String expected = "내일 오후 12시부터 오후 2시까지 이상고온";
+        assertThat(actual).isEqualTo(expected);
+    }
 }
