@@ -13,6 +13,8 @@ interface UseLoginReturn {
   handleIdentifierChange: (value: string) => void;
   handlePasswordChange: (value: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handleTestLogin1: (e: React.FormEvent) => void;
+  handleTestLogin2: (e: React.FormEvent) => void;
 }
 
 export const useLogin = (): UseLoginReturn => {
@@ -33,27 +35,28 @@ export const useLogin = (): UseLoginReturn => {
     setPassword(value);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (
+    loginIdentifier: string,
+    loginPassword: string,
+    updateState = false
+  ) => {
     setError('');
     setIsLoading(true);
 
-    if (!identifier) {
-      setError('아이디를 입력해주세요.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (!password) {
-      setError('비밀번호를 입력해주세요.');
-      setIsLoading(false);
-      return;
-    }
     try {
-      const res = await postLogin({ identifier, password });
+      const res = await postLogin({
+        identifier: loginIdentifier,
+        password: loginPassword,
+      });
       if (res.code === 200) {
         setAccessToken(res.data.accessToken!);
         useUserStore.setState({ nickName: res.data.nickname });
+
+        if (updateState) {
+          setIdentifier(loginIdentifier);
+          setPassword(loginPassword);
+        }
+
         navigate('/');
       } else {
         setError('아이디 또는 비밀번호가 올바르지 않습니다.');
@@ -69,6 +72,32 @@ export const useLogin = (): UseLoginReturn => {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!identifier) {
+      setError('아이디를 입력해주세요.');
+      return;
+    }
+
+    if (!password) {
+      setError('비밀번호를 입력해주세요.');
+      return;
+    }
+
+    await handleLogin(identifier, password);
+  };
+
+  const handleTestLogin1 = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handleLogin('user001', 'encodedPw1', true);
+  };
+
+  const handleTestLogin2 = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handleLogin('user002', 'asdf', true);
+  };
+
   return {
     identifier,
     password,
@@ -77,5 +106,7 @@ export const useLogin = (): UseLoginReturn => {
     handleIdentifierChange,
     handlePasswordChange,
     handleSubmit,
+    handleTestLogin1,
+    handleTestLogin2,
   };
 };

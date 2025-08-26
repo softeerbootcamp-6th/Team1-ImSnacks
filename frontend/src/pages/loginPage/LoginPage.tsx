@@ -14,6 +14,8 @@ const LoginPage = () => {
     handleIdentifierChange,
     handlePasswordChange,
     handleSubmit,
+    handleTestLogin1,
+    handleTestLogin2,
   } = useLogin();
   const { isMobile } = useIsMobileStore();
   const theme = useTheme();
@@ -83,6 +85,46 @@ const LoginPage = () => {
               css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
             >
               {isLoading ? '로그인 중...' : '로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleTestLogin1}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '양재 농부 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleTestLogin2}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '청주 농부 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleTestLogin2}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '이천1 농부 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleTestLogin2}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '이천2 농부 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleTestLogin2}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '김천 농부 계정 로그인'}
             </button>
           </form>
         </div>
