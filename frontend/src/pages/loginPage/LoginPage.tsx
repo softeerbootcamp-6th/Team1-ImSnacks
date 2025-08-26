@@ -129,7 +129,7 @@ const LoginPage = () => {
               onClick={() => handleTestLogin('user001', 'encodedPw1')}
               css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
             >
-              {isLoading ? '로그인 중...' : '구미 농부 농부킹 계정 로그인'}
+              {isLoading ? '로그인 중...' : '수원 농부 농부킹 계정 로그인'}
             </button>
           </form>
         </div>
