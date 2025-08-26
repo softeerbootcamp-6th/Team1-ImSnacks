@@ -13,6 +13,11 @@ interface UseLoginReturn {
   handleIdentifierChange: (value: string) => void;
   handlePasswordChange: (value: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handleTestLogin: (
+    identifier: string,
+    password: string,
+    updateState?: boolean
+  ) => void;
 }
 
 export const useLogin = (): UseLoginReturn => {
@@ -33,27 +38,28 @@ export const useLogin = (): UseLoginReturn => {
     setPassword(value);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (
+    loginIdentifier: string,
+    loginPassword: string,
+    updateState = false
+  ) => {
     setError('');
     setIsLoading(true);
 
-    if (!identifier) {
-      setError('아이디를 입력해주세요.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (!password) {
-      setError('비밀번호를 입력해주세요.');
-      setIsLoading(false);
-      return;
-    }
     try {
-      const res = await postLogin({ identifier, password });
+      const res = await postLogin({
+        identifier: loginIdentifier,
+        password: loginPassword,
+      });
       if (res.code === 200) {
         setAccessToken(res.data.accessToken!);
         useUserStore.setState({ nickName: res.data.nickname });
+
+        if (updateState) {
+          setIdentifier(loginIdentifier);
+          setPassword(loginPassword);
+        }
+
         navigate('/');
       } else {
         setError('아이디 또는 비밀번호가 올바르지 않습니다.');
@@ -69,6 +75,29 @@ export const useLogin = (): UseLoginReturn => {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!identifier) {
+      setError('아이디를 입력해주세요.');
+      return;
+    }
+
+    if (!password) {
+      setError('비밀번호를 입력해주세요.');
+      return;
+    }
+
+    await handleLogin(identifier, password);
+  };
+
+  const handleTestLogin = async (
+    loginIdentifier: string,
+    loginPassword: string
+  ) => {
+    await handleLogin(loginIdentifier, loginPassword, true);
+  };
+
   return {
     identifier,
     password,
@@ -77,5 +106,6 @@ export const useLogin = (): UseLoginReturn => {
     handleIdentifierChange,
     handlePasswordChange,
     handleSubmit,
+    handleTestLogin,
   };
 };
