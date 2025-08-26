@@ -6,6 +6,7 @@ import com.imsnacks.Nyeoreumnagi.work.repository.MyCropRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
@@ -47,6 +48,9 @@ public final class Briefing {
     public static final String GOOD_EVENING_NO_RISK = "오늘 하루도 수고 많으셨어요.";
     public static final String GOOD_NIGHT_NO_RISK = "편안한 시간 보내고 계신가요?";
 
+    public static final String TODAY = "오늘";
+    public static final String TOMORROW = "내일";
+
     public static String buildWelcomeMsg(int hour) {
         if (hour < 6) return GOOD_NIGHT;
         else if (hour < 12) return GOOD_MORNING;
@@ -64,12 +68,22 @@ public final class Briefing {
     public static String buildWeatherMsg(LocalDateTime now, WeatherRisk risk) {
         LocalDateTime start = risk.getStartTime();
         LocalDateTime end = risk.getEndTime();
+        LocalDate startDate = start.toLocalDate();
+        LocalDate endDate = end.toLocalDate();
+        LocalDate today = now.toLocalDate();
+
 
         final String from = getClockHourAsString(start.isBefore(now) ? now : start);
         final String to = getClockHourAsString(end);
 
         final StringBuilder sb = new StringBuilder();
+        if (startDate.isAfter(today)) {
+            sb.append(TOMORROW).append(SPACE);
+        }
         sb.append(from).append(FROM_KOR).append(SPACE);
+        if (startDate.isEqual(today) && endDate.isAfter(today)) {
+            sb.append(TOMORROW).append(SPACE);
+        }
         sb.append(to).append(TO_KOR).append(SPACE);
         sb.append(risk.getName().getDescription());
 
