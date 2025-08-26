@@ -2,8 +2,6 @@
 
 # 🌱 녀름나기 - 영세농을 위한 날씨 정보 기반 농작업 계획 어시스턴트
 
-
-
 ## 1. 서비스 내용
 돌발성 기상 변화로 인한 농업 피해가 증가하고 있는 상황에서, 기존 기상 정보가 대응에 필요한 **예측 데이터**를 충분히 제공하지 못하는 문제를 해결하고자 합니다.
 
@@ -52,7 +50,7 @@
 
 ## 4. 시연 영상
 
-https://github.com/user-attachments/assets/d624b7ef-f87e-41ef-af6a-9e3922af33e7
+https://github.com/user-attachments/assets/14e8513d-597b-486b-a0bd-ea265c9b4b31
 
 ---
 
@@ -95,12 +93,34 @@ https://github.com/user-attachments/assets/d624b7ef-f87e-41ef-af6a-9e3922af33e7
 
 ---
 
-## 7. 인프라 구조도
+## 7. FrontEnd 디렉토리 구조
+
+```
+frontend
+├── public                    // 정적 파일 (font, favicon)
+├── src
+│   ├── apis                  // API 통신
+│   ├── assets                // 정적 자산 파일 및 컴포넌트 (icons, images)
+│   ├── components            // 재사용 UI 컴포넌트
+│   ├── constants             // 상수값
+│   ├── hooks                 // 커스텀 React 훅
+│   ├── layouts               // 레이아웃 관련
+│   ├── lib                   // 자체 모듈 패키지 (dnd)
+│   ├── pages                 // 페이지별 패키지
+│   ├── routes                // 라우팅 설정
+│   ├── store                 // 전역 상태 관리
+│   ├── styles                // 스타일 테마
+│   ├── types                 // 타입 정의
+│   ├── utils                 // 유틸리티 함수
+│   └── App.tsx               // 메인
+```
+
+## 8. 인프라 구조도
 <img width="1608" height="1320" alt="Cloud Architecture" src="https://github.com/user-attachments/assets/242ef2ec-93a9-4b1b-a7cf-910ed4fde225" />
 
 
 ---
-## 8. ERD
+## 9. ERD
 
 ### 주요 ERD
 
@@ -117,7 +137,7 @@ https://github.com/user-attachments/assets/d624b7ef-f87e-41ef-af6a-9e3922af33e7
 
 ---
 
-## 9. GitHub Wiki
+## 10. GitHub Wiki
 - [📖 그라운드룰 바로가기](https://github.com/softeerbootcamp-6th/Team1-ImSnacks/wiki/%5B1%ED%8C%80%5D-%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)
 - [💭 논의 공간 바로가기](https://github.com/softeerbootcamp-6th/Team1-ImSnacks/discussions)
 - [✏️ 프로젝트 관리 바로가기(private)](https://github.com/orgs/softeerbootcamp-6th/projects/15/views/1)
