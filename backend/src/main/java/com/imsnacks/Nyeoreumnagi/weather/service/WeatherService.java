@@ -157,14 +157,26 @@ public class WeatherService {
         final int ny = farm.getNy();
 
         final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime upperbound = now.plusDays(1).minusHours(1).truncatedTo(ChronoUnit.HOURS);
 
         final List<WeatherRisk> allRisks = weatherRiskRepository.findByNxAndNyWithMaxJobExecutionId(nx, ny);
         if (allRisks.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
             return new GetWeatherBriefingResponse(false, briefing.buildNoRiskWelcomeMsg(now.getHour()), briefing.buildNoRiskWeatherMsg(memberId, now.getHour()));
         }
+        // risk의 시작 시각이 now 전인 경우에는 now를 시작시각으로 사용한다.
+        // risk의 종료 시각을 현재 시각(분 아래는 절삭) + 23시간으로 자른다.
+        allRisks.forEach(x -> {
+            if (x.getStartTime().isBefore(now))
+                x.setStartTime(now);
+            if (x.getEndTime().isAfter(upperbound))
+                x.setEndTime(upperbound);
+        });
 
         final List<WeatherRisk> filteredRisk = allRisks.stream()
-                .filter(r -> r.getEndTime().isAfter(now))
+                .filter(x -> {
+                    LocalDateTime start = x.getStartTime();
+                    LocalDateTime end = x.getEndTime();
+                    return (end.isAfter(now) && end.isAfter(start));})
                 .sorted(Briefing.RISK_COMPARATOR) // 우선 순위가 가장 앞서는 것이 맨 앞에 오도록 정렬한다.
                 .toList();
         if (filteredRisk.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
