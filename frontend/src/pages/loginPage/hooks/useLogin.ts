@@ -13,8 +13,11 @@ interface UseLoginReturn {
   handleIdentifierChange: (value: string) => void;
   handlePasswordChange: (value: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
-  handleTestLogin1: (e: React.FormEvent) => void;
-  handleTestLogin2: (e: React.FormEvent) => void;
+  handleTestLogin: (
+    identifier: string,
+    password: string,
+    updateState?: boolean
+  ) => void;
 }
 
 export const useLogin = (): UseLoginReturn => {
@@ -88,14 +91,11 @@ export const useLogin = (): UseLoginReturn => {
     await handleLogin(identifier, password);
   };
 
-  const handleTestLogin1 = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await handleLogin('user001', 'encodedPw1', true);
-  };
-
-  const handleTestLogin2 = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await handleLogin('user002', 'asdf', true);
+  const handleTestLogin = async (
+    loginIdentifier: string,
+    loginPassword: string
+  ) => {
+    await handleLogin(loginIdentifier, loginPassword, true);
   };
 
   return {
@@ -106,7 +106,6 @@ export const useLogin = (): UseLoginReturn => {
     handleIdentifierChange,
     handlePasswordChange,
     handleSubmit,
-    handleTestLogin1,
-    handleTestLogin2,
+    handleTestLogin,
   };
 };
