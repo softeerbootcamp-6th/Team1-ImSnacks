@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import useWorkBlocks from '@/pages/homePage/desktop/hooks/useWorkBlocks';
@@ -35,12 +35,6 @@ const WorkContainer = ({
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.TEMPERATURE
   );
-
-  const renderCountRef = useRef(0);
-  useEffect(() => {
-    renderCountRef.current++;
-    console.log('WorkContainer render count:', renderCountRef.current);
-  });
 
   const { currentTime } = useTimeStore();
   const { data: graphData, error, refetch } = useWeatherGraphQuery(currentTab);
