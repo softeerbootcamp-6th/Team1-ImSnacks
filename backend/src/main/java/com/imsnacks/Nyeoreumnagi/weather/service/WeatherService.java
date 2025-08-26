@@ -173,9 +173,9 @@ public class WeatherService {
         });
 
         final List<WeatherRisk> filteredRisk = allRisks.stream()
-                .filter(r -> {
-                    LocalDateTime start = r.getStartTime();
-                    LocalDateTime end = r.getEndTime();
+                .filter(x -> {
+                    LocalDateTime start = x.getStartTime();
+                    LocalDateTime end = x.getEndTime();
                     return (end.isAfter(now) && end.isAfter(start));})
                 .sorted(Briefing.RISK_COMPARATOR) // 우선 순위가 가장 앞서는 것이 맨 앞에 오도록 정렬한다.
                 .toList();
