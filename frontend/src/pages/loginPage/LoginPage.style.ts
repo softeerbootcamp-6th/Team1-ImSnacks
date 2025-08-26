@@ -5,8 +5,9 @@ import { css } from '@emotion/react';
 const LoginContainer = css`
   ${FlexStyles.flexColumn}
   justify-content: center;
+  align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 0 20px;
 `;
 
 const LogoWrapper = css`

@@ -18,7 +18,7 @@ export const useWeatherQuery = <TData = unknown>(
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
-    gcTime: 1000,
+    gcTime: 3000,
     ...options,
   });
 };

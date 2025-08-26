@@ -14,6 +14,7 @@ const LoginPage = () => {
     handleIdentifierChange,
     handlePasswordChange,
     handleSubmit,
+    handleTestLogin,
   } = useLogin();
   const { isMobile } = useIsMobileStore();
   const theme = useTheme();
@@ -83,6 +84,52 @@ const LoginPage = () => {
               css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
             >
               {isLoading ? '로그인 중...' : '로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => handleTestLogin('user070', 'encodedPw70')}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading
+                ? '로그인 중...'
+                : '양재 농부 도시농부의 꿈 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => handleTestLogin('user067', 'encodedPw67')}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading
+                ? '로그인 중...'
+                : '이천 농부1 밭두렁 아이돌 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => handleTestLogin('user068', 'encodedPw68')}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading
+                ? '로그인 중...'
+                : '이천 농부2 땅의 파수꾼 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => handleTestLogin('user069', 'encodedPw69')}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '청주 농부 바람의 언덕 계정 로그인'}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => handleTestLogin('user001', 'encodedPw1')}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
+            >
+              {isLoading ? '로그인 중...' : '구미 농부 농부킹 계정 로그인'}
             </button>
           </form>
         </div>
