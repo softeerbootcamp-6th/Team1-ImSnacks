@@ -1,21 +1,20 @@
 import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
-import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/updateBlockTimeOnServer';
-import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
+import updateWorkTimeByPos from '@/pages/homePage/desktop/utils/updateWorkTimeByPosUtil';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import type { Position } from '@/lib/dnd/types/position.type';
-import isInBound from '@/lib/dnd/utils/isInBound';
+import isInBound from '@/lib/dnd/utils/isInBoundUtil';
 import { getYCoordinate } from '@/constants/workTimeCoordinate';
 import { useBlocksTransition } from '@/lib/dnd/hooks/useBlocksTransition';
-import { resolveCollision } from '../utils/resolveCollision';
-import { snapPositionToGrid } from '@/lib/dnd/utils/snapToGrid';
-import { getTimeUpdatedBlocks } from '@/pages/homePage/desktop/utils/updateBlockTime';
-import { useQueryClient } from '@tanstack/react-query';
+import { resolveCollision } from '@/lib/dnd/utils/collisionUtils';
+import { snapPositionToGrid } from '@/lib/dnd/utils/snapToGridUtil';
+import { getTimeUpdatedBlocks } from '@/pages/homePage/desktop/utils/updateBlockTimeUtil';
 
 interface UseDragBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
   scrollOffset: number;
   workBlocks: WorkBlockType[];
+  updateWorkBlockTimeOnServer: (updatedBlock: WorkBlockType) => void;
   updateWorkBlocks: (blocks: WorkBlockType[]) => void;
 }
 
@@ -23,6 +22,7 @@ export const useDragBlock = ({
   containerRef,
   scrollOffset,
   workBlocks,
+  updateWorkBlockTimeOnServer,
   updateWorkBlocks,
 }: UseDragBlockProps) => {
   const [draggingBlock, setDraggingBlock] = useState<WorkBlockType | null>(
@@ -38,8 +38,6 @@ export const useDragBlock = ({
   // 블록 이동 애니메이션 훅
   const { animateBlocksTransition } =
     useBlocksTransition<WorkBlockType>(updateWorkBlocks);
-
-  const queryClient = useQueryClient();
 
   const getContainerCoords = useCallback(
     (e: PointerEvent) => {
@@ -84,7 +82,7 @@ export const useDragBlock = ({
         y: newPosition.y,
       });
 
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
         draggingBlock.startTime,
         draggingBlock.endTime,
         snappedPosition
@@ -101,7 +99,7 @@ export const useDragBlock = ({
     [draggingBlock, dragOffset, getContainerCoords, scrollOffset]
   );
 
-  const handleEndDrag = useCallback(async () => {
+  const handleEndDrag = useCallback(() => {
     if (!draggingBlock) return;
 
     const currentDraggingBlock = draggingBlock;
@@ -139,13 +137,13 @@ export const useDragBlock = ({
 
     animateBlocksTransition(newBlocks, sortedBlocks);
 
-    await updateBlockTimeOnServer(updatedBlock, queryClient);
+    updateWorkBlockTimeOnServer(updatedBlock);
   }, [
     animateBlocksTransition,
     containerRef,
     draggingBlock,
-    queryClient,
     scrollOffset,
+    updateWorkBlockTimeOnServer,
     workBlocks,
   ]);
 

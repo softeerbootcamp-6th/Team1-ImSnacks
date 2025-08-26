@@ -1,23 +1,22 @@
 import { useSetPointerEvents } from '@/hooks/useSetPointerEvents';
-import updateBlockTimeOnServer from '@/pages/homePage/desktop/utils/updateBlockTimeOnServer';
 import type { WorkBlockType } from '@/types/workCard.type';
 import { useCallback, useState, type RefObject } from 'react';
 import { useBlocksTransition } from './useBlocksTransition';
-import { resolveCollision } from '../utils/resolveCollision';
+import { resolveCollision } from '@/lib/dnd/utils/collisionUtils';
 import { X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
-import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
+import updateWorkTimeByPos from '@/pages/homePage/desktop/utils/updateWorkTimeByPosUtil';
 import {
   snapPositionToGrid,
   snapWidthToGrid,
   snapToGrid,
-} from '@/lib/dnd/utils/snapToGrid';
-import { useQueryClient } from '@tanstack/react-query';
+} from '@/lib/dnd/utils/snapToGridUtil';
 
 interface UseResizeBlockProps {
   containerRef: RefObject<HTMLDivElement | null>;
   scrollOffset: number;
   workBlocks: WorkBlockType[];
   updateWorkBlocks: (blocks: WorkBlockType[]) => void;
+  updateWorkBlockTimeOnServer: (updatedBlock: WorkBlockType) => void;
 }
 
 export const useResizeBlock = ({
@@ -25,6 +24,7 @@ export const useResizeBlock = ({
   scrollOffset,
   workBlocks,
   updateWorkBlocks,
+  updateWorkBlockTimeOnServer,
 }: UseResizeBlockProps) => {
   const [resizingBlock, setResizingBlock] = useState<WorkBlockType | null>(
     null
@@ -32,8 +32,6 @@ export const useResizeBlock = ({
   const [resizeDirection, setResizeDirection] = useState<
     'left' | 'right' | null
   >(null);
-
-  const queryClient = useQueryClient();
 
   const { animateBlocksTransition } =
     useBlocksTransition<WorkBlockType>(updateWorkBlocks);
@@ -92,7 +90,7 @@ export const useResizeBlock = ({
         y: resizingBlock.position.y,
       });
 
-      const { newStartTime, newEndTime, newWorkTime } = updateWorkTime(
+      const { newStartTime, newEndTime, newWorkTime } = updateWorkTimeByPos(
         resizingBlock.startTime,
         resizingBlock.endTime,
         snappedPosition,
@@ -113,7 +111,7 @@ export const useResizeBlock = ({
     [resizingBlock, resizeDirection, getContainerCoords, scrollOffset]
   );
 
-  const handleResizeEnd = useCallback(async () => {
+  const handleResizeEnd = useCallback(() => {
     if (!resizingBlock) return;
 
     const currentBlock = resizingBlock;
@@ -133,14 +131,14 @@ export const useResizeBlock = ({
 
     animateBlocksTransition(newBlocks, sortedBlocks);
 
-    await updateBlockTimeOnServer(updatedBlock, queryClient);
+    updateWorkBlockTimeOnServer(updatedBlock);
   }, [
     resizingBlock,
     workBlocks,
     containerRef,
     scrollOffset,
     animateBlocksTransition,
-    queryClient,
+    updateWorkBlockTimeOnServer,
   ]);
 
   useSetPointerEvents({

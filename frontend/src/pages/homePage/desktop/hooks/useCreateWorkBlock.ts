@@ -6,8 +6,8 @@ import type {
   RecommendedWorksResponse,
 } from '@/types/openapiGenerator';
 import { getYCoordinate, X_PX_PER_HOUR } from '@/constants/workTimeCoordinate';
-import updateWorkTime from '@/pages/homePage/desktop/utils/updateWorkTime';
-import { snapToGrid } from '@/lib/dnd/utils/snapToGrid';
+import updateWorkTimeByPos from '@/pages/homePage/desktop/utils/updateWorkTimeByPosUtil';
+import { snapToGrid } from '@/lib/dnd/utils/snapToGridUtil';
 
 interface UseCreateWorkBlockReturn {
   handleCreateWork: (
@@ -54,7 +54,7 @@ export const useCreateWorkBlock = ({
           newStartTime: tempStartTime,
           newEndTime: tempEndTime,
           newWorkTime: tempWorkTime,
-        } = updateWorkTime('', '', position, width);
+        } = updateWorkTimeByPos('', '', position, width);
 
         // 임시 블록 생성하여 겹침 검사용으로 사용
         const tempBlock: WorkBlockType = {
@@ -68,12 +68,16 @@ export const useCreateWorkBlock = ({
           endTime: tempEndTime,
         };
 
-        // updateWorkTime 함수를 사용하여 최종 시간 계산
+        // updateWorkTimeByPos 함수를 사용하여 최종 시간 계산
         const {
           newStartTime: finalStartTime,
           newEndTime: finalEndTime,
           newWorkTime,
-        } = updateWorkTime(tempBlock.startTime, tempBlock.endTime, position);
+        } = updateWorkTimeByPos(
+          tempBlock.startTime,
+          tempBlock.endTime,
+          position
+        );
 
         // 최종 작업 블록 생성 및 시간 업데이트
         const newWorkBlock: WorkBlockType = {

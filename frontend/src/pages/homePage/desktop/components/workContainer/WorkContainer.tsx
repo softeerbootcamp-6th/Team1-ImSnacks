@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import WorkCellsContainer from '../workCellsContainer/WorkCellsContainer';
 import WorkCardRegister from '../workCardRegister/WorkCardRegister';
 import useWorkBlocks from '@/pages/homePage/desktop/hooks/useWorkBlocks';
@@ -24,7 +24,9 @@ import useContainer from '@/pages/homePage/desktop/hooks/useContainer';
 import { useResizeBlock } from '@/lib/dnd/hooks/useResizeBlock';
 import DraggableItem from '@/lib/dnd/components/DraggableItem';
 import DraggingItem from '@/lib/dnd/components/DraggingItem';
+
 import S from './WorkContainer.style';
+
 const WorkContainer = ({
   weatherRiskData,
 }: {
@@ -33,6 +35,12 @@ const WorkContainer = ({
   const [currentTab, setCurrentTab] = useState<WeatherMetrics>(
     WEATHER_METRICS.TEMPERATURE
   );
+
+  const renderCountRef = useRef(0);
+  useEffect(() => {
+    renderCountRef.current++;
+    console.log('WorkContainer render count:', renderCountRef.current);
+  });
 
   const { currentTime } = useTimeStore();
   const { data: graphData, error, refetch } = useWeatherGraphQuery(currentTab);
@@ -47,8 +55,13 @@ const WorkContainer = ({
     }
   }, [currentTime, refetch]);
 
-  const { workBlocks, updateWorkBlocks, removeWorkBlock, addWorkBlock } =
-    useWorkBlocks();
+  const {
+    workBlocks,
+    updateWorkBlocks,
+    removeWorkBlock,
+    addWorkBlock,
+    updateWorkBlockTimeOnServer,
+  } = useWorkBlocks();
 
   const { containerRef, scrollOffset, setScrollOffset } = useContainer();
 
@@ -74,6 +87,7 @@ const WorkContainer = ({
       scrollOffset,
       workBlocks,
       updateWorkBlocks,
+      updateWorkBlockTimeOnServer,
     });
 
   const { resizingBlock, handleResizeStart, handleResizeEnd } = useResizeBlock({
@@ -81,7 +95,14 @@ const WorkContainer = ({
     scrollOffset,
     workBlocks,
     updateWorkBlocks,
+    updateWorkBlockTimeOnServer,
   });
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (e.currentTarget) {
+      setScrollOffset(e.currentTarget.scrollLeft);
+    }
+  };
 
   // DragContainer에 드롭 처리
   const handleContainerDrop = async (e: React.DragEvent) => {
@@ -144,9 +165,7 @@ const WorkContainer = ({
         <div css={S.RightMaskGradientWrapper(scrollOffset)}>
           <div
             css={[S.ScrollContainer, S.LeftMaskGradientWrapper(scrollOffset)]}
-            onScroll={e => {
-              setScrollOffset(e.currentTarget.scrollLeft);
-            }}
+            onScroll={handleScroll}
           >
             <MainGraph
               graphData={graphData}
