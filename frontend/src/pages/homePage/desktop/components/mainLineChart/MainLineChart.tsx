@@ -19,6 +19,7 @@ import type {
   WeatherRiskDto,
 } from '@/types/openapiGenerator';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import { useMainLineChartCoords } from '../../hooks/useMainLineChartCoords';
 
 const MainLineChart = ({
   graphData,
@@ -37,9 +38,9 @@ const MainLineChart = ({
     return () => clearTimeout(timer);
   }, []);
 
-  if (isError) {
-    return <div css={S.LoadingWrapper}>데이터를 불러오는데 실패했습니다</div>;
-  }
+  const { captureDot, handleLineAnimEnd, getDotX } = useMainLineChartCoords(
+    graphData!
+  );
 
   if (!graphData || !graphData.valuePerTime) {
     return (
@@ -48,7 +49,11 @@ const MainLineChart = ({
       </div>
     );
   }
+  const processedData = getProcessedData(graphData, weatherRiskData ?? []);
 
+  if (isError) {
+    return <div css={S.LoadingWrapper}>데이터를 불러오는데 실패했습니다</div>;
+  }
   if (!showChart) {
     return <div css={S.LoadingWrapper}></div>;
   }
@@ -69,8 +74,6 @@ const MainLineChart = ({
     </defs>
   );
 
-  const processedData = getProcessedData(graphData, weatherRiskData ?? []);
-
   const WRAPPER_MARGIN = {
     top: 53,
     right: -40,
@@ -81,7 +84,6 @@ const MainLineChart = ({
 
   return (
     <div css={S.MainLineChart}>
-      {/* <div css={S.LineChartScrollWrapper}> */}
       <div css={S.LineChartInnerWrapper(chartWidth)} ref={chartRef}>
         <ComposedChart
           width={chartWidth}
@@ -143,10 +145,10 @@ const MainLineChart = ({
             dataKey="value"
             stroke={GrayScale.White}
             strokeWidth={4}
+            onAnimationEnd={handleLineAnimEnd}
             dot={
               <CustomizedDot
-                cx={0}
-                cy={0}
+                onLayout={captureDot}
                 weatherRiskData={weatherRiskData}
                 wrapperMargin={WRAPPER_MARGIN}
                 chartHeight={CHART_HEIGHT}
@@ -155,18 +157,22 @@ const MainLineChart = ({
           />
         </ComposedChart>
 
-        {weatherRiskData.map((riskData, index) => (
-          <WeatherRiskText
-            key={`weatherRisk_${index}`}
-            riskData={riskData}
-            graphData={graphData}
-            index={index}
-            pointSpacing={pointSpacing}
-          />
-        ))}
+        {weatherRiskData.map((riskData, index) => {
+          const startX = getDotX(riskData.startTime!);
+          const endX = getDotX(riskData.endTime!);
+          if (startX === null || endX === null) return null; // 값 생기면 다음 렌더에서 나타남
+          return (
+            <WeatherRiskText
+              key={`weatherRisk_${index}`}
+              category={riskData.category!}
+              index={index}
+              startX={startX}
+              endX={endX}
+            />
+          );
+        })}
       </div>
     </div>
-    // </div>
   );
 };
 

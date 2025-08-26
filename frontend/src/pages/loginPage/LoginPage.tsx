@@ -2,6 +2,8 @@ import { useIsMobileStore } from '@/store/useIsMobileStore';
 import S from './LoginPage.style';
 import { useLogin } from './hooks/useLogin';
 import { css, useTheme } from '@emotion/react';
+import loginLogoUrl from '@/assets/icons/flat/IC24Logo.svg';
+import logoTextUrl from '@/assets/images/LogoText.svg';
 
 const LoginPage = () => {
   const {
@@ -21,7 +23,7 @@ const LoginPage = () => {
       <div css={S.LoginContainer}>
         <div css={S.LogoWrapper}>
           <img
-            src="src/assets/icons/flat/IC24Logo.svg"
+            src={loginLogoUrl}
             alt="Login Icon"
             width={64}
             css={css`
@@ -29,7 +31,7 @@ const LoginPage = () => {
             `}
           />
           <img
-            src="src/assets/images/LogoText.svg"
+            src={logoTextUrl}
             alt="Login Logo"
             width={200}
             css={css`
