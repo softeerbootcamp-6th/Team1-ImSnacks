@@ -92,7 +92,12 @@ public class WeatherWriter implements ItemWriter<ShortTermWeatherDto>, StepExecu
 
         log.info("afterStep: shadow 테이블 rename 작업 시작");
 
-        String nowFcstTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHH00"));
+        LocalDateTime nowHour = LocalDateTime.now()
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
+        Timestamp nowFcstTime = Timestamp.valueOf(nowHour);
+
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
         String sql = "INSERT INTO short_term_weather_forecast_shadow ( " +
