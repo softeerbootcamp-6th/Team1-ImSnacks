@@ -1,23 +1,24 @@
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import S from './WeatherBoardSunset.style';
 import { SunEffect } from '@/assets/icons/flat';
 import { useSunsetAnimation } from '@/pages/weatherBoardPage/hooks/useSunsetAnimation';
 import type { GetSunRiseSetTimeResponse } from '@/types/openapiGenerator';
 import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherSunset } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
 
 const WeatherBoardSunset = () => {
-  const Content = () => {
-    const { data: sunsetData } = useSuspenseQuery({
-      queryKey: ['weather', 'sunset'],
-      queryFn: async (): Promise<GetSunRiseSetTimeResponse> => {
+  const SunsetContent = () => {
+    const { data: sunsetData } = useWeatherQuery(
+      ['weather', 'sunset'],
+      async (): Promise<GetSunRiseSetTimeResponse> => {
         const res = await getWeatherSunset();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-    });
+      }
+    );
+
     const {
       progress,
       sunX,
@@ -34,7 +35,7 @@ const WeatherBoardSunset = () => {
     });
 
     return (
-      <>
+      <div css={S.WeatherBoardSunsetContentWrapper}>
         <div css={S.WeatherBoardSunsetContent}>
           <div css={S.WeatherBoardSunsetBaseLine} />
           <svg viewBox={viewBox} css={S.WeatherBoardSunsetSvg}>
@@ -69,7 +70,9 @@ const WeatherBoardSunset = () => {
             {shouldShowSun && (
               <g transform={`translate(${sunX}, ${sunY})`}>
                 <foreignObject x="-16" y="-16" width="32" height="32">
-                  <SunEffect width={32} height={32} />
+                  <div css={S.WeatherBoardSunsetSvgWrapper}>
+                    <SunEffect width={32} height={32} />
+                  </div>
                 </foreignObject>
               </g>
             )}
@@ -79,16 +82,22 @@ const WeatherBoardSunset = () => {
           <span css={S.WeatherBoardSunsetTime}>{sunsetData.startTime}</span>
           <span css={S.WeatherBoardSunsetTime}>{sunsetData.endTime}</span>
         </div>
-      </>
+      </div>
     );
   };
 
   return (
     <div css={S.WeatherBoardSunset}>
-      <h3 css={S.WeatherBoardSunsetTitle}>일출/일몰</h3>
-      <Suspense fallback={<CircularSpinner minHeight={180} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="일출/일몰">
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
+          <h3 css={S.WeatherBoardSunsetTitle}>일출/일몰</h3>
+          <SunsetContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import type {
   GetMemberAddressResponse,
   GetMyCropsResponse,
 } from '@/types/openapiGenerator';
-import HTTP from './http';
+import HTTP from './shared/HTTP';
 
 export const getMemberAddress = () =>
   HTTP.get<GetMemberAddressResponse>('/member/address');

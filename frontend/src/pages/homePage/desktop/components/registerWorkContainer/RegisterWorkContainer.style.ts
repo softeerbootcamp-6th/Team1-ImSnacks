@@ -1,0 +1,84 @@
+import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
+import { Assets, Opacity } from '@/styles/colors';
+import { Spacing } from '@/styles/spacing';
+import { Typography } from '@/styles/typography';
+import { css } from '@emotion/react';
+
+const RegisterWorkContainer = css`
+  width: 1328px;
+  height: 137px;
+  border-radius: 16px;
+  padding: ${Spacing.Spacing600} ${Spacing.Spacing800};
+  background: ${Opacity.White.W600};
+  ${customBorderGradientStyles.gradientBorder}
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: ${Spacing.Spacing600};
+  margin-bottom: ${Spacing.Spacing600};
+  box-sizing: border-box;
+`;
+
+const TextBoxTitle = css`
+  ${Typography.Subtitle_700}
+  color: ${Assets.Text.Global.Headline};
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const TextBoxDescription = css`
+  ${Typography.Body_S_400}
+  color: ${Assets.Text.Global.Caption};
+`;
+
+const TextBox = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: ${Spacing.Spacing300};
+`;
+
+const BtnBox = css`
+  display: flex;
+  flex-direction: column;
+  gap: ${Spacing.Spacing500};
+  padding-right: ${Spacing.Spacing800};
+  height: 88px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const BtnSelectChipContainer = css`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: ${Spacing.Spacing300};
+`;
+
+const BtnCreateWorkContainer = css`
+  display: flex;
+  flex-direction: row;
+  gap: ${Spacing.Spacing300};
+  height: 52px;
+`;
+
+const IconContainer = css`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+export default {
+  RegisterWorkContainer,
+  TextBoxTitle,
+  TextBoxDescription,
+  TextBox,
+  BtnBox,
+  BtnSelectChipContainer,
+  BtnCreateWorkContainer,
+  IconContainer,
+};

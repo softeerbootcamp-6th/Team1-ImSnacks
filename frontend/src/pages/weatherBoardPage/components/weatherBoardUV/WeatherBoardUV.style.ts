@@ -1,13 +1,18 @@
 import { GrayScale } from '@/styles/colors';
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
 const WeatherBoardUV = css`
-  ${CommonStyles.weatherBoardContainer}
+  ${S.WeatherBoardContainer}
   position: relative;
-  padding-bottom: 12px;
   box-sizing: border-box;
+`;
+
+const WeatherBoardUVContentWrapper = css`
+  ${FlexStyles.flexColumn};
+  padding-bottom: 12px;
 `;
 
 const WeatherBoardUVTitle = css`
@@ -56,6 +61,7 @@ const WeatherBoardUVTime = css`
 
 export default {
   WeatherBoardUV,
+  WeatherBoardUVContentWrapper,
   WeatherBoardUVTitle,
   WeatherBoardUVContent,
   WeatherBoardUVSvg,

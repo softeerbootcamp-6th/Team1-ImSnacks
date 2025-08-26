@@ -1,30 +1,30 @@
 import { Suspense } from 'react';
 import { css } from '@emotion/react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import S from './WeatherBoardUV.style';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { Typography } from '@/styles/typography';
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import { getWeatherUV } from '@/apis/weather.api';
 import { GetUVInfoResponse } from '@/types/openapiGenerator';
 import { getUVLevelAndColor } from '../../utils/uvUtil';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
 
 const WeatherBoardUV = () => {
-  const Content = () => {
-    const { data: uv } = useSuspenseQuery({
-      queryKey: ['weather', 'uv'],
-      queryFn: async (): Promise<GetUVInfoResponse> => {
+  const UVContent = () => {
+    const { data: uv } = useWeatherQuery(
+      ['weather', 'uv'],
+      async (): Promise<GetUVInfoResponse> => {
         const res = await getWeatherUV();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-    });
+      }
+    );
 
     const { level, color } = getUVLevelAndColor(uv.value ?? 0);
 
     return (
-      <>
+      <div css={S.WeatherBoardUVContentWrapper}>
         <div
           css={css`
             ${FlexStyles.flexColumn};
@@ -69,19 +69,25 @@ const WeatherBoardUV = () => {
           <span css={S.WeatherBoardUVTime}>{uv.startTime}</span>
           <span css={S.WeatherBoardUVTime}>{uv.endTime}</span>
         </div>
-      </>
+      </div>
     );
   };
 
   return (
     <div css={S.WeatherBoardUV}>
-      <h3 css={S.WeatherBoardUVTitle}>자외선</h3>
+      <WeatherErrorBoundary title="자외선">
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
+          <h3 css={S.WeatherBoardUVTitle}>자외선</h3>
 
-      <div css={S.WeatherBoardUVContent}>
-        <Suspense fallback={<CircularSpinner minHeight={180} />}>
-          <Content />
+          <div css={S.WeatherBoardUVContent}>
+            <UVContent />
+          </div>
         </Suspense>
-      </div>
+      </WeatherErrorBoundary>
     </div>
   );
 };

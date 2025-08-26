@@ -1,57 +1,65 @@
 import type { GetDailyMaxPrecipitationResponse } from '@/types/openapiGenerator';
-import { usePrecipitationSvg } from '../../hooks/usePrecipitationSvg';
+import { getPrecipitationSvgUtil } from '../../utils/getPrecipitationSvgUtil';
 import S from './WeatherBoardPrecipitation.style';
-import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { Suspense, useState } from 'react';
 import { getWeatherPrecipitation } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
+import { ColorPrimary } from '@/styles/colors';
 
-const WeatherBoardPrecipitation = () => {
-  const Content = () => {
-    const { data: maxPrecipitation } = useSuspenseQuery({
-      queryKey: ['weather', 'precipitation'],
-      queryFn: async (): Promise<GetDailyMaxPrecipitationResponse> => {
-        const res = await getWeatherPrecipitation();
-        return res.data;
-      },
+const PrecipitationContent = () => {
+  const { data: maxPrecipitation } = useWeatherQuery(
+    ['weather', 'precipitation'],
+    async (): Promise<GetDailyMaxPrecipitationResponse> => {
+      const res = await getWeatherPrecipitation();
+      return res.data;
+    }
+  );
 
-      staleTime: 24 * 60 * 60 * 1000,
-    });
+  const { svgElement } = getPrecipitationSvgUtil({
+    value: maxPrecipitation?.value ?? 0,
+  });
 
-    const { svgElement } = usePrecipitationSvg({
-      value: maxPrecipitation?.value ?? 0,
-    });
-
-    return (
-      <>
-        <div css={S.WeatherBoardPrecipitationTitle}>
-          <h3>최고 강수량</h3>
-          <p>
-            {maxPrecipitation?.value}mm{' '}
-            {(maxPrecipitation?.value ?? 0) >= 30 && '이상'}
-          </p>
-        </div>
-
-        {svgElement && (
-          <div
-            style={{
-              marginTop: 'auto',
-              width: '100%',
-            }}
-            css={S.WeatherBoardPrecipitationSvg}
-          >
-            {svgElement}
-          </div>
-        )}
-      </>
-    );
-  };
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
+    <>
+      <div css={S.WeatherBoardPrecipitationTitle}>
+        <h3>최고 강수량</h3>
+        <p>
+          {maxPrecipitation?.value}mm{' '}
+          {(maxPrecipitation?.value ?? 0) >= 30 && '이상'}
+        </p>
+      </div>
+
+      {svgElement && (
+        <div
+          css={S.WeatherBoardPrecipitationSvg}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <div css={[S.WaveShake, isHovered && S.WaveShakeActive]}>
+            {svgElement}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+const WeatherBoardPrecipitation = () => {
+  return (
     <div css={S.WeatherBoardPrecipitation}>
-      <Suspense fallback={<CircularSpinner minHeight={200} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="습도">
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={200} color={ColorPrimary.B700} />
+          }
+        >
+          <PrecipitationContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };

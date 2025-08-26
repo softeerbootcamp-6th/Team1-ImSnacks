@@ -1,10 +1,10 @@
-import { css } from '@emotion/react';
+import { css, type Theme } from '@emotion/react';
 import { Spacing } from '@/styles/spacing';
 import { GrayScale, ColorStatus, ColorPrimary, Opacity } from '@/styles/colors';
 import { Typography } from '@/styles/typography';
 import { BorderRadius } from '@/styles/borderRadius';
 import { customBorderGradientStyles } from '@/styles/customBorderGradientStyles';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { gradientMask } from '@/styles/gradientMask';
 
 const getDayColor = (dayName: string, isToday = false) => {
@@ -46,11 +46,14 @@ const DateInfoContainer = css`
 const DateContainer = css`
   border-right: 1px solid ${GrayScale.G300};
   height: 100%;
-  width: 162px;
   ${FlexStyles.flexColumn}
 `;
 
-const DateNumberContainer = (dayName: string, isToday = false) => css`
+const DateNumberContainer = (
+  dayName: string,
+  isToday = false,
+  theme: Theme
+) => css`
   width: 36px;
   height: 32px;
   display: flex;
@@ -58,7 +61,7 @@ const DateNumberContainer = (dayName: string, isToday = false) => css`
   justify-content: center;
   border-radius: ${BorderRadius.Base.Hard};
   ${Typography.Body_L_500}
-  background-color: ${isToday ? ColorPrimary.B400 : 'transparent'};
+  background-color: ${isToday ? theme.ColorPrimary.B300 : 'transparent'};
   color: ${getDayColor(dayName, isToday)};
 `;
 

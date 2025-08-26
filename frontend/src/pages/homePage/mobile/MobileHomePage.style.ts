@@ -1,5 +1,5 @@
 import { GrayScale } from '@/styles/colors';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { Spacing } from '@/styles/spacing';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';

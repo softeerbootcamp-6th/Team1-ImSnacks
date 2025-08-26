@@ -1,29 +1,31 @@
 import S from './WeatherBoardWind.style';
 import { Typography } from '@/styles/typography';
 import { WindArrow } from '@/assets/icons/flat';
-import { GrayScale } from '@/styles/colors';
+import { ColorPrimary, GrayScale } from '@/styles/colors';
 import type { GetWindInfoResponse } from '@/types/openapiGenerator';
 import { Suspense, useState, useEffect } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { getWeatherWind } from '@/apis/weather.api';
 import { CircularSpinner } from '@/components/common/CircularSpinner';
+import WeatherErrorBoundary from '@/pages/weatherBoardPage/components/weatherErrorBoundary/WeatherErrorBoundary';
+import { useWeatherQuery } from '@/pages/weatherBoardPage/hooks/useWeatherQuery';
 
 const WeatherBoardWind = () => {
-  const Content = () => {
-    const { data: windData } = useSuspenseQuery({
-      queryKey: ['weather', 'wind'],
-      queryFn: async (): Promise<GetWindInfoResponse> => {
+  const WindContent = () => {
+    const { data: windData } = useWeatherQuery(
+      ['weather', 'wind'],
+      async (): Promise<GetWindInfoResponse> => {
         const res = await getWeatherWind();
         return res.data;
-      },
-      staleTime: 24 * 60 * 60 * 1000,
-    });
+      }
+    );
+
     const [isAnimating, setIsAnimating] = useState(false);
     useEffect(() => {
       setTimeout(() => setIsAnimating(true), 100);
     }, []);
+
     return (
-      <>
+      <div css={S.WeatherBoardWindContentWrapper}>
         <span css={Typography.Body_S_400}>N</span>
         <div css={S.WeatherBoardWindContent}>
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
@@ -51,15 +53,21 @@ const WeatherBoardWind = () => {
         <p>
           {windData.direction} • {windData.speed}m/s
         </p>
-      </>
+      </div>
     );
   };
 
   return (
     <div css={S.WeatherBoardWind}>
-      <Suspense fallback={<CircularSpinner minHeight={180} />}>
-        <Content />
-      </Suspense>
+      <WeatherErrorBoundary title="풍속">
+        <Suspense
+          fallback={
+            <CircularSpinner minHeight={180} color={ColorPrimary.B700} />
+          }
+        >
+          <WindContent />
+        </Suspense>
+      </WeatherErrorBoundary>
     </div>
   );
 };

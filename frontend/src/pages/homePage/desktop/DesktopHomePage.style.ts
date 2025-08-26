@@ -1,4 +1,4 @@
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import { css } from '@emotion/react';
 
 const DesktopHomePage = css`

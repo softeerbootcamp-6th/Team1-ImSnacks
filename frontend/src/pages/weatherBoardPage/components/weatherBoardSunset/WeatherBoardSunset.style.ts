@@ -1,15 +1,20 @@
 import { GrayScale } from '@/styles/colors';
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
 const WeatherBoardSunset = css`
-  ${CommonStyles.weatherBoardContainer}
+  ${S.WeatherBoardContainer}
   position: relative;
   ${FlexStyles.flexColumn}
   justify-content: flex-end;
-  padding-bottom: 12px;
   box-sizing: border-box;
+`;
+
+const WeatherBoardSunsetContentWrapper = css`
+  padding-bottom: 12px;
+  ${FlexStyles.flexColumn}
 `;
 
 const WeatherBoardSunsetTitle = css`
@@ -26,6 +31,15 @@ const WeatherBoardSunsetContent = css`
   justify-content: center;
   align-items: flex-end;
   margin-bottom: 6px;
+`;
+
+const WeatherBoardSunsetSvgWrapper = css`
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.2);
+  }
 `;
 
 const WeatherBoardSunsetSvg = css`
@@ -58,8 +72,10 @@ const WeatherBoardSunsetTime = css`
 
 export default {
   WeatherBoardSunset,
+  WeatherBoardSunsetContentWrapper,
   WeatherBoardSunsetTitle,
   WeatherBoardSunsetContent,
+  WeatherBoardSunsetSvgWrapper,
   WeatherBoardSunsetSvg,
   WeatherBoardSunsetBaseLine,
   WeatherBoardSunsetTimeWrapper,

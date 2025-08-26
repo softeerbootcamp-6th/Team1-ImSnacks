@@ -1,10 +1,11 @@
 import { GrayScale } from '@/styles/colors';
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { Typography } from '@/styles/typography';
 import { css } from '@emotion/react';
 
 const WeatherBoardHumidity = css`
-  ${CommonStyles.weatherBoardContainer};
+  ${S.WeatherBoardContainer};
   ${FlexStyles.flexColumn};
   justify-content: flex-end;
   position: relatvie;
@@ -27,9 +28,19 @@ const HumidityRangeText = css`
   color: ${GrayScale.G800};
 `;
 
+const HumidityIconWrapper = css`
+  position: absolute;
+  top: 2px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
 export default {
   WeatherBoardHumidity,
   WeatherBoardTitleWrapper,
   HumidityRangeTextWrapper,
   HumidityRangeText,
+  HumidityIconWrapper,
 };

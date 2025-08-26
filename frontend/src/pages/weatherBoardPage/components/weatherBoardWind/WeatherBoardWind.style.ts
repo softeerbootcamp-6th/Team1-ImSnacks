@@ -1,12 +1,17 @@
-import { CommonStyles, FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
+import S from '@/pages/weatherBoardPage/WeatherBoardCommon.style';
 import { css } from '@emotion/react';
 import { getArrowPosition } from '../../utils/windUtil';
 
 const WeatherBoardWind = css`
-  ${CommonStyles.weatherBoardContainer}
+  ${S.WeatherBoardContainer}
   ${FlexStyles.flexColumn}
-  padding-top: 32px;
   box-sizing: border-box;
+`;
+
+const WeatherBoardWindContentWrapper = css`
+  padding-top: 32px;
+  ${FlexStyles.flexColumn}
 `;
 
 const WeatherBoardWindContent = css`
@@ -60,6 +65,7 @@ const WindArrowInitial = css`
 
 export default {
   WeatherBoardWind,
+  WeatherBoardWindContentWrapper,
   WeatherBoardWindContent,
   WindArrow,
   WindArrowInitial,

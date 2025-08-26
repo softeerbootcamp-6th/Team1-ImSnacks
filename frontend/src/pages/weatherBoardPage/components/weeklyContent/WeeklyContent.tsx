@@ -1,4 +1,4 @@
-import { FLAT_ICON } from '@/constants/flatIcons';
+import { FLAT_ICON } from '@/constants/iconElements/flatIcons';
 import S from './WeeklyContent.style';
 import type { GetSevenDaysForecastResponse } from '@/types/openapiGenerator';
 

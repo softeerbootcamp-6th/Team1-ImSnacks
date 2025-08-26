@@ -1,6 +1,9 @@
 import { useIsMobileStore } from '@/store/useIsMobileStore';
 import S from './LoginPage.style';
 import { useLogin } from './hooks/useLogin';
+import { css, useTheme } from '@emotion/react';
+import loginLogoUrl from '@/assets/icons/flat/IC24Logo.svg';
+import logoTextUrl from '@/assets/images/LogoText.svg';
 
 const LoginPage = () => {
   const {
@@ -13,10 +16,29 @@ const LoginPage = () => {
     handleSubmit,
   } = useLogin();
   const { isMobile } = useIsMobileStore();
+  const theme = useTheme();
 
   return (
     <>
       <div css={S.LoginContainer}>
+        <div css={S.LogoWrapper}>
+          <img
+            src={loginLogoUrl}
+            alt="Login Icon"
+            width={64}
+            css={css`
+              margin-right: -8px;
+            `}
+          />
+          <img
+            src={logoTextUrl}
+            alt="Login Logo"
+            width={200}
+            css={css`
+              margin-right: 16px;
+            `}
+          />
+        </div>
         <div css={S.LoginCard(isMobile)}>
           <div css={S.LoginHeader}>
             <h1 css={S.LoginTitle}>로그인</h1>
@@ -33,7 +55,7 @@ const LoginPage = () => {
                 value={identifier}
                 onChange={e => handleIdentifierChange(e.target.value)}
                 placeholder="아이디를 입력하세요"
-                css={S.LoginInput}
+                css={S.LoginInput(theme.ColorPrimary.B300)}
                 required
               />
             </div>
@@ -48,7 +70,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={e => handlePasswordChange(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                css={S.LoginInput}
+                css={S.LoginInput(theme.ColorPrimary.B300)}
                 required
               />
             </div>
@@ -58,7 +80,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              css={S.LoginSubmitButton}
+              css={S.LoginSubmitButton(theme.ColorPrimary.B700)}
             >
               {isLoading ? '로그인 중...' : '로그인'}
             </button>

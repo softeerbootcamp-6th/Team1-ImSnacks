@@ -1,12 +1,17 @@
-import { ColorPrimary, ColorStatus, GrayScale } from '@/styles/colors';
+import { ColorStatus, GrayScale } from '@/styles/colors';
+import { FlexStyles } from '@/styles/flexStyles';
 import { css } from '@emotion/react';
 
 const LoginContainer = css`
-  display: flex;
+  ${FlexStyles.flexColumn}
   justify-content: center;
-  align-items: center;
   min-height: 100vh;
   padding: 20px;
+`;
+
+const LogoWrapper = css`
+  ${FlexStyles.flexRow}
+  margin-bottom: 32px;
 `;
 
 const LoginCard = (isMobile: boolean) => css`
@@ -52,7 +57,7 @@ const LoginLabel = css`
   color: ${GrayScale.G800};
 `;
 
-const LoginInput = css`
+const LoginInput = (borderColor: string) => css`
   width: 100%;
   box-sizing: border-box;
   padding: 12px 16px;
@@ -63,7 +68,7 @@ const LoginInput = css`
 
   &:focus {
     outline: none;
-    border-color: ${ColorPrimary.B500};
+    border-color: ${borderColor};
   }
 
   &::placeholder {
@@ -79,8 +84,8 @@ const LoginErrorMessage = css`
   border-radius: 6px;
 `;
 
-const LoginSubmitButton = css`
-  background: ${ColorPrimary.B400};
+const LoginSubmitButton = (bgColor: string) => css`
+  background: ${bgColor};
   color: white;
   border: none;
   border-radius: 8px;
@@ -104,6 +109,7 @@ const LoginSubmitButton = css`
 
 export default {
   LoginContainer,
+  LogoWrapper,
   LoginCard,
   LoginHeader,
   LoginTitle,

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { ColorStatus, GrayScale, Opacity } from '@/styles/colors';
 import { BorderRadius } from '@/styles/borderRadius';
 import { Spacing } from '@/styles/spacing';
-import { FlexStyles } from '@/styles/commonStyles';
+import { FlexStyles } from '@/styles/flexStyles';
 import {
   WORK_CHIP_TYPES,
   type WorkChipType,
