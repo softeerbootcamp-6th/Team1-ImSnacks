@@ -164,7 +164,7 @@ public class WeatherService {
         }
 
         final List<WeatherRisk> filteredRisk = allRisks.stream()
-                .filter(r -> r.getEndTime().isAfter(now))
+                .filter(r -> r.getEndTime().isAfter(now) && r.getEndTime().isAfter(r.getStartTime()))
                 .sorted(Briefing.RISK_COMPARATOR) // 우선 순위가 가장 앞서는 것이 맨 앞에 오도록 정렬한다.
                 .toList();
         if (filteredRisk.isEmpty()) { // 기상 특이 사항이 없는 것이니 exception이 아닌 false 응답을 보낸다.
