@@ -52,12 +52,15 @@
 
 https://github.com/user-attachments/assets/14e8513d-597b-486b-a0bd-ea265c9b4b31
 
+<img width="424" height="758" alt="image" src="https://github.com/user-attachments/assets/59a411f5-3d92-4c24-832e-207d03cfa535" />
+
+
 ---
 
 ## 5. 팀 구성
 
 
-| <img src="https://github.com/user-attachments/assets/cb6c0ae5-5566-4a47-a811-095c500289d8" alt="김미소" width="100"/> | <img src="https://github.com/user-attachments/assets/fea8baa9-7028-41ef-b44d-9ca9820aea11" alt="조은진" width="100"/> | <img src="https://github.com/user-attachments/assets/cae6ad12-e938-4f16-96a5-eca5fdfd0146" alt="권민혁" width="100"/> | <img src="https://github.com/user-attachments/assets/4101dfc6-74f3-4380-9d17-d4e0716cf61a" alt="박세연" width="100"/> | <img src="https://github.com/user-attachments/assets/8dac1353-a2bc-4126-9a35-2591929c4da8" alt="임규현" width="100"/> |
+| <img src="https://github.com/user-attachments/assets/1e93cc8a-9979-4491-90e5-5020d3f598ca" alt="김미소" width="100"/> | <img src="https://github.com/user-attachments/assets/fea8baa9-7028-41ef-b44d-9ca9820aea11" alt="조은진" width="100"/> | <img src="https://github.com/user-attachments/assets/6b06dd07-bc08-4813-83d1-6d225bd3b062" alt="권민혁" width="100"/> | <img src="https://github.com/user-attachments/assets/eb5e65c4-e7d0-4c2f-bf2d-01e6d72972b7" alt="박세연" width="100"/> | <img src="https://github.com/user-attachments/assets/8dac1353-a2bc-4126-9a35-2591929c4da8" alt="임규현" width="100"/> |
 |------------|------------|--------|--------|--------|
 | [김미소](https://github.com/bamb14)     | [조은진](https://github.com/eunjin11)     | [권민혁](https://github.com/imscow11253) | [박세연](https://github.com/adorableco) | [임규현](https://github.com/ghlim22) |
 | 프론트엔드 | 프론트엔드 | 백엔드 | 백엔드 | 백엔드 |
@@ -139,6 +142,6 @@ frontend
 
 ## 10. GitHub Wiki
 - [📖 그라운드룰 바로가기](https://github.com/softeerbootcamp-6th/Team1-ImSnacks/wiki/%5B1%ED%8C%80%5D-%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)
-- [💭 논의 공간 바로가기](https://github.com/softeerbootcamp-6th/Team1-ImSnacks/discussions)
-- [✏️ 프로젝트 관리 바로가기(private)](https://github.com/orgs/softeerbootcamp-6th/projects/15/views/1)
+- [💭 논의 공간 바로가기](https://github.com/softeerbootcamp-6th/Team1-ImSnacks/discussions?discussions_q=)
+- [✏️ 프로젝트 관리 바로가기](https://github.com/orgs/softeerbootcamp-6th/projects/15/views/1)
 - [📚 위키 정리 바로가기](https://github.com/softeerbootcamp-6th/Team1-ImSnacks/wiki)
